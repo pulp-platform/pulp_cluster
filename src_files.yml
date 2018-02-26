@@ -1,0 +1,27 @@
+pulp_cluster:
+  incdirs: [
+    ../../rtl/includes,
+  ]
+  files: [
+    packages/pulp_cluster_package.sv,
+    packages/apu_package.sv,
+    rtl/core_region.sv,
+    rtl/core_demux.sv,
+    rtl/cluster_interconnect_wrap.sv,
+    rtl/tcdm_banks_wrap.sv,
+    rtl/periph_demux.sv,
+    rtl/per_demux_wrap.sv,
+    rtl/periph_FIFO.sv,
+    rtl/cluster_peripherals.sv,
+    rtl/cluster_clock_gate.sv,
+    rtl/cluster_timer_wrap.sv,
+    rtl/cluster_event_map.sv,
+    rtl/dmac_wrap.sv,
+    rtl/xne_wrap.sv,
+    rtl/cluster_bus_wrap.sv,
+    rtl/axi_slice_wrap.sv,
+    rtl/axi2mem_wrap.sv,
+    rtl/axi2per_wrap.sv,
+    rtl/per2axi_wrap.sv,
+    rtl/pulp_cluster.sv,
+  ]

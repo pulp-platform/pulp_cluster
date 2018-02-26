@@ -1,0 +1,36 @@
+#
+# List of IPs and relative branch/commit-hash/tag.
+# Uses the YAML syntax.
+#
+
+axi/axi2mem:
+  commit: tags/pulp-v1.0
+  group:  pulp-platform
+axi/axi2per:
+  commit: tags/pulp-v1.0
+  group:  pulp-platform
+axi/per2axi:
+  commit: tags/pulp-v1.0
+  group:  pulp-platform
+axi/axi_size_conv:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+cluster_interconnect:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+event_unit_flex:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+mchan:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+icache-intc:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+icache_mp_128_pf:
+  commit: tags/pulp-v1.0
+  group: pulp-platform
+cluster_peripherals:
+  commit: tags/pulp-v1.0
+  group:  pulp-platform
+
