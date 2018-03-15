@@ -25,7 +25,7 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter NB_CORES           = `NB_CORES,
-  parameter NB_HWACC_PORTS     = 4,
+  parameter NB_HWACC_PORTS     = 0,
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 8,
