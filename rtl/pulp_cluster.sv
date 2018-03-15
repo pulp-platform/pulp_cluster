@@ -57,7 +57,7 @@ module pulp_cluster
   // AXI parameters
   parameter AXI_ADDR_WIDTH        = 32,
   parameter AXI_DATA_C2S_WIDTH    = 64,
-  parameter AXI_DATA_S2C_WIDTH    = 32,
+  parameter AXI_DATA_S2C_WIDTH    = 64,
   parameter AXI_USER_WIDTH        = 6,
   parameter AXI_ID_IN_WIDTH       = 4,
   parameter AXI_ID_OUT_WIDTH      = `AXI_ID_SOC_S_WIDTH,
@@ -310,17 +310,10 @@ module pulp_cluster
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_64();
-
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_32();
+  ) s_data_slave();
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -453,7 +446,7 @@ module pulp_cluster
     .instr_slave   ( s_core_instr_bus  ),
     .data_slave    ( s_core_ext_bus    ),
     .dma_slave     ( s_dma_ext_bus     ),
-    .ext_slave     ( s_data_slave_64   ),
+    .ext_slave     ( s_data_slave      ),
     .tcdm_master   ( s_ext_tcdm_bus    ),
     .periph_master ( s_ext_mperiph_bus ),
     .ext_master    ( s_data_master     )
@@ -874,23 +867,7 @@ module pulp_cluster
     .clock_down_i    ( s_isolate_cluster  ),
     .incoming_req_o  ( s_incoming_req     ),
     .axi_slave_async ( s_data_slave_async ),
-    .axi_master      ( s_data_slave_32    )
-  );
-
-  axi_size_UPSIZE_32_64_wrap #(
-    .AXI_ADDR_WIDTH      ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH_IN   ( AXI_DATA_S2C_WIDTH ),
-    .AXI_USER_WIDTH_IN   ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_IN     ( AXI_ID_IN_WIDTH    ),
-    .AXI_DATA_WIDTH_OUT  ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH_OUT  ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_OUT    ( AXI_ID_IN_WIDTH    )
-  ) axi_size_UPSIZE_32_64_wrap_i (
-    .clk_i       ( clk_i           ),
-    .rst_ni      ( s_rst_n         ),
-    .test_mode_i ( test_mode_i     ),
-    .axi_slave   ( s_data_slave_32 ),
-    .axi_master  ( s_data_slave_64 )
+    .axi_master      ( s_data_slave       )
   );
    
   /* event synchronizers */
