@@ -29,7 +29,7 @@ module pulp_cluster
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 8,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
+  parameter CLUSTER_ALIAS_BASE = 12'h1B0,
   parameter TCDM_SIZE          = `TCDM_SIZE,              // [B], must be 2**N
   parameter NB_TCDM_BANKS      = `NB_TCDM_BANKS,          // must be 2**N
   parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
