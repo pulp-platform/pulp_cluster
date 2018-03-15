@@ -23,5 +23,6 @@ pulp_cluster:
     rtl/axi2mem_wrap.sv,
     rtl/axi2per_wrap.sv,
     rtl/per2axi_wrap.sv,
+    rtl/tryx_ctrl.sv,
     rtl/pulp_cluster.sv,
   ]

@@ -242,6 +242,10 @@ module pulp_cluster
   logic                               hwpe_sel;
   logic                               hwpe_en;
 
+  logic [NB_CORES-1:0][AXI_USER_WIDTH-1:0] tryx_axuser;
+  logic [NB_CORES-1:0]                     tryx_xresp_slverr;
+  logic [NB_CORES-1:0]                     tryx_xresp_valid;
+
   logic                s_cluster_periphs_busy;
   logic                s_axi2mem_busy;
   logic                s_per2axi_busy;
@@ -387,6 +391,9 @@ module pulp_cluster
   
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
+
+  // cores -> tryx control
+  XBAR_PERIPH_BUS s_core_periph_tryx[NB_CORES-1:0]();
   
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus();
@@ -521,12 +528,28 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH       ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
   ) per2axi_wrap_i (
-    .clk_i          ( clk_cluster                     ),
-    .rst_ni         ( rst_ni                          ),
-    .test_en_i      ( test_mode_i                     ),
-    .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
-    .axi_master     ( s_core_ext_bus                  ),
-    .busy_o         ( s_per2axi_busy                  )
+    .clk_i              ( clk_cluster                     ),
+    .rst_ni             ( rst_ni                          ),
+    .test_en_i          ( test_mode_i                     ),
+    .periph_slave       ( s_xbar_speriph_bus[SPER_EXT_ID] ),
+    .axi_axuser_i       ( tryx_axuser                     ),
+    .axi_xresp_slverr_o ( tryx_xresp_slverr               ),
+    .axi_xresp_valid_o  ( tryx_xresp_valid                ),
+    .axi_master         ( s_core_ext_bus                  ),
+    .busy_o             ( s_per2axi_busy                  )
+  );
+
+  tryx_ctrl #(
+    .NB_CORES           ( NB_CORES       ),
+    .AXI_USER_WIDTH     ( AXI_USER_WIDTH )
+  ) tryx_ctrl_i (
+    .clk_i              ( clk_cluster        ),
+    .rst_ni             ( rst_ni             ),
+    .axi_axuser_o       ( tryx_axuser        ),
+    .axi_xresp_slverr_i ( tryx_xresp_slverr  ),
+    .axi_xresp_valid_i  ( tryx_xresp_valid   ),
+    .periph_data_slave  ( s_core_periph_bus  ),
+    .periph_data_master ( s_core_periph_tryx )
   );
     
   /* cluster (log + periph) interconnect and attached peripherals */
@@ -550,7 +573,7 @@ module pulp_cluster
     .clk_i              ( clk_cluster                         ),
     .rst_ni             ( rst_ni                              ),
     .core_tcdm_slave    ( s_core_xbar_bus                     ),
-    .core_periph_slave  ( s_core_periph_bus                   ),
+    .core_periph_slave  ( s_core_periph_tryx                  ),
     .ext_slave          ( s_ext_xbar_bus                      ),
     .dma_slave          ( s_dma_xbar_bus                      ),
     .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
