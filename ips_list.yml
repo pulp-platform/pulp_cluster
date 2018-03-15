@@ -21,6 +21,10 @@ cluster_interconnect:
 event_unit_flex:
   commit: tags/pulp-v1.0
   group: pulp-platform
+fpga-support:
+  commit: v0.3.0
+  group: pulp-restricted
+  server: git@iis-git.ee.ethz.ch
 mchan:
   commit: tags/pulp-v1.0
   group: pulp-platform

@@ -17,56 +17,56 @@
  */
 
 module tcdm_banks_wrap
-  #(
-    parameter BANK_SIZE = 256,   //- -> OVERRIDE
-    parameter NB_BANKS  = 1,     // --> OVERRIDE
-    parameter RM_SIZE   = 1,     // only for SRAM
-    parameter WM_SIZE   = 1      // only for SRAM
-    )
-   (
-    input  logic               clk_i,
-    input  logic               rst_ni,
-    input  logic               init_ni,
-    input  logic               pwdn_i,
-    input  logic               test_mode_i,
+#(
+  parameter BANK_SIZE = 256,   //- -> OVERRIDE
+  parameter NB_BANKS  = 1,     // --> OVERRIDE
+  parameter RM_SIZE   = 1,     // only for SRAM
+  parameter WM_SIZE   = 1      // only for SRAM
+)
+(
+  input  logic               clk_i,
+  input  logic               rst_ni,
+  input  logic               init_ni,
+  input  logic               pwdn_i,
+  input  logic               test_mode_i,
     
-    TCDM_BANK_MEM_BUS.Slave    tcdm_slave[NB_BANKS-1:0]
-    );
+  TCDM_BANK_MEM_BUS.Slave    tcdm_slave[NB_BANKS-1:0]
+);
    
-   generate
-      for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
-	 
-	 logic                         bank_ce_n;
-	 logic                         bank_rdwe_n;
-	 logic [3:0]                   bank_be_n;
-	 logic [$clog2(BANK_SIZE)-1:0] bank_a;
-	 logic [32-1:0]                bank_d;
-	 logic [32-1:0]                bank_q;
-	 
-	 assign bank_a              = tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
-	 assign bank_d              = tcdm_slave[i].wdata;
-	 assign bank_be_n           = ~tcdm_slave[i].be;
-	 assign bank_ce_n           = ~tcdm_slave[i].req;
-	 assign bank_rdwe_n         = tcdm_slave[i].wen;
-	 assign tcdm_slave[i].rdata = bank_q;
-	 
-	 generic_memory
-	   #(
-	     .ADDR_WIDTH($clog2(BANK_SIZE))
-	     )
-	 i_bank 
-	   (
-	    .CLK       ( clk_i       ),
-	    .INITN     ( rst_ni      ),
-	    .CEN       ( bank_ce_n   ),
-	    .WEN       ( bank_rdwe_n ),
-	    .BEN       ( bank_be_n   ),
-	    .A         ( bank_a      ),
-            .D         ( bank_d      ),
-            .Q         ( bank_q      )
-	    );
-	 
-      end
-   endgenerate
+  generate
+    for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
+
+      logic                  [31:0] wdata;
+      logic [$clog2(BANK_SIZE)-1:0] add;
+      logic                         csn;
+      logic                         wen;
+      logic                   [3:0] be;
+      logic                  [31:0] rdata;
+
+      assign wdata =  tcdm_slave[i].wdata;
+      assign add   =  tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
+      assign csn   = ~tcdm_slave[i].req;
+      assign wen   =  tcdm_slave[i].wen;
+      assign be    =  tcdm_slave[i].be;
+
+      SyncSpRamBeNx32 #(
+        .ADDR_WIDTH ( $clog2(BANK_SIZE) ),
+        .DATA_DEPTH (        BANK_SIZE  ),
+        .OUT_REGS   (                0  )
+      ) SyncSpRamBeNx32_i (
+       .Clk_CI    ( clk_i  ),
+       .Rst_RBI   ( rst_ni ),
+       .CSel_SI   ( ~csn   ),
+       .WrEn_SI   ( ~wen   ),
+       .BEn_SI    ( be     ),
+       .Addr_DI   ( add    ),
+       .WrData_DI ( wdata  ),
+       .RdData_DO ( rdata  )
+      );
+
+      assign tcdm_slave[i].rdata = rdata;
+
+    end
+  endgenerate
    
 endmodule
