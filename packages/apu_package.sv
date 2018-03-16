@@ -15,6 +15,8 @@
 
 package apu_package;
 
+   import apu_core_package::*;
+
    parameter FPU                 = 1;
    
    parameter SHARED_FP           = 1;
@@ -29,9 +31,6 @@ package apu_package;
    ////////////////////////////////////////////////////////////////////////////////////////
    // THESE PARAMETERS HAVE TO MATCH THE ones in ips/riscv/includes/apu_core_package.sv  //
    ////////////////////////////////////////////////////////////////////////////////////////
-  
-   // by default set to 0
-   parameter SHARED_INT_MULT   = 0;
 
    // CPU side / general params
    parameter NARGS_CPU     = 3;
@@ -44,7 +43,6 @@ package apu_package;
    
    // FP-general
    parameter APUTYPE_FP   = (SHARED_FP) ? SHARED_DSP_MULT + SHARED_INT_MULT + SHARED_INT_DIV : 0;
-   parameter APU_FLAGS_FP = 2;
 
    // generated values
    parameter C_APUTYPES   = (SHARED_FP) ? (SHARED_FP_DIVSQRT==1) ? APUTYPE_FP+6 : (SHARED_FP_DIVSQRT==2) ? APUTYPE_FP+5 : APUTYPE_FP+4 : SHARED_DSP_MULT + SHARED_INT_DIV + SHARED_INT_MULT;
