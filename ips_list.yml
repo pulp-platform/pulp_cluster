@@ -37,4 +37,9 @@ icache_mp_128_pf:
 cluster_peripherals:
   commit: tags/pulp-v1.0
   group:  pulp-platform
-
+scm:
+  commit: tags/pulpissimo-v1.0
+  group: pulp-platform
+timer_unit:
+  commit: tags/pulpissimo-v1.0
+  group:  pulp-platform
