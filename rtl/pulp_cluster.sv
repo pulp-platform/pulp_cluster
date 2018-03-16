@@ -483,6 +483,7 @@ module pulp_cluster
     .clk_i         ( clk_cluster       ),
     .rst_ni        ( rst_ni            ),
     .test_en_i     ( test_mode_i       ),
+    .cluster_id_i  ( cluster_id_i      ),
     .axi_slave     ( s_ext_mperiph_bus ),
     .periph_master ( s_mperiph_bus     ),
     .busy_o        ( s_axi2per_busy    )

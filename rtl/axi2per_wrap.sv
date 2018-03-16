@@ -31,6 +31,7 @@ module axi2per_wrap
   input logic          clk_i,
   input logic          rst_ni,
   input logic          test_en_i,
+  input logic [5:0]    cluster_id_i,
   AXI_BUS.Slave        axi_slave,
   XBAR_TCDM_BUS.Master periph_master,
   output logic         busy_o
@@ -48,6 +49,8 @@ module axi2per_wrap
     .clk_i                 ( clk_i                 ),
     .rst_ni                ( rst_ni                ),
     .test_en_i             ( test_en_i             ),
+
+    .cluster_id_i          ( cluster_id_i          ),
 
     .axi_slave_aw_valid_i  ( axi_slave.aw_valid    ),
     .axi_slave_aw_addr_i   ( axi_slave.aw_addr     ),
