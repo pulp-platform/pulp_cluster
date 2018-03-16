@@ -14,6 +14,7 @@
  * Antonio Pullini <pullinia@iis.ee.ethz.ch>
  * Igor Loi <igor.loi@unibo.it>
  * Francesco Conti <fconti@iis.ee.ethz.ch>
+ * Andreas Kurth <akurth@iis.ee.ethz.ch>
  */
 
 `include "pulp_soc_defines.sv"
@@ -374,17 +375,28 @@ module cluster_bus_wrap
     .cfg_connectivity_map_i   ( s_connectivity_map )
   );
 
-  assign s_start_addr[0][0] = `MASTER_0_START_ADDR + ( cluster_id_i << 22);
-  assign s_end_addr[0][0]   = `MASTER_0_END_ADDR   + ( cluster_id_i << 22);
+  always_comb begin
+    s_start_addr = '0;
+    s_end_addr   = '0;
+    s_valid_rule = '0;
 
-  assign s_start_addr[0][1] = `MASTER_1_START_ADDR + ( cluster_id_i << 22);
-  assign s_end_addr[0][1]   = `MASTER_1_END_ADDR   + ( cluster_id_i << 22);
+    s_start_addr[0][0] = `MASTER_0_START_ADDR + ( cluster_id_i << 22);
+    s_end_addr  [0][0] = `MASTER_0_END_ADDR   + ( cluster_id_i << 22);
+    s_valid_rule[0][0] = 1;
 
-  assign s_start_addr[0][2] = `MASTER_2_START_ADDR;
-  assign s_end_addr[0][2]   = `MASTER_2_END_ADDR;
+    s_start_addr[0][1] = `MASTER_1_START_ADDR + ( cluster_id_i << 22);
+    s_end_addr  [0][1] = `MASTER_1_END_ADDR   + ( cluster_id_i << 22);
+    s_valid_rule[0][1] = 1;
 
-  assign s_valid_rule       = '1;
+    s_start_addr[0][2] = `MASTER_2_REGION_0_START_ADDR;
+    s_end_addr  [0][2] = s_start_addr[0][0] - 1;
+    s_valid_rule[0][2] = 1;
 
-  assign s_connectivity_map = '1;
+    s_start_addr[1][2] = s_end_addr[0][1] + 1;
+    s_end_addr  [1][2] = `MASTER_2_REGION_1_END_ADDR;
+    s_valid_rule[1][2] = 1;
+
+    s_connectivity_map = {NB_MASTER*NB_SLAVE{1'b1}};
+  end
 
 endmodule
