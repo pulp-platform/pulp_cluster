@@ -69,11 +69,11 @@ module pulp_cluster
   parameter DATA_WIDTH     = 32,
   parameter ADDR_WIDTH     = 32,
   parameter BE_WIDTH       = DATA_WIDTH/8,
-  parameter TEST_SET_BIT   = 20, // bits used to indicate a test and set opration during a load in TCDM
-  parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // Memory datawidth is 4 byte (32bit) --> bits used to address a single bank in SRAM TCDM
+  parameter TEST_SET_BIT   = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS),
+  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
   parameter NB_OUTSND_BURSTS   = `NB_OUTSND_BURSTS,
   parameter MCHAN_BURST_LENGTH = `MCHAN_BURST_LENGTH,
 
