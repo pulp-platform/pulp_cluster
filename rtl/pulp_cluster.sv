@@ -665,10 +665,10 @@ module pulp_cluster
         .fregfile_disable_i  ( s_fregfile_disable    ),
         .boot_addr_i         ( boot_addr[i]          ),
         .irq_id_i            ( irq_id[i]             ),
-	.irq_ack_id_o        ( irq_ack_id[i]         ),
+        .irq_ack_id_o        ( irq_ack_id[i]         ),
         .irq_req_i           ( irq_req[i]            ),
         .irq_ack_o           ( irq_ack[i]            ),
-	
+
         .test_mode_i         ( test_mode_i           ),
         .core_busy_o         ( core_busy[i]          ),
         .instr_req_o         ( instr_req[i]          ),
