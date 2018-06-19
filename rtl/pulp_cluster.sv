@@ -71,7 +71,9 @@ module pulp_cluster
   parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // Memory datawidth is 4 byte (32bit) --> bits used to address a single bank in SRAM TCDM
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS),
+  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS),
+  parameter NB_OUTSND_BURSTS   = 8,
+  parameter MCHAN_BURST_LENGTH = 256,
 
   // peripheral and periph interconnect parameters
   parameter LOG_CLUSTER    = 5,  // unused
@@ -435,6 +437,7 @@ module pulp_cluster
 
   /* cluster bus and attached peripherals */
   cluster_bus_wrap #(
+    .NB_CORES         ( NB_CORES           ),
     .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
     .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
@@ -515,7 +518,7 @@ module pulp_cluster
   );
     
   per2axi_wrap #(
-    .NB_CORES       ( 4                    ),
+    .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
     .PER_ID_WIDTH   ( NB_CORES+NB_MPERIPHS ),
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH       ),
@@ -533,20 +536,21 @@ module pulp_cluster
     
   /* cluster (log + periph) interconnect and attached peripherals */
   cluster_interconnect_wrap #(
-    .NB_CORES           ( NB_CORES        ),
-    .NB_HWACC_PORTS     ( NB_HWACC_PORTS  ),
-    .NB_DMAS            ( NB_DMAS         ),
-    .NB_MPERIPHS        ( NB_MPERIPHS     ),
-    .NB_TCDM_BANKS      ( NB_TCDM_BANKS   ),
-    .NB_SPERIPHS        ( NB_SPERIPHS     ),
-    .DATA_WIDTH         ( DATA_WIDTH      ),
-    .ADDR_WIDTH         ( ADDR_WIDTH      ),
-    .BE_WIDTH           ( BE_WIDTH        ),
-    .TEST_SET_BIT       ( TEST_SET_BIT    ),
-    .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH  ),
-    .LOG_CLUSTER        ( LOG_CLUSTER     ),
-    .PE_ROUTING_LSB     ( PE_ROUTING_LSB  ),
-    .PE_ROUTING_MSB     ( PE_ROUTING_MSB  )
+    .NB_CORES           ( NB_CORES           ),
+    .NB_HWACC_PORTS     ( NB_HWACC_PORTS     ),
+    .NB_DMAS            ( NB_DMAS            ),
+    .NB_MPERIPHS        ( NB_MPERIPHS        ),
+    .NB_TCDM_BANKS      ( NB_TCDM_BANKS      ),
+    .NB_SPERIPHS        ( NB_SPERIPHS        ),
+    .DATA_WIDTH         ( DATA_WIDTH         ),
+    .ADDR_WIDTH         ( ADDR_WIDTH         ),
+    .BE_WIDTH           ( BE_WIDTH           ),
+    .TEST_SET_BIT       ( TEST_SET_BIT       ),
+    .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH     ),
+    .LOG_CLUSTER        ( LOG_CLUSTER        ),
+    .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
+    .PE_ROUTING_MSB     ( PE_ROUTING_MSB     ),
+    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
     .rst_ni             ( rst_ni                              ),
@@ -561,16 +565,18 @@ module pulp_cluster
   );
 
   dmac_wrap #(
-    .NB_CORES       ( NB_CORES           ),
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .PE_ID_WIDTH    ( NB_CORES + 1       ),
-    .TCDM_ADD_WIDTH ( TCDM_ADD_WIDTH     ),
-    .DATA_WIDTH     ( DATA_WIDTH         ),
-    .ADDR_WIDTH     ( ADDR_WIDTH         ),
-    .BE_WIDTH       ( BE_WIDTH           )
+    .NB_CORES           ( NB_CORES           ),
+    .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
+    .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
+    .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
+    .PE_ID_WIDTH        ( NB_CORES + 1       ),
+    .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
+    .DATA_WIDTH         ( DATA_WIDTH         ),
+    .ADDR_WIDTH         ( ADDR_WIDTH         ),
+    .BE_WIDTH           ( BE_WIDTH           )
   ) dmac_wrap_i (
     .clk_i          ( clk_cluster        ),
     .rst_ni         ( rst_ni             ),
@@ -588,8 +594,9 @@ module pulp_cluster
 
   cluster_peripherals #(
     .NB_CORES       ( NB_CORES       ),
-    .NB_SPERIPHS    ( NB_SPERIPHS    ),
+    .NB_MPERIPHS    ( NB_MPERIPHS    ),
     .NB_CACHE_BANKS ( NB_CACHE_BANKS ),
+    .NB_SPERIPHS    ( NB_SPERIPHS    ),
     .NB_TCDM_BANKS  ( NB_TCDM_BANKS  ),
     .NB_HWPE_PORTS  ( 1              ),
     .ROM_BOOT_ADDR  ( ROM_BOOT_ADDR  ),
@@ -639,11 +646,12 @@ module pulp_cluster
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
       core_region #(
-        .CORE_ID             ( i                 ),
-        .ADDR_WIDTH          ( 32                ),
-        .DATA_WIDTH          ( 32                ),
-        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
-        .REMAP_ADDRESS       ( REMAP_ADDRESS     )
+        .CORE_ID             ( i                  ),
+        .ADDR_WIDTH          ( 32                 ),
+        .DATA_WIDTH          ( 32                 ),
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
+        .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE ),
+        .REMAP_ADDRESS       ( REMAP_ADDRESS      )
       ) core_region_i (
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
@@ -925,7 +933,7 @@ module pulp_cluster
    
   /* centralized gating */
   cluster_clock_gate #(
-    .NB_CORES(NB_CORES)
+    .NB_CORES ( NB_CORES )
   ) u_clustercg (
     .clk_i              ( clk_i              ),
     .rstn_i             ( s_rst_n            ),
