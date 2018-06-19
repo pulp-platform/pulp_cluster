@@ -33,11 +33,12 @@ module cluster_bus_wrap
   input logic       rst_ni,
   input logic       test_en_i,
   input logic [5:0] cluster_id_i,
+
   AXI_BUS.Slave     data_slave,
   AXI_BUS.Slave     instr_slave,
   AXI_BUS.Slave     dma_slave,
   AXI_BUS.Slave     ext_slave,
-  //INITIATOR
+
   AXI_BUS.Master    tcdm_master,
   AXI_BUS.Master    periph_master,
   AXI_BUS.Master    ext_master
