@@ -120,8 +120,8 @@ module pulp_cluster
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
-  input  logic [7:0]                       data_slave_aw_writetoken_i,
-  input  logic [31:0]                      data_slave_aw_addr_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_writetoken_i,
+  input  logic [AXI_ADDR_WIDTH-1:0]        data_slave_aw_addr_i,
   input  logic [2:0]                       data_slave_aw_prot_i,
   input  logic [3:0]                       data_slave_aw_region_i,
   input  logic [7:0]                       data_slave_aw_len_i,
@@ -132,11 +132,11 @@ module pulp_cluster
   input  logic [3:0]                       data_slave_aw_qos_i,
   input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_aw_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_aw_user_i,
-  output logic [7:0]                       data_slave_aw_readpointer_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_readpointer_o,
    
   // READ ADDRESS CHANNEL
-  input  logic [7:0]                       data_slave_ar_writetoken_i,
-  input  logic [31:0]                      data_slave_ar_addr_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_writetoken_i,
+  input  logic [AXI_ADDR_WIDTH-1:0]        data_slave_ar_addr_i,
   input  logic [2:0]                       data_slave_ar_prot_i,
   input  logic [3:0]                       data_slave_ar_region_i,
   input  logic [7:0]                       data_slave_ar_len_i,
@@ -147,36 +147,36 @@ module pulp_cluster
   input  logic [3:0]                       data_slave_ar_qos_i,
   input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_ar_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_ar_user_i,
-  output logic [7:0]                       data_slave_ar_readpointer_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_readpointer_o,
    
   // WRITE DATA CHANNEL
-  input  logic [7:0]                       data_slave_w_writetoken_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_writetoken_i,
   input  logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_w_data_i,
   input  logic [AXI_STRB_S2C_WIDTH-1:0]    data_slave_w_strb_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_w_user_i,
   input  logic                             data_slave_w_last_i,
-  output logic [7:0]                       data_slave_w_readpointer_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_readpointer_o,
    
   // READ DATA CHANNEL
-  output logic [7:0]                       data_slave_r_writetoken_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_writetoken_o,
   output logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_r_data_o,
   output logic [1:0]                       data_slave_r_resp_o,
   output logic                             data_slave_r_last_o,
   output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_r_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_slave_r_user_o,
-  input  logic [7:0]                       data_slave_r_readpointer_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_readpointer_i,
   
   // WRITE RESPONSE CHANNEL
-  output logic [7:0]                       data_slave_b_writetoken_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_writetoken_o,
   output logic [1:0]                       data_slave_b_resp_o,
   output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_b_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_slave_b_user_o,
-  input  logic [7:0]                       data_slave_b_readpointer_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_readpointer_i,
    
   // AXI4 MASTER
   //***************************************
   // WRITE ADDRESS CHANNEL
-  output logic [7:0]                       data_master_aw_writetoken_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_aw_writetoken_o,
   output logic [AXI_ADDR_WIDTH-1:0]        data_master_aw_addr_o,
   output logic [2:0]                       data_master_aw_prot_o,
   output logic [3:0]                       data_master_aw_region_o,
@@ -188,10 +188,10 @@ module pulp_cluster
   output logic [3:0]                       data_master_aw_qos_o,
   output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_aw_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_master_aw_user_o,
-  input  logic [7:0]                       data_master_aw_readpointer_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_aw_readpointer_i,
   
   // READ ADDRESS CHANNEL
-  output logic [7:0]                       data_master_ar_writetoken_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_writetoken_o,
   output logic [AXI_ADDR_WIDTH-1:0]        data_master_ar_addr_o,
   output logic [2:0]                       data_master_ar_prot_o,
   output logic [3:0]                       data_master_ar_region_o,
@@ -203,31 +203,31 @@ module pulp_cluster
   output logic [3:0]                       data_master_ar_qos_o,
   output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_ar_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_master_ar_user_o,
-  input  logic [7:0]                       data_master_ar_readpointer_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_readpointer_i,
    
   // WRITE DATA CHANNEL
-  output logic [7:0]                       data_master_w_writetoken_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_writetoken_o,
   output logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_w_data_o,
   output logic [AXI_STRB_C2S_WIDTH-1:0]    data_master_w_strb_o,
   output logic [AXI_USER_WIDTH-1:0]        data_master_w_user_o,
   output logic                             data_master_w_last_o,
-  input  logic [7:0]                       data_master_w_readpointer_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_readpointer_i,
   
   // READ DATA CHANNEL
-  input  logic [7:0]                       data_master_r_writetoken_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_writetoken_i,
   input  logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_r_data_i,
   input  logic [1:0]                       data_master_r_resp_i,
   input  logic                             data_master_r_last_i,
   input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_r_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_master_r_user_i,
-  output logic [7:0]                       data_master_r_readpointer_o,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_readpointer_o,
   
   // WRITE RESPONSE CHANNEL
-  input  logic [7:0]                       data_master_b_writetoken_i,
+  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_writetoken_i,
   input  logic [1:0]                       data_master_b_resp_i,
   input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_b_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_master_b_user_i,
-  output logic [7:0]                       data_master_b_readpointer_o
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o
    
 );
   
