@@ -12,9 +12,6 @@ axi/axi2per:
 axi/per2axi:
   commit: 0f6e2570fa7119875ad5ee55cce67038fa6d23e7
   group:  pulp-platform
-axi/axi_size_conv:
-  commit: tags/pulp-v1.0
-  group: pulp-platform
 cluster_interconnect:
   commit: tags/pulp-v1.0
   group: pulp-platform
