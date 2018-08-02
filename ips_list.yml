@@ -31,6 +31,5 @@ icache_mp_128_pf:
   commit: tags/pulp-v1.0
   group: pulp-platform
 cluster_peripherals:
-  commit: tags/pulp-v1.0
+  commit: aa58c62d9c7ca1866311ba67e539ef9e527a268e
   group:  pulp-platform
-
