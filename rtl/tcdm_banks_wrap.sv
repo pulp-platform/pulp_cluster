@@ -36,12 +36,12 @@ module tcdm_banks_wrap
    generate
       for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
 	 
-	 logic             bank_ce_n;
-	 logic             bank_rdwe_n;
-	 logic [3:0]       bank_be_n;
-	 logic [1+7+2-1:0] bank_a;
-	 logic [32-1:0]    bank_d;
-	 logic [32-1:0]    bank_q;
+	 logic                         bank_ce_n;
+	 logic                         bank_rdwe_n;
+	 logic [3:0]                   bank_be_n;
+	 logic [$clog2(BANK_SIZE)-1:0] bank_a;
+	 logic [32-1:0]                bank_d;
+	 logic [32-1:0]                bank_q;
 	 
 	 assign bank_a              = tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
 	 assign bank_d              = tcdm_slave[i].wdata;
