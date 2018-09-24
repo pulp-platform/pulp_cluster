@@ -10,8 +10,9 @@ axi/axi2per:
   commit: f284066827e91b1c10f7e2e28eca969cc8844d77
   group:  pulp-platform
 axi/per2axi:
-  commit: 0f6e2570fa7119875ad5ee55cce67038fa6d23e7
-  group:  pulp-platform
+  commit: atomics-v0.1.0
+  server: git@iis-git.ee.ethz.ch
+  group:  akurth
 cluster_interconnect:
   commit: atomics-v0.1.0
   server: git@iis-git.ee.ethz.ch
