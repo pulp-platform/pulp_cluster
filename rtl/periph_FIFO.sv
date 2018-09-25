@@ -31,6 +31,7 @@ module periph_FIFO
   input  logic                         data_req_i,
   input  logic [ADDR_WIDTH - 1:0]      data_add_i,
   input  logic                         data_wen_i,
+  input  logic [5:0]                   data_atop_i,
   input  logic [DATA_WIDTH - 1:0]      data_wdata_i,
   input  logic [BYTE_ENABLE_BIT - 1:0] data_be_i,
   output logic                         data_gnt_o,
@@ -39,6 +40,7 @@ module periph_FIFO
   output logic                         data_req_o,
   output logic [ADDR_WIDTH - 1:0]      data_add_o,
   output logic                         data_wen_o,
+  output logic [5:0]                   data_atop_o,
   output logic [DATA_WIDTH - 1:0]      data_wdata_o,
   output logic [BYTE_ENABLE_BIT - 1:0] data_be_o,
   input logic                          data_gnt_i,
@@ -54,13 +56,13 @@ module periph_FIFO
   output logic [DATA_WIDTH - 1:0]      data_r_rdata_o
 );
 
-  localparam FIFO_DW = ADDR_WIDTH + 1 + DATA_WIDTH + BYTE_ENABLE_BIT;
+  localparam FIFO_DW = ADDR_WIDTH + 1 + 6 + DATA_WIDTH + BYTE_ENABLE_BIT;
 
   logic [FIFO_DW-1:0] DATA_IN;
   logic [FIFO_DW-1:0] DATA_OUT;
 
-  assign DATA_IN  = { data_add_i, data_wen_i, data_wdata_i, data_be_i };
-  assign            { data_add_o, data_wen_o, data_wdata_o, data_be_o } = DATA_OUT;
+  assign DATA_IN  = { data_add_i, data_wen_i, data_atop_i, data_wdata_i, data_be_i };
+  assign            { data_add_o, data_wen_o, data_atop_o, data_wdata_o, data_be_o } = DATA_OUT;
 
   generic_fifo #( 
     .DATA_WIDTH ( FIFO_DW ),

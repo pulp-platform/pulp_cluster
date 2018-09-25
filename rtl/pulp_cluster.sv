@@ -391,6 +391,7 @@ module pulp_cluster
   
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
+  logic [NB_CORES-1:0][5:0] s_core_periph_bus_atop;
 
   // cores -> tryx control
   XBAR_PERIPH_BUS s_core_periph_tryx[NB_CORES-1:0]();
@@ -665,43 +666,44 @@ module pulp_cluster
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
       core_region #(
-        .CORE_ID             ( i                  ),
-        .ADDR_WIDTH          ( 32                 ),
-        .DATA_WIDTH          ( 32                 ),
-        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
-        .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE ),
-        .REMAP_ADDRESS       ( REMAP_ADDRESS      )
+        .CORE_ID                   ( i                  ),
+        .ADDR_WIDTH                ( 32                 ),
+        .DATA_WIDTH                ( 32                 ),
+        .INSTR_RDATA_WIDTH         ( INSTR_RDATA_WIDTH  ),
+        .CLUSTER_ALIAS_BASE        ( CLUSTER_ALIAS_BASE ),
+        .REMAP_ADDRESS             ( REMAP_ADDRESS      )
       ) core_region_i (
-        .clk_i               ( clk_cluster           ),
-        .rst_ni              ( s_rst_n               ),
-        .base_addr_i         ( base_addr_i           ),
-        .init_ni             ( s_init_n              ),
-        .cluster_id_i        ( cluster_id_i          ),
-        .clock_en_i          ( clk_core_en[i]        ),
-        .fetch_en_i          ( fetch_en_int[i]       ),
-        .fregfile_disable_i  ( s_fregfile_disable    ),
-        .boot_addr_i         ( boot_addr[i]          ),
-        .irq_id_i            ( irq_id[i]             ),
-        .irq_ack_id_o        ( irq_ack_id[i]         ),
-        .irq_req_i           ( irq_req[i]            ),
-        .irq_ack_o           ( irq_ack[i]            ),
+        .clk_i                    ( clk_cluster               ),
+        .rst_ni                   ( s_rst_n                   ),
+        .base_addr_i              ( base_addr_i               ),
+        .init_ni                  ( s_init_n                  ),
+        .cluster_id_i             ( cluster_id_i              ),
+        .clock_en_i               ( clk_core_en[i]            ),
+        .fetch_en_i               ( fetch_en_int[i]           ),
+        .fregfile_disable_i       ( s_fregfile_disable        ),
+        .boot_addr_i              ( boot_addr[i]              ),
+        .irq_id_i                 ( irq_id[i]                 ),
+        .irq_ack_id_o             ( irq_ack_id[i]             ),
+        .irq_req_i                ( irq_req[i]                ),
+        .irq_ack_o                ( irq_ack[i]                ),
 
-        .test_mode_i         ( test_mode_i           ),
-        .core_busy_o         ( core_busy[i]          ),
-        .instr_req_o         ( instr_req[i]          ),
-        .instr_gnt_i         ( instr_gnt[i]          ),
-        .instr_addr_o        ( instr_addr[i]         ),
-        .instr_r_rdata_i     ( instr_r_rdata[i]      ),
-        .instr_r_valid_i     ( instr_r_valid[i]      ),
-        .debug_bus           ( s_debug_bus[i]        ),
-        .debug_core_halted_o ( dbg_core_halted[i]    ),
-        .debug_core_halt_i   ( dbg_core_halt[i]      ),
-        .debug_core_resume_i ( dbg_core_resume[i]    ),
-        .tcdm_data_master    ( s_core_xbar_bus[i]    ),
-        .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
-        .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
-        .periph_data_master  ( s_core_periph_bus[i]  ),
-        .apu_master          ( apu_cluster_bus[i]    )
+        .test_mode_i              ( test_mode_i               ),
+        .core_busy_o              ( core_busy[i]              ),
+        .instr_req_o              ( instr_req[i]              ),
+        .instr_gnt_i              ( instr_gnt[i]              ),
+        .instr_addr_o             ( instr_addr[i]             ),
+        .instr_r_rdata_i          ( instr_r_rdata[i]          ),
+        .instr_r_valid_i          ( instr_r_valid[i]          ),
+        .debug_bus                ( s_debug_bus[i]            ),
+        .debug_core_halted_o      ( dbg_core_halted[i]        ),
+        .debug_core_halt_i        ( dbg_core_halt[i]          ),
+        .debug_core_resume_i      ( dbg_core_resume[i]        ),
+        .tcdm_data_master         ( s_core_xbar_bus[i]        ),
+        .dma_ctrl_master          ( s_core_dmactrl_bus[i]     ),
+        .eu_ctrl_master           ( s_core_euctrl_bus[i]      ),
+        .periph_data_master       ( s_core_periph_bus[i]      ),
+        .periph_data_master_atop  ( s_core_periph_bus_atop[i] ),
+        .apu_master               ( apu_cluster_bus[i]        )
       );
     end
   endgenerate

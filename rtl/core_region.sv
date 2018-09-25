@@ -80,6 +80,7 @@ module core_region
 				      XBAR_TCDM_BUS.Master dma_ctrl_master,
 				      XBAR_PERIPH_BUS.Master eu_ctrl_master,
 				      XBAR_PERIPH_BUS.Master periph_data_master,
+				      output logic [5:0]     periph_data_master_atop,
 				      
 				      // APU interconnect interface
 				      cpu_marx_if.cpu apu_master
@@ -128,6 +129,7 @@ module core_region
     .data_addr_o           ( s_core_bus.add           ),
     .data_wdata_o          ( s_core_bus.wdata         ),
     .data_we_o             ( s_core_bus.we            ),
+    .data_atop_o           ( s_core_bus.atop          ),
     .data_req_o            ( s_core_bus.req           ),
     .data_be_o             ( s_core_bus.be            ),
     .data_rdata_i          ( s_core_bus.r_rdata       ),
@@ -202,6 +204,7 @@ module core_region
     .data_req_i         (  s_core_bus.req             ),
     .data_add_i         (  s_core_bus.add             ),
     .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N
+    .data_atop_i        (  s_core_bus.atop            ),
     .data_wdata_i       (  s_core_bus.wdata           ),
     .data_be_i          (  s_core_bus.be              ),
     .data_gnt_o         (  s_core_bus.gnt             ),
@@ -232,6 +235,7 @@ module core_region
     .data_req_o_PE      (  periph_data_master.req     ),
     .data_add_o_PE      (  periph_data_master.add     ),
     .data_wen_o_PE      (  periph_data_master.wen     ),
+    .data_atop_o_PE     (  periph_data_master_atop    ),
     .data_wdata_o_PE    (  periph_data_master.wdata   ),
     .data_be_o_PE       (  periph_data_master.be      ),
     .data_gnt_i_PE      (  periph_data_master.gnt     ),

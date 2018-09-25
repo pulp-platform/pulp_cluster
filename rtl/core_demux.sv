@@ -37,6 +37,7 @@ module core_demux
   input logic                          data_req_i,
   input logic [ADDR_WIDTH - 1:0]       data_add_i,
   input logic                          data_wen_i,
+  input logic [5:0]                    data_atop_i,
   input logic [DATA_WIDTH - 1:0]       data_wdata_i,
   input logic [BYTE_ENABLE_BIT - 1:0]  data_be_i,
   output logic                         data_gnt_o,
@@ -71,6 +72,7 @@ module core_demux
   output logic                         data_req_o_PE,
   output logic [ADDR_WIDTH - 1:0]      data_add_o_PE,
   output logic                         data_wen_o_PE,
+  output logic [5:0]                   data_atop_o_PE,
   output logic [DATA_WIDTH - 1:0]      data_wdata_o_PE,
   output logic [BYTE_ENABLE_BIT - 1:0] data_be_o_PE,
   input logic                          data_gnt_i_PE,
@@ -118,6 +120,7 @@ module core_demux
   logic                                   data_req_PE_fifo;
   logic [ADDR_WIDTH - 1:0]                data_add_PE_fifo;
   logic                                   data_wen_PE_fifo;
+  logic [5:0]                             data_atop_PE_fifo;
   logic [DATA_WIDTH - 1:0]                data_wdata_PE_fifo;
   logic [BYTE_ENABLE_BIT - 1:0]           data_be_PE_fifo;
   logic                                   data_gnt_PE_fifo;
@@ -335,6 +338,7 @@ module core_demux
   // level 2 request arbiter
   assign data_add_PE_fifo   = data_add_int;
   assign data_wen_PE_fifo   = data_wen_i;
+  assign data_atop_PE_fifo  = data_atop_i;
   assign data_wdata_PE_fifo = data_wdata_i;
   assign data_be_PE_fifo    = data_be_i;
 
@@ -503,6 +507,7 @@ module core_demux
     .data_req_i     ( data_req_PE_fifo     ),
     .data_add_i     ( data_add_PE_fifo     ),
     .data_wen_i     ( data_wen_PE_fifo     ),
+    .data_atop_i    ( data_atop_PE_fifo    ),
     .data_wdata_i   ( data_wdata_PE_fifo   ),
     .data_be_i      ( data_be_PE_fifo      ),
     .data_gnt_o     ( data_gnt_PE_fifo     ),
@@ -511,6 +516,7 @@ module core_demux
     .data_req_o     ( data_req_o_PE        ),
     .data_add_o     ( data_add_o_PE        ),
     .data_wen_o     ( data_wen_o_PE        ),
+    .data_atop_o    ( data_atop_o_PE       ),
     .data_wdata_o   ( data_wdata_o_PE      ),
     .data_be_o      ( data_be_o_PE         ),
     .data_gnt_i     ( data_gnt_i_PE        ),
