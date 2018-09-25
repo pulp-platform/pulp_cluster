@@ -40,11 +40,13 @@ module cluster_interconnect_wrap
   input logic                          rst_ni,
   XBAR_TCDM_BUS.Slave                  core_tcdm_slave[NB_CORES+NB_HWACC_PORTS-1:0],
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
+  input logic [NB_CORES-1:0][5:0]      core_periph_slave_atop,
   XBAR_TCDM_BUS.Slave                  ext_slave[NB_DMAS-1:0],
   XBAR_TCDM_BUS.Slave                  dma_slave[NB_DMAS-1:0],
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0],
   TCDM_BANK_MEM_BUS.Master             tcdm_sram_master[NB_TCDM_BANKS-1:0],
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
+  output logic [NB_SPERIPHS-1:0][5:0]  speriph_master_atop,
   input logic [1:0]                    TCDM_arb_policy_i
 );
 
@@ -86,6 +88,7 @@ module cluster_interconnect_wrap
   logic [NB_CORES-1:0]                 s_core_periph_bus_req;
   logic [NB_CORES-1:0][DATA_WIDTH-1:0] s_core_periph_bus_wdata;
   logic [NB_CORES-1:0]                 s_core_periph_bus_wen;
+  logic [NB_CORES-1:0][5:0]            s_core_periph_bus_atop;
   logic [NB_CORES-1:0][BE_WIDTH-1:0]   s_core_periph_bus_be;
   logic [NB_CORES-1:0]                 s_core_periph_bus_gnt;
   logic [NB_CORES-1:0]                 s_core_periph_bus_r_opc;
@@ -110,6 +113,7 @@ module cluster_interconnect_wrap
   logic [NB_SPERIPHS-1:0][ADDR_WIDTH-1:0]           s_speriph_bus_add;
   logic [NB_SPERIPHS-1:0]                           s_speriph_bus_req;
   logic [NB_SPERIPHS-1:0]                           s_speriph_bus_wen;
+  logic [NB_SPERIPHS-1:0][5:0]                      s_speriph_bus_atop;
   logic [NB_SPERIPHS-1:0][BE_WIDTH-1:0]             s_speriph_bus_be;
   logic [NB_SPERIPHS-1:0][NB_CORES+NB_MPERIPHS-1:0] s_speriph_bus_id;
   logic [NB_SPERIPHS-1:0]                           s_speriph_bus_gnt  ;
@@ -127,6 +131,7 @@ module cluster_interconnect_wrap
       assign s_core_periph_bus_req[i]      =  core_periph_slave[i].req;
       assign s_core_periph_bus_wdata[i]    =  core_periph_slave[i].wdata;
       assign s_core_periph_bus_wen[i]      =  core_periph_slave[i].wen;
+      assign s_core_periph_bus_atop[i]     =  core_periph_slave_atop[i];
       assign s_core_periph_bus_be[i]       =  core_periph_slave[i].be;
 
       assign core_periph_slave[i].gnt      =  s_core_periph_bus_gnt[i];
@@ -227,6 +232,7 @@ module cluster_interconnect_wrap
       assign speriph_master[i].req       = s_speriph_bus_req[i];
       assign speriph_master[i].wdata     = s_speriph_bus_wdata[i];
       assign speriph_master[i].wen       = s_speriph_bus_wen[i];
+      assign speriph_master_atop[i]      = s_speriph_bus_atop[i];
       assign speriph_master[i].be        = s_speriph_bus_be[i];
       assign speriph_master[i].id        = s_speriph_bus_id[i];
 
@@ -290,29 +296,31 @@ module cluster_interconnect_wrap
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
   ) xbar_pe_inst (
-    .clk              ( clk_i                                              ),
-    .rst_n            ( rst_ni                                             ),
-    .CLUSTER_ID       ( 5'b00000                                           ),
-    .data_req_i       ( {s_mperiph_bus_req,     s_core_periph_bus_req}     ),
-    .data_add_i       ( {s_mperiph_bus_add,     s_core_periph_bus_add}     ),
-    .data_wen_i       ( {s_mperiph_bus_wen,     s_core_periph_bus_wen}     ),
-    .data_wdata_i     ( {s_mperiph_bus_wdata,   s_core_periph_bus_wdata}   ),
-    .data_be_i        ( {s_mperiph_bus_be,      s_core_periph_bus_be}      ),
-    .data_gnt_o       ( {s_mperiph_bus_gnt,     s_core_periph_bus_gnt}     ),
-    .data_r_valid_o   ( {s_mperiph_bus_r_valid, s_core_periph_bus_r_valid} ),
-    .data_r_rdata_o   ( {s_mperiph_bus_r_rdata, s_core_periph_bus_r_rdata} ),
-    .data_r_opc_o     ( {s_mperiph_bus_r_opc,   s_core_periph_bus_r_opc}   ),
-    .data_req_o       ( s_speriph_bus_req                                  ),
-    .data_add_o       ( s_speriph_bus_add                                  ),
-    .data_wen_o       ( s_speriph_bus_wen                                  ),
-    .data_wdata_o     ( s_speriph_bus_wdata                                ),
-    .data_be_o        ( s_speriph_bus_be                                   ),
-    .data_ID_o        ( s_speriph_bus_id                                   ),
-    .data_gnt_i       ( s_speriph_bus_gnt                                  ),
-    .data_r_rdata_i   ( s_speriph_bus_r_rdata                              ),
-    .data_r_valid_i   ( s_speriph_bus_r_valid                              ),
-    .data_r_ID_i      ( s_speriph_bus_r_id                                 ),
-    .data_r_opc_i     ( s_speriph_bus_r_opc                                )
+    .clk              ( clk_i                                                   ),
+    .rst_n            ( rst_ni                                                  ),
+    .CLUSTER_ID       ( 5'b00000                                                ),
+    .data_req_i       ( {s_mperiph_bus_req,         s_core_periph_bus_req}      ),
+    .data_add_i       ( {s_mperiph_bus_add,         s_core_periph_bus_add}      ),
+    .data_wen_i       ( {s_mperiph_bus_wen,         s_core_periph_bus_wen}      ),
+    .data_atop_i      ( {{NB_MPERIPHS{6'b000000}},  s_core_periph_bus_atop}     ),
+    .data_wdata_i     ( {s_mperiph_bus_wdata,       s_core_periph_bus_wdata}    ),
+    .data_be_i        ( {s_mperiph_bus_be,          s_core_periph_bus_be}       ),
+    .data_gnt_o       ( {s_mperiph_bus_gnt,         s_core_periph_bus_gnt}      ),
+    .data_r_valid_o   ( {s_mperiph_bus_r_valid,     s_core_periph_bus_r_valid}  ),
+    .data_r_rdata_o   ( {s_mperiph_bus_r_rdata,     s_core_periph_bus_r_rdata}  ),
+    .data_r_opc_o     ( {s_mperiph_bus_r_opc,       s_core_periph_bus_r_opc}    ),
+    .data_req_o       ( s_speriph_bus_req                                       ),
+    .data_add_o       ( s_speriph_bus_add                                       ),
+    .data_wen_o       ( s_speriph_bus_wen                                       ),
+    .data_atop_o      ( s_speriph_bus_atop                                      ),
+    .data_wdata_o     ( s_speriph_bus_wdata                                     ),
+    .data_be_o        ( s_speriph_bus_be                                        ),
+    .data_ID_o        ( s_speriph_bus_id                                        ),
+    .data_gnt_i       ( s_speriph_bus_gnt                                       ),
+    .data_r_rdata_i   ( s_speriph_bus_r_rdata                                   ),
+    .data_r_valid_i   ( s_speriph_bus_r_valid                                   ),
+    .data_r_ID_i      ( s_speriph_bus_r_id                                      ),
+    .data_r_opc_i     ( s_speriph_bus_r_opc                                     )
   );
 
 endmodule

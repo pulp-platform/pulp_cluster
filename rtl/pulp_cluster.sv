@@ -372,6 +372,7 @@ module pulp_cluster
 
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
+  logic [NB_SPERIPHS-1:0][5:0] s_xbar_speriph_atop;
 
   // periph interconnect -> XNE
   XBAR_PERIPH_BUS s_xne_cfg_bus();
@@ -572,16 +573,18 @@ module pulp_cluster
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB     ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
   ) cluster_interconnect_wrap_i (
-    .clk_i              ( clk_cluster                         ),
-    .rst_ni             ( rst_ni                              ),
-    .core_tcdm_slave    ( s_core_xbar_bus                     ),
-    .core_periph_slave  ( s_core_periph_tryx                  ),
-    .ext_slave          ( s_ext_xbar_bus                      ),
-    .dma_slave          ( s_dma_xbar_bus                      ),
-    .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
-    .tcdm_sram_master   ( s_tcdm_bus_sram                     ),
-    .speriph_master     ( s_xbar_speriph_bus                  ),
-    .TCDM_arb_policy_i  ( s_TCDM_arb_policy                   )
+    .clk_i                  ( clk_cluster                         ),
+    .rst_ni                 ( rst_ni                              ),
+    .core_tcdm_slave        ( s_core_xbar_bus                     ),
+    .core_periph_slave      ( s_core_periph_tryx                  ),
+    .core_periph_slave_atop ( s_core_periph_bus_atop              ),
+    .ext_slave              ( s_ext_xbar_bus                      ),
+    .dma_slave              ( s_dma_xbar_bus                      ),
+    .mperiph_slave          ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
+    .tcdm_sram_master       ( s_tcdm_bus_sram                     ),
+    .speriph_master         ( s_xbar_speriph_bus                  ),
+    .speriph_master_atop    ( s_xbar_speriph_atop                 ),
+    .TCDM_arb_policy_i      ( s_TCDM_arb_policy                   )
   );
 
   dmac_wrap #(
