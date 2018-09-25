@@ -531,15 +531,16 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH       ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
   ) per2axi_wrap_i (
-    .clk_i              ( clk_cluster                     ),
-    .rst_ni             ( rst_ni                          ),
-    .test_en_i          ( test_mode_i                     ),
-    .periph_slave       ( s_xbar_speriph_bus[SPER_EXT_ID] ),
-    .axi_axuser_i       ( tryx_axuser                     ),
-    .axi_xresp_slverr_o ( tryx_xresp_slverr               ),
-    .axi_xresp_valid_o  ( tryx_xresp_valid                ),
-    .axi_master         ( s_core_ext_bus                  ),
-    .busy_o             ( s_per2axi_busy                  )
+    .clk_i                ( clk_cluster                       ),
+    .rst_ni               ( rst_ni                            ),
+    .test_en_i            ( test_mode_i                       ),
+    .periph_slave         ( s_xbar_speriph_bus[SPER_EXT_ID]   ),
+    .periph_slave_atop_i  ( s_xbar_speriph_atop[SPER_EXT_ID]  ),
+    .axi_axuser_i         ( tryx_axuser                       ),
+    .axi_xresp_slverr_o   ( tryx_xresp_slverr                 ),
+    .axi_xresp_valid_o    ( tryx_xresp_valid                  ),
+    .axi_master           ( s_core_ext_bus                    ),
+    .busy_o               ( s_per2axi_busy                    )
   );
 
   tryx_ctrl #(
