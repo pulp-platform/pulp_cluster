@@ -707,27 +707,8 @@ module pulp_cluster
   endgenerate
 
   generate
-    if(APU_CLUSTER) begin : apu_cluster_gen
-      apu_cluster #(
-        .C_NB_CORES         ( NB_CORES          ),
-        .NDSFLAGS_CPU       ( NDSFLAGS_CPU      ),
-        .NUSFLAGS_CPU       ( NUSFLAGS_CPU      ),
-        .WOP_CPU            ( WOP_CPU           ),
-        .NARGS_CPU          ( NARGS_CPU         ),
-        .WAPUTYPE           ( WAPUTYPE          ),
-        .SHARED_FP          ( SHARED_FP         ),
-        .SHARED_DSP_MULT    ( SHARED_DSP_MULT   ),
-        .SHARED_INT_MULT    ( SHARED_INT_MULT   ),
-        .SHARED_INT_DIV     ( SHARED_INT_DIV    ),
-        .SHARED_FP_DIVSQRT  ( SHARED_FP_DIVSQRT )
-      ) apu_cluster_i (
-        .clk_i  ( clk_cluster     ),
-        .rst_ni ( s_rst_n         ),
-        .cpus   ( apu_cluster_bus )
-      );
-    end
-    else begin : no_apu_cluster_gen
-      for(genvar i=0; i<NB_CORES; i++) begin
+    begin
+      for(genvar i=0; i<NB_CORES; i++) begin : no_apu_cluster_gen
         assign apu_cluster_bus[i].ack_ds_s    = '1;
         assign apu_cluster_bus[i].valid_us_s  = '0;
         assign apu_cluster_bus[i].result_us_d = '0;
