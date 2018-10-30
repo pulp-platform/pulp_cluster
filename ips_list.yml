@@ -25,7 +25,7 @@ icache-intc:
   commit: tags/pulp-v1.0
   group: pulp-platform
 icache_mp_128_pf:
-  commit: tags/pulp-v1.0
+  commit: 64a1fb3c1cdbf79662e3157bff03ba33bf8c3545
   group: pulp-platform
 cluster_peripherals:
   commit: tags/pulp-v1.0
