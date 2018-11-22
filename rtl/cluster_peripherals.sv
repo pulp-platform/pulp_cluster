@@ -18,9 +18,11 @@
 
 import pulp_cluster_package::*;
 
+`include "pulp_soc_defines.sv"
+
 module cluster_peripherals
 #(
-  parameter NB_CORES       = 4,
+  parameter NB_CORES       = 8,
   parameter NB_MPERIPHS    = 1,
   parameter NB_CACHE_BANKS = 4,
   parameter NB_SPERIPHS    = 8,
@@ -82,7 +84,13 @@ module cluster_peripherals
   output logic                        hwpe_en_o,
 
   // Control ports
+`ifdef MP_ICACHE
   MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
+`endif
+`ifdef PRI_ICACHE
+ PRI_ICACHE_CTRL_UNIT_BUS.Master        IC_ctrl_unit_bus[NB_CORES]
+`endif
+ 
 );
    
   logic                      s_timer_out_lo_event;
@@ -230,7 +238,9 @@ module cluster_peripherals
       end
     end
   endgenerate
-     
+   
+
+`ifdef MP_ICACHE   
   mp_pf_icache_ctrl_unit #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
     .NB_CORES       ( NB_CORES             ),
@@ -242,7 +252,23 @@ module cluster_peripherals
     .IC_ctrl_unit_master_if ( IC_ctrl_unit_bus                ),
     .pf_event_o             ( pf_event_o                      )
   );
+`endif //  `ifdef MP_ICACHE
 
+   
+`ifdef PRI_ICACHE
+   /* to do: generate 8 control units */ 
+  pri_icache_ctrl_unit #(
+    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+    .NB_CORES       ( NB_CORES             ),
+    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
+  ) icache_ctrl_unit_i (
+    .clk_i                  ( clk_i                           ),
+    .rst_ni                 ( rst_ni                          ),
+    .speriph_slave          ( speriph_slave[SPER_ICACHE_CTRL] ),
+    .IC_ctrl_unit_master_if ( IC_ctrl_unit_bus                )
+  );      
+`endif //  `ifdef PRI_ICACHE
+   
   // dma binding
   assign speriph_slave[SPER_DMA_ID].gnt     = dma_cfg_master.gnt;
   assign speriph_slave[SPER_DMA_ID].r_rdata = dma_cfg_master.r_rdata;
