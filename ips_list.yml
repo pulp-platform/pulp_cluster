@@ -39,6 +39,4 @@ cluster_peripherals:
 apu_cluster:
   commit: fpnew_integration
   group: pulp-platform
-fpnew:
-  commit: tags/vega_1.0.2
-  group: pulp-platform
+
