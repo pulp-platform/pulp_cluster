@@ -256,7 +256,7 @@ module cluster_peripherals
 
    
 `ifdef PRI_ICACHE
-   /* to do: generate 8 control units */ 
+    
   pri_icache_ctrl_unit #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
     .NB_CORES       ( NB_CORES             ),

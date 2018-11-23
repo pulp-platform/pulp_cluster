@@ -41,12 +41,6 @@ module pulp_cluster
   parameter NB_CACHE_BANKS        = 8,
   parameter CACHE_LINE            = 1,
   parameter CACHE_SIZE            = 4096,
-//`ifdef PRI_ICACHE
- // parameter NB_REFILL_PORT        = 1,
- // parameter FIFO_DEPTH            = 2,
- // parameter CACHE_SIZE_PRI = CACHE_SIZE/NB_CORES,
-//`endif
-
   parameter ICACHE_DATA_WIDTH     = 128,
   parameter L0_BUFFER_FEATURE     = "DISABLED",
   parameter MULTICAST_FEATURE     = "DISABLED",
