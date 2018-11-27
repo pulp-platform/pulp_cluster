@@ -28,7 +28,7 @@ package pulp_cluster_package;
   parameter SPER_EXT_ID      = 7;
   
   // if set to 1, then instantiate APU in the cluster
-  parameter APU_CLUSTER = 0;
+  parameter APU_CLUSTER = 1;
   
   // // if set to 1, the 0x0000_0000 to 0x0040_0000 is the alias of the current cluster address space (eg cluster 0 is from  0x1000_0000 to 0x1040_0000)
   // parameter CLUSTER_ALIAS = 1;
