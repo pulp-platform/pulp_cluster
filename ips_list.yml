@@ -40,6 +40,6 @@ fpnew:
   commit: vega
   group: pulp-platform
 apu_cluster:
-  commit: fpnew_integration
+  commit: fpu_integration
   group: pulp-platform
 
