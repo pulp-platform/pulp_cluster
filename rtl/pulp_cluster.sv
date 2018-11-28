@@ -231,7 +231,13 @@ module pulp_cluster
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o
    
 );
-  
+
+
+  //********************************************************
+  //***************** SIGNALS DECLARATION ******************
+  //********************************************************
+   
+    
   logic [NB_CORES-1:0]                fetch_enable_reg_int;
   logic [NB_CORES-1:0]                fetch_en_int;
   logic                               s_rst_n;
@@ -293,82 +299,7 @@ module pulp_cluster
   logic[NB_CORES-1:0]      irq_ack;
    
    
-  /* asynchronous AXI interfaces at CLUSTER/SOC interface */
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_async();
 
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_master_async();
-    
-  /* synchronous AXI interfaces at CLUSTER/SOC interface */
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_64();
-
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_32();
-
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_master();
-
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_instr_bus();
-
-  /* synchronous AXI interfaces internal to the cluster */
-  // core per2axi -> ext
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_ext_bus();
-
-  // DMA -> ext
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_dma_ext_bus();
-
-  // ext -> axi2mem
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_ext_tcdm_bus();
-
-  // cluster bus -> axi2per 
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_ext_mperiph_bus();
 
   /* logarithmic and peripheral interconnect interfaces */
   // ext -> log interconnect 
@@ -419,6 +350,93 @@ module pulp_cluster
    
   // log interconnect -> TCDM memory banks (SRAM)
   TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
+
+
+
+  /* asynchronous AXI interfaces at CLUSTER/SOC interface */
+  AXI_BUS_ASYNC #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_data_slave_async();
+
+  AXI_BUS_ASYNC #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_data_master_async();
+    
+  /* synchronous AXI interfaces at CLUSTER/SOC interface */
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_data_slave_64();
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_data_slave_32();
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_data_master();
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_core_instr_bus();
+
+
+   // ***********************************************************************************************+
+   // ***********************************************************************************************+
+   // ***********************************************************************************************+
+   // ***********************************************************************************************+
+   // ***********************************************************************************************+
+   
+
+  /* synchronous AXI interfaces internal to the cluster */
+  // core per2axi -> ext
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_core_ext_bus();
+
+  // DMA -> ext
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_dma_ext_bus();
+
+  // ext -> axi2mem
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_ext_tcdm_bus();
+
+  // cluster bus -> axi2per 
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+  ) s_ext_mperiph_bus();
 
   // cores -> APU
   cpu_marx_if #(
@@ -654,6 +672,18 @@ module pulp_cluster
     .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                  )   
 `endif   
 );
+
+      //********************************************************
+   //***************** CORE ISLANDS *************************
+   //********************************************************
+   //------------------------------------------------------//
+   //          ██████╗ ██████╗ ██████╗ ███████╗            //
+   //         ██╔════╝██╔═══██╗██╔══██╗██╔════╝            //
+   //         ██║     ██║   ██║██████╔╝█████╗              //
+   //         ██║     ██║   ██║██╔══██╗██╔══╝              //
+   //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
+   //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
+   //------------------------------------------------------//
   
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate

@@ -48,7 +48,7 @@ package apu_package;
 
    // generated values
    parameter C_APUTYPES   = (SHARED_FP) ? (SHARED_FP_DIVSQRT==1) ? APUTYPE_FP+6 : (SHARED_FP_DIVSQRT==2) ? APUTYPE_FP+5 : APUTYPE_FP+4 : SHARED_DSP_MULT + SHARED_INT_DIV + SHARED_INT_MULT;
-  // parameter C_APUTYPES = APUTYPE_FP +2;
+
    
    parameter WAPUTYPE     = $clog2(C_APUTYPES);
 
