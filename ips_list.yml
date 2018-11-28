@@ -37,7 +37,7 @@ cluster_peripherals:
   commit: aa58c62d9c7ca1866311ba67e539ef9e527a268e
   group:  pulp-platform
 fpnew:
-  commit: vega
+  commit: fpu_integration
   group: pulp-platform
 apu_cluster:
   commit: fpu_integration
