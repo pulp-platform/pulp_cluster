@@ -39,9 +39,9 @@ cluster_peripherals:
 fpnew:
   commit: master
   group: pulp-platform
-fpu_interco
+fpu_interco:
   commit: master
-  group:pulp-platform
+  group: pulp-platform
 apu_cluster:
   commit: fpu_integration
   group: pulp-platform
