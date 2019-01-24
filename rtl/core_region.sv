@@ -18,7 +18,6 @@
 
 `include "pulp_soc_defines.sv"
 
-import apu_package::*;
 
 // USER DEFINED MACROS to improve self-testing capabilities
 `ifndef PULP_FPGA_SIM
@@ -36,6 +35,18 @@ module core_region
   parameter INSTR_RDATA_WIDTH  = 32,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   parameter REMAP_ADDRESS      = 0,
+
+  parameter APU_NARGS_CPU      = 2,
+  parameter APU_WOP_CPU        = 1,
+  parameter WAPUTYPE           = 3,
+  parameter APU_NDSFLAGS_CPU   = 3,
+  parameter APU_NUSFLAGS_CPU   = 5,
+  
+  parameter FPU                =  0,
+  parameter FP_DIVSQRT         =  0,
+  parameter SHARED_FP          =  0,
+  parameter SHARED_FP_DIVSQRT  =  0,
+
   parameter L2_SLM_FILE   = "./slm_files/l2_stim.slm",
   parameter ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
@@ -81,13 +92,10 @@ module core_region
 				      XBAR_PERIPH_BUS.Master eu_ctrl_master,
 				      XBAR_PERIPH_BUS.Master periph_data_master,
 
-	// old apu interface. not used anymore			      
-				      // APU interconnect interface
-	//			      cpu_marx_if.cpu apu_master
 
  // new interface signals
  `ifdef SHARED_FPU_CLUSTER
-  ,
+  
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
   // request channel
@@ -102,21 +110,6 @@ module core_region
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
 `endif
  
-`ifdef APU_CLUSTER
-  ,
-  output logic                           apu_master_req_o,
-  input logic                            apu_master_gnt_i,
-  // request channel
-  output logic [WAPUTYPE-1:0]            apu_master_type_o,
-  output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
-  output logic [APU_WOP_CPU-1:0]         apu_master_op_o,
-  output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
-  // response channel
-  output logic                           apu_master_ready_o,
-  input logic                            apu_master_valid_i,
-  input logic [31:0]                     apu_master_result_i,
-  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
-`endif
 
 );
 
@@ -139,11 +132,13 @@ module core_region
     .N_EXT_PERF_COUNTERS ( 5                 ),
     .FPU                 ( FPU               ),
     .SHARED_FP           ( SHARED_FP         ),
-    .SHARED_DSP_MULT     ( SHARED_DSP_MULT   ),
-    .SHARED_INT_DIV      ( SHARED_INT_DIV    ),
+    .SHARED_DSP_MULT     ( 0                 ),
+    .SHARED_INT_DIV      ( 0                 ),
     .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
     .WAPUTYPE            ( WAPUTYPE          )
-  ) RISCV_CORE (
+  ) 
+   RISCV_CORE 
+  (
     .clk_i                 ( clk_i                    ),
     .rst_ni                ( rst_ni                   ),
 
