@@ -17,7 +17,7 @@ package apu_package;
 
    parameter FPU                 = 1;
    
-   parameter SHARED_FP           = 2;
+   parameter SHARED_FP           = 1;
    parameter SHARED_DSP_MULT     = SHARED_FP ? 1 : 0; // only available with shared FPU
    parameter SHARED_INT_DIV      = SHARED_FP ? 0 : 0; // only available with shared FPU
 
