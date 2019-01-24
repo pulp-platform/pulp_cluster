@@ -22,7 +22,7 @@ import fpnew_pkg::*;
 `include "pulp_soc_defines.sv"
 
 
-module pulp_clusterY
+module pulp_cluster
 #(
   // cluster parameters
   parameter NB_CORES           = 8,
@@ -30,7 +30,9 @@ module pulp_clusterY
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 8,
+  
   parameter CLUSTER_ALIAS_BASE = 12'h000,
+  
   parameter TCDM_SIZE          = 64*1024,                 // [B], must be 2**N
   parameter NB_TCDM_BANKS      = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
@@ -91,7 +93,7 @@ module pulp_clusterY
   parameter EVNT_WIDTH     = 8,  // size of the event bus
   parameter REMAP_ADDRESS  = 0,   // for cluster virtualization
 
-  // APU PARAMETERS
+  // FPU PARAMETERS
   parameter APU_NARGS_CPU         = 3,
   parameter APU_WOP_CPU           = 6,
   parameter WAPUTYPE              = 3,
@@ -764,65 +766,24 @@ module pulp_clusterY
         .periph_data_master  ( s_core_periph_bus[i]  ),
         
         .fregfile_disable_i  ( s_fregfile_disable    ),
- `ifdef APU_CLUSTER
-                ,
-                .apu_master_req_o      ( s_apu_cluster_bus[i].req_ds_s     ),
-                .apu_master_gnt_i      ( s_apu_cluster_bus[i].ack_ds_s     ),
-                .apu_master_type_o     ( s_apu_cluster_bus[i].type_ds_d    ),
-                .apu_master_operands_o ( s_apu_cluster_bus[i].operands_ds_d),
-                .apu_master_op_o       ( s_apu_cluster_bus[i].op_ds_d      ),
-                .apu_master_flags_o    ( s_apu_cluster_bus[i].flags_ds_d   ),
-                .apu_master_valid_i    ( s_apu_cluster_bus[i].valid_us_s   ),
-                .apu_master_ready_o    ( s_apu_cluster_bus[i].ready_us_s   ),
-                .apu_master_result_i   ( s_apu_cluster_bus[i].result_us_d  ),
-                .apu_master_flags_i    ( s_apu_cluster_bus[i].flags_us_d   )
-`endif
 
 `ifdef SHARED_FPU_CLUSTER
                 
-                .apu_master_req_o      ( s_apu_master_req     [i] ),
-                .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
-                .apu_master_type_o     ( s_apu_master_type    [i] ),
-                .apu_master_operands_o ( s_apu_master_operands[i] ),
-                .apu_master_op_o       ( s_apu_master_op      [i] ),
-                .apu_master_flags_o    ( s_apu_master_flags   [i] ),
-                .apu_master_valid_i    ( s_apu_master_rvalid  [i] ),
-                .apu_master_ready_o    ( s_apu_master_rready  [i] ),
-                .apu_master_result_i   ( s_apu_master_rdata   [i] ),
-                .apu_master_flags_i    ( s_apu_master_rflags  [i] )
+        .apu_master_req_o      ( s_apu_master_req     [i] ),
+        .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
+        .apu_master_type_o     ( s_apu_master_type    [i] ),
+        .apu_master_operands_o ( s_apu_master_operands[i] ),
+        .apu_master_op_o       ( s_apu_master_op      [i] ),
+        .apu_master_flags_o    ( s_apu_master_flags   [i] ),
+        .apu_master_valid_i    ( s_apu_master_rvalid  [i] ),
+        .apu_master_ready_o    ( s_apu_master_rready  [i] ),
+        .apu_master_result_i   ( s_apu_master_rdata   [i] ),
+        .apu_master_flags_i    ( s_apu_master_rflags  [i] )
 `endif
       );
     end
   endgenerate
 
-   //**********************************************
-   //**** APU cluster - Shared execution units ****
-   //**********************************************
-
-`ifdef APU_CLUSTER
-
-   apu_cluster
-     #(
-       .C_NB_CORES         ( NB_CORES                ),
-       .NDSFLAGS_CPU       ( APU_NDSFLAGS_CPU        ),
-       .NUSFLAGS_CPU       ( APU_NUSFLAGS_CPU        ),
-       .WOP_CPU            ( APU_WOP_CPU             ),
-       .NARGS_CPU          ( APU_NARGS_CPU           ),
-       .WAPUTYPE           ( WAPUTYPE                ),
-       .SHARED_FP          ( CLUST_SHARED_FP         ),
-       .SHARED_DSP_MULT    ( 0                       ),
-       .SHARED_INT_MULT    ( 0                       ),
-       .SHARED_INT_DIV     ( 0                       ),
-       .SHARED_FP_DIVSQRT  ( CLUST_SHARED_FP_DIVSQRT )
-       )
-   apu_cluster_i
-     (
-      .clk_i  ( clk_cluster       ),
-      .rst_ni ( s_rst_n           ),
-      .cpus   ( s_apu_cluster_bus )
-      );
-
-`endif
 
    //****************************************************
    //**** Shared FPU cluster - Shared execution units ***

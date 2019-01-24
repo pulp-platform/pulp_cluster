@@ -127,6 +127,26 @@ module core_region
     .clk_o     ( clk_int     )
   );
 
+ `ifndef SHARED_FPU_CLUSTER
+   logic 	                   apu_master_req_o;
+   logic 	                   apu_master_gnt_i;
+   // request channel
+   logic [WAPUTYPE-1:0]            apu_master_type_o;
+   logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o;
+   logic [APU_WOP_CPU-1:0] 	   apu_master_op_o;
+   logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o;
+   // response channel
+   logic 			   apu_master_ready_o;
+   logic 			   apu_master_valid_i;
+   logic [31:0] 		   apu_master_result_i;
+   logic [APU_NUSFLAGS_CPU-1:0]    apu_master_flags_i;
+   
+   assign apu_master_gnt_i      = '1;
+   assign apu_master_valid_i    = '0;
+   assign apu_master_result_i   = '0;
+   assign apu_master_flags_i    = '0;
+ `endif
+
   riscv_core #(
     .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
     .N_EXT_PERF_COUNTERS ( 5                 ),
@@ -163,7 +183,7 @@ module core_region
     .data_rdata_i          ( s_core_bus.r_rdata       ),
     .data_gnt_i            ( s_core_bus.gnt           ),
     .data_rvalid_i         ( s_core_bus.r_valid       ),
-    .data_err_i            ( 1'b0                     ),
+    //.data_err_i            ( 1'b0                     ),
 
     .irq_i                 ( irq_req_i                ),
     .irq_id_i              ( irq_id_i                 ),
