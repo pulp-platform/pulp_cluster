@@ -150,12 +150,15 @@ module core_region
   riscv_core #(
     .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
     .N_EXT_PERF_COUNTERS ( 5                 ),
+    .PULP_SECURE         ( 0                 ),
     .FPU                 ( FPU               ),
+    .FP_DIVSQRT          ( FP_DIVSQRT        ),
     .SHARED_FP           ( SHARED_FP         ),
     .SHARED_DSP_MULT     ( 0                 ),
     .SHARED_INT_DIV      ( 0                 ),
     .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
     .WAPUTYPE            ( WAPUTYPE          )
+
   ) 
    RISCV_CORE 
   (
