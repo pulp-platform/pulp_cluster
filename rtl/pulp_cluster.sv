@@ -17,7 +17,7 @@
  */
 
 import pulp_cluster_package::*;
-import fpnew_pkg::*;
+//import fpnew_pkg::*;
 
 `include "pulp_soc_defines.sv"
 
@@ -813,7 +813,7 @@ module pulp_cluster
       #(
          .NB_CORES         ( NB_CORES          ),
          .NB_APUS          ( 1                 ),
-         .NB_FPNEW         ( 4                 ),
+         .NB_FPNEW         ( 2                 ),
          .FP_TYPE_WIDTH    ( 3                 ),
 
 
@@ -867,6 +867,7 @@ module pulp_cluster
 
 
    
+
    
   /* cluster-coupled accelerators / HW processing engines */
   generate

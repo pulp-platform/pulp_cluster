@@ -194,7 +194,7 @@ module core_region
     .irq_ack_o             ( irq_ack_o                ),
 
     .sec_lvl_o             (                          ),
-    .irq_sec_i             (                          ),
+    .irq_sec_i             (      1'b0                ),
 
     .debug_req_i           ( debug_bus.req            ),
     .debug_gnt_o           ( debug_bus.gnt            ),
