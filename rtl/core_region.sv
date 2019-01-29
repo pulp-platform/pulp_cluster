@@ -133,7 +133,7 @@ module core_region
     .data_rdata_i          ( s_core_bus.r_rdata       ),
     .data_gnt_i            ( s_core_bus.gnt           ),
     .data_rvalid_i         ( s_core_bus.r_valid       ),
-    .data_err_i            ( 1'b0                     ),
+     //.data_err_i            ( 1'b0                     ),
 
     .irq_i                 ( irq_req_i                ),
     .irq_id_i              ( irq_id_i                 ),
