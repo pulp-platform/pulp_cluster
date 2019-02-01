@@ -17,7 +17,6 @@
  */
 
 import pulp_cluster_package::*;
-//import fpnew_pkg::*;
 
 `include "pulp_soc_defines.sv"
 
@@ -41,7 +40,17 @@ module pulp_cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE       = 4,
-  parameter NB_CACHE_BANKS        = 8,
+`ifdef PRI_ICACHE
+    parameter NB_CACHE_BANKS        = 2,
+`endif
+
+`ifdef MP_ICACHE
+    parameter NB_CACHE_BANKS        = 8,
+`endif
+
+`ifdef SP_ICACHE
+    parameter NB_CACHE_BANKS        = 8,
+`endif
   parameter CACHE_LINE            = 1,
   parameter CACHE_SIZE            = 4096,
   parameter ICACHE_DATA_WIDTH     = 128,
@@ -815,7 +824,6 @@ module pulp_cluster
          .NB_APUS          ( 1                 ),
          .NB_FPNEW         ( 2                 ),
          .FP_TYPE_WIDTH    ( 3                 ),
-
 
          .NB_CORE_ARGS      ( 3                ),
 	       .CORE_DATA_WIDTH   ( 32               ),
