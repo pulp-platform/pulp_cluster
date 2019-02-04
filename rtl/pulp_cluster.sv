@@ -773,9 +773,8 @@ module pulp_cluster
         .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
-        
-        .fregfile_disable_i  ( s_fregfile_disable    ),
-
+      
+        .fregfile_disable_i  (  s_fregfile_disable     ),
 `ifdef SHARED_FPU_CLUSTER
                 
         .apu_master_req_o      ( s_apu_master_req     [i] ),
@@ -822,7 +821,7 @@ module pulp_cluster
       #(
          .NB_CORES         ( NB_CORES          ),
          .NB_APUS          ( 1                 ),
-         .NB_FPNEW         ( 2                 ),
+         .NB_FPNEW         ( 4                 ),
          .FP_TYPE_WIDTH    ( 3                 ),
 
          .NB_CORE_ARGS      ( 3                ),
@@ -849,8 +848,8 @@ module pulp_cluster
          .C_ROUND_BITS        (3                          ),
          .C_FPNEW_OPBITS      (fpnew_pkg::OP_BITS         ),
          .USE_FPU_OPT_ALLOC   ("FALSE"),
-         .USE_FPNEW_OPT_ALLOC ("FALSE"),
-         .FPNEW_INTECO_TYPE   ("CUSTOM")
+         .USE_FPNEW_OPT_ALLOC ("TRUE"),
+         .FPNEW_INTECO_TYPE   ("SINGLE_INTERCO")
       )
       i_shared_fpu_cluster
       (
