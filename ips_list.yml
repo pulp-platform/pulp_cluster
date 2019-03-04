@@ -4,13 +4,15 @@
 #
 
 axi/axi2mem:
-  commit: tags/pulp-v1.0
-  group:  pulp-platform
+  commit: atomics
+  server: git@iis-git.ee.ethz.ch
+  group: sriedel
 axi/axi2per:
-  commit: f284066827e91b1c10f7e2e28eca969cc8844d77
-  group:  pulp-platform
+  commit: atomics
+  server: git@iis-git.ee.ethz.ch
+  group: sriedel
 axi/per2axi:
-  commit: atomics-v0.1.0
+  commit: f0c54b4166b62b40feeaf2b4ec1a7719de3cfb86
   server: git@iis-git.ee.ethz.ch
   group:  akurth
 cluster_interconnect:
@@ -30,8 +32,9 @@ icache_mp_128_pf:
   commit: tags/pulp-v1.0
   group: pulp-platform
 cluster_peripherals:
-  commit: tags/pulp-v1.0
-  group:  pulp-platform
+  commit: remove-axi
+  server: git@iis-git.ee.ethz.ch
+  group: sriedel
 scm:
   commit: tags/pulpissimo-v1.0
   group: pulp-platform

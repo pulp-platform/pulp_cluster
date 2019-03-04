@@ -60,6 +60,7 @@ module axi2per_wrap
     .axi_slave_aw_size_i   ( axi_slave.aw_size     ),
     .axi_slave_aw_burst_i  ( axi_slave.aw_burst    ),
     .axi_slave_aw_lock_i   ( axi_slave.aw_lock     ),
+    .axi_slave_aw_atop_i   ( axi_slave.aw_atop     ),
     .axi_slave_aw_cache_i  ( axi_slave.aw_cache    ),
     .axi_slave_aw_qos_i    ( axi_slave.aw_qos      ),
     .axi_slave_aw_id_i     ( axi_slave.aw_id       ),

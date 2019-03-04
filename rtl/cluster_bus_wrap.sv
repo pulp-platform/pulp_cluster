@@ -56,6 +56,7 @@ module cluster_bus_wrap
   logic [NB_MASTER-1:0][2:0]                  s_master_aw_size;
   logic [NB_MASTER-1:0][1:0]                  s_master_aw_burst;
   logic [NB_MASTER-1:0]                       s_master_aw_lock;
+  logic [NB_MASTER-1:0][5:0]                  s_master_aw_atop;
   logic [NB_MASTER-1:0][3:0]                  s_master_aw_cache;
   logic [NB_MASTER-1:0][2:0]                  s_master_aw_prot;
   logic [NB_MASTER-1:0][3:0]                  s_master_aw_region;
@@ -105,6 +106,7 @@ module cluster_bus_wrap
   logic [NB_SLAVE-1:0][2:0]                   s_slave_aw_size;
   logic [NB_SLAVE-1:0][1:0]                   s_slave_aw_burst;
   logic [NB_SLAVE-1:0]                        s_slave_aw_lock;
+  logic [NB_SLAVE-1:0][5:0]                   s_slave_aw_atop;
   logic [NB_SLAVE-1:0][3:0]                   s_slave_aw_cache;
   logic [NB_SLAVE-1:0][2:0]                   s_slave_aw_prot;
   logic [NB_SLAVE-1:0][3:0]                   s_slave_aw_region;
@@ -161,6 +163,7 @@ module cluster_bus_wrap
   assign                     { ext_master.aw_size,                     periph_master.aw_size,                     tcdm_master.aw_size                     } = s_master_aw_size;
   assign                     { ext_master.aw_burst,                    periph_master.aw_burst,                    tcdm_master.aw_burst                    } = s_master_aw_burst;
   assign                     { ext_master.aw_lock,                     periph_master.aw_lock,                     tcdm_master.aw_lock                     } = s_master_aw_lock;
+  assign                     { ext_master.aw_atop,                     periph_master.aw_atop,                     tcdm_master.aw_atop                     } = s_master_aw_atop;
   assign                     { ext_master.aw_cache,                    periph_master.aw_cache,                    tcdm_master.aw_cache                    } = s_master_aw_cache;
   assign                     { ext_master.aw_prot,                     periph_master.aw_prot,                     tcdm_master.aw_prot                     } = s_master_aw_prot;
   assign                     { ext_master.aw_region,                   periph_master.aw_region,                   tcdm_master.aw_region                   } = s_master_aw_region;
@@ -212,6 +215,7 @@ module cluster_bus_wrap
   assign s_slave_aw_size   = { instr_slave.aw_size,                    data_slave.aw_size,                    dma_slave.aw_size,                    ext_slave.aw_size                    };
   assign s_slave_aw_burst  = { instr_slave.aw_burst,                   data_slave.aw_burst,                   dma_slave.aw_burst,                   ext_slave.aw_burst                   };
   assign s_slave_aw_lock   = { instr_slave.aw_lock,                    data_slave.aw_lock,                    dma_slave.aw_lock,                    ext_slave.aw_lock                    };
+  assign s_slave_aw_atop   = { instr_slave.aw_atop,                    data_slave.aw_atop,                    dma_slave.aw_atop,                    ext_slave.aw_atop                    };
   assign s_slave_aw_cache  = { instr_slave.aw_cache,                   data_slave.aw_cache,                   dma_slave.aw_cache,                   ext_slave.aw_cache                   };
   assign s_slave_aw_prot   = { instr_slave.aw_prot,                    data_slave.aw_prot,                    dma_slave.aw_prot,                    ext_slave.aw_prot                    };
   assign s_slave_aw_region = { instr_slave.aw_region,                  data_slave.aw_region,                  dma_slave.aw_region,                  ext_slave.aw_region                  };
@@ -277,6 +281,7 @@ module cluster_bus_wrap
     .slave_awsize_i           ( s_slave_aw_size    ),
     .slave_awburst_i          ( s_slave_aw_burst   ),
     .slave_awlock_i           ( s_slave_aw_lock    ),
+    .slave_awatop_i           ( s_slave_aw_atop    ),
     .slave_awcache_i          ( s_slave_aw_cache   ),
     .slave_awprot_i           ( s_slave_aw_prot    ),
     .slave_awregion_i         ( s_slave_aw_region  ),
@@ -326,6 +331,7 @@ module cluster_bus_wrap
     .master_awsize_o          ( s_master_aw_size   ),
     .master_awburst_o         ( s_master_aw_burst  ),
     .master_awlock_o          ( s_master_aw_lock   ),
+    .master_awatop_o          ( s_master_aw_atop   ),
     .master_awcache_o         ( s_master_aw_cache  ),
     .master_awprot_o          ( s_master_aw_prot   ),
     .master_awregion_o        ( s_master_aw_region ),

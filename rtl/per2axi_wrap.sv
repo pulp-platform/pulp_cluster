@@ -79,6 +79,7 @@ module per2axi_wrap
     .axi_master_aw_size_o   ( axi_master.aw_size                  ),
     .axi_master_aw_burst_o  ( axi_master.aw_burst                 ),
     .axi_master_aw_lock_o   ( axi_master.aw_lock                  ),
+    .axi_master_aw_atop_o   ( axi_master.aw_atop                  ),
     .axi_master_aw_cache_o  ( axi_master.aw_cache                 ),
     .axi_master_aw_qos_o    ( axi_master.aw_qos                   ),
     .axi_master_aw_id_o     ( axi_master.aw_id[AXI_ID_WIDTH-1:0]  ),

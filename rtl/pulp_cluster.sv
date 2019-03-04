@@ -128,6 +128,7 @@ module pulp_cluster
   input  logic [2:0]                       data_slave_aw_size_i,
   input  logic [1:0]                       data_slave_aw_burst_i,
   input  logic                             data_slave_aw_lock_i,
+  input  logic [5:0]                       data_slave_aw_atop_i,
   input  logic [3:0]                       data_slave_aw_cache_i,
   input  logic [3:0]                       data_slave_aw_qos_i,
   input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_aw_id_i,
@@ -184,6 +185,7 @@ module pulp_cluster
   output logic [2:0]                       data_master_aw_size_o,
   output logic [1:0]                       data_master_aw_burst_o,
   output logic                             data_master_aw_lock_o,
+  output logic [5:0]                       data_master_aw_atop_o,
   output logic [3:0]                       data_master_aw_cache_o,
   output logic [3:0]                       data_master_aw_qos_o,
   output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_aw_id_o,
@@ -298,17 +300,19 @@ module pulp_cluster
    
   /* asynchronous AXI interfaces at CLUSTER/SOC interface */
   AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH        ),
+    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH    ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH       ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH        ),
+    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH )
   ) s_data_slave_async();
 
   AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH        ),
+    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH    ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH      ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH        ),
+    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH )
   ) s_data_master_async();
     
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
@@ -965,6 +969,7 @@ module pulp_cluster
   assign s_data_slave_async.aw_size         = data_slave_aw_size_i;
   assign s_data_slave_async.aw_burst        = data_slave_aw_burst_i;
   assign s_data_slave_async.aw_lock         = data_slave_aw_lock_i;
+  assign s_data_slave_async.aw_atop         = data_slave_aw_atop_i;
   assign s_data_slave_async.aw_cache        = data_slave_aw_cache_i;
   assign s_data_slave_async.aw_qos          = data_slave_aw_qos_i;
   assign s_data_slave_async.aw_id           = data_slave_aw_id_i;
@@ -1014,6 +1019,7 @@ module pulp_cluster
   assign data_master_aw_size_o              = s_data_master_async.aw_size;
   assign data_master_aw_burst_o             = s_data_master_async.aw_burst;
   assign data_master_aw_lock_o              = s_data_master_async.aw_lock;
+  assign data_master_aw_atop_o              = s_data_master_async.aw_atop;
   assign data_master_aw_cache_o             = s_data_master_async.aw_cache;
   assign data_master_aw_qos_o               = s_data_master_async.aw_qos;
   assign data_master_aw_id_o                = s_data_master_async.aw_id;

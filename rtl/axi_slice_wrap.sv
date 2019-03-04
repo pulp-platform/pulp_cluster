@@ -59,6 +59,7 @@ module axi_slice_wrap
 	  .axi_slave_aw_size_i   ( axi_slave.aw_size                ),
 	  .axi_slave_aw_burst_i  ( axi_slave.aw_burst               ),
 	  .axi_slave_aw_lock_i   ( axi_slave.aw_lock                ),
+	  .axi_slave_aw_atop_i   ( axi_slave.aw_atop                ),
 	  .axi_slave_aw_cache_i  ( axi_slave.aw_cache               ),
 	  .axi_slave_aw_qos_i    ( axi_slave.aw_qos                 ),
 	  .axi_slave_aw_id_i     ( axi_slave.aw_id[AXI_ID_WIDTH-1:0]),
@@ -108,6 +109,7 @@ module axi_slice_wrap
 	  .axi_master_aw_size_o  ( axi_master.aw_size                ),
 	  .axi_master_aw_burst_o ( axi_master.aw_burst               ),
 	  .axi_master_aw_lock_o  ( axi_master.aw_lock                ),
+	  .axi_master_aw_atop_o  ( axi_master.aw_atop                ),
 	  .axi_master_aw_cache_o ( axi_master.aw_cache               ),
 	  .axi_master_aw_qos_o   ( axi_master.aw_qos                 ),
 	  .axi_master_aw_id_o    ( axi_master.aw_id[AXI_ID_WIDTH-1:0]),
@@ -160,6 +162,7 @@ module axi_slice_wrap
 	  assign axi_master.aw_size                   =  axi_slave.aw_size                 ;
 	  assign axi_master.aw_burst                  =  axi_slave.aw_burst                ;
 	  assign axi_master.aw_lock                   =  axi_slave.aw_lock                 ;
+	  assign axi_master.aw_atop                   =  axi_slave.aw_atop                 ;
 	  assign axi_master.aw_cache                  =  axi_slave.aw_cache                ;
 	  assign axi_master.aw_qos                    =  axi_slave.aw_qos                  ;
 	  assign axi_master.aw_id                     =  axi_slave.aw_id                   ;
