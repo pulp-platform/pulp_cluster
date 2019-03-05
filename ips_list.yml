@@ -12,7 +12,7 @@ axi/axi2per:
   server: git@iis-git.ee.ethz.ch
   group: sriedel
 axi/per2axi:
-  commit: f0c54b4166b62b40feeaf2b4ec1a7719de3cfb86
+  commit: 50de2b6de679e8431b4d4424e6dd05863fd9727e
   server: git@iis-git.ee.ethz.ch
   group:  akurth
 cluster_interconnect:
