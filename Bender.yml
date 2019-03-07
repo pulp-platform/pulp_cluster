@@ -1,0 +1,42 @@
+package:
+  name: pulp_cluster
+
+dependencies:
+  axi2mem: { git: "https://github.com/pulp-platform/axi2mem.git", rev: atomics }
+  axi2per: { git: "https://github.com/pulp-platform/axi2per.git", rev: atomics }
+  axi_slice: { git: "https://github.com/pulp-platform/axi_slice.git", rev: atomics }
+  cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: atomics }
+  cluster_peripherals: { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: release-1.0 }
+  event_unit_flex: { git: "https://github.com/pulp-platform/event_unit_flex.git", version: 1.0.0 }
+  icache_mp_128_pf: { git: "https://github.com/pulp-platform/icache_mp_128_pf.git", rev: release-1.0 }
+  mchan: { git: "https://github.com/pulp-platform/mchan.git", rev: release-1.1 }
+  per2axi: { git: "https://github.com/pulp-platform/per2axi.git", rev: atomics }
+  timer_unit: { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.0 }
+
+sources:
+  # Level 0
+  - packages/apu_package.sv
+  - packages/pulp_cluster_package.sv
+  - rtl/axi2mem_wrap.sv
+  - rtl/axi2per_wrap.sv
+  - rtl/axi_slice_wrap.sv
+  - rtl/cluster_bus_wrap.sv
+  - rtl/cluster_clock_gate.sv
+  - rtl/cluster_event_map.sv
+  - rtl/cluster_interconnect_wrap.sv
+  - rtl/cluster_timer_wrap.sv
+  - rtl/dmac_wrap.sv
+  - rtl/per2axi_wrap.sv
+  - rtl/per_demux_wrap.sv
+  - rtl/periph_FIFO.sv
+  - rtl/periph_demux.sv
+  - rtl/tcdm_banks_wrap.sv
+  - rtl/tryx_ctrl.sv
+  - rtl/xne_wrap.sv
+  # Level 1
+  - rtl/cluster_peripherals.sv
+  - rtl/core_demux.sv
+  # Level 2
+  - rtl/core_region.sv
+  # Level 3
+  - rtl/pulp_cluster.sv
