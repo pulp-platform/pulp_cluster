@@ -30,14 +30,14 @@ import apu_package::*;
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_ID            = 0,
-  parameter ADDR_WIDTH         = 32,
-  parameter DATA_WIDTH         = 32,
-  parameter INSTR_RDATA_WIDTH  = 32,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
-  parameter REMAP_ADDRESS      = 0,
-  parameter L2_SLM_FILE   = "./slm_files/l2_stim.slm",
-  parameter ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
+  parameter int     CORE_ID            = 0,
+  parameter int     ADDR_WIDTH         = 32,
+  parameter int     DATA_WIDTH         = 32,
+  parameter int     INSTR_RDATA_WIDTH  = 32,
+  parameter int     CLUSTER_ALIAS_BASE = 12'h000,
+  parameter int     REMAP_ADDRESS      = 0,
+  parameter string  L2_SLM_FILE   = "./slm_files/l2_stim.slm",
+  parameter string  ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
   input logic 			      clk_i,
