@@ -20,9 +20,9 @@
 
 module periph_demux
 #(
-  parameter ADDR_WIDTH = 32,
-  parameter DATA_WIDTH = 32,
-  parameter BE_WIDTH = DATA_WIDTH/8
+  parameter int ADDR_WIDTH = 32,
+  parameter int DATA_WIDTH = 32,
+  parameter int BE_WIDTH = DATA_WIDTH/8
 )
 (
   input  logic                    clk,
