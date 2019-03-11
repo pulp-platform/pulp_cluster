@@ -21,11 +21,11 @@
 
 module core_demux
 #(
-  parameter ADDR_WIDTH = 32,
-  parameter DATA_WIDTH = 32,
-  parameter BYTE_ENABLE_BIT = DATA_WIDTH/8,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
-  parameter REMAP_ADDRESS = 0
+  parameter int ADDR_WIDTH = 32,
+  parameter int DATA_WIDTH = 32,
+  parameter int BYTE_ENABLE_BIT = DATA_WIDTH/8,
+  parameter int CLUSTER_ALIAS_BASE = 12'h000,
+  parameter bit REMAP_ADDRESS = 1'b0
 )
 (
   input logic                          clk,
