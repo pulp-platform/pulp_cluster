@@ -29,6 +29,7 @@ module pulp_cluster
   parameter int NB_DMAS             = 4,
   parameter int NB_MPERIPHS         = 1,
   parameter int NB_SPERIPHS         = 8,
+  parameter bit CLUSTER_ALIAS       = 1'b1,
   parameter int CLUSTER_ALIAS_BASE  = 12'h1B0,
   parameter int TCDM_SIZE           = `TCDM_SIZE,              // [B], must be 2**N
   parameter int NB_TCDM_BANKS       = `NB_TCDM_BANKS,          // must be 2**N
@@ -679,6 +680,7 @@ module pulp_cluster
         .ADDR_WIDTH                ( 32                     ),
         .DATA_WIDTH                ( 32                     ),
         .INSTR_RDATA_WIDTH         ( INSTR_RDATA_WIDTH      ),
+        .CLUSTER_ALIAS             ( CLUSTER_ALIAS          ),
         .CLUSTER_ALIAS_BASE        ( CLUSTER_ALIAS_BASE     ),
         .REMAP_ADDRESS             ( REMAP_ADDRESS          ),
         .DEM_PER_BEFORE_TCDM_TS    ( DEM_PER_BEFORE_TCDM_TS )
