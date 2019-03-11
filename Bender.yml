@@ -29,6 +29,7 @@ sources:
   - rtl/cluster_event_map.sv
   - rtl/cluster_interconnect_wrap.sv
   - rtl/cluster_timer_wrap.sv
+  - rtl/cpu_marx_if.sv
   - rtl/dmac_wrap.sv
   - rtl/per2axi_wrap.sv
   - rtl/per_demux_wrap.sv
