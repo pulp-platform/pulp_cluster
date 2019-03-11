@@ -96,9 +96,9 @@ module dmac_wrap
   endgenerate
    
   mchan #(
-    .NB_CORES                 ( NB_CORES              ),    // NUMBER OF CORES
+    .NB_CTRLS                 ( NB_CORES              ),    // NUMBER OF CORES
     .NB_TRANSFERS             ( 2*NB_CORES            ),
-    .CORE_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
+    .CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
     .GLOBAL_TRANS_QUEUE_DEPTH ( 2*NB_CORES            ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
     .TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
     .EXT_ADD_WIDTH            ( AXI_ADDR_WIDTH        ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
