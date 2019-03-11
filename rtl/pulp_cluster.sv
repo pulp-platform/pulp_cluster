@@ -16,38 +16,36 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`include "pulp_soc_defines.sv"
-
 import pulp_cluster_package::*;
 import apu_package::*;
 
 module pulp_cluster
 #(
   // cluster parameters
-  parameter int NB_CORES            = `NB_CORES,
+  parameter int NB_CORES            = 8,
   parameter int NB_HWACC_PORTS      = 0,
   parameter int NB_DMAS             = 4,
   parameter int NB_MPERIPHS         = 1,
   parameter int NB_SPERIPHS         = 8,
   parameter bit CLUSTER_ALIAS       = 1'b1,
   parameter int CLUSTER_ALIAS_BASE  = 12'h1B0,
-  parameter int TCDM_SIZE           = `TCDM_SIZE,              // [B], must be 2**N
-  parameter int NB_TCDM_BANKS       = `NB_TCDM_BANKS,          // must be 2**N
+  parameter int TCDM_SIZE           = 256*1024,                // [B], must be 2**N
+  parameter int NB_TCDM_BANKS       = 16,                      // must be 2**N
   parameter int TCDM_BANK_SIZE      = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter int TCDM_NUM_ROWS       = TCDM_BANK_SIZE/4,        // [words]
   parameter bit XNE_PRESENT         = 0,                       // set to 1 if XNE is present in the cluster
 
   // I$ parameters
   parameter int SET_ASSOCIATIVE           = 4,
-  parameter int NB_CACHE_BANKS            = `NB_CACHE_BANKS,
+  parameter int NB_CACHE_BANKS            = 4,
   parameter int CACHE_LINE                = 1,
-  parameter int CACHE_SIZE                = `CACHE_SIZE,
+  parameter int CACHE_SIZE                = 4096,
   parameter int ICACHE_DATA_WIDTH         = 128,
   parameter string L0_BUFFER_FEATURE      = "DISABLED",
   parameter string MULTICAST_FEATURE      = "DISABLED",
   parameter string SHARED_ICACHE          = "ENABLED",
   parameter string DIRECT_MAPPED_FEATURE  = "DISABLED",
-  parameter int L2_SIZE                   = `L2_SIZE,
+  parameter int L2_SIZE                   = 256*1024,
   parameter string USE_REDUCED_TAG        = "TRUE",
 
   // core parameters
@@ -62,7 +60,7 @@ module pulp_cluster
   parameter int AXI_DATA_S2C_WIDTH    = 64,
   parameter int AXI_USER_WIDTH        = 6,
   parameter int AXI_ID_IN_WIDTH       = 4,
-  parameter int AXI_ID_OUT_WIDTH      = `AXI_ID_SOC_S_WIDTH,
+  parameter int AXI_ID_OUT_WIDTH      = 6,
   parameter int AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
   parameter int AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
   parameter int DC_SLICE_BUFFER_WIDTH = 8,
@@ -76,8 +74,8 @@ module pulp_cluster
   
   // DMA parameters
   parameter int TCDM_ADD_WIDTH      = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter int NB_OUTSND_BURSTS    = `NB_OUTSND_BURSTS,
-  parameter int MCHAN_BURST_LENGTH  = `MCHAN_BURST_LENGTH,
+  parameter int NB_OUTSND_BURSTS    = 8,
+  parameter int MCHAN_BURST_LENGTH  = 256,
 
   // peripheral and periph interconnect parameters
   parameter int LOG_CLUSTER     = 5,  // unused
