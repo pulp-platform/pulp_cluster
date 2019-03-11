@@ -16,13 +16,12 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`include "pulp_soc_defines.sv"
-
 module periph_demux
 #(
   parameter int ADDR_WIDTH = 32,
   parameter int DATA_WIDTH = 32,
-  parameter int BE_WIDTH = DATA_WIDTH/8
+  parameter int BE_WIDTH = DATA_WIDTH/8,
+  parameter bit DEM_PER_BEFORE_TCDM_TS = 1'b0
 )
 (
   input  logic                    clk,
@@ -70,36 +69,36 @@ module periph_demux
       request_destination <= MH;
     end
     else begin
-      if(data_req_i) begin
-`ifdef DEM_PER_BEFORE_TCDM_TS
-        case(data_add_i[13:10])
-          4'b1111 : begin : _EVENT_UNIT_REGS
-            request_destination <= EU; 
-          end
-          4'b1110 : begin : _MCHAN_REGISTERS_
-            request_destination <= MH;
-          end
-          default: begin : _UNMAPPED_REGION_
-            request_destination <= UNMAPPED; 
-          end
-        endcase // data_add_i[13:10]
-`else /* ! DEM_PER_BEFORE_TCDM_TS */
-        if( (data_add_i[19:14] == 6'b000001 ) ) begin // this means 0x1020_4000 to 1020_7FFF
+      if (data_req_i) begin
+        if (DEM_PER_BEFORE_TCDM_TS) begin
           case(data_add_i[13:10])
-            0 : begin : _EVENT_UNIT_REGS
-              request_destination <= EU; 
+            4'b1111 : begin : _DPBTT_EVENT_UNIT_REGS
+              request_destination <= EU;
             end
-            1 : begin : _MCHAN_REGISTERS_
-              request_destination <= MH; 
+            4'b1110 : begin : _DPBTT_MCHAN_REGISTERS_
+              request_destination <= MH;
             end
-            default : begin : _UNMAPPED_REGION_
-              request_destination <= UNMAPPED; 
+            default: begin : _DPBTT_UNMAPPED_REGION_
+              request_destination <= UNMAPPED;
             end
-          endcase // data_add_i[10:13]
+          endcase // data_add_i[13:10]
+        end else begin
+          if( (data_add_i[19:14] == 6'b000001 ) ) begin // this means 0x1020_4000 to 1020_7FFF
+            case(data_add_i[13:10])
+              0 : begin : _EVENT_UNIT_REGS
+                request_destination <= EU;
+              end
+              1 : begin : _MCHAN_REGISTERS_
+                request_destination <= MH;
+              end
+              default : begin : _UNMAPPED_REGION_
+                request_destination <= UNMAPPED;
+              end
+            endcase // data_add_i[10:13]
+          end
         end
-`endif
       end
-    end 
+    end
   end
 
   assign data_add_o_MH    = data_add_i;
@@ -117,41 +116,41 @@ module periph_demux
     data_req_o_MH = 1'b0;
     data_req_o_EU = 1'b0;
     data_gnt_o    = 1'b0;
-`ifdef DEM_PER_BEFORE_TCDM_TS
-    case(data_add_i[13:10])
-      4'b1111 : begin
-        data_req_o_EU = data_req_i;
-        data_gnt_o    = data_gnt_i_EU;
-      end
-      4'b1110 : begin
-        data_req_o_MH = data_req_i;
-        data_gnt_o    = data_gnt_i_MH;
-      end
-      default : begin : _TO_UNMAPPED_REGION_
-        data_req_o_MH = 1'b0;
-        data_req_o_EU = 1'b0;
-        data_gnt_o    = 1'b0;
-      end
-    endcase // data_add_i[13:10]
-`else /* ! DEM_PER_BEFORE_TCDM_TS */
-    if( (data_add_i[19:14] == 6'b000001 ) ) begin // this means 0x1020_4000 to 1020_7FFF
+    if (DEM_PER_BEFORE_TCDM_TS) begin
       case(data_add_i[13:10])
-        0 : begin
+        4'b1111 : begin
           data_req_o_EU = data_req_i;
           data_gnt_o    = data_gnt_i_EU;
         end
-        1 : begin
+        4'b1110 : begin
           data_req_o_MH = data_req_i;
           data_gnt_o    = data_gnt_i_MH;
         end
-        default : begin
-          data_req_o_MH    = 1'b0;
-          data_req_o_EU    = 1'b0;
-          data_gnt_o       = 1'b0; 
+        default : begin : _TO_UNMAPPED_REGION_
+          data_req_o_MH = 1'b0;
+          data_req_o_EU = 1'b0;
+          data_gnt_o    = 1'b0;
         end
-      endcase // data_add_i[10:13]
+      endcase // data_add_i[13:10]
+    end else begin
+      if( (data_add_i[19:14] == 6'b000001 ) ) begin // this means 0x1020_4000 to 1020_7FFF
+        case(data_add_i[13:10])
+          0 : begin
+            data_req_o_EU = data_req_i;
+            data_gnt_o    = data_gnt_i_EU;
+          end
+          1 : begin
+            data_req_o_MH = data_req_i;
+            data_gnt_o    = data_gnt_i_MH;
+          end
+          default : begin
+            data_req_o_MH    = 1'b0;
+            data_req_o_EU    = 1'b0;
+            data_gnt_o       = 1'b0;
+          end
+        endcase // data_add_i[10:13]
+      end
     end
-`endif
   end
 
   always_comb
