@@ -30,12 +30,13 @@ import apu_package::*;
 module core_region
 #(
   // CORE PARAMETERS
-  parameter int     CORE_ID            = 0,
-  parameter int     ADDR_WIDTH         = 32,
-  parameter int     DATA_WIDTH         = 32,
-  parameter int     INSTR_RDATA_WIDTH  = 32,
-  parameter int     CLUSTER_ALIAS_BASE = 12'h000,
-  parameter int     REMAP_ADDRESS      = 0,
+  parameter int     CORE_ID                 = 0,
+  parameter int     ADDR_WIDTH              = 32,
+  parameter int     DATA_WIDTH              = 32,
+  parameter int     INSTR_RDATA_WIDTH       = 32,
+  parameter int     CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter int     REMAP_ADDRESS           = 0,
+  parameter bit     DEM_PER_BEFORE_TCDM_TS  = 1'b0,
   parameter string  L2_SLM_FILE   = "./slm_files/l2_stim.slm",
   parameter string  ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
@@ -250,7 +251,9 @@ module core_region
     .CLUSTER_ID         (  cluster_id_i               )
   );
 
-  periph_demux periph_demux_i (
+  periph_demux #(
+    .DEM_PER_BEFORE_TCDM_TS (DEM_PER_BEFORE_TCDM_TS)
+  ) periph_demux_i (
     .clk               ( clk_int                  ),
     .rst_ni            ( rst_ni                   ),
 
