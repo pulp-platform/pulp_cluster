@@ -5,6 +5,7 @@ dependencies:
   axi2mem: { git: "https://github.com/pulp-platform/axi2mem.git", rev: atomics }
   axi2per: { git: "https://github.com/pulp-platform/axi2per.git", rev: atomics }
   axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.6.0 }
+  axi_node: { git: "https://github.com/pulp-platform/axi_node.git", rev: atop }
   axi_slice: { git: "https://github.com/pulp-platform/axi_slice.git", rev: atomics }
   cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: atomics }
   cluster_peripherals: { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: release-1.0 }
