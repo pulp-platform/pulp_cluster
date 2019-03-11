@@ -50,9 +50,10 @@ module pulp_cluster
   parameter string USE_REDUCED_TAG        = "TRUE",
 
   // core parameters
-  parameter int ROM_BOOT_ADDR     = 32'h1A000000,
-  parameter int BOOT_ADDR         = 32'h1C000000,
-  parameter int INSTR_RDATA_WIDTH = 128,
+  parameter bit DEM_PER_BEFORE_TCDM_TS  = 1'b0,
+  parameter int ROM_BOOT_ADDR           = 32'h1A000000,
+  parameter int BOOT_ADDR               = 32'h1C000000,
+  parameter int INSTR_RDATA_WIDTH       = 128,
   
   // AXI parameters
   parameter int AXI_ADDR_WIDTH        = 32,
@@ -674,12 +675,13 @@ module pulp_cluster
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
       core_region #(
-        .CORE_ID                   ( i                  ),
-        .ADDR_WIDTH                ( 32                 ),
-        .DATA_WIDTH                ( 32                 ),
-        .INSTR_RDATA_WIDTH         ( INSTR_RDATA_WIDTH  ),
-        .CLUSTER_ALIAS_BASE        ( CLUSTER_ALIAS_BASE ),
-        .REMAP_ADDRESS             ( REMAP_ADDRESS      )
+        .CORE_ID                   ( i                      ),
+        .ADDR_WIDTH                ( 32                     ),
+        .DATA_WIDTH                ( 32                     ),
+        .INSTR_RDATA_WIDTH         ( INSTR_RDATA_WIDTH      ),
+        .CLUSTER_ALIAS_BASE        ( CLUSTER_ALIAS_BASE     ),
+        .REMAP_ADDRESS             ( REMAP_ADDRESS          ),
+        .DEM_PER_BEFORE_TCDM_TS    ( DEM_PER_BEFORE_TCDM_TS )
       ) core_region_i (
         .clk_i                    ( clk_cluster               ),
         .rst_ni                   ( s_rst_n                   ),
