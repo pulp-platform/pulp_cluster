@@ -11,6 +11,7 @@ dependencies:
   icache_mp_128_pf: { git: "https://github.com/pulp-platform/icache_mp_128_pf.git", rev: release-1.0 }
   mchan: { git: "https://github.com/pulp-platform/mchan.git", rev: release-1.1 }
   per2axi: { git: "https://github.com/pulp-platform/per2axi.git", rev: atomics }
+  riscv: { git: "https://github.com/pulp-platform/riscv.git", rev: atomics }
   timer_unit: { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.0 }
 
 sources:
