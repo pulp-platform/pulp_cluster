@@ -24,65 +24,65 @@ import apu_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter NB_CORES           = `NB_CORES,
-  parameter NB_HWACC_PORTS     = 0,
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 8,
-  parameter CLUSTER_ALIAS_BASE = 12'h1B0,
-  parameter TCDM_SIZE          = `TCDM_SIZE,              // [B], must be 2**N
-  parameter NB_TCDM_BANKS      = `NB_TCDM_BANKS,          // must be 2**N
-  parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
-  parameter TCDM_NUM_ROWS      = TCDM_BANK_SIZE/4,        // [words]
-  parameter XNE_PRESENT        = 0,                       // set to 1 if XNE is present in the cluster
+  parameter int NB_CORES            = `NB_CORES,
+  parameter int NB_HWACC_PORTS      = 0,
+  parameter int NB_DMAS             = 4,
+  parameter int NB_MPERIPHS         = 1,
+  parameter int NB_SPERIPHS         = 8,
+  parameter int CLUSTER_ALIAS_BASE  = 12'h1B0,
+  parameter int TCDM_SIZE           = `TCDM_SIZE,              // [B], must be 2**N
+  parameter int NB_TCDM_BANKS       = `NB_TCDM_BANKS,          // must be 2**N
+  parameter int TCDM_BANK_SIZE      = TCDM_SIZE/NB_TCDM_BANKS, // [B]
+  parameter int TCDM_NUM_ROWS       = TCDM_BANK_SIZE/4,        // [words]
+  parameter bit XNE_PRESENT         = 0,                       // set to 1 if XNE is present in the cluster
 
   // I$ parameters
-  parameter SET_ASSOCIATIVE       = 4,
-  parameter NB_CACHE_BANKS        = `NB_CACHE_BANKS,
-  parameter CACHE_LINE            = 1,
-  parameter CACHE_SIZE            = `CACHE_SIZE,
-  parameter ICACHE_DATA_WIDTH     = 128,
-  parameter L0_BUFFER_FEATURE     = "DISABLED",
-  parameter MULTICAST_FEATURE     = "DISABLED",
-  parameter SHARED_ICACHE         = "ENABLED",
-  parameter DIRECT_MAPPED_FEATURE = "DISABLED",
-  parameter L2_SIZE               = `L2_SIZE,
-  parameter USE_REDUCED_TAG       = "TRUE",
+  parameter int SET_ASSOCIATIVE           = 4,
+  parameter int NB_CACHE_BANKS            = `NB_CACHE_BANKS,
+  parameter int CACHE_LINE                = 1,
+  parameter int CACHE_SIZE                = `CACHE_SIZE,
+  parameter int ICACHE_DATA_WIDTH         = 128,
+  parameter string L0_BUFFER_FEATURE      = "DISABLED",
+  parameter string MULTICAST_FEATURE      = "DISABLED",
+  parameter string SHARED_ICACHE          = "ENABLED",
+  parameter string DIRECT_MAPPED_FEATURE  = "DISABLED",
+  parameter int L2_SIZE                   = `L2_SIZE,
+  parameter string USE_REDUCED_TAG        = "TRUE",
 
   // core parameters
-  parameter ROM_BOOT_ADDR     = 32'h1A000000,
-  parameter BOOT_ADDR         = 32'h1C000000,
-  parameter INSTR_RDATA_WIDTH = 128,
+  parameter int ROM_BOOT_ADDR     = 32'h1A000000,
+  parameter int BOOT_ADDR         = 32'h1C000000,
+  parameter int INSTR_RDATA_WIDTH = 128,
   
   // AXI parameters
-  parameter AXI_ADDR_WIDTH        = 32,
-  parameter AXI_DATA_C2S_WIDTH    = 64,
-  parameter AXI_DATA_S2C_WIDTH    = 64,
-  parameter AXI_USER_WIDTH        = 6,
-  parameter AXI_ID_IN_WIDTH       = 4,
-  parameter AXI_ID_OUT_WIDTH      = `AXI_ID_SOC_S_WIDTH,
-  parameter AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
-  parameter AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
-  parameter DC_SLICE_BUFFER_WIDTH = 8,
+  parameter int AXI_ADDR_WIDTH        = 32,
+  parameter int AXI_DATA_C2S_WIDTH    = 64,
+  parameter int AXI_DATA_S2C_WIDTH    = 64,
+  parameter int AXI_USER_WIDTH        = 6,
+  parameter int AXI_ID_IN_WIDTH       = 4,
+  parameter int AXI_ID_OUT_WIDTH      = `AXI_ID_SOC_S_WIDTH,
+  parameter int AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
+  parameter int AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
+  parameter int DC_SLICE_BUFFER_WIDTH = 8,
   
   // TCDM and log interconnect parameters
-  parameter DATA_WIDTH     = 32,
-  parameter ADDR_WIDTH     = 32,
-  parameter BE_WIDTH       = DATA_WIDTH/8,
-  parameter TEST_SET_BIT   = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
-  parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
+  parameter int DATA_WIDTH      = 32,
+  parameter int ADDR_WIDTH      = 32,
+  parameter int BE_WIDTH        = DATA_WIDTH/8,
+  parameter int TEST_SET_BIT    = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter int ADDR_MEM_WIDTH  = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter NB_OUTSND_BURSTS   = `NB_OUTSND_BURSTS,
-  parameter MCHAN_BURST_LENGTH = `MCHAN_BURST_LENGTH,
+  parameter int TCDM_ADD_WIDTH      = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
+  parameter int NB_OUTSND_BURSTS    = `NB_OUTSND_BURSTS,
+  parameter int MCHAN_BURST_LENGTH  = `MCHAN_BURST_LENGTH,
 
   // peripheral and periph interconnect parameters
-  parameter LOG_CLUSTER    = 5,  // unused
-  parameter PE_ROUTING_LSB = 10, // LSB used as routing BIT in periph interco
-  parameter PE_ROUTING_MSB = 13, // MSB used as routing BIT in periph interco
-  parameter EVNT_WIDTH     = 8,  // size of the event bus
-  parameter REMAP_ADDRESS  = 0   // for cluster virtualization
+  parameter int LOG_CLUSTER     = 5,  // unused
+  parameter int PE_ROUTING_LSB  = 10, // LSB used as routing BIT in periph interco
+  parameter int PE_ROUTING_MSB  = 13, // MSB used as routing BIT in periph interco
+  parameter int EVNT_WIDTH      = 8,  // size of the event bus
+  parameter int REMAP_ADDRESS   = 0   // for cluster virtualization
 )
 (
   input  logic                             clk_i,
