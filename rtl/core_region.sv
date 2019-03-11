@@ -190,11 +190,13 @@ module core_region
 
   // demuxes to TCDM & memory hierarchy
   core_demux #(
-    .ADDR_WIDTH         ( 32                 ),
-    .DATA_WIDTH         ( 32                 ),
-    .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE ),
-    .REMAP_ADDRESS      ( REMAP_ADDRESS      )
+    .ADDR_WIDTH             ( 32                      ),
+    .DATA_WIDTH             ( 32                      ),
+    .BYTE_ENABLE_BIT        ( DATA_WIDTH/8            ),
+    .CLUSTER_ALIAS          ( CLUSTER_ALIAS           ),
+    .CLUSTER_ALIAS_BASE     ( CLUSTER_ALIAS_BASE      ),
+    .DEM_PER_BEFORE_TCDM_TS ( DEM_PER_BEFORE_TCDM_TS  ),
+    .REMAP_ADDRESS          ( REMAP_ADDRESS           )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
