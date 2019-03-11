@@ -7,6 +7,7 @@ dependencies:
   axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.6.0 }
   axi_node: { git: "https://github.com/pulp-platform/axi_node.git", rev: atop }
   axi_slice: { git: "https://github.com/pulp-platform/axi_slice.git", rev: atomics }
+  axi_slice_dc: { git: "https://github.com/pulp-platform/axi_slice_dc.git", rev: atomics }
   cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: atomics }
   cluster_peripherals: { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: release-1.0 }
   event_unit_flex: { git: "https://github.com/pulp-platform/event_unit_flex.git", version: 1.0.0 }
