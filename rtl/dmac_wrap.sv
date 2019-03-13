@@ -144,6 +144,7 @@ module dmac_wrap
     .axi_master_aw_addr_o      ( ext_master.aw_addr                 ),
     .axi_master_aw_prot_o      ( ext_master.aw_prot                 ),
     .axi_master_aw_region_o    ( ext_master.aw_region               ),
+    .axi_master_aw_atop_o      ( ext_master.aw_atop                 ),
     .axi_master_aw_len_o       ( ext_master.aw_len                  ),
     .axi_master_aw_size_o      ( ext_master.aw_size                 ),
     .axi_master_aw_burst_o     ( ext_master.aw_burst                ),
