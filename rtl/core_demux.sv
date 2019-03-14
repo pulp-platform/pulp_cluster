@@ -90,9 +90,12 @@ module core_demux
   input  logic [5:0]                   CLUSTER_ID
 );
    
-  logic [10:0] CLUSTER_ALIAS_BASE_11;
-  logic [11:0] CLUSTER_ALIAS_BASE_12;
-  
+  logic [10:0]  CLUSTER_ALIAS_BASE_11;
+  logic [11:0]  CLUSTER_ALIAS_BASE_12,
+                CLUSTER_ALIAS_TCDM_RW,
+                CLUSTER_ALIAS_TCDM_TS,
+                CLUSTER_ALIAS_DEM_PER;
+
   logic                                  s_data_req_PE;
   logic                                  s_data_gnt_PE;  
   logic [DATA_WIDTH - 1:0]               s_data_r_data_PE;
@@ -136,13 +139,13 @@ module core_demux
 
   assign CLUSTER_ALIAS_BASE_12 = CLUSTER_ALIAS_BASE;
   assign CLUSTER_ALIAS_BASE_11 = CLUSTER_ALIAS_BASE_12[11:1];
+  assign CLUSTER_ALIAS_TCDM_RW = CLUSTER_ALIAS_BASE_12 + 0;
+  assign CLUSTER_ALIAS_TCDM_TS = CLUSTER_ALIAS_BASE_12 + 1;
+  assign CLUSTER_ALIAS_DEM_PER = CLUSTER_ALIAS_BASE_12 + 2;
 
-  always_comb
-  begin
-    TCDM_RW          = 12'h100 + (CLUSTER_ID << 2) + 0;
-    TCDM_TS          = 12'h100 + (CLUSTER_ID << 2) + 1;
-    DEM_PER          = 12'h100 + (CLUSTER_ID << 2) + 2;
-  end
+  assign TCDM_RW = 12'h100 + (CLUSTER_ID << 2) + 0;
+  assign TCDM_TS = 12'h100 + (CLUSTER_ID << 2) + 1;
+  assign DEM_PER = 12'h100 + (CLUSTER_ID << 2) + 2;
  
   // This section is used to swap the 4 most significant bits of the address 
   // with the ones that are provided by the base_addr_i
@@ -192,7 +195,7 @@ module core_demux
       if (DEM_PER_BEFORE_TCDM_TS) begin
         casex ({CLUSTER_ALIAS, data_add_int[31:20]})
           {1'bx, TCDM_RW},
-          {1'b1, CLUSTER_ALIAS_BASE}: begin
+          {1'b1, CLUSTER_ALIAS_TCDM_RW}: begin
             if (data_add_int[19:14] == 6'b11_1111) begin
               request_destination <= EXT;
             end else begin
@@ -201,12 +204,12 @@ module core_demux
           end
 
           {1'bx, TCDM_TS},
-          {1'b1, CLUSTER_ALIAS_BASE+1}: begin
+          {1'b1, CLUSTER_ALIAS_TCDM_TS}: begin
             request_destination <= SH;
           end
 
           {1'bx, DEM_PER},
-          {1'b1, CLUSTER_ALIAS_BASE+2}: begin
+          {1'b1, CLUSTER_ALIAS_DEM_PER}: begin
             request_destination <= PE;
           end
 
@@ -215,14 +218,14 @@ module core_demux
       end else begin
         casex ({CLUSTER_ALIAS, data_add_int[31:20]})
           {1'bx, TCDM_RW},
-          {1'b1, CLUSTER_ALIAS_BASE},
+          {1'b1, CLUSTER_ALIAS_TCDM_RW},
           {1'bx, TCDM_TS},
-          {1'b1, CLUSTER_ALIAS_BASE+1}: begin
+          {1'b1, CLUSTER_ALIAS_TCDM_TS}: begin
             request_destination <= SH;
           end
 
           {1'bx, DEM_PER},
-          {1'b1, CLUSTER_ALIAS_BASE+2}: begin
+          {1'b1, CLUSTER_ALIAS_DEM_PER}: begin
             if (data_add_int[14]) begin // DEMUX PERIPHERALS
               request_destination <= EXT; 
             end else begin
@@ -241,7 +244,7 @@ module core_demux
     if (DEM_PER_BEFORE_TCDM_TS) begin
       casex ({CLUSTER_ALIAS, data_add_int[31:20]})
         {1'bx, TCDM_RW},
-        {1'b1, CLUSTER_ALIAS_BASE}: begin
+        {1'b1, CLUSTER_ALIAS_TCDM_RW}: begin
           if (data_add_int[19:14] == 6'b11_1111) begin
             destination = EXT;
           end else begin
@@ -250,12 +253,12 @@ module core_demux
         end // CLUSTER or DEM peripherals (mappping based on Germain suggestion)
 
         {1'bx, TCDM_TS},
-        {1'b1, CLUSTER_ALIAS_BASE+1}: begin
+        {1'b1, CLUSTER_ALIAS_TCDM_TS}: begin
           destination = SH;
         end
 
         {1'bx, DEM_PER},
-        {1'b1, CLUSTER_ALIAS_BASE+2}: begin
+        {1'b1, CLUSTER_ALIAS_DEM_PER}: begin
           destination = PE;
         end
 
@@ -267,14 +270,14 @@ module core_demux
     end else begin
       casex ({CLUSTER_ALIAS, data_add_int[31:20]})
         {1'bx, TCDM_RW},
-        {1'b1, CLUSTER_ALIAS_BASE},
+        {1'b1, CLUSTER_ALIAS_TCDM_RW},
         {1'bx, TCDM_TS},
-        {1'b1, CLUSTER_ALIAS_BASE+1}: begin
+        {1'b1, CLUSTER_ALIAS_TCDM_TS}: begin
           destination = SH;
         end
 
         {1'bx, DEM_PER},
-        {1'b1, CLUSTER_ALIAS_BASE+2}: begin
+        {1'b1, CLUSTER_ALIAS_DEM_PER}: begin
           if(data_add_int[14]) begin // DEMUX PERIPHERALS
             destination  = EXT;
           end else begin
@@ -341,7 +344,7 @@ module core_demux
     if (DEM_PER_BEFORE_TCDM_TS) begin
       if (data_add_int[19:14] == 6'b11_1111 && (
         ( CLUSTER_ALIAS && (
-          data_add_int[31:20] == TCDM_RW || data_add_int == CLUSTER_ALIAS_BASE)
+          data_add_int[31:20] == TCDM_RW || data_add_int[31:20] == CLUSTER_ALIAS_TCDM_RW)
         ) ||
         (!CLUSTER_ALIAS && data_add_int[31:20] == DEM_PER)
       )) begin: _DPBTT_TO_DEMUX_PERIPH_ //Peripheral --> add_i[31:0] --> 0x100F_FC00 to 0x100F_FFFF
@@ -356,7 +359,7 @@ module core_demux
     end else begin
       if (data_add_int[14] && (
         data_add_int[31:20] == DEM_PER ||
-        (CLUSTER_ALIAS && data_add_int[31:20] == CLUSTER_ALIAS_BASE+2)
+        (CLUSTER_ALIAS && data_add_int[31:20] == CLUSTER_ALIAS_DEM_PER)
       )) begin: _TO_DEMUX_PERIPH_ //Peripheral --> add_i[31:0] --> 0x1020_4000 to 0x1020_7FFF
         data_req_PE_fifo = 1'b0;
         data_req_o_EXT  = data_req_to_L2;
