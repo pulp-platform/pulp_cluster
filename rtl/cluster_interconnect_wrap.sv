@@ -33,6 +33,7 @@ module cluster_interconnect_wrap
   parameter LOG_CLUSTER     = 5,
   parameter PE_ROUTING_LSB  = 16,
   parameter PE_ROUTING_MSB  = 19,
+  parameter CLUSTER_ALIAS      = 1'b0,
   parameter CLUSTER_ALIAS_BASE = 12'h000
 )
 (
@@ -294,6 +295,7 @@ module cluster_interconnect_wrap
     .BE_WIDTH           ( BE_WIDTH             ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
+    .CLUSTER_ALIAS      ( CLUSTER_ALIAS        ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
   ) xbar_pe_inst (
     .clk              ( clk_i                                                   ),

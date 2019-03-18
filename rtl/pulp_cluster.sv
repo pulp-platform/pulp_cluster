@@ -576,6 +576,7 @@ module pulp_cluster
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB     ),
+    .CLUSTER_ALIAS      ( CLUSTER_ALIAS      ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
   ) cluster_interconnect_wrap_i (
     .clk_i                  ( clk_cluster                         ),
