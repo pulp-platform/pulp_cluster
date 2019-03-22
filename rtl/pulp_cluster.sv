@@ -42,7 +42,7 @@ module pulp_cluster
   parameter int CACHE_SIZE                = 4096,
   parameter int ICACHE_DATA_WIDTH         = 128,
   parameter int L2_SIZE                   = 256*1024,
-  parameter string USE_REDUCED_TAG        = "TRUE",
+  parameter bit USE_REDUCED_TAG           = 1'b1,
 
   // core parameters
   parameter bit DEM_PER_BEFORE_TCDM_TS  = 1'b0,
