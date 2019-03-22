@@ -41,10 +41,6 @@ module pulp_cluster
   parameter int CACHE_LINE                = 1,
   parameter int CACHE_SIZE                = 4096,
   parameter int ICACHE_DATA_WIDTH         = 128,
-  parameter string L0_BUFFER_FEATURE      = "DISABLED",
-  parameter string MULTICAST_FEATURE      = "DISABLED",
-  parameter string SHARED_ICACHE          = "ENABLED",
-  parameter string DIRECT_MAPPED_FEATURE  = "DISABLED",
   parameter int L2_SIZE                   = 256*1024,
   parameter string USE_REDUCED_TAG        = "TRUE",
 
