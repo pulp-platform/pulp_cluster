@@ -35,9 +35,12 @@ module core_region
   parameter bit     CLUSTER_ALIAS           = 1'b1,
   parameter int     CLUSTER_ALIAS_BASE      = 12'h000,
   parameter int     REMAP_ADDRESS           = 0,
-  parameter bit     DEM_PER_BEFORE_TCDM_TS  = 1'b0,
+  parameter bit     DEM_PER_BEFORE_TCDM_TS  = 1'b0
+`ifndef SYNTHESIS
+  ,
   parameter string  L2_SLM_FILE   = "./slm_files/l2_stim.slm",
   parameter string  ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
+`endif
 )
 (
   input logic 			      clk_i,
