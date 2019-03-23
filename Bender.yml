@@ -36,7 +36,6 @@ sources:
   - rtl/per_demux_wrap.sv
   - rtl/periph_FIFO.sv
   - rtl/periph_demux.sv
-  - rtl/tcdm_banks_wrap.sv
   - rtl/tryx_ctrl.sv
   - rtl/xne_wrap.sv
   # Level 1

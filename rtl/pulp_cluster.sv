@@ -858,17 +858,23 @@ module pulp_cluster
   );
 
   /* TCDM banks */
-  tcdm_banks_wrap #(
-    .BANK_SIZE ( TCDM_NUM_ROWS ),
-    .NB_BANKS  ( NB_TCDM_BANKS )
-  ) tcdm_banks_i (
-    .clk_i       ( clk_cluster     ),
-    .rst_ni      ( s_rst_n         ),
-    .init_ni     ( s_init_n        ),
-    .test_mode_i ( test_mode_i     ),
-    .pwdn_i      ( 1'b0            ),
-    .tcdm_slave  ( s_tcdm_bus_sram )
-  );
+  for (genvar i = 0; i < NB_TCDM_BANKS; i++) begin : gen_tcdm_banks
+    logic [$clog2(TCDM_NUM_ROWS)-1:0] addr;
+    assign addr = s_tcdm_bus_sram[i].add;
+
+    sram #(
+      .N_WORDS    (TCDM_NUM_ROWS),
+      .DATA_WIDTH (32)
+    ) i_mem (
+      .clk_i    (clk_cluster),
+      .req_i    (s_tcdm_bus_sram[i].req),
+      .addr_i   (addr),
+      .we_i     (~s_tcdm_bus_sram[i].wen),
+      .wdata_i  (s_tcdm_bus_sram[i].wdata),
+      .be_i     (s_tcdm_bus_sram[i].be),
+      .rdata_o  (s_tcdm_bus_sram[i].rdata)
+    );
+  end
   
   /* AXI interconnect infrastructure (slices, size conversion) */ 
   axi_slice_dc_slave_wrap #(
