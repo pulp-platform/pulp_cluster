@@ -923,6 +923,7 @@ module pulp_cluster
       .DATA_WIDTH (32)
     ) i_mem (
       .clk_i    (clk_cluster),
+      .rst_ni   (rst_ni),
       .req_i    (s_tcdm_bus_sram[i].req),
       .addr_i   (addr),
       .we_i     (~s_tcdm_bus_sram[i].wen),
