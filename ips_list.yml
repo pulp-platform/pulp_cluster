@@ -22,7 +22,7 @@ event_unit_flex:
   commit: tags/v1.0.1
   group: pulp-platform
 mchan:
-  commit: tags/v1.0.1
+  commit: tags/pulp-v1.0
   group: pulp-platform
 icache-intc:
   commit: tags/v1.0.1
