@@ -4,40 +4,40 @@
 #
 
 axi/axi2mem:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.1
   group:  pulp-platform
 axi/axi2per:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.1
   group:  pulp-platform
 axi/per2axi:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.3
   group:  pulp-platform
 axi/axi_size_conv:
   commit: tags/pulp-v1.0
   group: pulp-platform
 cluster_interconnect:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.2
   group: pulp-platform
 event_unit_flex:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.1
   group: pulp-platform
 mchan:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.1
   group: pulp-platform
 icache-intc:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.1
   group: pulp-platform
 icache_mp_128_pf:
-  commit: tags/pulp-v1.0
+  commit: tags/v1.0.0
   group: pulp-platform
 icache_private:
   commit: master
   group: pulp-platform
 cluster_peripherals:
-  commit: aa58c62d9c7ca1866311ba67e539ef9e527a268e
+  commit: tags/v1.0.1
   group:  pulp-platform
 fpu_interco:
-  commit: tags/v1.1.4
+  commit: tags/v1.2.4
   group: pulp-platform
 
 
