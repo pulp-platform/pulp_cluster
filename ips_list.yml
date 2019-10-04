@@ -36,3 +36,6 @@ scm:
 timer_unit:
   commit: tags/pulpissimo-v1.0
   group:  pulp-platform
+hwpe-mac-engine:
+  commit: v1.2
+  group: pulp-platform
