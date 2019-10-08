@@ -3,9 +3,9 @@
 # Uses the YAML syntax.
 #
 
-axi/axi2mem:
-  commit: tags/v1.0.1
-  group:  pulp-platform
+#axi/axi2mem:
+#  commit: tags/v1.0.1
+#  group:  pulp-platform
 axi/axi2per:
   commit: tags/v1.0.1
   group:  pulp-platform
@@ -22,7 +22,7 @@ event_unit_flex:
   commit: tags/v1.0.1
   group: pulp-platform
 mchan:
-  commit: tags/pulp-v1.0
+  commit: tags/vega_v1.0.8
   group: pulp-platform
 icache-intc:
   commit: tags/v1.0.1
