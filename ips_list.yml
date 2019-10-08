@@ -16,7 +16,7 @@ axi/axi_size_conv:
   commit: tags/pulp-v1.0
   group: pulp-platform
 cluster_interconnect:
-  commit: tags/v1.0.2
+  commit: alignment
   group: pulp-platform
 event_unit_flex:
   commit: tags/v1.0.1

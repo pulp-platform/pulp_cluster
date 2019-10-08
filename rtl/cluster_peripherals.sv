@@ -178,9 +178,9 @@ module cluster_peripherals
         .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS         ),
         .NB_CORES      ( NB_CORES                     ),
         .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
-        .BOOT_ADDR     ( BOOT_ADDR                    ),
-        .NB_L1_CUTS      ( NB_L1_CUTS                 ),
-        .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH            )
+        .BOOT_ADDR     ( BOOT_ADDR                    )
+        //.NB_L1_CUTS      ( NB_L1_CUTS                 ),
+        //.RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH            )
    )
    cluster_control_unit_i
    (
