@@ -31,6 +31,8 @@ module cluster_event_map
   input  logic [NB_CORES-1:0][1:0]  timer_events_i,
   input  logic [NB_CORES-1:0][31:0] cluster_events_i,
 
+  input  logic                      decompr_done_evt_i,
+
   output logic [NB_CORES-1:0][31:0] events_mapped_o
 );
 
@@ -40,7 +42,8 @@ module cluster_event_map
     for ( I = 0; I < NB_CORES; I++ ) begin : CL_EVENT_MAP
       assign events_mapped_o[I][31:28] = '0;
       assign events_mapped_o[I][27]    = periph_fifo_event_i;
-      assign events_mapped_o[I][26:24] = '0;
+      assign events_mapped_o[I][26:25] = '0;
+      assign events_mapped_o[I][24]    = decompr_done_evt_i;
       assign events_mapped_o[I][23:22] = cluster_events_i[I][1:0];
       assign events_mapped_o[I][21:19] = '0;
 

@@ -31,6 +31,7 @@ module core_demux
   input logic                          clk,
   input logic                          rst_ni,
   input logic                          test_en_i,
+
   input logic [3:0]                    base_addr_i,
 
   // CORE SIDE
