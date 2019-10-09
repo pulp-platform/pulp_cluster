@@ -3,9 +3,9 @@
 # Uses the YAML syntax.
 #
 
-#axi/axi2mem:
-#  commit: tags/v1.0.1
-#  group:  pulp-platform
+axi/axi2mem:
+  commit: master
+  group:  pulp-platform
 axi/axi2per:
   commit: tags/v1.0.1
   group:  pulp-platform
