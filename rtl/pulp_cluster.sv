@@ -53,7 +53,7 @@ module pulp_cluster
   parameter ROM_BOOT_ADDR     = 32'h1A000000,
   parameter BOOT_ADDR         = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH = 128,
-  
+
   // AXI parameters
   parameter AXI_ADDR_WIDTH        = 32,
   parameter AXI_DATA_C2S_WIDTH    = 64,
@@ -64,14 +64,14 @@ module pulp_cluster
   parameter AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH = 8,
-  
+
   // TCDM and log interconnect parameters
   parameter DATA_WIDTH     = 32,
   parameter ADDR_WIDTH     = 32,
   parameter BE_WIDTH       = DATA_WIDTH/8,
   parameter TEST_SET_BIT   = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
   parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
-  
+
   // DMA parameters
   parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
   parameter NB_OUTSND_BURSTS   = `NB_OUTSND_BURSTS,
@@ -89,7 +89,7 @@ module pulp_cluster
   input  logic                             rst_ni,
   input  logic                             ref_clk_i,
   input  logic                             pmu_mem_pwdn_i,
-  
+
   input logic [3:0]                        base_addr_i,
 
   input logic                              test_mode_i,
@@ -99,24 +99,24 @@ module pulp_cluster
   input logic [5:0]                        cluster_id_i,
 
   input logic                              fetch_en_i,
- 
+
   output logic                             eoc_o,
-  
+
   output logic                             busy_o,
- 
+
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] ext_events_writetoken_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] ext_events_readpointer_o,
   input  logic            [EVNT_WIDTH-1:0] ext_events_dataasync_i,
-  
+
   input  logic                             dma_pe_evt_ack_i,
   output logic                             dma_pe_evt_valid_o,
 
   input  logic                             dma_pe_irq_ack_i,
   output logic                             dma_pe_irq_valid_o,
-  
+
   input  logic                             pf_evt_ack_i,
   output logic                             pf_evt_valid_o,
-   
+
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
@@ -133,7 +133,7 @@ module pulp_cluster
   input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_aw_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_aw_user_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_readpointer_o,
-   
+
   // READ ADDRESS CHANNEL
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_writetoken_i,
   input  logic [AXI_ADDR_WIDTH-1:0]        data_slave_ar_addr_i,
@@ -148,7 +148,7 @@ module pulp_cluster
   input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_ar_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_ar_user_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_readpointer_o,
-   
+
   // WRITE DATA CHANNEL
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_writetoken_i,
   input  logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_w_data_i,
@@ -156,7 +156,7 @@ module pulp_cluster
   input  logic [AXI_USER_WIDTH-1:0]        data_slave_w_user_i,
   input  logic                             data_slave_w_last_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_readpointer_o,
-   
+
   // READ DATA CHANNEL
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_writetoken_o,
   output logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_r_data_o,
@@ -165,14 +165,14 @@ module pulp_cluster
   output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_r_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_slave_r_user_o,
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_readpointer_i,
-  
+
   // WRITE RESPONSE CHANNEL
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_writetoken_o,
   output logic [1:0]                       data_slave_b_resp_o,
   output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_b_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_slave_b_user_o,
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_readpointer_i,
-   
+
   // AXI4 MASTER
   //***************************************
   // WRITE ADDRESS CHANNEL
@@ -189,7 +189,7 @@ module pulp_cluster
   output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_aw_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_master_aw_user_o,
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_aw_readpointer_i,
-  
+
   // READ ADDRESS CHANNEL
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_writetoken_o,
   output logic [AXI_ADDR_WIDTH-1:0]        data_master_ar_addr_o,
@@ -204,7 +204,7 @@ module pulp_cluster
   output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_ar_id_o,
   output logic [AXI_USER_WIDTH-1:0]        data_master_ar_user_o,
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_readpointer_i,
-   
+
   // WRITE DATA CHANNEL
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_writetoken_o,
   output logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_w_data_o,
@@ -212,7 +212,7 @@ module pulp_cluster
   output logic [AXI_USER_WIDTH-1:0]        data_master_w_user_o,
   output logic                             data_master_w_last_o,
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_readpointer_i,
-  
+
   // READ DATA CHANNEL
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_writetoken_i,
   input  logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_r_data_i,
@@ -221,16 +221,16 @@ module pulp_cluster
   input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_r_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_master_r_user_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_readpointer_o,
-  
+
   // WRITE RESPONSE CHANNEL
   input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_writetoken_i,
   input  logic [1:0]                       data_master_b_resp_i,
   input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_b_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_master_b_user_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o
-   
+
 );
-  
+
   logic [NB_CORES-1:0]                fetch_enable_reg_int;
   logic [NB_CORES-1:0]                fetch_en_int;
   logic                               s_rst_n;
@@ -289,13 +289,13 @@ module pulp_cluster
   logic               s_dma_pe_event;
   logic               s_dma_pe_irq;
   logic               s_pf_event;
-  
+
   logic[NB_CORES-1:0][4:0] irq_id;
   logic[NB_CORES-1:0][4:0] irq_ack_id;
   logic[NB_CORES-1:0]      irq_req;
   logic[NB_CORES-1:0]      irq_ack;
-   
-   
+
+
   /* asynchronous AXI interfaces at CLUSTER/SOC interface */
   AXI_BUS_ASYNC #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -310,7 +310,7 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_data_master_async();
-    
+
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -358,7 +358,7 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_ext_tcdm_bus();
 
-  // cluster bus -> axi2per 
+  // cluster bus -> axi2per
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
@@ -367,7 +367,7 @@ module pulp_cluster
   ) s_ext_mperiph_bus();
 
   /* logarithmic and peripheral interconnect interfaces */
-  // ext -> log interconnect 
+  // ext -> log interconnect
   XBAR_TCDM_BUS s_ext_xbar_bus[NB_DMAS-1:0]();
 
   // periph interconnect -> slave peripherals
@@ -385,29 +385,29 @@ module pulp_cluster
   // periph demux
   XBAR_TCDM_BUS s_mperiph_bus();
   XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
-  
+
   // cores & accelerators -> log interconnect
   XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWACC_PORTS-1:0]();
-  
+
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
 
   // cores -> tryx control
   XBAR_PERIPH_BUS s_core_periph_tryx[NB_CORES-1:0]();
-  
+
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus();
-  
+
   // debug
   XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
-  
+
   /* other interfaces */
   // cores -> DMA ctrl
   XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
-  
+
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
-  
+
   // I$ ctrl unit <-> I$, L0, I$ interconnect
   MP_PF_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus();
 
@@ -431,7 +431,7 @@ module pulp_cluster
     .rst_no     ( s_rst_n     ),
     .init_no    ( s_init_n    )
   );
-  
+
   /* fetch & busy genertion */
   assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_xne_busy;
   assign busy_o = s_cluster_int_busy | (|core_busy);
@@ -498,18 +498,18 @@ module pulp_cluster
     .slave   ( s_mperiph_bus       ),
     .masters ( s_mperiph_demux_bus )
   );
-    
+
   assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
   assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;
   assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wen   = s_mperiph_demux_bus[0].wen;
   assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wdata = s_mperiph_demux_bus[0].wdata;
   assign s_mperiph_xbar_bus[NB_MPERIPHS-1].be    = s_mperiph_demux_bus[0].be;
-                                        
+
   assign s_mperiph_demux_bus[0].gnt       = s_mperiph_xbar_bus[NB_MPERIPHS-1].gnt;
   assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
   assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
   assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
-    
+
   per_demux_wrap #(
     .NB_MASTERS  ( NB_CORES ),
     .ADDR_OFFSET ( 15       )
@@ -519,7 +519,7 @@ module pulp_cluster
     .slave   ( s_mperiph_demux_bus[1] ),
     .masters ( s_debug_bus            )
   );
-    
+
   per2axi_wrap #(
     .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
@@ -552,7 +552,7 @@ module pulp_cluster
     .periph_data_slave  ( s_core_periph_bus  ),
     .periph_data_master ( s_core_periph_tryx )
   );
-    
+
   /* cluster (log + periph) interconnect and attached peripherals */
   cluster_interconnect_wrap #(
     .NB_CORES           ( NB_CORES           ),
@@ -658,9 +658,9 @@ module pulp_cluster
     .hwacc_events_i         ( s_hwacc_events                     ),
     .hwpe_sel_o             ( hwpe_sel                           ),
     .hwpe_en_o              ( hwpe_en                            ),
-    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                  )    
+    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                  )
   );
-  
+
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -747,10 +747,10 @@ module pulp_cluster
       end
       assign s_xne_busy = '0;
       assign s_xne_evt  = '0;
-       
+
     end
   endgenerate
-  
+
   generate
     for(genvar i=0; i<NB_CORES; i++) begin : hwacc_event_interrupt_gen
       assign s_hwacc_events[i][3:2] = '0;
@@ -772,7 +772,7 @@ module pulp_cluster
     .AXI_USER         ( AXI_USER_WIDTH     ),
     .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
     .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            ) 
+    .L2_SIZE          ( L2_SIZE            )
   ) icache_top_i (
     .clk                    ( clk_cluster                ),
     .rst_n                  ( s_rst_n                    ),
@@ -781,19 +781,19 @@ module pulp_cluster
     .fetch_addr_i           ( instr_addr                 ),
     .fetch_gnt_o            ( instr_gnt                  ),
     .fetch_rvalid_o         ( instr_r_valid              ),
-    .fetch_rdata_o          ( instr_r_rdata              ), 
+    .fetch_rdata_o          ( instr_r_rdata              ),
     .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
     .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
+    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),
+    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),
+    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),
+    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),
     .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
     .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
     .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
+    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),
+    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),
+    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),
     .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
     .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
     .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
@@ -841,8 +841,8 @@ module pulp_cluster
     .pwdn_i      ( 1'b0            ),
     .tcdm_slave  ( s_tcdm_bus_sram )
   );
-  
-  /* AXI interconnect infrastructure (slices, size conversion) */ 
+
+  /* AXI interconnect infrastructure (slices, size conversion) */
   axi_slice_dc_slave_wrap #(
     .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH         ),
     .AXI_DATA_WIDTH  ( AXI_DATA_C2S_WIDTH     ),
@@ -874,7 +874,7 @@ module pulp_cluster
     .axi_slave_async ( s_data_slave_async ),
     .axi_master      ( s_data_slave       )
   );
-   
+
   /* event synchronizers */
   dc_token_ring_fifo_dout #(
     .DATA_WIDTH   ( EVNT_WIDTH            ),
@@ -888,9 +888,9 @@ module pulp_cluster
     .write_token  ( ext_events_writetoken_i  ),
     .read_pointer ( ext_events_readpointer_o ),
     .data_async   ( ext_events_dataasync_i   )
-  ); 
+  );
   assign s_events_async = s_events_valid;
-    
+
   edge_propagator_tx ep_dma_pe_evt_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -898,7 +898,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_evt_ack_i   ),
     .valid_o ( dma_pe_evt_valid_o )
   );
-   
+
   edge_propagator_tx ep_dma_pe_irq_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -906,7 +906,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_irq_ack_i   ),
     .valid_o ( dma_pe_irq_valid_o )
   );
-   
+
   edge_propagator_tx ep_pf_evt_i (
     .clk_i   ( clk_i          ),
     .rstn_i  ( s_rst_n        ),
@@ -914,7 +914,7 @@ module pulp_cluster
     .ack_i   ( pf_evt_ack_i   ),
     .valid_o ( pf_evt_valid_o )
   );
-   
+
   /* centralized gating */
   cluster_clock_gate #(
     .NB_CORES ( NB_CORES )
@@ -930,8 +930,8 @@ module pulp_cluster
     .isolate_cluster_o  ( s_isolate_cluster  ),
     .cluster_clk_o      ( clk_cluster        )
   );
-    
-  /* binding of AXI SV interfaces to external Verilog buses */    
+
+  /* binding of AXI SV interfaces to external Verilog buses */
   assign s_data_slave_async.aw_writetoken   = data_slave_aw_writetoken_i;
   assign s_data_slave_async.aw_addr         = data_slave_aw_addr_i;
   assign s_data_slave_async.aw_prot         = data_slave_aw_prot_i;
@@ -945,7 +945,7 @@ module pulp_cluster
   assign s_data_slave_async.aw_id           = data_slave_aw_id_i;
   assign s_data_slave_async.aw_user         = data_slave_aw_user_i;
   assign data_slave_aw_readpointer_o        = s_data_slave_async.aw_readpointer;
-  
+
   assign s_data_slave_async.ar_writetoken   = data_slave_ar_writetoken_i;
   assign s_data_slave_async.ar_addr         = data_slave_ar_addr_i;
   assign s_data_slave_async.ar_prot         = data_slave_ar_prot_i;
@@ -959,14 +959,14 @@ module pulp_cluster
   assign s_data_slave_async.ar_id           = data_slave_ar_id_i;
   assign s_data_slave_async.ar_user         = data_slave_ar_user_i;
   assign data_slave_ar_readpointer_o        = s_data_slave_async.ar_readpointer;
-  
+
   assign s_data_slave_async.w_writetoken    = data_slave_w_writetoken_i;
   assign s_data_slave_async.w_data          = data_slave_w_data_i;
   assign s_data_slave_async.w_strb          = data_slave_w_strb_i;
   assign s_data_slave_async.w_user          = data_slave_w_user_i;
-  assign s_data_slave_async.w_last          = data_slave_w_last_i; 
+  assign s_data_slave_async.w_last          = data_slave_w_last_i;
   assign data_slave_w_readpointer_o         = s_data_slave_async.w_readpointer;
-  
+
   assign data_slave_r_writetoken_o          = s_data_slave_async.r_writetoken;
   assign data_slave_r_data_o                = s_data_slave_async.r_data;
   assign data_slave_r_resp_o                = s_data_slave_async.r_resp;
@@ -974,13 +974,13 @@ module pulp_cluster
   assign data_slave_r_id_o                  = s_data_slave_async.r_id;
   assign data_slave_r_user_o                = s_data_slave_async.r_user;
   assign s_data_slave_async.r_readpointer   = data_slave_r_readpointer_i;
-  
+
   assign data_slave_b_writetoken_o          = s_data_slave_async.b_writetoken;
   assign data_slave_b_resp_o                = s_data_slave_async.b_resp;
   assign data_slave_b_id_o                  = s_data_slave_async.b_id;
   assign data_slave_b_user_o                = s_data_slave_async.b_user;
   assign s_data_slave_async.b_readpointer   = data_slave_b_readpointer_i;
-  
+
   assign data_master_aw_writetoken_o        = s_data_master_async.aw_writetoken;
   assign data_master_aw_addr_o              = s_data_master_async.aw_addr;
   assign data_master_aw_prot_o              = s_data_master_async.aw_prot;
@@ -1029,5 +1029,5 @@ module pulp_cluster
   assign s_data_master_async.b_id           = data_master_b_id_i;
   assign s_data_master_async.b_user         = data_master_b_user_i;
   assign data_master_b_readpointer_o        = s_data_master_async.b_readpointer;
-   
+
 endmodule
