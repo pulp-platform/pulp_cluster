@@ -29,7 +29,7 @@ module pulp_cluster
   parameter NB_HWACC_PORTS     = 4,
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 10,
+  parameter NB_SPERIPHS        = 9,
   
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   
@@ -601,7 +601,8 @@ module pulp_cluster
   // assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
   // assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
   // assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
-    
+ 
+/* not used in vega   
   per_demux_wrap #(
     .NB_MASTERS  ( NB_CORES ),
     .ADDR_OFFSET ( 15       )
@@ -611,7 +612,7 @@ module pulp_cluster
     .slave   ( s_mperiph_demux_bus[1] ),
     .masters ( s_debug_bus            )
   );
-    
+    */
   per2axi_wrap #(
     .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
@@ -677,6 +678,7 @@ module pulp_cluster
   //*************************************************** 
   
   dmac_wrap #(
+    .NB_CTRLS           ( 2                  ),
     .NB_CORES           ( NB_CORES           ),
     .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
     .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
@@ -693,7 +695,7 @@ module pulp_cluster
     .clk_i          ( clk_cluster        ),
     .rst_ni         ( rst_ni             ),
     .test_mode_i    ( test_mode_i        ),
-    .ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
+    //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
     .cl_ctrl_slave  ( s_periph_dma_bus[0]),
     .fc_ctrl_slave  ( s_periph_dma_bus[1]),
     .tcdm_master    ( s_dma_xbar_bus     ),

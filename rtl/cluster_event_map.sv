@@ -19,19 +19,20 @@ module cluster_event_map
 )
 (
   // events generated inside event unit
-  input  logic [NB_CORES-1:0][7:0]  sw_events_i,
-  input  logic [NB_CORES-1:0]       barrier_events_i,
-  input  logic [NB_CORES-1:0]       mutex_events_i,
-  input  logic [NB_CORES-1:0]       dispatch_events_i,
-  input  logic                      periph_fifo_event_i,
+  input logic [NB_CORES-1:0][7:0]   sw_events_i,
+  input logic [NB_CORES-1:0]        barrier_events_i,
+  input logic [NB_CORES-1:0]        mutex_events_i,
+  input logic [NB_CORES-1:0]        dispatch_events_i,
+  input logic                       periph_fifo_event_i,
 
   // events from cluster blocks
-  input  logic [NB_CORES-1:0][3:0]  acc_events_i,
-  input  logic [NB_CORES-1:0][1:0]  dma_events_i,
-  input  logic [NB_CORES-1:0][1:0]  timer_events_i,
-  input  logic [NB_CORES-1:0][31:0] cluster_events_i,
+  input logic [NB_CORES-1:0][3:0]   acc_events_i,
+  input logic [NB_CORES-1:0][1:0]   dma_events_i,
+  input logic [NB_CORES-1:0][1:0]   timer_events_i,
+  input logic [NB_CORES-1:0][31:0]  cluster_events_i,
 
-  input  logic                      decompr_done_evt_i,
+  input logic decompr_done_evt_i,
+
 
   output logic [NB_CORES-1:0][31:0] events_mapped_o
 );

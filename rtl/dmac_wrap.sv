@@ -18,7 +18,8 @@
 
 module dmac_wrap
 #(
-  parameter NB_CORES           = 4,
+  parameter NB_CTRLS           = 2,
+  parameter NB_CORES           = 8,
   parameter NB_OUTSND_BURSTS   = 8,
   parameter MCHAN_BURST_LENGTH = 256,
   parameter AXI_ADDR_WIDTH     = 32,
@@ -37,30 +38,31 @@ module dmac_wrap
   input logic                      test_mode_i,
   XBAR_PERIPH_BUS.Slave            cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave            fc_ctrl_slave,
-  XBAR_TCDM_BUS.Slave              ctrl_slave[NB_CORES-1:0],
+  
   XBAR_TCDM_BUS.Master             tcdm_master[3:0],
   AXI_BUS.Master                   ext_master,
-  output logic [NB_CORES-1:0]      term_event_cl_o,
-  output logic [NB_CORES-1:0]      term_irq_cl_o,
+  output logic                     term_event_cl_o,
+  output logic                     term_irq_cl_o,
   output logic                     term_event_pe_o,
   output logic                     term_irq_pe_o,
   output logic                     busy_o
 );
   
-  // // CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
-  //  logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
-  //  logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
-  //  logic [NB_CTRLS-1:0]                  s_ctrl_bus_req;
-  //  logic [NB_CTRLS-1:0]                  s_ctrl_bus_wen;
-  //  logic [NB_CTRLS-1:0][BE_WIDTH-1:0]    s_ctrl_bus_be;
-  //  logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_id;
-  //  logic [NB_CTRLS-1:0]                  s_ctrl_bus_gnt;
-  //  logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_r_rdata;
-  //  logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_valid;
-  //  logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_opc;
-  //  logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_r_id;
+  //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
+     logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
+     logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
+     logic [NB_CTRLS-1:0]                  s_ctrl_bus_req;
+     logic [NB_CTRLS-1:0]                  s_ctrl_bus_wen;
+     logic [NB_CTRLS-1:0][BE_WIDTH-1:0]    s_ctrl_bus_be;
+     logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_id;
+     logic [NB_CTRLS-1:0]                  s_ctrl_bus_gnt;
+     logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_r_rdata;
+     logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_valid;
+     logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_opc;
+     logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_r_id;
 
   // CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
+/* -----\/----- EXCLUDED -----\/-----
   logic [NB_CORES-1:0][DATA_WIDTH-1:0] s_ctrl_bus_wdata;
   logic [NB_CORES-1:0][ADDR_WIDTH-1:0] s_ctrl_bus_add;
   logic [NB_CORES-1:0]                 s_ctrl_bus_req;
@@ -69,6 +71,7 @@ module dmac_wrap
   logic [NB_CORES-1:0]                 s_ctrl_bus_gnt;
   logic [NB_CORES-1:0][DATA_WIDTH-1:0] s_ctrl_bus_r_rdata;
   logic [NB_CORES-1:0]                 s_ctrl_bus_r_valid;
+ -----/\----- EXCLUDED -----/\----- */
 
 
 
@@ -83,46 +86,31 @@ module dmac_wrap
   logic [3:0]                 s_tcdm_bus_r_valid;
 
   // // CL CTRL PORT BINDING
-  //  assign s_ctrl_bus_add[0]     = cl_ctrl_slave.add;
-  //  assign s_ctrl_bus_req[0]     = cl_ctrl_slave.req;
-  //  assign s_ctrl_bus_wdata[0]   = cl_ctrl_slave.wdata;
-  //  assign s_ctrl_bus_wen[0]     = cl_ctrl_slave.wen;
-  //  assign s_ctrl_bus_be[0]      = cl_ctrl_slave.be;
-  //  assign s_ctrl_bus_id[0]      = cl_ctrl_slave.id;
-  //  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[0];
-  //  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[0];
-  //  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
-  //  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
-  //  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
+    assign s_ctrl_bus_add[0]     = cl_ctrl_slave.add;
+     assign s_ctrl_bus_req[0]     = cl_ctrl_slave.req;
+     assign s_ctrl_bus_wdata[0]   = cl_ctrl_slave.wdata;
+     assign s_ctrl_bus_wen[0]     = cl_ctrl_slave.wen;
+     assign s_ctrl_bus_be[0]      = cl_ctrl_slave.be;
+     assign s_ctrl_bus_id[0]      = cl_ctrl_slave.id;
+     assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[0];
+     assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[0];
+     assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
+     assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
+     assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
    
-  //  // FC CTRL PORT BINDING
-  //  assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
-  //  assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
-  //  assign s_ctrl_bus_wdata[1]   = fc_ctrl_slave.wdata;
-  //  assign s_ctrl_bus_wen[1]     = fc_ctrl_slave.wen;
-  //  assign s_ctrl_bus_be[1]      = fc_ctrl_slave.be;
-  //  assign s_ctrl_bus_id[1]      = fc_ctrl_slave.id;
-  //  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[1];
-  //  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[1];
-  //  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[1];
-  //  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[1];
-  //  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[1];
+     // FC CTRL PORT BINDING
+     assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
+     assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
+     assign s_ctrl_bus_wdata[1]   = fc_ctrl_slave.wdata;
+     assign s_ctrl_bus_wen[1]     = fc_ctrl_slave.wen;
+     assign s_ctrl_bus_be[1]      = fc_ctrl_slave.be;
+     assign s_ctrl_bus_id[1]      = fc_ctrl_slave.id;
+     assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[1];
+     assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[1];
+     assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[1];
+     assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[1];
+     assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[1];
 
-  generate
-    for (genvar i=0; i<NB_CORES; i++) begin : CTRL_SLAVE_BIND
-      assign s_ctrl_bus_add[i]     = ctrl_slave[i].add;
-      assign s_ctrl_bus_req[i]     = ctrl_slave[i].req;
-      assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].wdata;
-      assign s_ctrl_bus_wen[i]     = ctrl_slave[i].wen;
-      assign s_ctrl_bus_be[i]      = ctrl_slave[i].be;
-
-      assign ctrl_slave[i].gnt     = s_ctrl_bus_gnt[i];
-      assign ctrl_slave[i].r_opc   = 'b0;
-      assign ctrl_slave[i].r_valid = s_ctrl_bus_r_valid[i];
-      assign ctrl_slave[i].r_rdata = s_ctrl_bus_r_rdata[i];
-    end
-  endgenerate
-   
   generate
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND
       assign tcdm_master[i].add      = s_tcdm_bus_add[i];
@@ -190,10 +178,10 @@ module dmac_wrap
     .ctrl_targ_type_i          ( s_ctrl_bus_wen                     ),
     .ctrl_targ_be_i            ( s_ctrl_bus_be                      ),
     .ctrl_targ_data_i          ( s_ctrl_bus_wdata                   ),
-    //.ctrl_targ_id_i            ( s_ctrl_bus_id         ),
+    .ctrl_targ_id_i            ( s_ctrl_bus_id                      ),
     .ctrl_targ_gnt_o           ( s_ctrl_bus_gnt                     ),
-    //.ctrl_targ_r_opc_o         ( s_ctrl_bus_r_opc      ),
-    //.ctrl_targ_r_id_o          ( s_ctrl_bus_r_id       ),
+    .ctrl_targ_r_opc_o         ( s_ctrl_bus_r_opc                   ),
+    .ctrl_targ_r_id_o          ( s_ctrl_bus_r_id                    ),
 
     .ctrl_targ_r_valid_o       ( s_ctrl_bus_r_valid                 ),
     .ctrl_targ_r_data_o        ( s_ctrl_bus_r_rdata                 ),

@@ -22,10 +22,12 @@ package pulp_cluster_package;
   parameter SPER_EOC_ID      = 0;
   parameter SPER_TIMER_ID    = 1;
   parameter SPER_EVENT_U_ID  = 2;
-  parameter SPER_HWPE_ID     = 4;
+  parameter SPER_HWCE_ID     = 4;
   parameter SPER_ICACHE_CTRL = 5;
-  parameter SPER_DMA_ID      = 6;
-  parameter SPER_EXT_ID      = 7;
+  parameter SPER_DMA_CL_ID   = 6;
+  parameter SPER_DMA_FC_ID   = 7;
+  parameter SPER_DECOMP_ID   = 8; 
+  parameter SPER_EXT_ID      = 9;
   
   // if set to 1, then instantiate APU in the cluster
  // parameter APU_CLUSTER = 0;

@@ -66,7 +66,7 @@ module cluster_peripherals
   //input  logic                        dma_pe_irq_i,
   //output logic                        pf_event_o,
   
-  input logic                         decompr_done_evt_i,
+  //input logic                         decompr_done_evt_i,
 
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
@@ -134,12 +134,12 @@ module cluster_peripherals
 
   MESSAGE_BUS eu_message_master(); 
 
-  logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_add;
-  logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_wen;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_wdata;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][3:0]        eu_speriph_plug_be;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][NB_CORES:0] eu_speriph_plug_id;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_add;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_wen;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_wdata;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0][3:0]        eu_speriph_plug_be;
+  logic [`NB_SPERIPH_PLUGS_EU-1:0][NB_CORES:0] eu_speriph_plug_id;
 
   logic soc_periph_evt_valid, soc_periph_evt_ready;
   logic [7:0] soc_periph_evt_data;
@@ -225,7 +225,7 @@ module cluster_peripherals
     .clk_i        ( clk_i                        ),
     .rst_ni       ( rst_ni                       ),
     .ref_clk_i    ( ref_clk_i                    ),
-    .periph_slave ( speriph_slave[SPER_TIMER_ID] ),
+    .periph_slave ( speriph_slave[`SPER_TIMER_ID] ),
     .event_lo_i   ( 1'b0                         ),
     .event_hi_i   ( 1'b0                         ),
     .irq_lo_o     ( s_timer_out_lo_event         ),
@@ -246,18 +246,18 @@ module cluster_peripherals
 
   // combine number of required slave ports for event unit
   generate
-    for (genvar I = 0; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
-      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = speriph_slave_eu_comb.gnt;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = speriph_slave_eu_comb.r_valid;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = speriph_slave_eu_comb.r_opc;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = speriph_slave_eu_comb.r_id;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = speriph_slave_eu_comb.r_rdata;
-      assign eu_speriph_plug_req[I]   = speriph_slave[SPER_EVENT_U_ID+I].req;
-      assign eu_speriph_plug_add[I]   = speriph_slave[SPER_EVENT_U_ID+I].add;
-      assign eu_speriph_plug_wen[I]   = speriph_slave[SPER_EVENT_U_ID+I].wen;
-      assign eu_speriph_plug_wdata[I] = speriph_slave[SPER_EVENT_U_ID+I].wdata;
-      assign eu_speriph_plug_be[I]    = speriph_slave[SPER_EVENT_U_ID+I].be;
-      assign eu_speriph_plug_id[I]    = speriph_slave[SPER_EVENT_U_ID+I].id;
+    for (genvar I = 0; I < `NB_SPERIPH_PLUGS_EU; I++ ) begin
+      assign speriph_slave[`SPER_EVENT_U_ID+I].gnt     = speriph_slave_eu_comb.gnt;
+      assign speriph_slave[`SPER_EVENT_U_ID+I].r_valid = speriph_slave_eu_comb.r_valid;
+      assign speriph_slave[`SPER_EVENT_U_ID+I].r_opc   = speriph_slave_eu_comb.r_opc;
+      assign speriph_slave[`SPER_EVENT_U_ID+I].r_id    = speriph_slave_eu_comb.r_id;
+      assign speriph_slave[`SPER_EVENT_U_ID+I].r_rdata = speriph_slave_eu_comb.r_rdata;
+      assign eu_speriph_plug_req[I]   = speriph_slave[`SPER_EVENT_U_ID+I].req;
+      assign eu_speriph_plug_add[I]   = speriph_slave[`SPER_EVENT_U_ID+I].add;
+      assign eu_speriph_plug_wen[I]   = speriph_slave[`SPER_EVENT_U_ID+I].wen;
+      assign eu_speriph_plug_wdata[I] = speriph_slave[`SPER_EVENT_U_ID+I].wdata;
+      assign eu_speriph_plug_be[I]    = speriph_slave[`SPER_EVENT_U_ID+I].be;
+      assign eu_speriph_plug_id[I]    = speriph_slave[`SPER_EVENT_U_ID+I].id;
     end
   endgenerate
 
@@ -281,7 +281,7 @@ module cluster_peripherals
 
     .acc_events_i           ( s_acc_events           ),
     .dma_events_i           ( s_dma_events           ),
-    .decompr_done_evt_i     ( decompr_done_evt_i     ),
+    .decompr_done_evt_i     (  '0   ),  //decompr_done_evt_i 
     .timer_events_i         ( s_timer_events         ),
     .cluster_events_i       ( s_cluster_events       ),
 
@@ -411,18 +411,26 @@ module cluster_peripherals
     //******************** HW ACC  ***************************
     //********************************************************
 
-    assign speriph_slave[`SPER_HWCE_ID].gnt     = hwce_cfg_master.gnt;
-    assign speriph_slave[`SPER_HWCE_ID].r_rdata = hwce_cfg_master.r_rdata;
-    assign speriph_slave[`SPER_HWCE_ID].r_opc   = hwce_cfg_master.r_opc;
-    assign speriph_slave[`SPER_HWCE_ID].r_id    = hwce_cfg_master.r_id;
-    assign speriph_slave[`SPER_HWCE_ID].r_valid = hwce_cfg_master.r_valid;
+    assign speriph_slave[`SPER_HWCE_ID].gnt     ='0;
+    assign speriph_slave[`SPER_HWCE_ID].r_rdata = '0;
+    assign speriph_slave[`SPER_HWCE_ID].r_opc   ='0;
+    assign speriph_slave[`SPER_HWCE_ID].r_id    = '0;
+    assign speriph_slave[`SPER_HWCE_ID].r_valid = '0;
 
+/* -----\/----- EXCLUDED -----\/-----
     assign hwce_cfg_master.req   = speriph_slave[`SPER_HWCE_ID].req;
     assign hwce_cfg_master.add   = speriph_slave[`SPER_HWCE_ID].add;
     assign hwce_cfg_master.wen   = speriph_slave[`SPER_HWCE_ID].wen;
     assign hwce_cfg_master.wdata = speriph_slave[`SPER_HWCE_ID].wdata;
     assign hwce_cfg_master.be    = speriph_slave[`SPER_HWCE_ID].be;
     assign hwce_cfg_master.id    = speriph_slave[`SPER_HWCE_ID].id;
+ -----/\----- EXCLUDED -----/\----- */
+
+    assign speriph_slave[`SPER_DECOMP_ID].gnt     =    '0;
+    assign speriph_slave[`SPER_DECOMP_ID].r_rdata =  '0;
+    assign speriph_slave[`SPER_DECOMP_ID].r_opc   = '0;
+    assign speriph_slave[`SPER_DECOMP_ID].r_id    = '0;
+    assign speriph_slave[`SPER_DECOMP_ID].r_valid = '0;
 
 
     generate

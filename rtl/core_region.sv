@@ -274,14 +274,15 @@ module core_region
     .ADDR_WIDTH         ( 32                 ),
     .DATA_WIDTH         ( 32                 ),
     .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE ),
-    .REMAP_ADDRESS      ( REMAP_ADDRESS      )
+    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
+    //.REMAP_ADDRESS      (   0 )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
     .test_en_i          (  test_mode_i                ),
+  `ifdef REMAP_ADDRESS
     .base_addr_i        (  base_addr_i                ),
-
+`endif
     .data_req_i         (  s_core_bus.req             ),
     .data_add_i         (  s_core_bus.add             ),
     .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N

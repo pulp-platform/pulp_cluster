@@ -248,7 +248,7 @@ module cluster_interconnect_wrap
 
 
    generate
-      for (i=0; i<NB_SPERIPHS; i++)
+      for (i=0; i<`NB_SPERIPHS; i++)
       begin : SPERIPHS_BIND
          assign speriph_master[i].add       = s_speriph_bus_add[i];
          assign speriph_master[i].req       = s_speriph_bus_req[i];
@@ -356,17 +356,17 @@ module cluster_interconnect_wrap
         .data_r_rdata_o   ( {s_mperiph_bus_r_rdata, s_core_periph_bus_r_rdata} ),
         .data_r_opc_o     ( {s_mperiph_bus_r_opc,   s_core_periph_bus_r_opc}   ),
         
-        .data_req_o       ( s_speriph_bus_req        ),
-        .data_add_o       ( s_speriph_bus_add        ),
-        .data_wen_o       ( s_speriph_bus_wen        ),
-        .data_wdata_o     ( s_speriph_bus_wdata      ),
-        .data_be_o        ( s_speriph_bus_be         ),
-        .data_ID_o        ( s_speriph_bus_id         ),
-        .data_gnt_i       ( s_speriph_bus_gnt        ),
-        .data_r_rdata_i   ( s_speriph_bus_r_rdata    ),
-        .data_r_valid_i   ( s_speriph_bus_r_valid    ),
-        .data_r_ID_i      ( s_speriph_bus_r_id       ),
-        .data_r_opc_i     ( s_speriph_bus_r_opc      )
+        .data_req_o       ( s_speriph_bus_req     [NB_SPERIPHS-1:0] ),
+        .data_add_o       ( s_speriph_bus_add     [NB_SPERIPHS-1:0] ),
+        .data_wen_o       ( s_speriph_bus_wen     [NB_SPERIPHS-1:0] ),
+        .data_wdata_o     ( s_speriph_bus_wdata   [NB_SPERIPHS-1:0] ),
+        .data_be_o        ( s_speriph_bus_be      [NB_SPERIPHS-1:0] ),
+        .data_ID_o        ( s_speriph_bus_id      [NB_SPERIPHS-1:0] ),
+        .data_gnt_i       ( s_speriph_bus_gnt     [NB_SPERIPHS-1:0] ),
+        .data_r_rdata_i   ( s_speriph_bus_r_rdata [NB_SPERIPHS-1:0] ),
+        .data_r_valid_i   ( s_speriph_bus_r_valid [NB_SPERIPHS-1:0] ),
+        .data_r_ID_i      ( s_speriph_bus_r_id    [NB_SPERIPHS-1:0] ),
+        .data_r_opc_i     ( s_speriph_bus_r_opc   [NB_SPERIPHS-1:0] )
     );
 
 endmodule
