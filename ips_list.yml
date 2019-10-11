@@ -37,7 +37,6 @@ timer_unit:
   commit: tags/pulpissimo-v1.0
   group:  pulp-platform
 accelerator:
-  server: git@iis-git.ee.ethz.ch
+  server: git@github.com
   commit: master
-  domain: [cluster]
-  group: sriedel
+  group: SamuelRiedel
