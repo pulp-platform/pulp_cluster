@@ -25,7 +25,7 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter NB_CORES           = `NB_CORES,
-  parameter NB_HWACC_PORTS     = 0,
+  parameter NB_HWACC_PORTS     = 1,
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 8,
@@ -376,6 +376,9 @@ module pulp_cluster
   // periph interconnect -> XNE
   XBAR_PERIPH_BUS s_xne_cfg_bus();
 
+  // periph interconnect -> Accelerator
+  XBAR_PERIPH_BUS s_accelerator_cfg_bus();
+
   // DMA -> log interconnect
   XBAR_TCDM_BUS s_dma_xbar_bus[NB_DMAS-1:0]();
 
@@ -655,6 +658,7 @@ module pulp_cluster
     .irq_ack_i              ( irq_ack                            ),
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
     .hwce_cfg_master        ( s_xne_cfg_bus                      ),
+    .accelerator_cfg_master ( s_accelerator_cfg_bus              ),
     .hwacc_events_i         ( s_hwacc_events                     ),
     .hwpe_sel_o             ( hwpe_sel                           ),
     .hwpe_en_o              ( hwpe_en                            ),
@@ -716,8 +720,18 @@ module pulp_cluster
       end
     end
   endgenerate
-   
+
   /* cluster-coupled accelerators / HW processing engines */
+  accelerator #(
+    .ID_WIDTH    ( NB_CORES+NB_MPERIPHS      )
+  ) accelerator_i (
+    .clk_i       ( clk_cluster               ),
+    .rst_ni      ( s_rst_n                   ),
+    .test_mode_i ( test_mode_i               ),
+    .tcdm_bus    ( s_core_xbar_bus[NB_CORES] ),
+    .cfg_bus     ( s_accelerator_cfg_bus     )
+  );
+
   generate
     if(XNE_PRESENT == 1) begin : xne_gen
       xne_wrap #(
@@ -739,12 +753,12 @@ module pulp_cluster
       assign s_xne_cfg_bus.gnt = '1;
       assign s_xne_cfg_bus.r_rdata = 32'hdeadbeef;
       assign s_xne_cfg_bus.r_id = '0;
-      for (genvar i=NB_CORES; i<NB_CORES+NB_HWACC_PORTS; i++) begin : no_xne_bias
-        assign s_core_xbar_bus[i].req = '0;
-        assign s_core_xbar_bus[i].wen = '0;
-        assign s_core_xbar_bus[i].be  = '0;
-        assign s_core_xbar_bus[i].wdata = '0;
-      end
+      // for (genvar i=NB_CORES; i<NB_CORES+NB_HWACC_PORTS; i++) begin : no_xne_bias
+      //   assign s_core_xbar_bus[i].req = '0;
+      //   assign s_core_xbar_bus[i].wen = '0;
+      //   assign s_core_xbar_bus[i].be  = '0;
+      //   assign s_core_xbar_bus[i].wdata = '0;
+      // end
       assign s_xne_busy = '0;
       assign s_xne_evt  = '0;
 

@@ -44,37 +44,39 @@ module cluster_peripherals
   input  logic [NB_CORES-1:0]         core_busy_i,
   output logic [NB_CORES-1:0]         core_clk_en_o,
   output logic                        fregfile_disable_o,
-  
+
   output logic [NB_CORES-1:0][31:0]   boot_addr_o,
-  
+
   output logic                        cluster_cg_en_o,
-  
+
   output logic                        busy_o,
-  
+
   XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0],
   XBAR_PERIPH_BUS.Slave               core_eu_direct_link[NB_CORES-1:0],
-  
+
   XBAR_PERIPH_BUS.Master              dma_cfg_master,
   input  logic                        dma_pe_irq_i,
   output logic                        pf_event_o,
-  
+
   output logic                        soc_periph_evt_ready_o,
   input  logic                        soc_periph_evt_valid_i,
   input  logic [EVNT_WIDTH-1:0]       soc_periph_evt_data_i,
-  
+
   input  logic [NB_CORES-1:0]         dbg_core_halted_i,
   output logic [NB_CORES-1:0]         dbg_core_halt_o,
   output logic [NB_CORES-1:0]         dbg_core_resume_o,
-  
+
   output logic                        eoc_o,
   output logic [NB_CORES-1:0]         fetch_enable_reg_o, //fetch enable driven by the internal register
   output logic [NB_CORES-1:0][4:0]    irq_id_o,
   input  logic [NB_CORES-1:0][4:0]    irq_ack_id_i,
   output logic [NB_CORES-1:0]         irq_req_o,
   input  logic [NB_CORES-1:0]         irq_ack_i,
-  
+
   // SRAM SPEED REGULATION --> TCDM
   output logic [1:0]                  TCDM_arb_policy_o,
+
+  XBAR_PERIPH_BUS.Master              accelerator_cfg_master,
 
   XBAR_PERIPH_BUS.Master              hwce_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwacc_events_i,
@@ -84,17 +86,17 @@ module cluster_peripherals
   // Control ports
   MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
 );
-   
+
   logic                      s_timer_out_lo_event;
   logic                      s_timer_out_hi_event;
   logic                      s_timer_in_lo_event;
   logic                      s_timer_in_hi_event;
-  
+
   logic [NB_CORES-1:0][31:0] s_cluster_events;
   logic [NB_CORES-1:0][3:0]  s_acc_events;
   logic [NB_CORES-1:0][1:0]  s_timer_events;
   logic [NB_CORES-1:0][1:0]  s_dma_events;
-  
+
   logic [NB_CORES-1:0]  s_fetch_en_cc;
 
   logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
@@ -106,11 +108,11 @@ module cluster_peripherals
 
   logic soc_periph_evt_valid, soc_periph_evt_ready;
   logic [7:0] soc_periph_evt_data;
-   
+
   // internal speriph bus to combine multiple plugs to new event unit
   XBAR_PERIPH_BUS speriph_slave_eu_comb();
-  MESSAGE_BUS eu_message_master();  
-  
+  MESSAGE_BUS eu_message_master();
+
   // decide between common or core-specific event sources
   generate
     for (genvar I=0; I<NB_CORES; I++) begin
@@ -120,9 +122,9 @@ module cluster_peripherals
       assign s_dma_events[I]     = {dma_irq_i[I],dma_events_i[I]};
     end
   endgenerate
-  
+
   assign fetch_enable_reg_o = s_fetch_en_cc;
-  
+
   cluster_control_unit #(
     .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS        ),
     .NB_CORES      ( NB_CORES                    ),
@@ -147,7 +149,7 @@ module cluster_peripherals
     .TCDM_arb_policy_o  ( TCDM_arb_policy_o          ),
     .fregfile_disable_o ( fregfile_disable_o         )
   );
-  
+
   cluster_timer_wrap #(
     .ID_WIDTH(NB_CORES+NB_MPERIPHS)
   ) cluster_timer_wrap_i (
@@ -161,7 +163,7 @@ module cluster_peripherals
     .irq_hi_o     ( s_timer_out_hi_event         ),
     .busy_o       ( busy_o                       )
   );
-   
+
   event_unit_top #(
     .NB_CORES     ( NB_CORES   ),
     .NB_BARR      ( NB_CORES   ),
@@ -185,7 +187,7 @@ module cluster_peripherals
     .eu_direct_link         ( core_eu_direct_link    ),
     .soc_periph_evt_valid_i ( soc_periph_evt_valid_i ),
     .soc_periph_evt_ready_o ( soc_periph_evt_ready_o ),
-    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),  
+    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),
     .message_master         ( eu_message_master      )
   );
 
@@ -230,7 +232,7 @@ module cluster_peripherals
       end
     end
   endgenerate
-     
+
   mp_pf_icache_ctrl_unit #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
     .NB_CORES       ( NB_CORES             ),
@@ -249,26 +251,40 @@ module cluster_peripherals
   assign speriph_slave[SPER_DMA_ID].r_opc   = dma_cfg_master.r_opc;
   assign speriph_slave[SPER_DMA_ID].r_id    = dma_cfg_master.r_id;
   assign speriph_slave[SPER_DMA_ID].r_valid = dma_cfg_master.r_valid;
-  
+
   assign dma_cfg_master.req   = speriph_slave[SPER_DMA_ID].req;
   assign dma_cfg_master.add   = speriph_slave[SPER_DMA_ID].add;
   assign dma_cfg_master.wen   = speriph_slave[SPER_DMA_ID].wen;
   assign dma_cfg_master.wdata = speriph_slave[SPER_DMA_ID].wdata;
   assign dma_cfg_master.be    = speriph_slave[SPER_DMA_ID].be;
   assign dma_cfg_master.id    = speriph_slave[SPER_DMA_ID].id;
-    
+
   // accelerator binding
-  assign speriph_slave[SPER_HWPE_ID].gnt     = hwce_cfg_master.gnt;
-  assign speriph_slave[SPER_HWPE_ID].r_rdata = hwce_cfg_master.r_rdata;
-  assign speriph_slave[SPER_HWPE_ID].r_opc   = hwce_cfg_master.r_opc;
-  assign speriph_slave[SPER_HWPE_ID].r_id    = hwce_cfg_master.r_id;
-  assign speriph_slave[SPER_HWPE_ID].r_valid = hwce_cfg_master.r_valid;
-  
-  assign hwce_cfg_master.req   = speriph_slave[SPER_HWPE_ID].req;
-  assign hwce_cfg_master.add   = speriph_slave[SPER_HWPE_ID].add;
-  assign hwce_cfg_master.wen   = speriph_slave[SPER_HWPE_ID].wen;
-  assign hwce_cfg_master.wdata = speriph_slave[SPER_HWPE_ID].wdata;
-  assign hwce_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
-  assign hwce_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
-   
+  assign speriph_slave[SPER_ACCEL_ID].gnt     = accelerator_cfg_master.gnt;
+  assign speriph_slave[SPER_ACCEL_ID].r_rdata = accelerator_cfg_master.r_rdata;
+  assign speriph_slave[SPER_ACCEL_ID].r_opc   = accelerator_cfg_master.r_opc;
+  assign speriph_slave[SPER_ACCEL_ID].r_id    = accelerator_cfg_master.r_id;
+  assign speriph_slave[SPER_ACCEL_ID].r_valid = accelerator_cfg_master.r_valid;
+
+  assign accelerator_cfg_master.req   = speriph_slave[SPER_ACCEL_ID].req;
+  assign accelerator_cfg_master.add   = speriph_slave[SPER_ACCEL_ID].add;
+  assign accelerator_cfg_master.wen   = speriph_slave[SPER_ACCEL_ID].wen;
+  assign accelerator_cfg_master.wdata = speriph_slave[SPER_ACCEL_ID].wdata;
+  assign accelerator_cfg_master.be    = speriph_slave[SPER_ACCEL_ID].be;
+  assign accelerator_cfg_master.id    = speriph_slave[SPER_ACCEL_ID].id;
+
+  // XNE binding
+  // assign speriph_slave[SPER_HWPE_ID].gnt     = hwce_cfg_master.gnt;
+  // assign speriph_slave[SPER_HWPE_ID].r_rdata = hwce_cfg_master.r_rdata;
+  // assign speriph_slave[SPER_HWPE_ID].r_opc   = hwce_cfg_master.r_opc;
+  // assign speriph_slave[SPER_HWPE_ID].r_id    = hwce_cfg_master.r_id;
+  // assign speriph_slave[SPER_HWPE_ID].r_valid = hwce_cfg_master.r_valid;
+
+  assign hwce_cfg_master.req   = '0; //speriph_slave[SPER_HWPE_ID].req;
+  assign hwce_cfg_master.add   = '0; //speriph_slave[SPER_HWPE_ID].add;
+  assign hwce_cfg_master.wen   = '0; //speriph_slave[SPER_HWPE_ID].wen;
+  assign hwce_cfg_master.wdata = '0; //speriph_slave[SPER_HWPE_ID].wdata;
+  assign hwce_cfg_master.be    = '0; //speriph_slave[SPER_HWPE_ID].be;
+  assign hwce_cfg_master.id    = '0; //speriph_slave[SPER_HWPE_ID].id;
+
 endmodule // cluster_peripherals
