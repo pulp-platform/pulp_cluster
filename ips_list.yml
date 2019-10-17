@@ -16,7 +16,7 @@ axi/axi_size_conv:
   commit: tags/pulp-v1.0
   group: pulp-platform
 cluster_interconnect:
-  commit: master
+  commit: tags/v1.0.3
   group: pulp-platform
 event_unit_flex:
   commit: tags/v1.0.1
