@@ -21,7 +21,6 @@ pulp_cluster:
     rtl/dmac_wrap.sv,
     rtl/xne_wrap.sv,
     rtl/cluster_bus_wrap.sv,
-    rtl/axi_slice_wrap.sv,
     rtl/axi2mem_wrap.sv,
     rtl/axi2per_wrap.sv,
     rtl/per2axi_wrap.sv,
