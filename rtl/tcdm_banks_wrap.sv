@@ -48,7 +48,7 @@ module tcdm_banks_wrap
    generate
       for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
 
-         `ifndef PULP_EMU_FPGA
+         `ifndef PULP_FPGA_EMUL
 	 logic                         bank_ce_n;
 	 logic                         bank_rdwe_n;
 	 logic [3:0]                   bank_be_n;
