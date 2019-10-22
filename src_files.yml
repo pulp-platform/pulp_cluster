@@ -4,6 +4,7 @@ pulp_cluster:
   ]
   incdirs: [
     ../../rtl/includes,
+    packages,
   ]
   files: [
     packages/pulp_cluster_package.sv,
@@ -25,4 +26,5 @@ pulp_cluster:
     rtl/axi2per_wrap.sv,
     rtl/per2axi_wrap.sv,
     rtl/pulp_cluster.sv,
+    ../pulp_soc/rtl/components/pulp_interfaces.sv,
   ]
