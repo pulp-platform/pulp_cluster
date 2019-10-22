@@ -14,6 +14,7 @@
  * Antonio Pullini <pullinia@iis.ee.ethz.ch>
  * Igor Loi <igor.loi@unibo.it>
  * Francesco Conti <fconti@iis.ee.ethz.ch>
+ * Angelo Garofalo <angelo.garofalo@unibo.it>
  */
 
 import pulp_cluster_package::*;
@@ -23,7 +24,7 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter NB_CORES           = 8,
-  parameter NB_HWACC_PORTS     = 4,
+  parameter NB_HWPE_PORTS      = 4,
   parameter NB_DMAS            = 4,
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 8,
@@ -32,7 +33,7 @@ module pulp_cluster
   parameter NB_TCDM_BANKS      = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS      = TCDM_BANK_SIZE/4,        // [words]
-  parameter XNE_PRESENT        = 0,                       // set to 1 if XNE is present in the cluster
+  parameter HWPE_PRESENT       = 1,                       // set to 1 if HW Processing Engines are present in the cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE       = 4,
@@ -238,8 +239,8 @@ module pulp_cluster
   logic [NB_CORES-1:0]                dbg_core_halt;
   logic [NB_CORES-1:0]                dbg_core_resume;
   logic [NB_CORES-1:0]                dbg_core_halted;
-  logic                               hwpe_sel;
-  logic                               hwpe_en;
+  logic                               s_hwpe_sel;
+  logic                               s_hwpe_en;
 
   logic                s_cluster_periphs_busy;
   logic                s_axi2mem_busy;
@@ -249,9 +250,9 @@ module pulp_cluster
   logic                s_cluster_cg_en;
   logic [NB_CORES-1:0] s_dma_event;
   logic [NB_CORES-1:0] s_dma_irq;
-  logic [NB_CORES-1:0][3:0]  s_hwacc_events;
-  logic [NB_CORES-1:0][1:0]  s_xne_evt;
-  logic                      s_xne_busy;
+  logic [NB_CORES-1:0][3:0]  s_hwpe_remap_evt;
+  logic [NB_CORES-1:0][1:0]  s_hwpe_evt;
+  logic                      s_hwpe_busy;
 
   logic [NB_CORES-1:0]               clk_core_en;
   logic                              clk_cluster;
@@ -375,8 +376,8 @@ module pulp_cluster
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
 
-  // periph interconnect -> XNE
-  XBAR_PERIPH_BUS s_xne_cfg_bus();
+  // periph interconnect -> HWPE
+  XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 
   // DMA -> log interconnect
   XBAR_TCDM_BUS s_dma_xbar_bus[NB_DMAS-1:0]();
@@ -389,7 +390,7 @@ module pulp_cluster
   XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
   
   // cores & accelerators -> log interconnect
-  XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWACC_PORTS-1:0]();
+  XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:0]();
   
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
@@ -432,7 +433,7 @@ module pulp_cluster
   );
   
   /* fetch & busy genertion */
-  assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_xne_busy;
+  assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
   assign busy_o = s_cluster_int_busy | (|core_busy);
   assign fetch_en_int = fetch_enable_reg_int;
 
@@ -538,7 +539,7 @@ module pulp_cluster
   /* cluster (log + periph) interconnect and attached peripherals */
   cluster_interconnect_wrap #(
     .NB_CORES           ( NB_CORES           ),
-    .NB_HWACC_PORTS     ( NB_HWACC_PORTS     ),
+    .NB_HWACC_PORTS     ( NB_HWPE_PORTS      ),
     .NB_DMAS            ( NB_DMAS            ),
     .NB_MPERIPHS        ( NB_MPERIPHS        ),
     .NB_TCDM_BANKS      ( NB_TCDM_BANKS      ),
@@ -636,10 +637,10 @@ module pulp_cluster
     .irq_req_o              ( irq_req                            ),
     .irq_ack_i              ( irq_ack                            ),
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
-    .hwce_cfg_master        ( s_xne_cfg_bus                      ),
-    .hwacc_events_i         ( s_hwacc_events                     ),
-    .hwpe_sel_o             ( hwpe_sel                           ),
-    .hwpe_en_o              ( hwpe_en                            ),
+    .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
+    .hwacc_events_i         ( s_hwpe_remap_evt                   ),
+    .hwpe_sel_o             ( s_hwpe_sel                         ),
+    .hwpe_en_o              ( s_hwpe_en                          ),
     .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                  )    
   );
   
@@ -720,42 +721,42 @@ module pulp_cluster
    
   /* cluster-coupled accelerators / HW processing engines */
   generate
-    if(XNE_PRESENT == 1) begin : xne_gen
-      xne_wrap #(
+    if(HWPE_PRESENT == 1) begin : hwpe_gen
+      hwpe_subsystem #(
         .N_CORES       ( NB_CORES             ),
         .N_MASTER_PORT ( 4                    ),
         .ID_WIDTH      ( NB_CORES+NB_MPERIPHS )
-      ) xne_wrap_i (
-        .clk               ( clk_cluster                                         ),
-        .rst_n             ( s_rst_n                                             ),
-        .test_mode         ( test_mode_i                                         ),
-        .hwacc_xbar_master ( s_core_xbar_bus[NB_CORES+NB_HWACC_PORTS-1:NB_CORES] ),
-        .hwacc_cfg_slave   ( s_xne_cfg_bus                                       ),
-        .evt_o             ( s_xne_evt                                           ),
-        .busy_o            ( s_xne_busy                                          )
+      ) hwpe_subsystem_i (
+        .clk               ( clk_cluster                                        ),
+        .rst_n             ( s_rst_n                                            ),
+        .test_mode         ( test_mode_i                                        ),
+        .hwpe_xbar_master  ( s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:NB_CORES] ),
+        .hwpe_cfg_slave    ( s_hwpe_cfg_bus                                     ),
+        .evt_o             ( s_hwpe_evt                                         ),
+        .busy_o            ( s_hwpe_busy                                        )
       );
     end
-    else begin : no_xne_gen
-      assign s_xne_cfg_bus.r_valid = '1;
-      assign s_xne_cfg_bus.gnt = '1;
-      assign s_xne_cfg_bus.r_rdata = 32'hdeadbeef;
-      assign s_xne_cfg_bus.r_id = '0;
-      for (genvar i=NB_CORES; i<NB_CORES+NB_HWACC_PORTS; i++) begin : no_xne_bias
+    else begin : no_hwpe_gen
+      assign s_hwpe_cfg_bus.r_valid = '1;
+      assign s_hwpe_cfg_bus.gnt     = '1;
+      assign s_hwpe_cfg_bus.r_rdata = 32'hdeadbeef;
+      assign s_hwpe_cfg_bus.r_id    = '0;
+      for (genvar i=NB_CORES; i<NB_CORES+NB_HWPE_PORTS; i++) begin : no_hwpe_bias
         assign s_core_xbar_bus[i].req = '0;
         assign s_core_xbar_bus[i].wen = '0;
         assign s_core_xbar_bus[i].be  = '0;
         assign s_core_xbar_bus[i].wdata = '0;
       end
-      assign s_xne_busy = '0;
-      assign s_xne_evt  = '0;
+      assign s_hwpe_busy = '0;
+      assign s_hwpe_evt  = '0;
        
     end
   endgenerate
   
   generate
-    for(genvar i=0; i<NB_CORES; i++) begin : hwacc_event_interrupt_gen
-      assign s_hwacc_events[i][3:2] = '0;
-      assign s_hwacc_events[i][1:0] = s_xne_evt[i];
+    for(genvar i=0; i<NB_CORES; i++) begin : hwpe_event_interrupt_gen
+      assign s_hwpe_remap_evt[i][3:2] = '0;
+      assign s_hwpe_remap_evt[i][1:0] = s_hwpe_evt[i];
     end
   endgenerate
 

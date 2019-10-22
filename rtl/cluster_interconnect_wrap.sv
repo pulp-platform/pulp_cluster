@@ -19,7 +19,7 @@
 module cluster_interconnect_wrap
 #(
   parameter NB_CORES        = 8,
-  parameter NB_HWACC_PORTS  = 4,
+  parameter NB_HWPE_PORTS   = 4,
   parameter NB_DMAS         = 4,
   parameter NB_MPERIPHS     = 1,
   parameter NB_TCDM_BANKS   = 16,
@@ -38,7 +38,7 @@ module cluster_interconnect_wrap
 (
   input logic                          clk_i,
   input logic                          rst_ni,
-  XBAR_TCDM_BUS.Slave                  core_tcdm_slave[NB_CORES+NB_HWACC_PORTS-1:0],
+  XBAR_TCDM_BUS.Slave                  core_tcdm_slave[NB_CORES+NB_HWPE_PORTS-1:0],
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
   XBAR_TCDM_BUS.Slave                  ext_slave[NB_DMAS-1:0],
   XBAR_TCDM_BUS.Slave                  dma_slave[NB_DMAS-1:0],
@@ -48,7 +48,7 @@ module cluster_interconnect_wrap
   input logic [1:0]                    TCDM_arb_policy_i
 );
 
-  localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWACC_PORTS;
+  localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
 
   // DMA --> LOGARITHMIC INTERCONNECT BUS SIGNALS
   logic [4+NB_DMAS-1:0][DATA_WIDTH-1:0] s_dma_bus_wdata;
@@ -72,14 +72,14 @@ module cluster_interconnect_wrap
   logic [NB_MPERIPHS-1:0]                 s_mperiph_bus_r_valid;
 
   // DEMUX --> LOGARITHMIC INTERCONNECT BUS SIGNALS
-  logic [NB_CORES+NB_HWACC_PORTS-1:0][DATA_WIDTH-1:0] s_core_tcdm_bus_wdata;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0][ADDR_WIDTH-1:0] s_core_tcdm_bus_add;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0]                 s_core_tcdm_bus_req;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0]                 s_core_tcdm_bus_wen;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0][BE_WIDTH-1:0]   s_core_tcdm_bus_be;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0]                 s_core_tcdm_bus_gnt;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0][DATA_WIDTH-1:0] s_core_tcdm_bus_r_rdata;
-  logic [NB_CORES+NB_HWACC_PORTS-1:0]                 s_core_tcdm_bus_r_valid;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0][DATA_WIDTH-1:0] s_core_tcdm_bus_wdata;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0][ADDR_WIDTH-1:0] s_core_tcdm_bus_add;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0]                 s_core_tcdm_bus_req;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0]                 s_core_tcdm_bus_wen;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0][BE_WIDTH-1:0]   s_core_tcdm_bus_be;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0]                 s_core_tcdm_bus_gnt;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0][DATA_WIDTH-1:0] s_core_tcdm_bus_r_rdata;
+  logic [NB_CORES+NB_HWPE_PORTS-1:0]                 s_core_tcdm_bus_r_valid;
 
   // DEMUX -->  PERIPHERAL INTERCONNECT BUS SIGNALS
   logic [NB_CORES-1:0][ADDR_WIDTH-1:0] s_core_periph_bus_add;
@@ -137,7 +137,7 @@ module cluster_interconnect_wrap
   endgenerate
 
   generate
-    for (genvar i=0; i<NB_CORES+NB_HWACC_PORTS; i++) begin : CORE_TCDM_BIND
+    for (genvar i=0; i<NB_CORES+NB_HWPE_PORTS; i++) begin : CORE_TCDM_BIND
       assign s_core_tcdm_bus_add[i]      = core_tcdm_slave[i].add;
       assign s_core_tcdm_bus_req[i]      = core_tcdm_slave[i].req;
       assign s_core_tcdm_bus_wdata[i]    = core_tcdm_slave[i].wdata;
@@ -240,15 +240,15 @@ module cluster_interconnect_wrap
 
   // logarithmic interconnect to TCDM
   XBAR_TCDM #(
-    .N_CH0         (NB_CORES+NB_HWACC_PORTS),
-    .N_CH1         (NB_DMAS+4              ),
-    .N_SLAVE       (NB_TCDM_BANKS          ),
-    .ID_WIDTH      (TCDM_ID_WIDTH          ),
-    .ADDR_WIDTH    (ADDR_WIDTH             ),
-    .DATA_WIDTH    (DATA_WIDTH             ),
-    .BE_WIDTH      (BE_WIDTH               ),
-    .TEST_SET_BIT  (TEST_SET_BIT           ),
-    .ADDR_MEM_WIDTH(ADDR_MEM_WIDTH         )
+    .N_CH0          ( NB_CORES+NB_HWPE_PORTS ),
+    .N_CH1          ( NB_DMAS+4              ),
+    .N_SLAVE        ( NB_TCDM_BANKS          ),
+    .ID_WIDTH       ( TCDM_ID_WIDTH          ),
+    .ADDR_WIDTH     ( ADDR_WIDTH             ),
+    .DATA_WIDTH     ( DATA_WIDTH             ),
+    .BE_WIDTH       ( BE_WIDTH               ),
+    .TEST_SET_BIT   ( TEST_SET_BIT           ),
+    .ADDR_MEM_WIDTH ( ADDR_MEM_WIDTH         )
   ) i_XBAR_TCDM (
     .data_req_i        ( {s_dma_bus_req,     s_core_tcdm_bus_req}     ),
     .data_add_i        ( {s_dma_bus_add,     s_core_tcdm_bus_add}     ),
