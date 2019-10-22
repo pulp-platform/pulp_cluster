@@ -22,13 +22,15 @@ package pulp_cluster_package;
   parameter SPER_EOC_ID      = 0;
   parameter SPER_TIMER_ID    = 1;
   parameter SPER_EVENT_U_ID  = 2;
-  parameter SPER_HWPE_ID     = 4;
+  parameter SPER_HWCE_ID     = 4;
   parameter SPER_ICACHE_CTRL = 5;
-  parameter SPER_DMA_ID      = 6;
-  parameter SPER_EXT_ID      = 7;
+  parameter SPER_DMA_CL_ID   = 6;
+  parameter SPER_DMA_FC_ID   = 7;
+  parameter SPER_DECOMP_ID   = 8; 
+  parameter SPER_EXT_ID      = 9;
   
   // if set to 1, then instantiate APU in the cluster
-  parameter APU_CLUSTER = 0;
+ // parameter APU_CLUSTER = 0;
   
   // // if set to 1, the 0x0000_0000 to 0x0040_0000 is the alias of the current cluster address space (eg cluster 0 is from  0x1000_0000 to 0x1040_0000)
   // parameter CLUSTER_ALIAS = 1;
