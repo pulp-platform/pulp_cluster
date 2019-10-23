@@ -101,7 +101,7 @@ module pulp_cluster
   parameter PE_ROUTING_LSB = 10, // LSB used as routing BIT in periph interco
   //parameter PE_ROUTING_MSB = 13, // MSB used as routing BIT in periph interco
   parameter EVNT_WIDTH     = 8,  // size of the event bus
-  parameter REMAP_ADDRESS  = 1,   // for cluster virtualization
+  parameter REMAP_ADDRESS  = 0,   // for cluster virtualization
 
   // FPU PARAMETERS
   parameter APU_NARGS_CPU         = 3,
