@@ -234,7 +234,7 @@ module cluster_interconnect_wrap
   endgenerate
 
   generate
-    for (genvar i=0; i<`NB_SPERIPHS; i++)
+    for (genvar i=0; i<NB_SPERIPHS; i++)
     begin : SPERIPHS_BIND
       assign speriph_master[i].add       = s_speriph_bus_add[i];
       assign speriph_master[i].req       = s_speriph_bus_req[i];

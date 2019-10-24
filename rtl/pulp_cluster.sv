@@ -68,10 +68,10 @@ module pulp_cluster
   parameter BOOT_ADDR         = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH = 128,
 
-  parameter CLUST_FPU               = `CLUST_FPU,
-  parameter CLUST_FP_DIVSQRT        = `CLUST_FP_DIVSQRT,
-  parameter CLUST_SHARED_FP         = `CLUST_SHARED_FP,
-  parameter CLUST_SHARED_FP_DIVSQRT = `CLUST_SHARED_FP_DIVSQRT,
+  parameter CLUST_FPU               = 1,
+  parameter CLUST_FP_DIVSQRT        = 1,
+  parameter CLUST_SHARED_FP         = 2,
+  parameter CLUST_SHARED_FP_DIVSQRT = 2,
   
   // AXI parameters
   parameter AXI_ADDR_WIDTH        = 32,
@@ -653,8 +653,7 @@ module pulp_cluster
 
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB     )
-    //.PE_ROUTING_MSB     ( PE_ROUTING_MSB     )
-  //  .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
+
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
     .rst_ni             ( rst_ni                              ),
