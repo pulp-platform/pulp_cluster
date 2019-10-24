@@ -302,7 +302,7 @@ module cluster_peripherals
   
    
 
-`ifdef PRIVATE_ICACHE_DUMMY   //to be integrated hier_icache
+`ifdef PRIVATE_ICACHE  //to be integrated hier_icache
 
 
     hier_icache_ctrl_unit_wrap

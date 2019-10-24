@@ -133,6 +133,16 @@ module core_region
   input logic [31:0]                     apu_master_result_i,
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
 `endif
+
+`ifdef PULP_FPGA_EMUL
+`ifdef TRACE_EXECUTION
+   ,
+   output logic [63:0] instr_trace_cycles_o,
+   output logic [31:0] instr_trace_instr_o,
+   output logic [31:0] instr_trace_pc_o,
+   output logic        instr_trace_valid_o
+`endif
+`endif
  
 
 );

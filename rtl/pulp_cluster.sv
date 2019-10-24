@@ -42,7 +42,7 @@ module pulp_cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE       = 4,
-`ifdef PRI_ICACHE
+`ifdef PRIVATE_ICACHE
     parameter NB_CACHE_BANKS        = 2,
 `endif
 
@@ -409,12 +409,22 @@ module pulp_cluster
       logic [NB_CORES-1:0][APU_NUSFLAGS_CPU-1:0]     s_apu_master_rflags;
 `endif
 
-  // I$ ctrl unit <-> I$, L0, I$ interconnect
-`ifdef PRI_ICACHE
-   PRI_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus[NB_CORES]();
-`endif
-`ifdef MP_ICACHE
-  MP_PF_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus();
+   //----------------------------------------------------------------------//
+   // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
+   //                                                                      //
+`ifdef PRIVATE_ICACHE
+    SP_ICACHE_CTRL_UNIT_BUS      IC_ctrl_unit_bus_main[NB_CACHE_BANKS]();
+    PRI_ICACHE_CTRL_UNIT_BUS     IC_ctrl_unit_bus_pri[NB_CORES]();
+    logic                        s_special_core_icache_cfg;
+`else
+  `ifdef SP_ICACHE
+    SP_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus[NB_CACHE_BANKS]();
+    L0_CTRL_UNIT_BUS         L0_ctrl_unit_bus[NB_CORES]();
+  `else
+    `ifdef MP_ICACHE
+      MP_PF_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus();
+   `endif
+  `endif
 `endif
    
   // log interconnect -> TCDM memory banks (SRAM)
@@ -592,28 +602,7 @@ module pulp_cluster
 
   `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
     
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wen   = s_mperiph_demux_bus[0].wen;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wdata = s_mperiph_demux_bus[0].wdata;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].be    = s_mperiph_demux_bus[0].be;
-                                        
-  // assign s_mperiph_demux_bus[0].gnt       = s_mperiph_xbar_bus[NB_MPERIPHS-1].gnt;
-  // assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
-  // assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
-  // assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
- 
-/* not used in vega   
-  per_demux_wrap #(
-    .NB_MASTERS  ( NB_CORES ),
-    .ADDR_OFFSET ( 15       )
-  ) debug_interconect_i (
-    .clk_i   ( clk_cluster            ),
-    .rst_ni  ( rst_ni                 ),
-    .slave   ( s_mperiph_demux_bus[1] ),
-    .masters ( s_debug_bus            )
-  );
-    */
+
   per2axi_wrap #(
     .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
@@ -695,7 +684,6 @@ module pulp_cluster
     .clk_i          ( clk_cluster        ),
     .rst_ni         ( rst_ni             ),
     .test_mode_i    ( test_mode_i        ),
-    //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
     .cl_ctrl_slave  ( s_periph_dma_bus[0]),
     .fc_ctrl_slave  ( s_periph_dma_bus[1]),
     .tcdm_master    ( s_dma_xbar_bus     ),
@@ -745,8 +733,6 @@ module pulp_cluster
 
     .dma_cl_event_i         ( s_dma_cl_event                     ),
     .dma_cl_irq_i           ( s_dma_cl_irq                       ),
-    //.dma_events_i           ( s_dma_event                        ),
-    //.dma_irq_i              ( s_dma_irq                          ),
 
     // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
@@ -882,6 +868,20 @@ module pulp_cluster
         .periph_data_master  ( s_core_periph_bus[i]  ),
       
         .fregfile_disable_i  (  s_fregfile_disable     )
+
+`ifdef APU_CLUSTER
+        ,
+        .apu_master_req_o      ( s_apu_cluster_bus[i].req_ds_s     ),
+        .apu_master_gnt_i      ( s_apu_cluster_bus[i].ack_ds_s     ),
+        .apu_master_type_o     ( s_apu_cluster_bus[i].type_ds_d    ),
+        .apu_master_operands_o ( s_apu_cluster_bus[i].operands_ds_d),
+        .apu_master_op_o       ( s_apu_cluster_bus[i].op_ds_d      ),
+        .apu_master_flags_o    ( s_apu_cluster_bus[i].flags_ds_d   ),
+        .apu_master_valid_i    ( s_apu_cluster_bus[i].valid_us_s   ),
+        .apu_master_ready_o    ( s_apu_cluster_bus[i].ready_us_s   ),
+        .apu_master_result_i   ( s_apu_cluster_bus[i].result_us_d  ),
+        .apu_master_flags_i    ( s_apu_cluster_bus[i].flags_us_d   )
+`endif        
 `ifdef SHARED_FPU_CLUSTER
         ,        
         .apu_master_req_o      ( s_apu_master_req     [i] ),
@@ -894,6 +894,17 @@ module pulp_cluster
         .apu_master_ready_o    ( s_apu_master_rready  [i] ),
         .apu_master_result_i   ( s_apu_master_rdata   [i] ),
         .apu_master_flags_i    ( s_apu_master_rflags  [i] )
+`endif
+
+                // Execution traces (FPGA only)
+`ifdef PULP_FPGA_EMUL
+`ifdef TRACE_EXECUTION
+                ,
+                .instr_trace_cycles_o ( instr_trace_cycles_o[((i+1)*64)-1:i*64] ),
+                .instr_trace_instr_o  ( instr_trace_instr_o [((i+1)*32)-1:i*32] ),
+                .instr_trace_pc_o     ( instr_trace_pc_o    [((i+1)*32)-1:i*32] ),
+                .instr_trace_valid_o  ( instr_trace_valid_o [i]                 )
+`endif
 `endif
       );
     end
@@ -1049,158 +1060,313 @@ module pulp_cluster
     end
   endgenerate
 
-`ifdef PRI_ICACHE
+`ifdef PRIVATE_ICACHE
    localparam CACHE_LINE_PRI=1;
    localparam CACHE_SIZE_PRI = CACHE_SIZE/NB_CORES;
    
   /* instruction cache */
-    icache_top_private #(
-    .FETCH_ADDR_WIDTH ( 32                 ),
-    .FETCH_DATA_WIDTH ( 128                ),
-    .NB_CORES         ( NB_CORES           ),
-			 
-    .NB_WAYS          ( SET_ASSOCIATIVE    ),
-    .CACHE_SIZE       ( CACHE_SIZE_PRI      ),
-    .CACHE_LINE       ( CACHE_LINE_PRI     ),
-			 
-    .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
-    .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
-    .AXI_USER         ( AXI_USER_WIDTH     ),
-    .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
-			 
-    .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            )
+  icache_hier_top
+  #(
+    .FETCH_ADDR_WIDTH  ( 32       ), //= 32,
+    .FETCH_DATA_WIDTH  ( 128      ), //= 128,
+    .NB_CORES          ( NB_CORES ), //= 8,
+
+    .SH_NB_BANKS       ( NB_CACHE_BANKS ), //= 1,
+    .SH_NB_WAYS        ( 4              ), //= 4,
+    .SH_CACHE_SIZE     ( 4*1024         ), //= 4*1024, // in Byte
+    .SH_CACHE_LINE     ( 1              ), //= 1,       // in word of [FETCH_DATA_WIDTH]
+
+    .PRI_NB_WAYS       ( 4              ), //= 4,
+    .PRI_CACHE_SIZE    ( 512            ), //= 512, // in Byte
+    .PRI_CACHE_LINE    ( 1              ), //= 1,   // in word of [FETCH_DATA_WIDTH]
+
+    .USE_SPECIAL_CORE       ( "FALSE"     ),
+    .SPECIAL_CORE_ID        ( 0          ),
+    .SPECIAL_PRI_CACHE_SIZE ( 1024       ), // in Byte
+
+    .AXI_ID            ( AXI_ID_OUT_WIDTH ), //= 6,
+    .AXI_ADDR          ( AXI_ADDR_WIDTH   ), //= 32,
+    .AXI_USER          ( AXI_USER_WIDTH   ), //= 6,
+    .AXI_DATA          ( AXI_DATA_C2S_WIDTH   ), //= 64,
+
+    .USE_REDUCED_TAG   ( USE_REDUCED_TAG ), //= "TRUE",   // TRUE | FALSE
+    .L2_SIZE           ( L2_SIZE         )  //= 512*1024    // Size of max(L2 ,ROM) program memory in Byte
  
   ) icache_top_i (
     .clk                    ( clk_cluster                ),
     .rst_n                  ( s_rst_n                    ),
     .test_en_i              ( test_mode_i                ),
-    .fetch_req_i            ( instr_req                  ),
-    .fetch_addr_i           ( instr_addr                 ),
-    .fetch_gnt_o            ( instr_gnt                  ),
-    .fetch_rvalid_o         ( instr_r_valid              ),
-    .fetch_rdata_o          ( instr_r_rdata              ), 
-    .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
-    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
-    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
-    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
-    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
-    .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
-    .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
-    .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
-    .axi_master_rresp_i     ( s_core_instr_bus.r_resp    ),
-    .axi_master_rlast_i     ( s_core_instr_bus.r_last    ),
-    .axi_master_ruser_i     ( s_core_instr_bus.r_user    ),
-    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid   ),
-    .axi_master_rready_o    ( s_core_instr_bus.r_ready   ),
-    .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
-    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
-    .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
-    .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
-    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
-    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
-    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
-    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
-    .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
-    .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
-    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
-    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
-    .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
-    .axi_master_wdata_o     ( s_core_instr_bus.w_data    ),
-    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb    ),
-    .axi_master_wlast_o     ( s_core_instr_bus.w_last    ),
-    .axi_master_wuser_o     ( s_core_instr_bus.w_user    ),
-    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid   ),
-    .axi_master_wready_i    ( s_core_instr_bus.w_ready   ),
-    .axi_master_bid_i       ( s_core_instr_bus.b_id      ),
-    .axi_master_bresp_i     ( s_core_instr_bus.b_resp    ),
-    .axi_master_buser_i     ( s_core_instr_bus.b_user    ),
-    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid   ),
-    .axi_master_bready_o    ( s_core_instr_bus.b_ready   ),
-    .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
-  );
-`endif //  `ifdef PRIVATE_ICACHE
 
-   
-`ifdef MP_ICACHE
-  /* instruction cache */
-  icache_top_mp_128_PF #(
-    .FETCH_ADDR_WIDTH ( 32                 ),
-    .FETCH_DATA_WIDTH ( 128                ),
-    .NB_CORES         ( NB_CORES           ),
-    .NB_BANKS         ( NB_CACHE_BANKS     ),
-    .NB_WAYS          ( SET_ASSOCIATIVE    ),
-    .CACHE_SIZE       ( CACHE_SIZE         ),
-    .CACHE_LINE       ( 1                  ),
-    .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
-    .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
-    .AXI_USER         ( AXI_USER_WIDTH     ),
-    .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
-    .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            ) 
-  ) icache_top_i (
-    .clk                    ( clk_cluster                ),
-    .rst_n                  ( s_rst_n                    ),
-    .test_en_i              ( test_mode_i                ),
     .fetch_req_i            ( instr_req                  ),
     .fetch_addr_i           ( instr_addr                 ),
     .fetch_gnt_o            ( instr_gnt                  ),
+
     .fetch_rvalid_o         ( instr_r_valid              ),
     .fetch_rdata_o          ( instr_r_rdata              ), 
-    .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
-    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
-    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
-    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
-    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
-    .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
-    .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
-    .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
-    .axi_master_rresp_i     ( s_core_instr_bus.r_resp    ),
-    .axi_master_rlast_i     ( s_core_instr_bus.r_last    ),
-    .axi_master_ruser_i     ( s_core_instr_bus.r_user    ),
-    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid   ),
-    .axi_master_rready_o    ( s_core_instr_bus.r_ready   ),
-    .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
-    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
-    .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
-    .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
-    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
-    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
-    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
-    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
+
+    //AXI read address bus -------------------------------------------
+    .axi_master_arid_o      ( s_core_instr_bus.ar_id    ),
+    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr  ),
+    .axi_master_arlen_o     ( s_core_instr_bus.ar_len   ),    //burst length - 1 to 16
+    .axi_master_arsize_o    ( s_core_instr_bus.ar_size  ),   //size of each transfer in burst
+    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst ),   //accept only incr burst=01
+    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock  ),   //only normal access supported axs_awlock=00
+    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache ),
+    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot  ),
+    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ), //
+    .axi_master_aruser_o    ( s_core_instr_bus.ar_user  ),   //
+    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos   ),    //
+    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid ),  //master addr valid
+    .axi_master_arready_i   ( s_core_instr_bus.ar_ready ),  //slave ready to accept
+    // ---------------------------------------------------------------
+
+
+    //AXI BACKWARD read data bus ----------------------------------------------
+    .axi_master_rid_i       ( s_core_instr_bus.r_id     ),
+    .axi_master_rdata_i     ( s_core_instr_bus.r_data   ),
+    .axi_master_rresp_i     ( s_core_instr_bus.r_resp   ),
+    .axi_master_rlast_i     ( s_core_instr_bus.r_last   ),    //last transfer in burst
+    .axi_master_ruser_i     ( s_core_instr_bus.r_user   ),
+    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid  ),   //slave data valid
+    .axi_master_rready_o    ( s_core_instr_bus.r_ready  ),    //master ready to accept
+    
+    // NOT USED ----------------------------------------------
+    .axi_master_awid_o      ( s_core_instr_bus.aw_id    ),
+    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr  ),
+    .axi_master_awlen_o     ( s_core_instr_bus.aw_len   ),
+    .axi_master_awsize_o    ( s_core_instr_bus.aw_size  ),
+    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst ),
+    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock  ),
+    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache ),
+    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot  ),
     .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
-    .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
-    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
-    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
-    .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
-    .axi_master_wdata_o     ( s_core_instr_bus.w_data    ),
-    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb    ),
-    .axi_master_wlast_o     ( s_core_instr_bus.w_last    ),
-    .axi_master_wuser_o     ( s_core_instr_bus.w_user    ),
-    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid   ),
-    .axi_master_wready_i    ( s_core_instr_bus.w_ready   ),
-    .axi_master_bid_i       ( s_core_instr_bus.b_id      ),
-    .axi_master_bresp_i     ( s_core_instr_bus.b_resp    ),
-    .axi_master_buser_i     ( s_core_instr_bus.b_user    ),
-    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid   ),
-    .axi_master_bready_o    ( s_core_instr_bus.b_ready   ),
-    .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
+    .axi_master_awuser_o    ( s_core_instr_bus.aw_user  ),
+    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos   ),
+    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid ),
+    .axi_master_awready_i   ( s_core_instr_bus.aw_ready ),
+    
+    // NOT USED ----------------------------------------------
+    .axi_master_wdata_o     ( s_core_instr_bus.w_data   ),
+    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb   ),
+    .axi_master_wlast_o     ( s_core_instr_bus.w_last   ),
+    .axi_master_wuser_o     ( s_core_instr_bus.w_user   ),
+    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid  ),
+    .axi_master_wready_i    ( s_core_instr_bus.w_ready  ),
+    // ---------------------------------------------------------------
+
+    // NOT USED ----------------------------------------------
+    .axi_master_bid_i       ( s_core_instr_bus.b_id     ),
+    .axi_master_bresp_i     ( s_core_instr_bus.b_resp   ),
+    .axi_master_buser_i     ( s_core_instr_bus.b_user   ),
+    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid  ),
+    .axi_master_bready_o    ( s_core_instr_bus.b_ready  ),
+    // ---------------------------------------------------------------
+    
+
+    .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri        ),
+    .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main       ),
+    .special_core_dest_i    ( s_special_core_icache_cfg   )
   );
-`endif //  `ifdef MP_ICACHE
+`else
+   
+  `ifdef MP_ICACHE
+    /* instruction cache */
+    icache_top_mp_128_PF #(
+      .FETCH_ADDR_WIDTH ( 32                 ),
+      .FETCH_DATA_WIDTH ( 128                ),
+      .NB_CORES         ( NB_CORES           ),
+      .NB_BANKS         ( NB_CACHE_BANKS     ),
+      .NB_WAYS          ( SET_ASSOCIATIVE    ),
+      .CACHE_SIZE       ( CACHE_SIZE         ),
+      .CACHE_LINE       ( 1                  ),
+      .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
+      .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
+      .AXI_USER         ( AXI_USER_WIDTH     ),
+      .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
+      .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
+      .L2_SIZE          ( L2_SIZE            ) 
+    ) icache_top_i (
+      .clk                    ( clk_cluster                ),
+      .rst_n                  ( s_rst_n                    ),
+      .test_en_i              ( test_mode_i                ),
+      .fetch_req_i            ( instr_req                  ),
+      .fetch_addr_i           ( instr_addr                 ),
+      .fetch_gnt_o            ( instr_gnt                  ),
+      .fetch_rvalid_o         ( instr_r_valid              ),
+      .fetch_rdata_o          ( instr_r_rdata              ), 
+      .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
+      .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
+      .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
+      .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
+      .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
+      .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
+      .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
+      .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
+      .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
+      .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
+      .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
+      .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
+      .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
+      .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
+      .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
+      .axi_master_rresp_i     ( s_core_instr_bus.r_resp    ),
+      .axi_master_rlast_i     ( s_core_instr_bus.r_last    ),
+      .axi_master_ruser_i     ( s_core_instr_bus.r_user    ),
+      .axi_master_rvalid_i    ( s_core_instr_bus.r_valid   ),
+      .axi_master_rready_o    ( s_core_instr_bus.r_ready   ),
+      .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
+      .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
+      .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
+      .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
+      .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
+      .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
+      .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
+      .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
+      .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
+      .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
+      .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
+      .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
+      .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
+      .axi_master_wdata_o     ( s_core_instr_bus.w_data    ),
+      .axi_master_wstrb_o     ( s_core_instr_bus.w_strb    ),
+      .axi_master_wlast_o     ( s_core_instr_bus.w_last    ),
+      .axi_master_wuser_o     ( s_core_instr_bus.w_user    ),
+      .axi_master_wvalid_o    ( s_core_instr_bus.w_valid   ),
+      .axi_master_wready_i    ( s_core_instr_bus.w_ready   ),
+      .axi_master_bid_i       ( s_core_instr_bus.b_id      ),
+      .axi_master_bresp_i     ( s_core_instr_bus.b_resp    ),
+      .axi_master_buser_i     ( s_core_instr_bus.b_user    ),
+      .axi_master_bvalid_i    ( s_core_instr_bus.b_valid   ),
+      .axi_master_bready_o    ( s_core_instr_bus.b_ready   ),
+      .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
+    );
+    `else
+        `ifdef SP_ICACHE
+           localparam NB_BANKS_SP   = NB_CORES;
+           localparam CACHE_LINE_SP = 1;
+           icache_top
+           #(
+               // Parameter for MULTIBANK CACHE
+               .NB_CORES              ( NB_CORES          ),  // Number of  Processor
+               .NB_REFILL_PORT        ( 1                 ),  // 1 refill port
+               .NB_CACHE_BANKS        ( NB_BANKS_SP       ),  // Number of  CACHE BANKS
+
+               //ICACHE CFG
+               .SET_ASSOCIATIVE       ( SET_ASSOCIATIVE   ),
+               .CACHE_LINE            ( CACHE_LINE_SP     ),  // WORDS in each cache line allowed value are 1 - 2 - 4 - 8
+               .CACHE_SIZE            ( CACHE_SIZE        ),  // In Byte
+               .FIFO_DEPTH            ( 2                 ),  // 2--> Minimum SIZE
+
+               //ICACHE BUS PARAMETERS
+               .ICACHE_DATA_WIDTH     ( ICACHE_DATA_WIDTH ),
+               .ICACHE_ID_WIDTH       ( NB_CORES          ),
+               .ICACHE_ADDR_WIDTH     ( 32                ),
+
+               .L0_BUFFER_FEATURE     ( L0_BUFFER_FEATURE ),
+               .L0_SIZE               ( ICACHE_DATA_WIDTH ),
+
+               .INSTR_RDATA_WIDTH     ( INSTR_RDATA_WIDTH ),
+
+               .SUPPORT_BOTH_PRI_SH   ( "FALSE"           ),
+               .SHARED_ICACHE         ( SHARED_ICACHE     ),
+               .MULTICAST_FEATURE     ( MULTICAST_FEATURE ),
+               .MULTICAST_GRANULARITY ( 1                 ),
+               .DIRECT_MAPPED_FEATURE ( DIRECT_MAPPED_FEATURE),
+
+               .L2_SIZE               ( L2_SIZE           ),
+               .USE_REDUCED_TAG       ( USE_REDUCED_TAG   ),
+
+               //AXI PARAMETER
+               .AXI_ID                ( AXI_ID_OUT_WIDTH  ),
+               .AXI_USER              ( AXI_USER_WIDTH    ),
+               .AXI_DATA              ( AXI_DATA_C2S_WIDTH    ),
+               .AXI_ADDR              ( AXI_ADDR_WIDTH    )
+           )
+           icache_top_i
+           (
+               // ---------------------------------------------------------------
+               // CORES I$ PLUG -----------------------------------------
+               // ---------------------------------------------------------------
+               .clk                 ( clk_cluster                ),
+               .rst_n               ( s_rst_n                    ),
+               .test_en_i           ( test_mode_i                ),
+
+               .instr_req_i         ( instr_req                  ),
+               .instr_add_i         ( instr_addr                 ),
+               .instr_gnt_o         ( instr_gnt                  ) ,
+
+               .instr_r_valid_o     ( instr_r_valid              ),
+               .instr_r_rdata_o     ( instr_r_rdata              ),
+
+
+               // ---------------------------------------------------------------
+               // Refill BUS I$ -----------------------------------------
+               // ---------------------------------------------------------------
+               .init_awid_o         ( s_core_instr_bus.aw_id     ),
+               .init_awaddr_o       ( s_core_instr_bus.aw_addr   ),
+               .init_awlen_o        ( s_core_instr_bus.aw_len    ),
+               .init_awsize_o       ( s_core_instr_bus.aw_size   ),
+               .init_awburst_o      ( s_core_instr_bus.aw_burst  ),
+               .init_awlock_o       ( s_core_instr_bus.aw_lock   ),
+               .init_awcache_o      ( s_core_instr_bus.aw_cache  ),
+               .init_awprot_o       ( s_core_instr_bus.aw_prot   ),
+               .init_awregion_o     ( s_core_instr_bus.aw_region ),
+               .init_awuser_o       ( s_core_instr_bus.aw_user   ),
+               .init_awqos_o        ( s_core_instr_bus.aw_qos    ),
+               .init_awvalid_o      ( s_core_instr_bus.aw_valid  ),
+               .init_awready_i      ( s_core_instr_bus.aw_ready  ),
+
+
+               //AXI write data bus -------------- // // --------------
+               .init_wdata_o        ( s_core_instr_bus.w_data    ),
+               .init_wstrb_o        ( s_core_instr_bus.w_strb    ),
+               .init_wlast_o        ( s_core_instr_bus.w_last    ),
+               .init_wuser_o        ( s_core_instr_bus.w_user    ),
+               .init_wvalid_o       ( s_core_instr_bus.w_valid   ),
+               .init_wready_i       ( s_core_instr_bus.w_ready   ),
+               // ---------------------------------------------------------------
+
+               //AXI BACKWARD write response bus -------------- // // --------------
+               .init_bid_i          ( s_core_instr_bus.b_id      ),
+               .init_bresp_i        ( s_core_instr_bus.b_resp    ),
+               .init_buser_i        ( s_core_instr_bus.b_user    ),
+               .init_bvalid_i       ( s_core_instr_bus.b_valid   ),
+               .init_bready_o       ( s_core_instr_bus.b_ready   ),
+               // ---------------------------------------------------------------
+
+               //AXI read address bus -------------------------------------------
+               .init_arid_o         ( s_core_instr_bus.ar_id     ),
+               .init_araddr_o       ( s_core_instr_bus.ar_addr   ),
+               .init_arlen_o        ( s_core_instr_bus.ar_len    ),
+               .init_arsize_o       ( s_core_instr_bus.ar_size   ),
+               .init_arburst_o      ( s_core_instr_bus.ar_burst  ),
+               .init_arlock_o       ( s_core_instr_bus.ar_lock   ),
+               .init_arcache_o      ( s_core_instr_bus.ar_cache  ),
+               .init_arprot_o       ( s_core_instr_bus.ar_prot   ),
+               .init_arregion_o     ( s_core_instr_bus.ar_region ),
+               .init_aruser_o       ( s_core_instr_bus.ar_user   ),
+               .init_arqos_o        ( s_core_instr_bus.ar_qos    ),
+               .init_arvalid_o      ( s_core_instr_bus.ar_valid  ),
+               .init_arready_i      ( s_core_instr_bus.ar_ready  ),
+               // ---------------------------------------------------------------
+
+
+               //AXI BACKWARD read data bus ----------------------------------------------
+               .init_rid_i          ( s_core_instr_bus.r_id      ),
+               .init_rdata_i        ( s_core_instr_bus.r_data    ),
+               .init_rresp_i        ( s_core_instr_bus.r_resp    ),
+               .init_rlast_i        ( s_core_instr_bus.r_last    ),
+               .init_ruser_i        ( s_core_instr_bus.r_user    ),
+               .init_rvalid_i       ( s_core_instr_bus.r_valid   ),
+               .init_rready_o       ( s_core_instr_bus.r_ready   ),
+
+               // Control ports
+               .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus        ),
+               .L0_ctrl_unit_slave_if  ( L0_ctrl_unit_bus        )
+           );
+        `endif // Closes `ifdef SP_ICACHE
+     `endif // Closes `ifdef MP_ICACHE
+  `endif // Closes `ifdef PRIVATE_ICACHE
 
    
   /* TCDM banks */

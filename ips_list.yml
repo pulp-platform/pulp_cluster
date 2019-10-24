@@ -6,50 +6,54 @@
 axi/axi2mem:
   commit: master
   domain: [soc, cluster]
-  group:  pulp-platform
+  group : pulp-platform
 axi/axi2per:
   commit: tags/v1.0.1
   domain: [cluster]
-  group:  pulp-platform
+  group : pulp-platform
 axi/per2axi:
   commit: tags/v1.0.3
   domain: [soc, cluster]
-  group:  pulp-platform
+  group : pulp-platform
 axi/axi_size_conv:
   commit: tags/pulp-v1.0
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 cluster_interconnect:
   commit: tags/v1.0.3
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 event_unit_flex:
   commit: tags/v1.0.1
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 mchan:
   commit: master
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 icache-intc:
   commit: tags/v1.0.1
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 icache_mp_128_pf:
   commit: tags/v1.0.0
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
 icache_private:
   commit: master
   domain: [cluster]
-  group: pulp-platform
+  group : pulp-platform
+hier-icache:
+  commit: master
+  domain: [cluster]
+  group : pulp-platform
 cluster_peripherals:
   commit: tags/v1.0.1
   domain: [cluster]
-  group:  pulp-platform
+  group : pulp-platform
 fpu_interco:
   commit: tags/v1.2.4
   domain: [soc, cluster]
-  group: pulp-platform
+  group : pulp-platform
 hwpe-mac-engine:
   commit: f1d0b72
