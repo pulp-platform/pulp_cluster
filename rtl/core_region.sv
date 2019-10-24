@@ -17,8 +17,8 @@
  */
 
 `include "pulp_soc_defines.sv"
+`include "periph_bus_defines.sv"
 
-import apu_package::*;
 
 // USER DEFINED MACROS to improve self-testing capabilities
 `ifndef PULP_FPGA_SIM
@@ -30,12 +30,29 @@ import apu_package::*;
 module core_region
 #(
   // CORE PARAMETERS
+  //parameter USE_FPU             = 1,
+  //parameter USE_HWPE            = 1,
+  parameter N_EXT_PERF_COUNTERS = 1,
   parameter CORE_ID            = 0,
   parameter ADDR_WIDTH         = 32,
   parameter DATA_WIDTH         = 32,
   parameter INSTR_RDATA_WIDTH  = 32,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   parameter REMAP_ADDRESS      = 0,
+
+  parameter APU_NARGS_CPU      = 2,
+  parameter APU_WOP_CPU        = 1,
+  parameter WAPUTYPE           = 3,
+  parameter APU_NDSFLAGS_CPU   = 3,
+  parameter APU_NUSFLAGS_CPU   = 5,
+  
+  parameter FPU                =  0,
+  parameter FP_DIVSQRT         =  0,
+  parameter SHARED_FP          =  0,
+  parameter SHARED_FP_DIVSQRT  =  0,
+
+  parameter DEBUG_START_ADDR   = `DEBUG_START_ADDR,
+
   parameter L2_SLM_FILE   = "./slm_files/l2_stim.slm",
   parameter ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
@@ -69,21 +86,60 @@ module core_region
   output logic [31:0] 		      instr_addr_o,
   input logic [INSTR_RDATA_WIDTH-1:0] instr_r_rdata_i,
   input logic 			      instr_r_valid_i,
+
+  input logic             debug_req_i,
 				      
-				      XBAR_TCDM_BUS.Slave debug_bus,
-  output logic 			      debug_core_halted_o,
-  input logic 			      debug_core_halt_i,
-  input logic 			      debug_core_resume_i,
+				      //XBAR_TCDM_BUS.Slave debug_bus,
+  //output logic 			      debug_core_halted_o,
+  //input logic 			      debug_core_halt_i,
+  //input logic 			      debug_core_resume_i,
 				      
 				      // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
 				      XBAR_TCDM_BUS.Master tcdm_data_master,
-				      XBAR_TCDM_BUS.Master dma_ctrl_master,
+				      //XBAR_TCDM_BUS.Master dma_ctrl_master,
 				      XBAR_PERIPH_BUS.Master eu_ctrl_master,
-				      XBAR_PERIPH_BUS.Master periph_data_master,
-				      
-				      // APU interconnect interface
-				      cpu_marx_if.cpu apu_master
+				      XBAR_PERIPH_BUS.Master periph_data_master
+
+
+ // new interface signals
+ `ifdef SHARED_FPU_CLUSTER
+  ,
+  output logic                           apu_master_req_o,
+  input logic                            apu_master_gnt_i,
+  // request channel
+  output logic [WAPUTYPE-1:0]            apu_master_type_o,
+  output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
+  output logic [APU_WOP_CPU-1:0]         apu_master_op_o,
+  output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
+  // response channel
+  output logic                           apu_master_ready_o,
+  input logic                            apu_master_valid_i,
+  input logic [31:0]                     apu_master_result_i,
+  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
+`endif
+
+`ifdef APU_CLUSTER
+  ,
+  output logic                           apu_master_req_o,
+  input logic                            apu_master_gnt_i,
+  // request channel
+  output logic [WAPUTYPE-1:0]            apu_master_type_o,
+  output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
+  output logic [APU_WOP_CPU-1:0]         apu_master_op_o,
+  output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
+  // response channel
+  output logic                           apu_master_ready_o,
+  input logic                            apu_master_valid_i,
+  input logic [31:0]                     apu_master_result_i,
+  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
+`endif
+ 
+
 );
+
+  //********************************************************
+  //***************** SIGNALS DECLARATION ******************
+  //********************************************************
 
   XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
   XBAR_PERIPH_BUS   periph_demux_bus();   // Internal interface between CORE_DEMUX <--> PERIPHERAL DEMUX
@@ -99,25 +155,57 @@ module core_region
     .clk_o     ( clk_int     )
   );
 
+ `ifndef APU_CLUSTER
+ `ifndef SHARED_FPU_CLUSTER
+   logic                     apu_master_req_o;
+   logic                     apu_master_gnt_i;
+   // request channel
+   logic [WAPUTYPE-1:0]            apu_master_type_o;
+   logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o;
+   logic [APU_WOP_CPU-1:0]     apu_master_op_o;
+   logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o;
+   // response channel
+   logic         apu_master_ready_o;
+   logic         apu_master_valid_i;
+   logic [31:0]        apu_master_result_i;
+   logic [APU_NUSFLAGS_CPU-1:0]    apu_master_flags_i;
+
+   assign apu_master_gnt_i      = '1;
+   assign apu_master_valid_i    = '0;
+   assign apu_master_result_i   = '0;
+   assign apu_master_flags_i    = '0;
+ `endif
+`endif
+
+   //********************************************************
+   //***************** PROCESSOR ****************************
+   //********************************************************
+
   riscv_core #(
     .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
     .N_EXT_PERF_COUNTERS ( 5                 ),
+    .PULP_SECURE         ( 0                 ),
     .FPU                 ( FPU               ),
+    .FP_DIVSQRT          ( FP_DIVSQRT        ),
     .SHARED_FP           ( SHARED_FP         ),
-    .SHARED_DSP_MULT     ( SHARED_DSP_MULT   ),
-    .SHARED_INT_DIV      ( SHARED_INT_DIV    ),
+    .SHARED_DSP_MULT     ( 0                 ),
+    .SHARED_INT_DIV      ( 0                 ),
     .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
-    .WAPUTYPE            ( WAPUTYPE          )
-  ) RISCV_CORE (
-    .clk_i                 ( clk_i                    ),
-    .rst_ni                ( rst_ni                   ),
+    .WAPUTYPE            ( WAPUTYPE          ),
+    .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
 
-    .clock_en_i            ( clock_en_i               ),
-    .test_en_i             ( test_mode_i              ),
+  ) 
+   RISCV_CORE 
+  (
+    .clk_i                 ( clk_i             ),
+    .rst_ni                ( rst_ni            ),
 
-    .boot_addr_i           ( boot_addr_i              ),
-    .core_id_i             ( CORE_ID[3:0]             ),
-    .cluster_id_i          ( cluster_id_i             ),
+    .clock_en_i            ( clock_en_i        ),
+    .test_en_i             ( test_mode_i       ),
+
+    .boot_addr_i           ( boot_addr_i       ),
+    .core_id_i             ( CORE_ID[3:0]      ),
+    .cluster_id_i          ( cluster_id_i      ),
 
     .instr_addr_o          ( instr_addr_o             ),
     .instr_req_o           ( instr_req_o              ),
@@ -133,7 +221,6 @@ module core_region
     .data_rdata_i          ( s_core_bus.r_rdata       ),
     .data_gnt_i            ( s_core_bus.gnt           ),
     .data_rvalid_i         ( s_core_bus.r_valid       ),
-     //.data_err_i            ( 1'b0                     ),
 
     .irq_i                 ( irq_req_i                ),
     .irq_id_i              ( irq_id_i                 ),
@@ -141,41 +228,32 @@ module core_region
     .irq_ack_o             ( irq_ack_o                ),
 
     .sec_lvl_o             (                          ),
-    .irq_sec_i             (                          ),
+    .irq_sec_i             (      1'b0                ),
 
-    .debug_req_i           ( debug_bus.req            ),
-    .debug_gnt_o           ( debug_bus.gnt            ),
-    .debug_rvalid_o        ( debug_bus.r_valid        ),
-    .debug_addr_i          ( debug_bus.add[14:0]      ),
-    .debug_we_i            ( ~debug_bus.wen           ),
-    .debug_wdata_i         ( debug_bus.wdata          ),
-    .debug_rdata_o         ( debug_bus.r_rdata        ),
-    .debug_halted_o        ( debug_core_halted_o      ),
-    .debug_halt_i          ( debug_core_halt_i        ),
-    .debug_resume_i        ( debug_core_resume_i      ),
+    .debug_req_i           ( debug_req_i              ),
 
     .fetch_enable_i        ( fetch_en_i               ),
     .core_busy_o           ( core_busy_o              ),
-    // apu-interconnect
-    // handshake signals
-    .apu_master_req_o      ( apu_master.req_ds_s      ),
-    .apu_master_ready_o    ( apu_master.ready_us_s    ),
-    .apu_master_gnt_i      ( apu_master.ack_ds_s      ),
-     // request channel
-    .apu_master_operands_o ( apu_master.operands_ds_d ),
-    .apu_master_op_o       ( apu_master.op_ds_d       ),
-    .apu_master_type_o     ( apu_master.type_ds_d     ),
-    .apu_master_flags_o    ( apu_master.flags_ds_d    ),
-    // response channel
-    .apu_master_valid_i    ( apu_master.valid_us_s    ),
-    .apu_master_result_i   ( apu_master.result_us_d   ),
-    .apu_master_flags_i    ( apu_master.flags_us_d    ),
 
-    .ext_perf_counters_i   ( perf_counters            ),
-    .fregfile_disable_i    ( fregfile_disable_i       )
-  );
 
-  assign debug_bus.r_opc = 1'b0;
+     // apu-interconnect
+    .apu_master_req_o      ( apu_master_req_o      ),
+    .apu_master_gnt_i      ( apu_master_gnt_i      ),
+    .apu_master_type_o     ( apu_master_type_o     ),
+    .apu_master_operands_o ( apu_master_operands_o ),
+    .apu_master_op_o       ( apu_master_op_o       ),
+    .apu_master_flags_o    ( apu_master_flags_o    ),
+
+    .apu_master_valid_i    ( apu_master_valid_i    ),
+    .apu_master_ready_o    ( apu_master_ready_o    ),
+    .apu_master_result_i   ( apu_master_result_i   ),
+    .apu_master_flags_i    ( apu_master_flags_i    ),
+
+    .ext_perf_counters_i   ( perf_counters         ),
+    .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
+  ); 
+
+  //assign debug_bus.r_opc = 1'b0;
 
   // Bind to 0 Unused Signals in CORE interface
   assign s_core_bus.r_gnt       = 1'b0;
@@ -186,19 +264,25 @@ module core_region
   // Performance Counters
   assign perf_counters[4] = tcdm_data_master.req & (~tcdm_data_master.gnt);  // Cycles lost due to contention
 
+
+  //********************************************************
+  //****** DEMUX TO TCDM AND PERIPHERAL INTERCONNECT *******
+  //********************************************************
+   
   // demuxes to TCDM & memory hierarchy
   core_demux #(
     .ADDR_WIDTH         ( 32                 ),
     .DATA_WIDTH         ( 32                 ),
     .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE ),
-    .REMAP_ADDRESS      ( REMAP_ADDRESS      )
+    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
+    //.REMAP_ADDRESS      (   0 )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
     .test_en_i          (  test_mode_i                ),
+  `ifdef REMAP_ADDRESS
     .base_addr_i        (  base_addr_i                ),
-
+`endif
     .data_req_i         (  s_core_bus.req             ),
     .data_add_i         (  s_core_bus.add             ),
     .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N
@@ -219,15 +303,25 @@ module core_region
     .data_r_valid_i_SH  (  tcdm_data_master.r_valid   ),
     .data_r_rdata_i_SH  (  tcdm_data_master.r_rdata   ),
 
-    .data_req_o_EXT     (  periph_demux_bus.req       ),
-    .data_add_o_EXT     (  periph_demux_bus.add       ),
-    .data_wen_o_EXT     (  periph_demux_bus.wen       ),
-    .data_wdata_o_EXT   (  periph_demux_bus.wdata     ),
-    .data_be_o_EXT      (  periph_demux_bus.be        ),
-    .data_gnt_i_EXT     (  periph_demux_bus.gnt       ),
-    .data_r_valid_i_EXT (  periph_demux_bus.r_valid   ),
-    .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata   ),
-    .data_r_opc_i_EXT   (  periph_demux_bus.r_opc     ),
+    .data_req_o_EXT     (  eu_ctrl_master.req         ),
+    .data_add_o_EXT     (  eu_ctrl_master.add         ),
+    .data_wen_o_EXT     (  eu_ctrl_master.wen         ),
+    .data_wdata_o_EXT   (  eu_ctrl_master.wdata       ),
+    .data_be_o_EXT      (  eu_ctrl_master.be          ),
+    .data_gnt_i_EXT     (  eu_ctrl_master.gnt         ),
+    .data_r_valid_i_EXT (  eu_ctrl_master.r_valid     ),
+    .data_r_rdata_i_EXT (  eu_ctrl_master.r_rdata     ),
+    .data_r_opc_i_EXT   (  eu_ctrl_master.r_opc       ),
+
+    // .data_req_o_EXT     (  periph_demux_bus.req       ),
+    // .data_add_o_EXT     (  periph_demux_bus.add       ),
+    // .data_wen_o_EXT     (  periph_demux_bus.wen       ),
+    // .data_wdata_o_EXT   (  periph_demux_bus.wdata     ),
+    // .data_be_o_EXT      (  periph_demux_bus.be        ),
+    // .data_gnt_i_EXT     (  periph_demux_bus.gnt       ),
+    // .data_r_valid_i_EXT (  periph_demux_bus.r_valid   ),
+    // .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata   ),
+    // .data_r_opc_i_EXT   (  periph_demux_bus.r_opc     ),
 
     .data_req_o_PE      (  periph_data_master.req     ),
     .data_add_o_PE      (  periph_data_master.add     ),
@@ -246,43 +340,43 @@ module core_region
     .CLUSTER_ID         (  cluster_id_i               )
   );
 
-  periph_demux periph_demux_i (
-    .clk               ( clk_int                  ),
-    .rst_ni            ( rst_ni                   ),
+  // periph_demux periph_demux_i (
+  //   .clk               ( clk_int                  ),
+  //   .rst_ni            ( rst_ni                   ),
 
-    .data_req_i        ( periph_demux_bus.req     ),
-    .data_add_i        ( periph_demux_bus.add     ),
-    .data_wen_i        ( periph_demux_bus.wen     ),
-    .data_wdata_i      ( periph_demux_bus.wdata   ),
-    .data_be_i         ( periph_demux_bus.be      ),
-    .data_gnt_o        ( periph_demux_bus.gnt     ),
+  //   .data_req_i        ( periph_demux_bus.req     ),
+  //   .data_add_i        ( periph_demux_bus.add     ),
+  //   .data_wen_i        ( periph_demux_bus.wen     ),
+  //   .data_wdata_i      ( periph_demux_bus.wdata   ),
+  //   .data_be_i         ( periph_demux_bus.be      ),
+  //   .data_gnt_o        ( periph_demux_bus.gnt     ),
 
-    .data_r_valid_o    ( periph_demux_bus.r_valid ),
-    .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-    .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
+  //   .data_r_valid_o    ( periph_demux_bus.r_valid ),
+  //   .data_r_opc_o      ( periph_demux_bus.r_opc   ),
+  //   .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
 
-    .data_req_o_MH     ( dma_ctrl_master.req      ),
-    .data_add_o_MH     ( dma_ctrl_master.add      ),
-    .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-    .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
-    .data_be_o_MH      ( dma_ctrl_master.be       ),
-    .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
+  //   .data_req_o_MH     ( dma_ctrl_master.req      ),
+  //   .data_add_o_MH     ( dma_ctrl_master.add      ),
+  //   .data_wen_o_MH     ( dma_ctrl_master.wen      ),
+  //   .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
+  //   .data_be_o_MH      ( dma_ctrl_master.be       ),
+  //   .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
 
-    .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-    .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
-    .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
+  //   .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
+  //   .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
+  //   .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
 
-    .data_req_o_EU     ( eu_ctrl_master.req       ),
-    .data_add_o_EU     ( eu_ctrl_master.add       ),
-    .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-    .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-    .data_be_o_EU      ( eu_ctrl_master.be        ),
-    .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
+  //   .data_req_o_EU     ( eu_ctrl_master.req       ),
+  //   .data_add_o_EU     ( eu_ctrl_master.add       ),
+  //   .data_wen_o_EU     ( eu_ctrl_master.wen       ),
+  //   .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
+  //   .data_be_o_EU      ( eu_ctrl_master.be        ),
+  //   .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
 
-    .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-    .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-    .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-  );
+  //   .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
+  //   .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
+  //   .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
+  // );
 
   /* debug stuff */
   //synopsys translate_off
