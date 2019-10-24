@@ -16,7 +16,12 @@
 
 package pulp_cluster_package;
   
-  parameter NB_SPERIPH_PLUGS_EU  = 2;
+  parameter NB_SPERIPH_PLUGS_EU  =  2;
+
+
+  // number of master and slave cluster periphs
+  parameter NB_MPERIPHS          =  1;
+  parameter NB_SPERIPHS          = 10;
   
   // position of peripherals on slave port of periph interconnect
   parameter SPER_EOC_ID      = 0;
