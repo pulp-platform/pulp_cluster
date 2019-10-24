@@ -73,8 +73,6 @@ module cluster_peripherals
   input  logic                        soc_periph_evt_valid_i,
   input  logic [EVNT_WIDTH-1:0]       soc_periph_evt_data_i,
   
-  XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
-  input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
 
   input  logic [NB_CORES-1:0]         dbg_core_halted_i,
   output logic [NB_CORES-1:0]         dbg_core_halt_o,

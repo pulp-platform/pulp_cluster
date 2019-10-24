@@ -754,9 +754,6 @@ module pulp_cluster
     .dma_fc_event_i         ( s_dma_fc_event                     ),
     .dma_fc_irq_i           (                                    ),
 
-    .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
-    .hwpe_events_i          ( s_hwpe_events                      ),
-
     .soc_periph_evt_ready_o ( s_events_ready                     ),
     .soc_periph_evt_valid_i ( s_events_valid                     ),
     .soc_periph_evt_data_i  ( s_events_data                      ),
@@ -775,10 +772,7 @@ module pulp_cluster
     .dbg_req_i              ( s_dbg_irq                          ),
     .dbg_req_o              ( s_core_dbg_irq                     ),
 
-    .fregfile_disable_o     ( s_fregfile_disable                 ),
-    
-    //.dma_pe_irq_i           ( s_dma_pe_irq                       ),
-    //.pf_event_o             ( s_pf_event                         ),    
+    .fregfile_disable_o     ( s_fregfile_disable                 ),   
     
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
     
