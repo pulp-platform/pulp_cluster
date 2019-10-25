@@ -31,6 +31,10 @@ mchan:
   commit: master
   domain: [cluster]
   group: pulp-platform
+hier-icache:
+  commit: master
+  domain: [cluster]
+  group:  pulp-platform
 icache-intc:
   commit: tags/v1.0.1
   domain: [cluster]
@@ -53,3 +57,4 @@ fpu_interco:
   group: pulp-platform
 hwpe-mac-engine:
   commit: f1d0b72
+
