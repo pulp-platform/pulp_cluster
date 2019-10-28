@@ -32,7 +32,7 @@ mchan:
   domain: [cluster]
   group: pulp-platform
 hier-icache:
-  commit: master
+  commit: tags/v1.0.1
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
