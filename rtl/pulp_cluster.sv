@@ -1079,7 +1079,7 @@ module pulp_cluster
       .PRI_CACHE_LINE    ( 1              ), //= 1,   // in word of [FETCH_DATA_WIDTH]
 
       .USE_SPECIAL_CORE       ( "FALSE"     ),
-      .SPECIAL_CORE_ID        ( 0          ),
+      .SPECIAL_CORE_ID        ( 9          ),
       .SPECIAL_PRI_CACHE_SIZE ( 0       ), // in Byte
 
       .AXI_ID            ( AXI_ID_OUT_WIDTH ), //= 6,
@@ -1102,6 +1102,8 @@ module pulp_cluster
 
        .fetch_rvalid_o   ( instr_r_valid   ),
        .fetch_rdata_o    ( instr_r_rdata   ),
+
+       .enable_l1_l15_prefetch_i (   1'b0     ),   // set it to 1 to use prefetch feature
 
        //AXI read address bus -------------------------------------------
        .axi_master_arid_o      ( s_core_instr_bus.ar_id    ),
@@ -1162,7 +1164,7 @@ module pulp_cluster
 
        .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri        ),
        .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main       ),
-       .special_core_dest_i    ( s_special_core_icache_cfg   )
+       .special_core_dest_i    (  '0  ) //s_special_core_icache_cfg
 );
 
 `else
