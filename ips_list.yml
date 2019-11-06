@@ -28,7 +28,7 @@ event_unit_flex:
   domain: [cluster]
   group: pulp-platform
 mchan:
-  commit: tag/v1.0.3
+  commit: tags/v1.0.3
   domain: [cluster]
   group: pulp-platform
 hier-icache:
