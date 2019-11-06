@@ -319,7 +319,7 @@ module cluster_peripherals
         .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
         .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri             ),
         .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main            ),
-        .special_core_icache_cfg_o   (          )   //special_core_icache_cfg_o
+        .special_core_icache_cfg_o   (    special_core_icache_cfg_o      )   //special_core_icache_cfg_o
     );
 
 
