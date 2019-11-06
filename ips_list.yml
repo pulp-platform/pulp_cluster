@@ -4,7 +4,7 @@
 #
 
 axi/axi2mem:
-  commit: master
+  commit: d704c8beff729476d1dbfd7b60679afa796947d2
   domain: [soc, cluster]
   group:  pulp-platform
 axi/axi2per:
@@ -28,7 +28,7 @@ event_unit_flex:
   domain: [cluster]
   group: pulp-platform
 mchan:
-  commit: master
+  commit: tag/v1.0.3
   domain: [cluster]
   group: pulp-platform
 hier-icache:
@@ -44,7 +44,7 @@ icache_mp_128_pf:
   domain: [cluster]
   group: pulp-platform
 icache_private:
-  commit: master
+  commit: b14de95b0f70e2edb54ccc7076d5737b41249411
   domain: [cluster]
   group: pulp-platform
 cluster_peripherals:
