@@ -103,7 +103,8 @@ module cluster_peripherals
 `ifdef PRIVATE_ICACHE
      SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
      PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
-     output logic                         special_core_icache_cfg_o
+     output logic                         special_core_icache_cfg_o,
+     output logic                         enable_l1_l15_prefetch_o
 `else
   `ifdef SP_ICACHE
       // Control ports
@@ -319,8 +320,9 @@ module cluster_peripherals
         .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
         .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri             ),
         .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main            ),
-        .special_core_icache_cfg_o   (    special_core_icache_cfg_o      )   //special_core_icache_cfg_o
-    );
+        .special_core_icache_cfg_o   (  special_core_icache_cfg_o      ),   //special_core_icache_cfg_o
+        .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o       )
+);
 
 
 `else

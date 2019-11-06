@@ -416,6 +416,8 @@ module pulp_cluster
       SP_ICACHE_CTRL_UNIT_BUS      IC_ctrl_unit_bus_main[NB_CACHE_BANKS]();
       PRI_ICACHE_CTRL_UNIT_BUS     IC_ctrl_unit_bus_pri[NB_CORES]();
       logic                        s_special_core_icache_cfg;
+      logic[NB_CORES-1:0]          s_enable_l1_l15_prefetch;
+
   `else
       `ifdef SP_ICACHE
              SP_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus[NB_CACHE_BANKS]();
@@ -793,7 +795,8 @@ module pulp_cluster
 `ifdef PRIVATE_ICACHE
       .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
       .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
-      .special_core_icache_cfg_o ( s_special_core_icache_cfg        )
+      .special_core_icache_cfg_o ( s_special_core_icache_cfg        ),
+      .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
 `else
   `ifdef SP_ICACHE
       .L0_ctrl_unit_bus       (  L0_ctrl_unit_bus                   ),
@@ -1103,7 +1106,7 @@ module pulp_cluster
        .fetch_rvalid_o   ( instr_r_valid   ),
        .fetch_rdata_o    ( instr_r_rdata   ),
 
-       .enable_l1_l15_prefetch_i (   '0     ),   // set it to 1 to use prefetch feature
+       .enable_l1_l15_prefetch_i (   s_enable_l1_l15_prefetch     ),   // set it to 1 to use prefetch feature
 
        //AXI read address bus -------------------------------------------
        .axi_master_arid_o      ( s_core_instr_bus.ar_id    ),
