@@ -855,6 +855,7 @@ module pulp_cluster
         .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
 
         .FPU                 ( CLUST_FPU               ),
+        .Zfinx               ( Zfinx                   ),
         .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
         .SHARED_FP           ( CLUST_SHARED_FP         ),
         .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
