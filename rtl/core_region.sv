@@ -47,6 +47,7 @@ module core_region
   parameter APU_NUSFLAGS_CPU   = 5,
   
   parameter FPU                =  0,
+  parameter Zfinx              =  0,
   parameter FP_DIVSQRT         =  0,
   parameter SHARED_FP          =  0,
   parameter SHARED_FP_DIVSQRT  =  0,
@@ -186,6 +187,7 @@ module core_region
     .N_EXT_PERF_COUNTERS ( 5                 ),
     .PULP_SECURE         ( 0                 ),
     .FPU                 ( FPU               ),
+    .Zfinx               ( Zfinx             ),
     .FP_DIVSQRT          ( FP_DIVSQRT        ),
     .SHARED_FP           ( SHARED_FP         ),
     .SHARED_DSP_MULT     ( 0                 ),

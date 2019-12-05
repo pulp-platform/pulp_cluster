@@ -33,7 +33,10 @@ package pulp_cluster_package;
   parameter SPER_DMA_FC_ID   = 7;
   parameter SPER_DECOMP_ID   = 8; 
   parameter SPER_EXT_ID      = 9;
-  
+
+
+  // If set to 1, use only 32 reg also for FP
+  parameter Zfinx            = 1;  
   // if set to 1, then instantiate APU in the cluster
  // parameter APU_CLUSTER = 0;
   
