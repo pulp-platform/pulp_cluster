@@ -25,7 +25,8 @@ module per2axi_wrap
   parameter AXI_DATA_WIDTH = 64,
   parameter AXI_USER_WIDTH = 6,
   parameter AXI_ID_WIDTH   = 4,
-  parameter AXI_STRB_WIDTH = AXI_DATA_WIDTH/8
+  parameter AXI_STRB_WIDTH = AXI_DATA_WIDTH/8,
+  parameter ID_WIDTH = PER_ID_WIDTH // required for XBAR_PERIPH_BUS interface
 )
 (
   input logic	          clk_i,
