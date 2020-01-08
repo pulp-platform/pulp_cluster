@@ -55,16 +55,12 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0],
   XBAR_PERIPH_BUS.Slave               core_eu_direct_link[NB_CORES-1:0],
 
-  //input  logic [NB_CORES-1:0]         dma_events_i,
-  //input  logic [NB_CORES-1:0]         dma_irq_i,
-
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
   input logic                         dma_cl_irq_i,
-  //input  logic                        dma_pe_irq_i,
-  //output logic                        pf_event_o,
+  //output logic                      pf_event_o,     // pf event not used anymore?
   
-  //input logic                         decompr_done_evt_i,
+  //input logic                       decompr_done_evt_i,   //needed for decomp integration
 
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
@@ -97,7 +93,6 @@ module cluster_peripherals
   output logic                        hwpe_sel_o,
   output logic                        hwpe_en_o,
 
-  //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 
   // Control ports
 `ifdef PRIVATE_ICACHE
@@ -129,7 +124,7 @@ module cluster_peripherals
   logic [NB_CORES-1:0][1:0]  s_timer_events;
   logic [NB_CORES-1:0][1:0]  s_dma_events;
   
-  logic [NB_CORES-1:0]  s_fetch_en_cc;
+  logic [NB_CORES-1:0]       s_fetch_en_cc;
 
   MESSAGE_BUS eu_message_master(); 
 
@@ -168,8 +163,6 @@ module cluster_peripherals
         .NB_CORES      ( NB_CORES                     ),
         .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
         .BOOT_ADDR     ( BOOT_ADDR                    )
-        //.NB_L1_CUTS      ( NB_L1_CUTS                 ),
-        //.RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH            )
    )
    cluster_control_unit_i
    (
@@ -199,7 +192,6 @@ module cluster_peripherals
 
         .fetch_enable_o ( s_fetch_en_cc                ),
         .TCDM_arb_policy_o (TCDM_arb_policy_o          )
-        //.rw_margin_L1_o    ( rw_margin_L1_o            )
    );
   
 
@@ -270,7 +262,7 @@ module cluster_peripherals
 
     .acc_events_i           ( s_acc_events           ),
     .dma_events_i           ( s_dma_events           ),
-    .decompr_done_evt_i     (  '0   ),  //decompr_done_evt_i 
+    .decompr_done_evt_i     (  '0                    ),  //decompr_done_evt_i 
     .timer_events_i         ( s_timer_events         ),
     .cluster_events_i       ( s_cluster_events       ),
 
@@ -317,11 +309,11 @@ module cluster_peripherals
         .clk_i                       (  clk_i                            ),
         .rst_ni                      (  rst_ni                           ),
 
-        .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+        .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL]  ),
         .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri             ),
         .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main            ),
-        .special_core_icache_cfg_o   (  special_core_icache_cfg_o      ),   //special_core_icache_cfg_o
-        .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o       )
+        .special_core_icache_cfg_o   (  special_core_icache_cfg_o        ),   //special_core_icache_cfg_o
+        .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o         )
 );
 
 
@@ -363,7 +355,7 @@ module cluster_peripherals
   `endif
 `endif
    
-  //********************************************************
+    //********************************************************
     //******************** DMA CL CONFIG PORT ****************
     //********************************************************
 

@@ -58,48 +58,45 @@ module core_region
   parameter ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
-  input logic 			      clk_i,
-  input logic 			      rst_ni,
-  input logic 			      init_ni,
+  input logic 			           clk_i,
+  input logic 			           rst_ni,
+  input logic 			           init_ni,
 
-  input logic [3:0] 		      base_addr_i, // FOR CLUSTER VIRTUALIZATION
+  input logic  [3:0] 		       base_addr_i, // FOR CLUSTER VIRTUALIZATION
 
-  input logic [5:0] 		      cluster_id_i,
+  input logic  [5:0] 		       cluster_id_i,
   
-  input logic 			      irq_req_i,
-  output logic 			      irq_ack_o,
-  input logic [4:0] 		      irq_id_i,
-  output logic [4:0] 		      irq_ack_id_o,
+  input logic 			           irq_req_i,
+  output logic 			           irq_ack_o,
+  input logic  [4:0] 		       irq_id_i,
+  output logic [4:0] 		       irq_ack_id_o,
   
-  input logic 			      clock_en_i,
-  input logic 			      fetch_en_i,
-  input logic 			      fregfile_disable_i,
+  input logic 			           clock_en_i,
+  input logic 			           fetch_en_i,
+  input logic 			           fregfile_disable_i,
 
-  input logic [31:0] 		      boot_addr_i,
+  input logic  [31:0] 	       boot_addr_i,
 
-  input logic 			      test_mode_i,
+  input logic 			           test_mode_i,
 
-  output logic 			      core_busy_o,
+  output logic 			           core_busy_o,
 
   // Interface to Instruction Logarithmic interconnect (Req->grant handshake)
-  output logic 			      instr_req_o,
-  input logic 			      instr_gnt_i,
-  output logic [31:0] 		      instr_addr_o,
-  input logic [INSTR_RDATA_WIDTH-1:0] instr_r_rdata_i,
-  input logic 			      instr_r_valid_i,
+  output logic 			           instr_req_o,
+  input logic 			           instr_gnt_i,
+  output logic  [31:0]		     instr_addr_o,
 
-  input logic             debug_req_i,
+  input logic [INSTR_RDATA_WIDTH-1:0]   instr_r_rdata_i,
+  
+  input logic 			           instr_r_valid_i,
+
+  input logic                  debug_req_i,
 				      
-				      //XBAR_TCDM_BUS.Slave debug_bus,
-  //output logic 			      debug_core_halted_o,
-  //input logic 			      debug_core_halt_i,
-  //input logic 			      debug_core_resume_i,
-				      
-				      // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-				      XBAR_TCDM_BUS.Master tcdm_data_master,
-				      //XBAR_TCDM_BUS.Master dma_ctrl_master,
-				      XBAR_PERIPH_BUS.Master eu_ctrl_master,
-				      XBAR_PERIPH_BUS.Master periph_data_master
+		      
+  // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
+  XBAR_TCDM_BUS.Master tcdm_data_master,
+  XBAR_PERIPH_BUS.Master eu_ctrl_master,
+  XBAR_PERIPH_BUS.Master periph_data_master
 
 
  // new interface signals
@@ -237,7 +234,6 @@ module core_region
     .fetch_enable_i        ( fetch_en_i               ),
     .core_busy_o           ( core_busy_o              ),
 
-
      // apu-interconnect
     .apu_master_req_o      ( apu_master_req_o      ),
     .apu_master_gnt_i      ( apu_master_gnt_i      ),
@@ -315,16 +311,6 @@ module core_region
     .data_r_rdata_i_EXT (  eu_ctrl_master.r_rdata     ),
     .data_r_opc_i_EXT   (  eu_ctrl_master.r_opc       ),
 
-    // .data_req_o_EXT     (  periph_demux_bus.req       ),
-    // .data_add_o_EXT     (  periph_demux_bus.add       ),
-    // .data_wen_o_EXT     (  periph_demux_bus.wen       ),
-    // .data_wdata_o_EXT   (  periph_demux_bus.wdata     ),
-    // .data_be_o_EXT      (  periph_demux_bus.be        ),
-    // .data_gnt_i_EXT     (  periph_demux_bus.gnt       ),
-    // .data_r_valid_i_EXT (  periph_demux_bus.r_valid   ),
-    // .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata   ),
-    // .data_r_opc_i_EXT   (  periph_demux_bus.r_opc     ),
-
     .data_req_o_PE      (  periph_data_master.req     ),
     .data_add_o_PE      (  periph_data_master.add     ),
     .data_wen_o_PE      (  periph_data_master.wen     ),
@@ -341,44 +327,6 @@ module core_region
     .perf_l2_st_cyc_o   (  perf_counters[3]           ),
     .CLUSTER_ID         (  cluster_id_i               )
   );
-
-  // periph_demux periph_demux_i (
-  //   .clk               ( clk_int                  ),
-  //   .rst_ni            ( rst_ni                   ),
-
-  //   .data_req_i        ( periph_demux_bus.req     ),
-  //   .data_add_i        ( periph_demux_bus.add     ),
-  //   .data_wen_i        ( periph_demux_bus.wen     ),
-  //   .data_wdata_i      ( periph_demux_bus.wdata   ),
-  //   .data_be_i         ( periph_demux_bus.be      ),
-  //   .data_gnt_o        ( periph_demux_bus.gnt     ),
-
-  //   .data_r_valid_o    ( periph_demux_bus.r_valid ),
-  //   .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-  //   .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
-
-  //   .data_req_o_MH     ( dma_ctrl_master.req      ),
-  //   .data_add_o_MH     ( dma_ctrl_master.add      ),
-  //   .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-  //   .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
-  //   .data_be_o_MH      ( dma_ctrl_master.be       ),
-  //   .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
-
-  //   .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-  //   .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
-  //   .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
-
-  //   .data_req_o_EU     ( eu_ctrl_master.req       ),
-  //   .data_add_o_EU     ( eu_ctrl_master.add       ),
-  //   .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-  //   .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-  //   .data_be_o_EU      ( eu_ctrl_master.be        ),
-  //   .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
-
-  //   .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-  //   .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-  //   .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-  // );
 
   /* debug stuff */
   //synopsys translate_off

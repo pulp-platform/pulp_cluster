@@ -62,8 +62,8 @@ module tcdm_banks_wrap
 	    .WEN       ( bank_rdwe_n ),
 	    .BEN       ( bank_be_n   ),
 	    .A         ( bank_a      ),
-            .D         ( bank_d      ),
-            .Q         ( bank_q      )
+        .D         ( bank_d      ),
+        .Q         ( bank_q      )
 	    );
 	 
       end
