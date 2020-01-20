@@ -708,9 +708,9 @@ module pulp_cluster
     .NB_TCDM_BANKS  ( NB_TCDM_BANKS  ),
     .ROM_BOOT_ADDR  ( ROM_BOOT_ADDR  ),
     .BOOT_ADDR      ( BOOT_ADDR      ),
-    .EVNT_WIDTH     ( EVNT_WIDTH     ),
+    .EVNT_WIDTH     ( EVNT_WIDTH     )
 
-    .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
+    //.RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
   
   ) cluster_peripherals_i (
 
