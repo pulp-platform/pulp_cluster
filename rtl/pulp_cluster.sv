@@ -603,7 +603,7 @@ module pulp_cluster
   );
 
   `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
-    */
+   
   per2axi_wrap #(
     .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
