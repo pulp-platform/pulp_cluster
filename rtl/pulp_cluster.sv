@@ -29,8 +29,8 @@ module pulp_cluster
   parameter NB_CORES           = 8,
   parameter NB_HWPE_PORTS      = 4,
   parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 9,
+  parameter NB_MPERIPHS        = NB_MPERIPHS,
+  parameter NB_SPERIPHS        = NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   
