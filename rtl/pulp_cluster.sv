@@ -34,7 +34,7 @@ module pulp_cluster
   
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   
-  parameter TCDM_SIZE          = 64*1024,                 // [B], must be 2**N
+  parameter TCDM_SIZE          = 128*1024,                 // [B], must be 2**N
   parameter NB_TCDM_BANKS      = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS      = TCDM_BANK_SIZE/4,        // [words]
