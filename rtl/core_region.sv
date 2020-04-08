@@ -181,7 +181,7 @@ module core_region
    //***************** PROCESSOR ****************************
    //********************************************************
 
-  riscv_core #(
+  riscv_nn_core #(
     .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
     .N_EXT_PERF_COUNTERS ( 5                 ),
     .PULP_SECURE         ( 0                 ),
@@ -195,7 +195,7 @@ module core_region
     .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
 
   ) 
-   RISCV_CORE 
+   RISCV_NN_CORE 
   (
     .clk_i                 ( clk_i             ),
     .rst_ni                ( rst_ni            ),
