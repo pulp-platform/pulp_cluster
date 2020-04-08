@@ -55,5 +55,10 @@ fpu_interco:
   commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
   domain: [soc, cluster]
   group: pulp-platform
+riscv_nn:
+  commit: marsellus_v2.4.0
+  domain: [cluster]
+  group: pulp-restricted
+  server: git@iis-git.ee.ethz.ch
 
 
