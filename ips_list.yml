@@ -52,7 +52,7 @@ cluster_peripherals:
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
+  commit: 40ed323ca72ecd40deb1ef8eb1a3d5b074925c05
   domain: [soc, cluster]
   group: pulp-platform
 riscv_nn:
