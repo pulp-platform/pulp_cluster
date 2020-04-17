@@ -56,7 +56,7 @@ fpu_interco:
   domain: [soc, cluster]
   group: pulp-platform
 riscv_nn:
-  commit: marsellus_v2.4.0
+  commit: marsellus_v2.5.0
   domain: [cluster]
   group: pulp-restricted
   server: git@iis-git.ee.ethz.ch
