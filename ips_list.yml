@@ -12,7 +12,7 @@ axi/axi2per:
   domain: [cluster]
   group:  pulp-platform
 axi/per2axi:
-  commit: tags/v1.0.3
+  commit: marsellus_v1.0.0
   domain: [soc, cluster]
   group:  pulp-platform
 axi/axi_size_conv:
@@ -24,7 +24,7 @@ cluster_interconnect:
   domain: [cluster]
   group: pulp-platform
 event_unit_flex:
-  commit: tags/v1.0.1
+  commit: 76ae54f66ebc40cb651ad10148f94c825a08e526
   domain: [cluster]
   group: pulp-platform
 mchan:
@@ -32,7 +32,7 @@ mchan:
   domain: [cluster]
   group: pulp-platform
 hier-icache:
-  commit: tags/v1.0.1
+  commit: marsellus_v1.2.0
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
@@ -52,7 +52,7 @@ cluster_peripherals:
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: tags/v1.2.4
+  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
   domain: [soc, cluster]
   group: pulp-platform
 
