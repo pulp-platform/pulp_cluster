@@ -12,7 +12,7 @@ axi/axi2per:
   domain: [cluster]
   group:  pulp-platform
 axi/per2axi:
-  commit: marsellus_v1.0.0
+  commit: v1.0.4
   domain: [soc, cluster]
   group:  pulp-platform
 axi/axi_size_conv:
@@ -24,7 +24,7 @@ cluster_interconnect:
   domain: [cluster]
   group: pulp-platform
 event_unit_flex:
-  commit: v1.2.0
+  commit: v1.3.0
   domain: [cluster]
   group: pulp-platform
 mchan:
