@@ -63,8 +63,6 @@ module cluster_peripherals
   input logic                         dma_cl_irq_i,
   //input  logic                        dma_pe_irq_i,
   //output logic                        pf_event_o,
-  
-  //input logic                         decompr_done_evt_i,
 
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
@@ -270,7 +268,6 @@ module cluster_peripherals
 
     .acc_events_i           ( s_acc_events           ),
     .dma_events_i           ( s_dma_events           ),
-    .decompr_done_evt_i     (  '0   ),  //decompr_done_evt_i 
     .timer_events_i         ( s_timer_events         ),
     .cluster_events_i       ( s_cluster_events       ),
 
