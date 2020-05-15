@@ -697,7 +697,7 @@ module pulp_cluster
   //*************************************************** 
   
   dmac_wrap #(
-    .NB_CTRLS           ( 2                  ),
+    .NB_CTRLS           ( 2+NB_CORES         ),
     .NB_CORES           ( NB_CORES           ),
     .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
     .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
@@ -711,19 +711,19 @@ module pulp_cluster
     .ADDR_WIDTH         ( ADDR_WIDTH         ),
     .BE_WIDTH           ( BE_WIDTH           )
   ) dmac_wrap_i (
-    .clk_i          ( clk_cluster        ),
-    .rst_ni         ( rst_ni             ),
-    .test_mode_i    ( test_mode_i        ),
-    //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
-    .cl_ctrl_slave  ( s_periph_dma_bus[0]),
-    .fc_ctrl_slave  ( s_periph_dma_bus[1]),
-    .tcdm_master    ( s_dma_xbar_bus     ),
-    .ext_master     ( s_dma_ext_bus      ),
-    .term_event_cl_o( s_dma_cl_event     ),
-    .term_irq_cl_o  ( s_dma_cl_irq       ),
-    .term_event_pe_o( s_dma_fc_event     ),
-    .term_irq_pe_o  ( s_dma_pe_irq       ),
-    .busy_o         ( s_dmac_busy        )
+    .clk_i          ( clk_cluster         ),
+    .rst_ni         ( rst_ni              ),
+    .test_mode_i    ( test_mode_i         ),
+    .pe_ctrl_slave  ( s_core_dmactrl_bus  ),
+    .cl_ctrl_slave  ( s_periph_dma_bus[0] ),
+    .fc_ctrl_slave  ( s_periph_dma_bus[1] ),
+    .tcdm_master    ( s_dma_xbar_bus      ),
+    .ext_master     ( s_dma_ext_bus       ),
+    .term_event_cl_o( s_dma_cl_event      ),
+    .term_irq_cl_o  ( s_dma_cl_irq        ),
+    .term_event_pe_o( s_dma_fc_event      ),
+    .term_irq_pe_o  ( s_dma_pe_irq        ),
+    .busy_o         ( s_dmac_busy         )
   );
 
   //***************************************************
@@ -764,8 +764,8 @@ module pulp_cluster
 
     .dma_cl_event_i         ( s_dma_cl_event                     ),
     .dma_cl_irq_i           ( s_dma_cl_irq                       ),
-    //.dma_events_i           ( s_dma_event                        ),
-    //.dma_irq_i              ( s_dma_irq                          ),
+    .dma_events_i           ( s_dma_event                        ),
+    .dma_irq_i              ( s_dma_irq                          ),
 
     // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
@@ -897,7 +897,7 @@ module pulp_cluster
         .tcdm_data_master    ( s_core_xbar_bus[i]    ),
 
         //tcdm, dma ctrl unit, periph interco interfaces
-        //.dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
+        .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
       
@@ -1012,7 +1012,7 @@ module pulp_cluster
       (
          .clk                   ( clk_cluster                               ),
          .rst_n                 ( s_rst_n                                   ),
-	       .test_mode_i           ( test_mode_i                               ),
+	 .test_mode_i           ( test_mode_i                               ),
          .core_slave_req_i      ( s_apu_master_req                          ),
          .core_slave_gnt_o      ( s_apu_master_gnt                          ),
          .core_slave_type_i     ( s_apu__type                               ),

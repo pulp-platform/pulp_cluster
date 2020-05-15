@@ -40,7 +40,7 @@ module periph_demux
   output logic [DATA_WIDTH - 1:0] data_r_rdata_o, // Data Response DATA (For LOAD commands)
   output logic                    data_r_opc_o,   // Data Response Error
 
-  // Low Latency log interconnect SIDE
+  // MCHAN_SIDE
   output logic                    data_req_o_MH,
   output logic [ADDR_WIDTH - 1:0] data_add_o_MH,
   output logic                    data_wen_o_MH,
