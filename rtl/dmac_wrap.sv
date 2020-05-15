@@ -33,20 +33,26 @@ module dmac_wrap
   parameter BE_WIDTH           = DATA_WIDTH/8
 )
 (
-  input logic           clk_i,
-  input logic           rst_ni,
-  input logic           test_mode_i,
-  XBAR_TCDM_BUS.Save    pe_ctrl_slave[NB_CORES-1:0],
-  XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
-  XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
+  input logic                 clk_i,
+  input logic                 rst_ni,
+  input logic                 test_mode_i,
+  XBAR_TCDM_BUS.Slave         pe_ctrl_slave[NB_CORES-1:0],
+  XBAR_PERIPH_BUS.Slave       cl_ctrl_slave,
+  XBAR_PERIPH_BUS.Slave       fc_ctrl_slave,
   
-  XBAR_TCDM_BUS.Master  tcdm_master[3:0],
-  AXI_BUS.Master        ext_master,
-  output logic          term_event_cl_o,
-  output logic          term_irq_cl_o,
-  output logic          term_event_pe_o,
-  output logic          term_irq_pe_o,
-  output logic          busy_o
+  XBAR_TCDM_BUS.Master        tcdm_master[3:0],
+  AXI_BUS.Master              ext_master,
+  // TO CLUSTER PE PORTS EVENTS
+  output logic [NB_CORES-1:0] term_event_pe_o,
+  output logic [NB_CORES-1:0] term_irq_pe_o,
+  // TO CLUSTER FC PORT EVENTS
+  output logic                term_event_cl_o,
+  output logic                term_irq_cl_o,
+  // TO FABRIC CONTROLLER
+  output logic                term_event_fc_o,
+  output logic                term_irq_fc_o,
+
+  output logic                busy_o
 );
   
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
@@ -100,15 +106,15 @@ module dmac_wrap
   
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : PE_CTRL_BIND
-      assign s_ctrl_bus_add[i+2]      = pe_ctrl_slave.add[i];
-      assign s_ctrl_bus_req[i+2]      = pe_ctrl_slave.req[i];
-      assign s_ctrl_bus_wdata[i+2]    = pe_ctrl_slave.wdata[i];
-      assign s_ctrl_bus_wen[i+2]      = pe_ctrl_slave.wen[i];
-      assign s_ctrl_bus_be[i+2]       = pe_ctrl_slave.be[i];
+      assign s_ctrl_bus_add[i+2]      = pe_ctrl_slave[i].add;
+      assign s_ctrl_bus_req[i+2]      = pe_ctrl_slave[i].req;
+      assign s_ctrl_bus_wdata[i+2]    = pe_ctrl_slave[i].wdata;
+      assign s_ctrl_bus_wen[i+2]      = pe_ctrl_slave[i].wen;
+      assign s_ctrl_bus_be[i+2]       = pe_ctrl_slave[i].be;
       assign s_ctrl_bus_id[i+2]       = '0;
-      assign pe_ctrl_slave.gnt[i]     = s_ctrl_bus_gnt[i+2];
-      assign pe_ctrl_slave.r_valid[i] = s_ctrl_bus_r_valid[i+2];
-      assign pe_ctrl_slave.r_rdata[i] = s_ctrl_bus_r_rdata[i+2];
+      assign pe_ctrl_slave[i].gnt     = s_ctrl_bus_gnt[i+2];
+      assign pe_ctrl_slave[i].r_valid = s_ctrl_bus_r_valid[i+2];
+      assign pe_ctrl_slave[i].r_rdata = s_ctrl_bus_r_rdata[i+2];
     end
   endgenerate
   
@@ -222,8 +228,8 @@ module dmac_wrap
     .axi_master_b_user_i       ( ext_master.b_user                  ),
     .axi_master_b_ready_o      ( ext_master.b_ready                 ),
     
-    .term_evt_o                ( {term_event_pe_o,term_event_cl_o}  ),
-    .term_int_o                ( {term_irq_pe_o,term_irq_cl_o    }  ),
+    .term_evt_o                ( {term_event_pe_o,term_event_fc_o,term_event_cl_o}  ),
+    .term_int_o                ( {term_irq_pe_o,term_irq_fc_o,term_irq_cl_o    }  ),
     
     .busy_o                    ( busy_o                             )
   );

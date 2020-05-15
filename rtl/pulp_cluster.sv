@@ -284,14 +284,14 @@ module pulp_cluster
   logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
-  logic                s_cluster_periphs_busy;
-  logic                s_axi2mem_busy;
-  logic                s_per2axi_busy;
-  logic                s_axi2per_busy;
-  logic                s_dmac_busy;
-  logic                s_cluster_cg_en;
-  logic [NB_CORES-1:0] s_dma_event;
-  logic [NB_CORES-1:0] s_dma_irq;
+  logic                      s_cluster_periphs_busy;
+  logic                      s_axi2mem_busy;
+  logic                      s_per2axi_busy;
+  logic                      s_axi2per_busy;
+  logic                      s_dmac_busy;
+  logic                      s_cluster_cg_en;
+  logic [NB_CORES-1:0]       s_dma_pe_event;
+  logic [NB_CORES-1:0]       s_dma_pe_irq;
   logic [NB_CORES-1:0][3:0]  s_hwpe_remap_evt;
   logic [NB_CORES-1:0][1:0]  s_hwpe_evt;
   logic                      s_hwpe_busy;
@@ -324,8 +324,6 @@ module pulp_cluster
   logic [1:0]                                 s_TCDM_arb_policy;
   logic                                       tcdm_sleep;
 
-  logic               s_dma_pe_event;
-  logic               s_dma_pe_irq;
   logic               s_pf_event;
   
   logic[NB_CORES-1:0][4:0] irq_id;
@@ -719,10 +717,13 @@ module pulp_cluster
     .fc_ctrl_slave  ( s_periph_dma_bus[1] ),
     .tcdm_master    ( s_dma_xbar_bus      ),
     .ext_master     ( s_dma_ext_bus       ),
+    
+    .term_event_pe_o( s_dma_pe_event      ),
+    .term_irq_pe_o  ( s_dma_pe_irq        ),
     .term_event_cl_o( s_dma_cl_event      ),
     .term_irq_cl_o  ( s_dma_cl_irq        ),
-    .term_event_pe_o( s_dma_fc_event      ),
-    .term_irq_pe_o  ( s_dma_pe_irq        ),
+    .term_event_fc_o( s_dma_fc_event      ),
+    .term_irq_fc_o  ( s_dma_fc_irq        ),
     .busy_o         ( s_dmac_busy         )
   );
 
@@ -764,8 +765,9 @@ module pulp_cluster
 
     .dma_cl_event_i         ( s_dma_cl_event                     ),
     .dma_cl_irq_i           ( s_dma_cl_irq                       ),
-    .dma_events_i           ( s_dma_event                        ),
-    .dma_irq_i              ( s_dma_irq                          ),
+			   
+    .dma_events_i           ( s_dma_pe_event                     ),
+    .dma_irq_i              ( s_dma_pe_irq                       ),
 
     // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
