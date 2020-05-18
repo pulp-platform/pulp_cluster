@@ -65,7 +65,11 @@ module hwpe_subsystem
     .periph_r_data    ( hwpe_cfg_slave.r_rdata ),
     .periph_r_valid   ( hwpe_cfg_slave.r_valid ),
     .periph_r_id      ( hwpe_cfg_slave.r_id    ),
-    .evt_o            ( evt_o                  )
+    // TODO: this breaks the hwpe subsystem but we currently
+    // 1. don't use it
+    // 2. don't know how to fix it
+    //.evt_o            ( evt_o                  )
+    .evt_o            ( )
   );
   assign busy_o = 1'b1;
 
