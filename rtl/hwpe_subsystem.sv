@@ -42,7 +42,8 @@ module hwpe_subsystem
 
   // use the mac engine as example accelerator
   mac_top_wrap #(
-    .ID  ( ID_WIDTH )
+    .N_CORES ( N_CORES  ),
+    .ID      ( ID_WIDTH )
   ) mac_top_wrap_i (
     .clk_i            ( clk                    ),
     .rst_ni           ( rst_n                  ),

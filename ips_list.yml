@@ -24,7 +24,7 @@ cluster_interconnect:
   domain: [cluster]
   group: pulp-platform
 event_unit_flex:
-  commit: v1.3.0
+  commit: v1.4.0
   domain: [cluster]
   group: pulp-platform
 mchan:

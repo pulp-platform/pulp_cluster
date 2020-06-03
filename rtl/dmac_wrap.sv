@@ -194,7 +194,7 @@ module dmac_wrap
     .tcdm_init_type_o          ( s_tcdm_bus_wen                     ),
     .tcdm_init_be_o            ( s_tcdm_bus_be                      ),
     .tcdm_init_data_o          ( s_tcdm_bus_wdata                   ),
-    
+    .tcdm_init_sid_o           (                                    ),
     .tcdm_init_gnt_i           ( s_tcdm_bus_gnt                     ),
     .tcdm_init_r_valid_i       ( s_tcdm_bus_r_valid                 ),
     .tcdm_init_r_data_i        ( s_tcdm_bus_r_rdata                 ),

@@ -801,7 +801,6 @@ module pulp_cluster
 `ifdef PRIVATE_ICACHE
       .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
       .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
-      .special_core_icache_cfg_o ( s_special_core_icache_cfg        ),
       .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
 `else
   `ifdef SP_ICACHE
@@ -1087,10 +1086,6 @@ module pulp_cluster
       .PRI_CACHE_SIZE    ( 512            ), //= 512, // in Byte
       .PRI_CACHE_LINE    ( 1              ), //= 1,   // in word of [FETCH_DATA_WIDTH]
 
-      .USE_SPECIAL_CORE       ( "FALSE"     ),
-      .SPECIAL_CORE_ID        ( 0          ),
-      .SPECIAL_PRI_CACHE_SIZE ( 0       ), // in Byte
-
       .AXI_ID            ( AXI_ID_OUT_WIDTH ), //= 6,
       .AXI_ADDR          ( AXI_ADDR_WIDTH   ), //= 32,
       .AXI_USER          ( AXI_USER_WIDTH   ), //= 6,
@@ -1172,8 +1167,7 @@ module pulp_cluster
        // ---------------------------------------------------------------
 
        .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri        ),
-       .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main       ),
-       .special_core_dest_i    (  '0  ) //s_special_core_icache_cfg
+       .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main       )
 );
 
 `else

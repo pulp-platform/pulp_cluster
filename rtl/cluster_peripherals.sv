@@ -101,8 +101,7 @@ module cluster_peripherals
 `ifdef PRIVATE_ICACHE
      SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
      PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
-     output logic                         special_core_icache_cfg_o,
-     output logic                         enable_l1_l15_prefetch_o
+     output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
 `else
   `ifdef SP_ICACHE
       // Control ports
@@ -301,63 +300,60 @@ module cluster_peripherals
    
 
 `ifdef PRIVATE_ICACHE   //to be integrated hier_icache
-
-
-    hier_icache_ctrl_unit_wrap
-    #(
-        .NB_CACHE_BANKS(NB_CACHE_BANKS),
-        .NB_CORES(NB_CORES),
-        .ID_WIDTH(NB_CORES+NB_MPERIPHS)
-    )
-    icache_ctrl_unit_i
-    (
-        .clk_i                       (  clk_i                            ),
-        .rst_ni                      (  rst_ni                           ),
-
-        .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-        .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri             ),
-        .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main            ),
-        .special_core_icache_cfg_o   (  special_core_icache_cfg_o      ),   //special_core_icache_cfg_o
-        .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o       )
-);
-
-
-`else
-  `ifdef MP_ICACHE
-      mp_pf_icache_ctrl_unit
-      #(
-          .NB_CACHE_BANKS(NB_CACHE_BANKS),
-          .NB_CORES(NB_CORES),
-          .ID_WIDTH(NB_CORES+NB_MPERIPHS)
-      )
-      icache_ctrl_unit_i
-      (
-          .clk_i                       (  clk_i                            ),
-          .rst_ni                      (  rst_ni                           ),
-
-          .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-          .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                 ),
-          .pf_event_o                  (                                   )
+   
+   hier_icache_ctrl_unit_wrap
+     #(
+       .NB_CACHE_BANKS(NB_CACHE_BANKS),
+       .NB_CORES(NB_CORES),
+       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+       )
+   icache_ctrl_unit_i
+     (
+      .clk_i                       (  clk_i                           ),
+      .rst_ni                      (  rst_ni                          ),
+      
+      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+      .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
+      .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
+      .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
       );
-  `else
-      `ifdef SP_ICACHE
-          sp_icache_ctrl_unit
-          #(
-              .NB_CACHE_BANKS(NB_CACHE_BANKS),
-              .NB_CORES(NB_CORES),
-              .ID_WIDTH(NB_CORES+NB_MPERIPHS)
-          )
-          icache_ctrl_unit_i
-          (
-              .clk_i                       (  clk_i                            ),
-              .rst_ni                      (  rst_ni                           ),
-
-              .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-              .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                 ),
-              .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                 )
-          );
-      `endif
+   
+`else
+ `ifdef MP_ICACHE
+   mp_pf_icache_ctrl_unit
+     #(
+       .NB_CACHE_BANKS(NB_CACHE_BANKS),
+       .NB_CORES(NB_CORES),
+       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+       )
+   icache_ctrl_unit_i
+     (
+      .clk_i                       (  clk_i                           ),
+      .rst_ni                      (  rst_ni                          ),
+      
+      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+      .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
+      .pf_event_o                  (                                  )
+      );
+ `else
+  `ifdef SP_ICACHE
+   sp_icache_ctrl_unit
+     #(
+       .NB_CACHE_BANKS(NB_CACHE_BANKS),
+       .NB_CORES(NB_CORES),
+       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+       )
+   icache_ctrl_unit_i
+     (
+      .clk_i                       (  clk_i                           ),
+      .rst_ni                      (  rst_ni                          ),
+      
+      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+      .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
+      .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                )
+      );
   `endif
+ `endif
 `endif
    
   //********************************************************
