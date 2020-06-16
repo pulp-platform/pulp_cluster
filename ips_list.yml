@@ -19,6 +19,10 @@ axi/axi_size_conv:
   commit: tags/pulp-v1.0
   domain: [cluster]
   group: pulp-platform
+axi/axi:
+  commit: tags/v0.23.0
+  domain: [soc]
+  group: recogni
 cluster_interconnect:
   commit: tags/v1.0.3
   domain: [cluster]
