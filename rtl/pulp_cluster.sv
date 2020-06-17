@@ -1439,7 +1439,7 @@ module pulp_cluster
       .axi_master  ( s_data_slave_64 )
     );
   end else begin
-    axi_join axi_join_i (
+    axi_join_intf axi_join_i (
       .in   ( s_data_slave    ),
       .out  ( s_data_slave_64 )
     );
