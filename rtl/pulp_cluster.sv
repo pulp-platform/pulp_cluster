@@ -473,7 +473,7 @@ module pulp_cluster
     .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_32();
+  ) s_data_slave();
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -1419,10 +1419,10 @@ module pulp_cluster
     .clock_down_i    ( 1'b0               ), //s_isolate_cluster
     .incoming_req_o  ( s_incoming_req     ),
     .axi_slave_async ( s_data_slave_async ),
-    .axi_master      ( s_data_slave_32    )
+    .axi_master      ( s_data_slave       )
   );
 
-  if(AXI_DATA_S2C_WIDTH != AXI_DATA_C2S_WIDTH) begin
+  if (AXI_DATA_S2C_WIDTH != AXI_DATA_C2S_WIDTH) begin
     axi_size_UPSIZE_32_64_wrap #(
       .AXI_ADDR_WIDTH      ( AXI_ADDR_WIDTH     ),
       .AXI_DATA_WIDTH_IN   ( AXI_DATA_S2C_WIDTH ),
@@ -1435,12 +1435,12 @@ module pulp_cluster
       .clk_i       ( clk_i           ),
       .rst_ni      ( s_rst_n         ),
       .test_mode_i ( test_mode_i     ),
-      .axi_slave   ( s_data_slave_32 ),
+      .axi_slave   ( s_data_slave    ),
       .axi_master  ( s_data_slave_64 )
     );
   end else begin
     axi_join axi_join_i (
-      .in   ( s_data_slave_32 ),
+      .in   ( s_data_slave    ),
       .out  ( s_data_slave_64 )
     );
   end
