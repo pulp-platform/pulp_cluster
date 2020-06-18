@@ -48,6 +48,7 @@ module core_region
   
   parameter FPU                =  0,
   parameter FP_DIVSQRT         =  0,
+  parameter ZFINX              =  0,
   parameter SHARED_FP          =  0,
   parameter SHARED_FP_DIVSQRT  =  0,
 
@@ -189,7 +190,7 @@ module core_region
     .USE_PMP             ( 1                 ),
     .PULP_CLUSTER        ( 1                 ),
     .FPU                 ( FPU               ),
-    .Zfinx               ( 0                 ), // 1: shared gp and fp register
+    .Zfinx               ( ZFINX             ), // 1: shared gp and fp register
     .FP_DIVSQRT          ( FP_DIVSQRT        ),
     .SHARED_FP           ( SHARED_FP         ),
     .SHARED_DSP_MULT     ( 0                 ),

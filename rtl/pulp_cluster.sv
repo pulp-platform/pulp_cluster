@@ -72,6 +72,7 @@ module pulp_cluster
   parameter CLUST_FP_DIVSQRT        = 1,
   parameter CLUST_SHARED_FP         = 2,
   parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter CLUST_ZFINX             = 0,
   
   // AXI parameters
   parameter AXI_ADDR_WIDTH        = 32,
@@ -858,6 +859,7 @@ module pulp_cluster
 
         .FPU                 ( CLUST_FPU               ),
         .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
+        .ZFINX               ( CLUST_ZFINX             ),
         .SHARED_FP           ( CLUST_SHARED_FP         ),
         .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
 
