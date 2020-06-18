@@ -185,18 +185,24 @@ module core_region
     .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
     .N_EXT_PERF_COUNTERS ( 5                 ),
     .PULP_SECURE         ( 0                 ),
+    .N_PMP_ENTRIES       ( 16                ),
+    .USE_PMP             ( 1                 ),
+    .PULP_CLUSTER        ( 1                 ),
     .FPU                 ( FPU               ),
+    .Zfinx               ( 0                 ), // 1: shared gp and fp register
     .FP_DIVSQRT          ( FP_DIVSQRT        ),
     .SHARED_FP           ( SHARED_FP         ),
     .SHARED_DSP_MULT     ( 0                 ),
+    .SHARED_INT_MULT     ( 0                 ),
     .SHARED_INT_DIV      ( 0                 ),
     .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
     .WAPUTYPE            ( WAPUTYPE          ),
+    .APU_NARGS_CPU       ( 3                 ),
+    .APU_WOP_CPU         ( 6                 ),
+    .APU_NDSFLAGS_CPU    ( 15                ),
+    .APU_NUSFLAGS_CPU    ( 5                 ),
     .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-
-  ) 
-   RISCV_CORE 
-  (
+  ) RISCV_CORE (
     .clk_i                 ( clk_i             ),
     .rst_ni                ( rst_ni            ),
 
