@@ -860,7 +860,7 @@ module pulp_cluster
         .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
         .SHARED_FP           ( CLUST_SHARED_FP         ),
         .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT ),
-        .DEBUG_START_ADDR    ( DEBUG_START_ADDR        ),
+        .DEBUG_START_ADDR    ( DEBUG_START_ADDR        )
 
                     
       ) core_region_i (
