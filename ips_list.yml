@@ -20,7 +20,7 @@ axi/axi_size_conv:
   domain: [cluster]
   group: pulp-platform
 axi/axi:
-  commit: 280ac6b6a3ede96c98c70ee4bba42747f659a3b4 
+  commit: 20961ed777beaee56b42c7dd45e8401f9c07554b
   domain: [soc, cluster]
   group: recogni 
 cluster_interconnect:
