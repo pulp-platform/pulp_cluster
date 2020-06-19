@@ -66,7 +66,7 @@ module pulp_cluster
   // core parameters
   parameter ROM_BOOT_ADDR     = 32'h1A000000,
   parameter BOOT_ADDR         = 32'h1C000000,
-  parameter DEBUG_START_ADDR  = `DEBUG_START_ADDR,
+  parameter DEBUG_START_ADDR  = 32'h0,
   parameter INSTR_RDATA_WIDTH = 128,
 
   parameter CLUST_FPU               = 1,
