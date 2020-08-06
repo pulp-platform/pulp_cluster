@@ -195,7 +195,7 @@ module core_region
     .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
 
   ) 
-   RISCV_NN_CORE 
+   RISCV_CORE 
   (
     .clk_i                 ( clk_i             ),
     .rst_ni                ( rst_ni            ),
