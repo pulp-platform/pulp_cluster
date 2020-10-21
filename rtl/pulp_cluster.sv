@@ -33,16 +33,16 @@ module pulp_cluster
   parameter NB_MPERIPHS             = NB_MPERIPHS,
   parameter NB_SPERIPHS             = NB_SPERIPHS,
   
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
+  parameter CLUSTER_ALIAS_BASE      = 12'h000,
   
-  parameter TCDM_SIZE          = 64*1024,                 // [B], must be 2**N
-  parameter NB_TCDM_BANKS      = 16,                      // must be 2**N
-  parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
-  parameter TCDM_NUM_ROWS      = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT       = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
+  parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
+  parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
+  parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
+  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
 
   // I$ parameters
-  parameter SET_ASSOCIATIVE       = 4,
+  parameter SET_ASSOCIATIVE         = 4,
 `ifdef PRIVATE_ICACHE
     parameter NB_CACHE_BANKS        = 2,
 `endif
@@ -54,20 +54,20 @@ module pulp_cluster
 `ifdef SP_ICACHE
     parameter NB_CACHE_BANKS        = 8,
 `endif
-  parameter CACHE_LINE            = 1,
-  parameter CACHE_SIZE            = 4096,
-  parameter ICACHE_DATA_WIDTH     = 128,
-  parameter L0_BUFFER_FEATURE     = "DISABLED",
-  parameter MULTICAST_FEATURE     = "DISABLED",
-  parameter SHARED_ICACHE         = "ENABLED",
-  parameter DIRECT_MAPPED_FEATURE = "DISABLED",
-  parameter L2_SIZE               = 512*1024,
-  parameter USE_REDUCED_TAG       = "TRUE",
+  parameter CACHE_LINE              = 1,
+  parameter CACHE_SIZE              = 4096,
+  parameter ICACHE_DATA_WIDTH       = 128,
+  parameter L0_BUFFER_FEATURE       = "DISABLED",
+  parameter MULTICAST_FEATURE       = "DISABLED",
+  parameter SHARED_ICACHE           = "ENABLED",
+  parameter DIRECT_MAPPED_FEATURE   = "DISABLED",
+  parameter L2_SIZE                 = 512*1024,
+  parameter USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
-  parameter ROM_BOOT_ADDR     = 32'h1A000000,
-  parameter BOOT_ADDR         = 32'h1C000000,
-  parameter INSTR_RDATA_WIDTH = 128,
+  parameter ROM_BOOT_ADDR           = 32'h1A000000,
+  parameter BOOT_ADDR               = 32'h1C000000,
+  parameter INSTR_RDATA_WIDTH       = 128,
 
   parameter CLUST_FPU               = 1,
   parameter CLUST_FP_DIVSQRT        = 1,
@@ -75,42 +75,42 @@ module pulp_cluster
   parameter CLUST_SHARED_FP_DIVSQRT = 2,
   
   // AXI parameters
-  parameter AXI_ADDR_WIDTH        = 32,
-  parameter AXI_DATA_C2S_WIDTH    = 64,
-  parameter AXI_DATA_S2C_WIDTH    = 32,
-  parameter AXI_USER_WIDTH        = 6,
-  parameter AXI_ID_IN_WIDTH       = 4,
-  parameter AXI_ID_OUT_WIDTH      = 6, 
-  parameter AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
-  parameter AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
-  parameter DC_SLICE_BUFFER_WIDTH = 8,
+  parameter AXI_ADDR_WIDTH          = 32,
+  parameter AXI_DATA_C2S_WIDTH      = 64,
+  parameter AXI_DATA_S2C_WIDTH      = 32,
+  parameter AXI_USER_WIDTH          = 6,
+  parameter AXI_ID_IN_WIDTH         = 4,
+  parameter AXI_ID_OUT_WIDTH        = 6, 
+  parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
+  parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
+  parameter DC_SLICE_BUFFER_WIDTH   = 8,
   
   // TCDM and log interconnect parameters
-  parameter DATA_WIDTH     = 32,
-  parameter ADDR_WIDTH     = 32,
-  parameter BE_WIDTH       = DATA_WIDTH/8,
-  parameter TEST_SET_BIT   = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
-  parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
+  parameter DATA_WIDTH              = 32,
+  parameter ADDR_WIDTH              = 32,
+  parameter BE_WIDTH                = DATA_WIDTH/8,
+  parameter TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter NB_OUTSND_BURSTS   = 8,
-  parameter MCHAN_BURST_LENGTH = 256,
+  parameter TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
+  parameter NB_OUTSND_BURSTS        = 8,
+  parameter MCHAN_BURST_LENGTH      = 256,
 
 
   // peripheral and periph interconnect parameters
-  parameter LOG_CLUSTER    = 5,  // unused
-  parameter PE_ROUTING_LSB = 10, // LSB used as routing BIT in periph interco
-  //parameter PE_ROUTING_MSB = 13, // MSB used as routing BIT in periph interco
-  parameter EVNT_WIDTH     = 8,  // size of the event bus
-  parameter REMAP_ADDRESS  = 1,   // for cluster virtualization
+  parameter LOG_CLUSTER             = 5,  // unused
+  parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
+  // parameter PE_ROUTING_MSB          = 13, // MSB used as routing BIT in periph interco
+  parameter EVNT_WIDTH              = 8,  // size of the event bus
+  parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
 
   // FPU PARAMETERS
-  parameter APU_NARGS_CPU         = 3,
-  parameter APU_WOP_CPU           = 6,
-  parameter WAPUTYPE              = 3,
-  parameter APU_NDSFLAGS_CPU      = 15,
-  parameter APU_NUSFLAGS_CPU      = 5
+  parameter APU_NARGS_CPU           = 3,
+  parameter APU_WOP_CPU             = 6,
+  parameter WAPUTYPE                = 3,
+  parameter APU_NDSFLAGS_CPU        = 15,
+  parameter APU_NUSFLAGS_CPU        = 5
 )
 (
   input  logic                             clk_i,
@@ -146,7 +146,7 @@ module pulp_cluster
   input  logic                             pf_evt_ack_i,
   output logic                             pf_evt_valid_o,
 
-  input logic  [NB_CORES-1:0]               dbg_irq_valid_i,
+  input logic  [NB_CORES-1:0]              dbg_irq_valid_i,
    
   // AXI4 SLAVE
   //***************************************
@@ -285,17 +285,17 @@ module pulp_cluster
   logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
-  logic                s_cluster_periphs_busy;
-  logic                s_axi2mem_busy;
-  logic                s_per2axi_busy;
-  logic                s_axi2per_busy;
-  logic                s_dmac_busy;
-  logic                s_cluster_cg_en;
-  logic [NB_CORES-1:0] s_dma_event;
-  logic [NB_CORES-1:0] s_dma_irq;
-  logic [NB_CORES-1:0][3:0]  s_hwpe_remap_evt;
-  logic [NB_CORES-1:0][1:0]  s_hwpe_evt;
-  logic                      s_hwpe_busy;
+  logic                     s_cluster_periphs_busy;
+  logic                     s_axi2mem_busy;
+  logic                     s_per2axi_busy;
+  logic                     s_axi2per_busy;
+  logic                     s_dmac_busy;
+  logic                     s_cluster_cg_en;
+  logic [NB_CORES-1:0]      s_dma_event;
+  logic [NB_CORES-1:0]      s_dma_irq;
+  logic [NB_CORES-1:0][3:0] s_hwpe_remap_evt;
+  logic [NB_CORES-1:0][1:0] s_hwpe_evt;
+  logic                     s_hwpe_busy;
 
   logic [NB_CORES-1:0]               clk_core_en;
   logic                              clk_cluster;
@@ -875,10 +875,10 @@ module pulp_cluster
        
         .boot_addr_i         ( boot_addr[i]          ),
         .irq_id_i            ( irq_id[i]             ),
-	      .irq_ack_id_o        ( irq_ack_id[i]         ),
+        .irq_ack_id_o        ( irq_ack_id[i]         ),
         .irq_req_i           ( irq_req[i]            ),
         .irq_ack_o           ( irq_ack[i]            ),
-	
+  
         .test_mode_i         ( test_mode_i           ),
         .core_busy_o         ( core_busy[i]          ),
 
@@ -955,7 +955,7 @@ module pulp_cluster
    //**** Shared FPU cluster - Shared execution units ***
    //****************************************************
 
-  `ifdef SHARED_FPU_CLUSTER
+`ifdef SHARED_FPU_CLUSTER
 
       // request channel
       logic [NB_CORES-1:0][2:0][31:0]                s_apu__operands;
@@ -983,7 +983,7 @@ module pulp_cluster
          .FP_TYPE_WIDTH    ( 3                 ),
 
          .NB_CORE_ARGS      ( 3                ),
-	       .CORE_DATA_WIDTH   ( 32               ),
+         .CORE_DATA_WIDTH   ( 32               ),
          .CORE_OPCODE_WIDTH ( 6                ),
          .CORE_DSFLAGS_CPU  ( 15               ),
          .CORE_USFLAGS_CPU  ( 5                ),
@@ -1013,7 +1013,7 @@ module pulp_cluster
       (
          .clk                   ( clk_cluster                               ),
          .rst_n                 ( s_rst_n                                   ),
-	       .test_mode_i           ( test_mode_i                               ),
+         .test_mode_i           ( test_mode_i                               ),
          .core_slave_req_i      ( s_apu_master_req                          ),
          .core_slave_gnt_o      ( s_apu_master_gnt                          ),
          .core_slave_type_i     ( s_apu__type                               ),
@@ -1025,7 +1025,7 @@ module pulp_cluster
          .core_slave_rdata_o    ( s_apu_master_rdata                        ),
          .core_slave_rflags_o   ( s_apu__rflags                             )
       );
-  `endif
+`endif
 
   //**************************************************************
   //**** HW Processing Engines / Cluster-Coupled Accelerators ****
@@ -1173,7 +1173,7 @@ module pulp_cluster
 );
 
 `else
- `ifdef MP_ICACHE
+  `ifdef MP_ICACHE
   /* instruction cache */
   icache_top_mp_128_PF #(
     .FETCH_ADDR_WIDTH ( 32                 ),
@@ -1245,8 +1245,8 @@ module pulp_cluster
     .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
   );
 
-   `else
-      `ifdef SP_ICACHE
+  `else
+    `ifdef SP_ICACHE
          localparam NB_BANKS_SP   = NB_CORES;
          localparam CACHE_LINE_SP = 1;
          icache_top
@@ -1369,8 +1369,8 @@ module pulp_cluster
              .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus        ),
              .L0_ctrl_unit_slave_if  ( L0_ctrl_unit_bus        )
          );
-      `endif // Closes `ifdef SP_ICACHE
-   `endif // Closes `ifdef MP_ICACHE
+    `endif // Closes `ifdef SP_ICACHE
+  `endif // Closes `ifdef MP_ICACHE
 `endif // Closes `ifdef PRI_ICACHE
 
 
