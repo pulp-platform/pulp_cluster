@@ -26,11 +26,12 @@ import pulp_cluster_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter NB_CORES           = 8,
-  parameter NB_HWPE_PORTS      = 4,
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
+  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter NB_CORES                = 8,
+  parameter NB_HWPE_PORTS           = 4,
+  parameter NB_DMAS                 = 4,
+  parameter NB_MPERIPHS             = NB_MPERIPHS,
+  parameter NB_SPERIPHS             = NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE = 12'h000,
   
@@ -843,6 +844,7 @@ module pulp_cluster
 
 
       core_region #(
+        .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
         .CORE_ID             ( i                  ),
         .ADDR_WIDTH          ( 32                 ),
         .DATA_WIDTH          ( 32                 ),

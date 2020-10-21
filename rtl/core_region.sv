@@ -30,8 +30,9 @@
 module core_region
 #(
   // CORE PARAMETERS
-  //parameter USE_FPU             = 1,
-  //parameter USE_HWPE            = 1,
+  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  // parameter USE_FPU             = 1,
+  // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
   parameter CORE_ID            = 0,
   parameter ADDR_WIDTH         = 32,
@@ -181,77 +182,146 @@ module core_region
    //***************** PROCESSOR ****************************
    //********************************************************
 
-  riscv_core #(
-    .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
-    .N_EXT_PERF_COUNTERS ( 5                 ),
-    .PULP_SECURE         ( 0                 ),
-    .FPU                 ( FPU               ),
-    .FP_DIVSQRT          ( FP_DIVSQRT        ),
-    .SHARED_FP           ( SHARED_FP         ),
-    .SHARED_DSP_MULT     ( 0                 ),
-    .SHARED_INT_DIV      ( 0                 ),
-    .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
-    .WAPUTYPE            ( WAPUTYPE          ),
-    .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
+  generate
+    if ( CORE_TYPE_CL == 0 ) begin: CL_CORE
+      assign boot_addr = boot_addr_i;
+      riscv_core #(
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
+        .N_EXT_PERF_COUNTERS ( 5                 ),
+        .PULP_SECURE         ( 0                 ),
+        .FPU                 ( FPU               ),
+        .FP_DIVSQRT          ( FP_DIVSQRT        ),
+        .SHARED_FP           ( SHARED_FP         ),
+        .SHARED_DSP_MULT     ( 0                 ),
+        .SHARED_INT_DIV      ( 0                 ),
+        .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
+        .WAPUTYPE            ( WAPUTYPE          ),
+        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
 
-  ) 
-   RISCV_CORE 
-  (
-    .clk_i                 ( clk_i             ),
-    .rst_ni                ( rst_ni            ),
+      ) CL_CORE (
+        .clk_i                 ( clk_i             ),
+        .rst_ni                ( rst_ni            ),
 
-    .clock_en_i            ( clock_en_i        ),
-    .test_en_i             ( test_mode_i       ),
+        .clock_en_i            ( clock_en_i        ),
+        .test_en_i             ( test_mode_i       ),
 
-    .boot_addr_i           ( boot_addr_i       ),
-    .core_id_i             ( CORE_ID[3:0]      ),
-    .cluster_id_i          ( cluster_id_i      ),
+        .boot_addr_i           ( boot_addr         ),
+        .core_id_i             ( CORE_ID[3:0]      ),
+        .cluster_id_i          ( cluster_id_i      ),
 
-    .instr_addr_o          ( instr_addr_o             ),
-    .instr_req_o           ( instr_req_o              ),
-    .instr_rdata_i         ( instr_r_rdata_i          ),
-    .instr_gnt_i           ( instr_gnt_i              ),
-    .instr_rvalid_i        ( instr_r_valid_i          ),
+        .instr_addr_o          ( instr_addr_o             ),
+        .instr_req_o           ( instr_req_o              ),
+        .instr_rdata_i         ( instr_r_rdata_i          ),
+        .instr_gnt_i           ( instr_gnt_i              ),
+        .instr_rvalid_i        ( instr_r_valid_i          ),
 
-    .data_addr_o           ( s_core_bus.add           ),
-    .data_wdata_o          ( s_core_bus.wdata         ),
-    .data_we_o             ( s_core_bus.we            ),
-    .data_req_o            ( s_core_bus.req           ),
-    .data_be_o             ( s_core_bus.be            ),
-    .data_rdata_i          ( s_core_bus.r_rdata       ),
-    .data_gnt_i            ( s_core_bus.gnt           ),
-    .data_rvalid_i         ( s_core_bus.r_valid       ),
+        .data_addr_o           ( s_core_bus.add           ),
+        .data_wdata_o          ( s_core_bus.wdata         ),
+        .data_we_o             ( s_core_bus.we            ),
+        .data_req_o            ( s_core_bus.req           ),
+        .data_be_o             ( s_core_bus.be            ),
+        .data_rdata_i          ( s_core_bus.r_rdata       ),
+        .data_gnt_i            ( s_core_bus.gnt           ),
+        .data_rvalid_i         ( s_core_bus.r_valid       ),
 
-    .irq_i                 ( irq_req_i                ),
-    .irq_id_i              ( irq_id_i                 ),
-    .irq_id_o              ( irq_ack_id_o             ),
-    .irq_ack_o             ( irq_ack_o                ),
+        .irq_i                 ( irq_req_i                ),
+        .irq_id_i              ( irq_id_i                 ),
+        .irq_id_o              ( irq_ack_id_o             ),
+        .irq_ack_o             ( irq_ack_o                ),
 
-    .sec_lvl_o             (                          ),
-    .irq_sec_i             (      1'b0                ),
+        .sec_lvl_o             (                          ),
+        .irq_sec_i             (      1'b0                ),
 
-    .debug_req_i           ( debug_req_i              ),
+        .debug_req_i           ( debug_req_i              ),
 
-    .fetch_enable_i        ( fetch_en_i               ),
-    .core_busy_o           ( core_busy_o              ),
+        .fetch_enable_i        ( fetch_en_i               ),
+        .core_busy_o           ( core_busy_o              ),
 
 
-     // apu-interconnect
-    .apu_master_req_o      ( apu_master_req_o      ),
-    .apu_master_gnt_i      ( apu_master_gnt_i      ),
-    .apu_master_type_o     ( apu_master_type_o     ),
-    .apu_master_operands_o ( apu_master_operands_o ),
-    .apu_master_op_o       ( apu_master_op_o       ),
-    .apu_master_flags_o    ( apu_master_flags_o    ),
+         // apu-interconnect
+        .apu_master_req_o      ( apu_master_req_o      ),
+        .apu_master_gnt_i      ( apu_master_gnt_i      ),
+        .apu_master_type_o     ( apu_master_type_o     ),
+        .apu_master_operands_o ( apu_master_operands_o ),
+        .apu_master_op_o       ( apu_master_op_o       ),
+        .apu_master_flags_o    ( apu_master_flags_o    ),
 
-    .apu_master_valid_i    ( apu_master_valid_i    ),
-    .apu_master_ready_o    ( apu_master_ready_o    ),
-    .apu_master_result_i   ( apu_master_result_i   ),
-    .apu_master_flags_i    ( apu_master_flags_i    ),
+        .apu_master_valid_i    ( apu_master_valid_i    ),
+        .apu_master_ready_o    ( apu_master_ready_o    ),
+        .apu_master_result_i   ( apu_master_result_i   ),
+        .apu_master_flags_i    ( apu_master_flags_i    ),
 
-    .ext_perf_counters_i   ( perf_counters         ),
-    .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
-  ); 
+        .ext_perf_counters_i   ( perf_counters         ),
+        .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
+      ); 
+    end else begin: CL_CORE
+      assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
+`ifdef VERILATOR
+      ibex_core #(
+`elsif TRACE_EXECUTION
+      ibex_core_tracing #(
+`else
+      ibex_core #(
+`endif
+        .PMPEnable                ( 1'b0              ),
+        .MHPMCounterNum           ( 10                ),
+        .MHPMCounterWidth         ( 40                ),
+        .RV32E                    ( CORE_TYPE_CL == 2 ),
+        .RV32M                    ( CORE_TYPE_CL == 1 ),
+        .RV32B                    ( 1'b0              ),
+        .BranchTargetALU          ( 1'b0              ),
+        .WritebackStage           ( 1'b0              ),
+        .MultiplierImplementation ( "fast"            ),
+        .ICache                   ( 1'b0              ),
+        .DbgTriggerEn             ( 1'b1              ),
+        .SecureIbex               ( 1'b0              ),
+        .DmHaltAddr               ( 32'h1A110800      ),
+        .DmExceptionAddr          ( 32'h1A110808      )
+      ) CL_CORE (
+        .clk_i                 ( clk_i             ),
+        .rst_ni                ( rst_ni            ),
+
+        .test_en_i             ( test_mode_i       ),
+
+        .hart_id_i             ( hart_id           ),
+        .boot_addr_i           ( boot_addr         ),
+
+        // Instruction Memory Interface:  Interface to Instruction Logaritmic interconnect: Req->grant handshake
+        .instr_addr_o          ( instr_addr_o      ),
+        .instr_req_o           ( instr_req_o       ),
+        .instr_rdata_i         ( instr_r_rdata_i   ),
+        .instr_gnt_i           ( instr_gnt_i       ),
+        .instr_rvalid_i        ( instr_r_valid_i   ),
+        .instr_err_i           (       ),                           // TODO!!! 
+
+        // Data memory interface:
+        .data_addr_o           ( s_core_bus.add     ),
+        .data_req_o            ( s_core_bus.req     ),
+        .data_be_o             ( s_core_bus.be      ),
+        .data_rdata_i          ( s_core_bus.r_rdata ),
+        .data_we_o             ( s_core_bus.we      ),
+        .data_gnt_i            ( s_core_bus.gnt     ),
+        .data_wdata_o          ( s_core_bus.wdata   ),
+        .data_rvalid_i         ( s_core_bus.r_valid ),
+        .data_err_i            (      ),                           // TODO!!! 
+
+        .irq_software_i        ( 1'b0              ),
+        .irq_timer_i           ( 1'b0              ),
+        .irq_external_i        ( 1'b0              ),
+        .irq_fast_i            ( 15'b0             ),
+        .irq_nm_i              ( 1'b0              ),
+
+        .irq_x_i               ( core_irq_x        ),
+        .irq_x_ack_o           ( core_irq_ack      ),
+        .irq_x_ack_id_o        ( core_irq_ack_id   ),
+
+        .debug_req_i           ( debug_req_i       ),
+
+        .fetch_enable_i        ( fetch_en_i        ),
+        .core_sleep_o          (                   )
+      );
+    end
+  endgenerate
 
   //assign debug_bus.r_opc = 1'b0;
 
@@ -481,7 +551,7 @@ module core_region
   endgenerate
  -----/\----- EXCLUDED -----/\----- */
 
-  // SELF CHECK ROUTINES TO compare isntruction fetches with slm files
+  // SELF CHECK ROUTINES TO compare instruction fetches with slm files
   always_ff @(posedge clk_i)
   begin
     if(instr_r_valid_i) begin
