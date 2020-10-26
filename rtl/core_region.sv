@@ -104,6 +104,7 @@ module core_region
 
  // new interface signals
  `ifdef SHARED_FPU_CLUSTER
+ // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
@@ -120,6 +121,7 @@ module core_region
 `endif
 
 `ifdef APU_CLUSTER
+ // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
@@ -147,6 +149,9 @@ module core_region
 
   logic [4:0]      perf_counters;
   logic            clk_int;
+  logic [31:0]     hart_id;
+  logic            core_sleep;
+  logic [31:0]     boot_addr;
 
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
@@ -156,8 +161,11 @@ module core_region
     .clk_o     ( clk_int     )
   );
 
+  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, base_addr_i[3:0]};
+
  `ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
+ // TODO: Disable if CORE_TYPE_CL != 0
    logic                     apu_master_req_o;
    logic                     apu_master_gnt_i;
    // request channel
@@ -278,21 +286,21 @@ module core_region
         .DmHaltAddr               ( 32'h1A110800      ),
         .DmExceptionAddr          ( 32'h1A110808      )
       ) CL_CORE (
-        .clk_i                 ( clk_i             ),
-        .rst_ni                ( rst_ni            ),
+        .clk_i                 ( clk_i              ),
+        .rst_ni                ( rst_ni             ),
 
-        .test_en_i             ( test_mode_i       ),
+        .test_en_i             ( test_mode_i        ),
 
-        .hart_id_i             ( hart_id           ),
-        .boot_addr_i           ( boot_addr         ),
+        .hart_id_i             ( hart_id            ),
+        .boot_addr_i           ( boot_addr          ),
 
         // Instruction Memory Interface:  Interface to Instruction Logaritmic interconnect: Req->grant handshake
-        .instr_addr_o          ( instr_addr_o      ),
-        .instr_req_o           ( instr_req_o       ),
-        .instr_rdata_i         ( instr_r_rdata_i   ),
-        .instr_gnt_i           ( instr_gnt_i       ),
-        .instr_rvalid_i        ( instr_r_valid_i   ),
-        .instr_err_i           (       ),                           // TODO!!! 
+        .instr_addr_o          ( instr_addr_o       ),
+        .instr_req_o           ( instr_req_o        ),
+        .instr_rdata_i         ( instr_r_rdata_i    ),
+        .instr_gnt_i           ( instr_gnt_i        ),
+        .instr_rvalid_i        ( instr_r_valid_i    ),
+        .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
         .data_addr_o           ( s_core_bus.add     ),
@@ -303,23 +311,24 @@ module core_region
         .data_gnt_i            ( s_core_bus.gnt     ),
         .data_wdata_o          ( s_core_bus.wdata   ),
         .data_rvalid_i         ( s_core_bus.r_valid ),
-        .data_err_i            (      ),                           // TODO!!! 
+        .data_err_i            ( 1'b0               ),
 
-        .irq_software_i        ( 1'b0              ),
-        .irq_timer_i           ( 1'b0              ),
-        .irq_external_i        ( 1'b0              ),
-        .irq_fast_i            ( 15'b0             ),
-        .irq_nm_i              ( 1'b0              ),
+        .irq_software_i        ( 1'b0               ),             // TODO!!!
+        .irq_timer_i           ( 1'b0               ),             // TODO!!!
+        .irq_external_i        ( 1'b0               ),             // TODO!!!
+        .irq_fast_i            ( 15'b0              ),             // TODO!!!
+        .irq_nm_i              ( 1'b0               ),             // TODO!!!
 
-        .irq_x_i               ( core_irq_x        ),
-        .irq_x_ack_o           ( core_irq_ack      ),
-        .irq_x_ack_id_o        ( core_irq_ack_id   ),
+        .irq_x_i               ( core_irq_x         ),
+        .irq_x_ack_o           ( core_irq_ack       ),
+        .irq_x_ack_id_o        ( core_irq_ack_id    ),
 
-        .debug_req_i           ( debug_req_i       ),
+        .debug_req_i           ( debug_req_i        ),
 
-        .fetch_enable_i        ( fetch_en_i        ),
-        .core_sleep_o          (                   )
+        .fetch_enable_i        ( fetch_en_i         ),
+        .core_sleep_o          ( core_sleep         )
       );
+      assign core_busy_o = ~core_sleep;
     end
   endgenerate
 
