@@ -8,6 +8,7 @@ pulp_cluster:
   ]
   files: [
     packages/pulp_cluster_package.sv,
+    rtl/instr_width_converter.sv,
     rtl/core_region.sv,
     rtl/core_demux.sv,
     rtl/cluster_interconnect_wrap.sv,

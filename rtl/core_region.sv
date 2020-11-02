@@ -152,6 +152,13 @@ module core_region
   logic [31:0]     hart_id;
   logic            core_sleep;
   logic [31:0]     boot_addr;
+  logic [31:0]     core_irq_x;
+
+  logic            core_instr_req;
+  logic            core_instr_gnt;
+  logic [31:0]     core_instr_addr;
+  logic [31:0]     core_instr_r_rdata;
+  logic            core_instr_r_valid;
 
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
@@ -264,6 +271,32 @@ module core_region
       ); 
     end else begin: CL_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
+      
+      if (INSTR_RDATA_WIDTH == 128) begin
+        instr_width_converter ibex_width_converter (
+          .clk_i            ( clk_i              ),
+          .rst_ni           ( rst_ni             ),
+
+          .cache_req_o      ( instr_req_o        ),
+          .cache_gnt_i      ( instr_gnt_i        ),
+          .cache_addr_o     ( instr_addr_o       ),
+          .cache_r_rdata_i  ( instr_r_rdata_i    ),
+          .cache_r_valid_i  ( instr_r_valid_i    ),
+
+          .core_req_i       ( core_instr_req     ),
+          .core_gnt_o       ( core_instr_gnt     ),
+          .core_addr_i      ( core_instr_addr    ),
+          .core_r_rdata_o   ( core_instr_r_rdata ),
+          .core_r_valid_o   ( core_instr_r_valid )
+        );
+      end else begin
+        assign instr_req_o        = core_instr_req;
+        assign core_instr_gnt     = instr_gnt_i;
+        assign instr_addr_o       = core_instr_addr;
+        assign core_instr_r_rdata = instr_r_rdata_i;
+        assign core_instr_r_valid = instr_r_valid_i;
+      end
+      
 `ifdef VERILATOR
       ibex_core #(
 `elsif TRACE_EXECUTION
@@ -295,11 +328,11 @@ module core_region
         .boot_addr_i           ( boot_addr          ),
 
         // Instruction Memory Interface:  Interface to Instruction Logaritmic interconnect: Req->grant handshake
-        .instr_addr_o          ( instr_addr_o       ),
-        .instr_req_o           ( instr_req_o        ),
-        .instr_rdata_i         ( instr_r_rdata_i    ),
-        .instr_gnt_i           ( instr_gnt_i        ),
-        .instr_rvalid_i        ( instr_r_valid_i    ),
+        .instr_addr_o          ( core_instr_addr    ),
+        .instr_req_o           ( core_instr_req     ),
+        .instr_rdata_i         ( core_instr_r_rdata ),
+        .instr_gnt_i           ( core_instr_gnt     ),
+        .instr_rvalid_i        ( core_instr_r_valid ),
         .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
@@ -320,8 +353,8 @@ module core_region
         .irq_nm_i              ( 1'b0               ),             // TODO!!!
 
         .irq_x_i               ( core_irq_x         ),
-        .irq_x_ack_o           ( core_irq_ack       ),
-        .irq_x_ack_id_o        ( core_irq_ack_id    ),
+        .irq_x_ack_o           ( irq_ack_o          ),
+        .irq_x_ack_id_o        ( irq_ack_id_o       ),
 
         .debug_req_i           ( debug_req_i        ),
 
@@ -329,6 +362,15 @@ module core_region
         .core_sleep_o          ( core_sleep         )
       );
       assign core_busy_o = ~core_sleep;
+
+      // Ibex supports 32 additional fast interrupts and reads the interrupt lines directly.
+      // Convert ID back to interrupt lines
+      always_comb begin : gen_core_irq_x
+          core_irq_x = '0;
+          if (irq_req_i) begin
+              core_irq_x[irq_id_i] = 1'b1;
+          end
+      end
     end
   endgenerate
 
