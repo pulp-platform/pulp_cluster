@@ -1,21 +1,24 @@
 package:
   name: pulp_cluster
   authors: 
-    - 
+    - "Pirmin Vogel <vogelpi@lowrisc.org>"
+    - "Angelo Garofalo <angelo.garofalo@unibo.it>"
+    - "Francesco Conti <f.conti@unibo.it>"
+    - "Jie Chen <jie.chen@greenwaves-technologies.com>"
 
 dependencies:
-  axi2mem: {path: "../axi/axi2mem"} # {git: "git@github.com:pulp-platform/axi2mem.git", rev: "d704c8beff729476d1dbfd7b60679afa796947d2"} # deprecated
-  axi2per: {git: "git@github.com:pulp-platform/axi2per.git", version: 1.0.1}
-  per2axi: {git: "git@github.com:pulp-platform/per2axi.git", version: 1.0.4}
-  axi_size_conv: {git: "git@github.com:pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097"} # deprecated, replace with axi_dw_converter in axi repo
-  cluster_interconnect: {path: "../cluster_interconnect"} # {git: "git@github.com:pulp-platform/cluster_interconnect.git", version: 1.0.3}
-  event_unit_flex: {path: "../event_unit_flex"} # {git: "git@github.com:pulp-platform/event_unit_flex.git", version: 1.4.0}
-  mchan: {path: "../mchan"} # v1.2.1
-  hier-icache: {path: "../hier-icache"} # tag: marsellus_v1.2.0 -> behind master
-  icache_mp_128_pf: {path: "../icache_mp_128_pf"} # development stopped in 2018, overhauled?
-  icache_private: {path: "../icache_private"} # NOT USED?
-  cluster_peripherals: {path: "../cluster_peripherals"}
-  fpu_interco: {path: "../fpu_interco"} # Updated branch away from master
+  axi2mem: { git: "git@github.com:micprog/axi2mem.git", rev: "31a39026a752d1d084bdf68bf8c6ea7adf74c245" } # deprecated # To be updated with pulp-platform dependency
+  axi2per: { git: "git@github.com:pulp-platform/axi2per.git", version: 1.0.1 }
+  per2axi: { git: "git@github.com:pulp-platform/per2axi.git", version: 1.0.4 }
+  axi_size_conv: { git: "git@github.com:pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097" } # deprecated, replace with axi_dw_converter in axi repo
+  cluster_interconnect: { git: "git@github.com:pulp-platform/cluster_interconnect.git", version: 1.1.0 }
+  event_unit_flex: { git: "git@github.com:micprog/event_unit_flex.git", rev: "f1ccfe2c88a5bf4fa7e9c8e4c4a0cccfd938b80e" } # To be updated with pulp-platform dependency
+  mchan: { git: "git@github.com:pulp-platform/mchan.git", version: 1.2.2 }
+  hier-icache: { git: "git@github.com:micprog/hier-icache", rev: "936b4f80cc7802c7e304d0943f4bb0665142a75a" } # To be updated with pulp-platform dependency
+  icache_mp_128_pf: {git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "4500c534211545cae6c13cc2a8b0c55c042efefe"}
+  icache_private: { git: "git@github.com:micprog/icache_private.git", rev: "dcdf211f847999d80ef20d4c36339f74d62aa199" } # NOT USED?
+  cluster_peripherals: {git: "git@github.com:pulp-platform/cluster_peripherals.git", rev: "bfcc04a7ab7e7a1e7a5981f60bbc0c9662e29b0e"} # {path: "../cluster_peripherals"}
+  fpu_interco: { git: "git@github.com:micprog/fpu_interco.git", rev: "9020b108ff5fb0ebd23e22aaea5a1f266e1c8c6f" } # To be updated with pulp-platform dependency
   axi: { git: "git@github.com:pulp-platform/axi.git", version: 0.7.1 } # really old (now 0.24?)
   axi_node: { git: "git@github.com:pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
   axi_slice: { git: "git@github.com:pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
@@ -23,10 +26,10 @@ dependencies:
   timer_unit: {git: "git@github.com:pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells: { git: "git@github.com:pulp-platform/common_cells.git", version: 1.13.1 }
   tech_cells_generic: { git: "git@github.com:pulp-platform/tech_cells_generic.git", version: 0.1.6 }
-  riscv: {path: "../riscv"} # { git: "git@github.com:pulp-platform/riscv.git", rev: "pulpissimo-v3.4.0" } # To be updated to CV32E40P?
-  ibex: { path: "../ibex"}
+  riscv: { git: "git@github.com:micprog/cv32e40p.git", rev: "29a838f6e2811b12220cb13bb02b37bd8ccd012f" } # { git: "git@github.com:pulp-platform/riscv.git", rev: "pulpissimo-v3.4.0" } # To be updated to CV32E40P? # To be updated with pulp-platform dependency
+  ibex: { git: "git@github.com:micprog/ibex", rev: "5480f422d8cd349fa5e3cc7c8a6bd2d7c7197bde" } # To be updated with lowrisc dependency
   scm: {git: "git@github.com:pulp-platform/scm.git", version: 1.0.1}
-  hwpe-mac-engine: {path: "../hwpe-mac-engine"}
+  hwpe-mac-engine: { git: "git@github.com:micprog/hwpe-mac-engine.git", rev: "d9a60d8ffee398c8d2c9745dcbec12fc7d29a008" } # To be updated with pulp-platform dependency
   # apu_cluster ?
   # sp_icache ?
 
