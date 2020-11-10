@@ -4,7 +4,7 @@
 #
 
 axi/axi2mem:
-  commit: d704c8beff729476d1dbfd7b60679afa796947d2
+  commit: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
   domain: [soc, cluster]
   group:  pulp-platform
 axi/axi2per:
@@ -16,19 +16,19 @@ axi/per2axi:
   domain: [soc, cluster]
   group:  pulp-platform
 axi/axi_size_conv:
-  commit: tags/pulp-v1.0
+  commit: 5239f87fe772111ec368fb08dbb971516edce097
   domain: [cluster]
   group: pulp-platform
 cluster_interconnect:
-  commit: tags/v1.0.3
+  commit: tags/v1.1.0
   domain: [cluster]
   group: pulp-platform
 event_unit_flex:
-  commit: v1.4.0
+  commit: 1.4.1
   domain: [cluster]
   group: pulp-platform
 mchan:
-  commit: tags/v1.2.1
+  commit: tags/v1.2.2
   domain: [cluster]
   group: pulp-platform
 hier-icache:
@@ -40,15 +40,15 @@ icache-intc:
   domain: [cluster]
   group: pulp-platform
 icache_mp_128_pf:
-  commit: tags/v1.0.0
+  commit: 4500c534211545cae6c13cc2a8b0c55c042efefe
   domain: [cluster]
   group: pulp-platform
 icache_private:
-  commit: b14de95b0f70e2edb54ccc7076d5737b41249411
+  commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
   group: pulp-platform
 cluster_peripherals:
-  commit: tags/v1.0.1
+  commit: bfcc04a7ab7e7a1e7a5981f60bbc0c9662e29b0e
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
