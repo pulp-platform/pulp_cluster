@@ -40,7 +40,7 @@ icache-intc:
   domain: [cluster]
   group: pulp-platform
 icache_mp_128_pf:
-  commit: 4500c534211545cae6c13cc2a8b0c55c042efefe
+  commit: f012d071b909881167b44d2945a1e31c0c39eea3
   domain: [cluster]
   group: pulp-platform
 icache_private:
@@ -48,7 +48,7 @@ icache_private:
   domain: [cluster]
   group: pulp-platform
 cluster_peripherals:
-  commit: bfcc04a7ab7e7a1e7a5981f60bbc0c9662e29b0e
+  commit: a25ead57d5dbaad456fa3ceb9e9aba0a969e0c86
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:

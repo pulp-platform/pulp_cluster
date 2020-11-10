@@ -15,9 +15,9 @@ dependencies:
   event_unit_flex:      { git: "git@github.com:pulp-platform/event_unit_flex.git", rev: "1.4.1" }
   mchan:                { git: "git@github.com:pulp-platform/mchan.git", version: 1.2.2 }
   hier-icache:          { git: "git@github.com:micprog/hier-icache.git", rev: "936b4f80cc7802c7e304d0943f4bb0665142a75a" } # To be updated with pulp-platform dependency
-  icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "4500c534211545cae6c13cc2a8b0c55c042efefe"}
+  icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "f012d071b909881167b44d2945a1e31c0c39eea3"}
   icache_private:       { git: "git@github.com:pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
-  cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", rev: "bfcc04a7ab7e7a1e7a5981f60bbc0c9662e29b0e"} # {path: "../cluster_peripherals"}
+  cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", rev: "a25ead57d5dbaad456fa3ceb9e9aba0a969e0c86"} # {path: "../cluster_peripherals"}
   fpu_interco:          { git: "git@github.com:micprog/fpu_interco.git", rev: "9020b108ff5fb0ebd23e22aaea5a1f266e1c8c6f" } # To be updated with pulp-platform dependency
   axi:                  { git: "git@github.com:pulp-platform/axi.git", version: 0.7.1 } # really old (now 0.24?)
   axi_node:             { git: "git@github.com:pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
