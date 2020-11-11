@@ -93,24 +93,27 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_sel_o,
-  output logic                        hwpe_en_o,
+  output logic                        hwpe_en_o
 
   //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 
   // Control ports
 `ifdef PRIVATE_ICACHE
-     SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
-     PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
-     output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
+  ,
+  SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
+  PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
+  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
 `else
   `ifdef SP_ICACHE
-      // Control ports
-      SP_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus[NB_CACHE_BANKS],
-      L0_CTRL_UNIT_BUS.Master             L0_ctrl_unit_bus[NB_CORES]
+    ,
+    // Control ports
+    SP_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus[NB_CACHE_BANKS],
+    L0_CTRL_UNIT_BUS.Master             L0_ctrl_unit_bus[NB_CORES]
   `else
-      `ifdef MP_ICACHE
-          MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
-      `endif
+    `ifdef MP_ICACHE
+      ,
+      MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
+    `endif
   `endif
 `endif
  
