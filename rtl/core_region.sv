@@ -213,7 +213,7 @@ module core_region
         .WAPUTYPE            ( WAPUTYPE          ),
         .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
 
-      ) CL_CORE (
+      ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
         .rst_ni                ( rst_ni            ),
 
@@ -318,7 +318,7 @@ module core_region
         .SecureIbex               ( 1'b0              ),
         .DmHaltAddr               ( 32'h1A110800      ),
         .DmExceptionAddr          ( 32'h1A110808      )
-      ) CL_CORE (
+      ) IBEX_CORE (
         .clk_i                 ( clk_i              ),
         .rst_ni                ( rst_ni             ),
 
