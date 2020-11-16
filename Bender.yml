@@ -34,23 +34,30 @@ dependencies:
   # sp_icache ?
 
 sources:
+    # Source files grouped in levels. Files in level 0 have no dependencies on files in this
+    # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
+    # levels 1 and 0, etc. Files within a level are ordered alphabetically.
+    # Level 0
   - packages/pulp_cluster_package.sv
-  - rtl/core_region.sv
-  - rtl/core_demux.sv
-  - rtl/cluster_interconnect_wrap.sv
-  - rtl/tcdm_banks_wrap.sv
-  - rtl/periph_demux.sv
-  - rtl/per_demux_wrap.sv
-  - rtl/periph_FIFO.sv
-  - rtl/cluster_peripherals.sv
-  - rtl/cluster_clock_gate.sv
-  - rtl/cluster_timer_wrap.sv
-  - rtl/cluster_event_map.sv
-  - rtl/dmac_wrap.sv
-  - rtl/hwpe_subsystem.sv
-  - rtl/cluster_bus_wrap.sv
-  - rtl/axi_slice_wrap.sv
   - rtl/axi2mem_wrap.sv
   - rtl/axi2per_wrap.sv
+  - rtl/axi_slice_wrap.sv
+  - rtl/cluster_bus_wrap.sv
+  - rtl/cluster_clock_gate.sv
+  - rtl/cluster_event_map.sv
+  - rtl/cluster_interconnect_wrap.sv
+  - rtl/cluster_timer_wrap.sv
+  - rtl/dmac_wrap.sv
+  - rtl/hwpe_subsystem.sv
   - rtl/per2axi_wrap.sv
+  - rtl/per_demux_wrap.sv
+  - rtl/periph_demux.sv
+  - rtl/periph_FIFO.sv
+  - rtl/tcdm_banks_wrap.sv
+    # Level 1
+  - rtl/cluster_peripherals.sv
+  - rtl/core_demux.sv
+    # Level 2
+  - rtl/core_region.sv
+    # Level 3
   - rtl/pulp_cluster.sv
