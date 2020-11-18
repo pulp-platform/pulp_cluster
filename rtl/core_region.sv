@@ -168,7 +168,7 @@ module core_region
     .clk_o     ( clk_int     )
   );
 
-  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, base_addr_i[3:0]};
+  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
  `ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
