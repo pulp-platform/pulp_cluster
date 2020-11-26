@@ -18,19 +18,19 @@ axi/per2axi:
 axi/axi_size_conv:
   commit: 5239f87fe772111ec368fb08dbb971516edce097
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 cluster_interconnect:
   commit: tags/v1.1.0
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 event_unit_flex:
   commit: 1.4.1
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 mchan:
   commit: tags/v1.2.2
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 hier-icache:
   commit: v1.2.0
   domain: [cluster]
@@ -38,22 +38,22 @@ hier-icache:
 icache-intc:
   commit: tags/v1.0.1
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 icache_mp_128_pf:
-  commit: f012d071b909881167b44d2945a1e31c0c39eea3
+  commit: ab4255c6874c1e2623ff2ca29cd89bf0f99309a8
   domain: [cluster]
-  group: pulp-platform
+  group:  micprog
 icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
-  group: pulp-platform
+  group:  pulp-platform
 cluster_peripherals:
-  commit: a25ead57d5dbaad456fa3ceb9e9aba0a969e0c86
+  commit: v2.0.0
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
+  commit: 83c7a1b690bffd006d8b925805aab3c1f8ba9ff1
   domain: [soc, cluster]
-  group: pulp-platform
+  group:  micprog
 
 
