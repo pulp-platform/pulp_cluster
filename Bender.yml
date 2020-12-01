@@ -15,7 +15,7 @@ dependencies:
   event_unit_flex:      { git: "git@github.com:pulp-platform/event_unit_flex.git", rev: "1.4.1" }
   mchan:                { git: "git@github.com:pulp-platform/mchan.git", version: 1.2.2 }
   hier-icache:          { git: "git@github.com:pulp-platform/hier-icache.git", version: 1.2.0 }
-  icache_mp_128_pf:     { git: "git@github.com:micprog/icache_mp_128_pf.git", rev: "ab4255c6874c1e2623ff2ca29cd89bf0f99309a8" }
+  icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
   icache_private:       { git: "git@github.com:pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
   cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", version: 2.0.0 }
   fpu_interco:          { git: "git@github.com:pulp-platform/fpu_interco.git", rev: "83c7a1b690bffd006d8b925805aab3c1f8ba9ff1" }
@@ -27,7 +27,7 @@ dependencies:
   common_cells:         { git: "git@github.com:pulp-platform/common_cells.git", version: 1.13.1 }
   tech_cells_generic:   { git: "git@github.com:pulp-platform/tech_cells_generic.git", version: 0.2.2 }
   riscv:                { git: "git@github.com:micprog/cv32e40p.git", rev: "pulpissimo-v3.4.1"} # To be updated to openhwgroup repository
-  ibex:                 { git: "git@github.com:lowRISC/ibex.git", rev: "aa320957eb34d02dc819db9dc7fa64b036b9b852" }
+  ibex:                 { git: "git@github.com:lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
   scm:                  { git: "git@github.com:pulp-platform/scm.git", version: 1.0.1}
   hwpe-mac-engine:      { git: "git@github.com:micprog/hwpe-mac-engine.git", rev: "v1.2-bender" } # To be updated with pulp-platform dependency
   # apu_cluster ?
