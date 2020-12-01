@@ -40,9 +40,9 @@ icache-intc:
   domain: [cluster]
   group:  pulp-platform
 icache_mp_128_pf:
-  commit: ab4255c6874c1e2623ff2ca29cd89bf0f99309a8
+  commit: 6f2e54102001230db9c82432bf9e011842419a48
   domain: [cluster]
-  group:  micprog
+  group:  pulp-platform
 icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
@@ -54,6 +54,6 @@ cluster_peripherals:
 fpu_interco:
   commit: 83c7a1b690bffd006d8b925805aab3c1f8ba9ff1
   domain: [soc, cluster]
-  group:  micprog
+  group:  pulp-platform
 
 
