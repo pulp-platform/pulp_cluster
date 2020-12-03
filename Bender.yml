@@ -49,7 +49,7 @@ sources:
   - rtl/hwpe_subsystem.sv
   - rtl/per2axi_wrap.sv
   - rtl/per_demux_wrap.sv
-  - rtl/periph_demux.sv
+  # - rtl/periph_demux.sv
   - rtl/periph_FIFO.sv
   - rtl/tcdm_banks_wrap.sv
     # Level 1
