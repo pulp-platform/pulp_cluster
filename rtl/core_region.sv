@@ -144,7 +144,6 @@ module core_region
   //********************************************************
 
   XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
-  XBAR_PERIPH_BUS   periph_demux_bus();   // Internal interface between CORE_DEMUX <--> PERIPHERAL DEMUX
 
   logic [4:0]      perf_counters;
   logic            clk_int;
@@ -395,7 +394,6 @@ module core_region
     .DATA_WIDTH         ( 32                 ),
     .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
-    //.REMAP_ADDRESS      (   0 )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
@@ -433,16 +431,6 @@ module core_region
     .data_r_rdata_i_EXT (  eu_ctrl_master.r_rdata     ),
     .data_r_opc_i_EXT   (  eu_ctrl_master.r_opc       ),
 
-    // .data_req_o_EXT     (  periph_demux_bus.req       ),
-    // .data_add_o_EXT     (  periph_demux_bus.add       ),
-    // .data_wen_o_EXT     (  periph_demux_bus.wen       ),
-    // .data_wdata_o_EXT   (  periph_demux_bus.wdata     ),
-    // .data_be_o_EXT      (  periph_demux_bus.be        ),
-    // .data_gnt_i_EXT     (  periph_demux_bus.gnt       ),
-    // .data_r_valid_i_EXT (  periph_demux_bus.r_valid   ),
-    // .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata   ),
-    // .data_r_opc_i_EXT   (  periph_demux_bus.r_opc     ),
-
     .data_req_o_PE      (  periph_data_master.req     ),
     .data_add_o_PE      (  periph_data_master.add     ),
     .data_wen_o_PE      (  periph_data_master.wen     ),
@@ -462,44 +450,6 @@ module core_region
 
   assign tcdm_data_master.boffs = '0;
   assign tcdm_data_master.lrdy  = '1;
-
-  // periph_demux periph_demux_i (
-  //   .clk               ( clk_int                  ),
-  //   .rst_ni            ( rst_ni                   ),
-
-  //   .data_req_i        ( periph_demux_bus.req     ),
-  //   .data_add_i        ( periph_demux_bus.add     ),
-  //   .data_wen_i        ( periph_demux_bus.wen     ),
-  //   .data_wdata_i      ( periph_demux_bus.wdata   ),
-  //   .data_be_i         ( periph_demux_bus.be      ),
-  //   .data_gnt_o        ( periph_demux_bus.gnt     ),
-
-  //   .data_r_valid_o    ( periph_demux_bus.r_valid ),
-  //   .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-  //   .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
-
-  //   .data_req_o_MH     ( dma_ctrl_master.req      ),
-  //   .data_add_o_MH     ( dma_ctrl_master.add      ),
-  //   .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-  //   .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
-  //   .data_be_o_MH      ( dma_ctrl_master.be       ),
-  //   .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
-
-  //   .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-  //   .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
-  //   .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
-
-  //   .data_req_o_EU     ( eu_ctrl_master.req       ),
-  //   .data_add_o_EU     ( eu_ctrl_master.add       ),
-  //   .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-  //   .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-  //   .data_be_o_EU      ( eu_ctrl_master.be        ),
-  //   .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
-
-  //   .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-  //   .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-  //   .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-  // );
 
   /* debug stuff */
   //synopsys translate_off
