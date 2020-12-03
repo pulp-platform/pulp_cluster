@@ -90,7 +90,7 @@ module core_region
 
   input logic                            debug_req_i,
               
-              //XBAR_TCDM_BUS.Slave debug_bus,
+  //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
   //input logic             debug_core_halt_i,
   //input logic             debug_core_resume_i,
@@ -169,26 +169,26 @@ module core_region
 
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
- `ifndef APU_CLUSTER
+`ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
- // TODO: Disable if CORE_TYPE_CL != 0
-   logic                     apu_master_req_o;
-   logic                     apu_master_gnt_i;
-   // request channel
-   logic [WAPUTYPE-1:0]             apu_master_type_o;
-   logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
-   logic [APU_WOP_CPU-1:0]          apu_master_op_o;
-   logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
-   // response channel
-   logic                        apu_master_ready_o;
-   logic                        apu_master_valid_i;
-   logic [31:0]                 apu_master_result_i;
-   logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
+  // TODO: Disable if CORE_TYPE_CL != 0
+  logic                     apu_master_req_o;
+  logic                     apu_master_gnt_i;
+  // request channel
+  logic [WAPUTYPE-1:0]             apu_master_type_o;
+  logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
+  logic [APU_WOP_CPU-1:0]          apu_master_op_o;
+  logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
+  // response channel
+  logic                        apu_master_ready_o;
+  logic                        apu_master_valid_i;
+  logic [31:0]                 apu_master_result_i;
+  logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
 
-   assign apu_master_gnt_i      = '1;
-   assign apu_master_valid_i    = '0;
-   assign apu_master_result_i   = '0;
-   assign apu_master_flags_i    = '0;
+  assign apu_master_gnt_i      = '1;
+  assign apu_master_valid_i    = '0;
+  assign apu_master_result_i   = '0;
+  assign apu_master_flags_i    = '0;
  `endif
 `endif
 
@@ -345,11 +345,11 @@ module core_region
         .data_rvalid_i         ( s_core_bus.r_valid ),
         .data_err_i            ( 1'b0               ),
 
-        .irq_software_i        ( 1'b0               ),             // TODO!!!
-        .irq_timer_i           ( 1'b0               ),             // TODO!!!
-        .irq_external_i        ( 1'b0               ),             // TODO!!!
-        .irq_fast_i            ( 15'b0              ),             // TODO!!!
-        .irq_nm_i              ( 1'b0               ),             // TODO!!!
+        .irq_software_i        ( 1'b0               ),
+        .irq_timer_i           ( 1'b0               ),
+        .irq_external_i        ( 1'b0               ),
+        .irq_fast_i            ( 15'b0              ),
+        .irq_nm_i              ( 1'b0               ),
 
         .irq_x_i               ( core_irq_x         ),
         .irq_x_ack_o           ( irq_ack_o          ),
@@ -365,10 +365,10 @@ module core_region
       // Ibex supports 32 additional fast interrupts and reads the interrupt lines directly.
       // Convert ID back to interrupt lines
       always_comb begin : gen_core_irq_x
-          core_irq_x = '0;
-          if (irq_req_i) begin
-              core_irq_x[irq_id_i] = 1'b1;
-          end
+        core_irq_x = '0;
+        if (irq_req_i) begin
+            core_irq_x[irq_id_i] = 1'b1;
+        end
       end
     end
   endgenerate

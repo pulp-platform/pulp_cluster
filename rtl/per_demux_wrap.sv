@@ -24,8 +24,8 @@ module per_demux_wrap
 (
   input logic           clk_i,
   input logic           rst_ni,
-  XBAR_TCDM_BUS.Slave  slave,
-  XBAR_TCDM_BUS.Master masters[NB_MASTERS-1:0]
+  XBAR_TCDM_BUS.Slave   slave,
+  XBAR_TCDM_BUS.Master  masters[NB_MASTERS-1:0]
 );
 
   localparam NB_MASTERS_LOG = $clog2(NB_MASTERS);
