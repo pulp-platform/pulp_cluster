@@ -145,6 +145,12 @@ module cluster_peripherals
    
   // internal speriph bus to combine multiple plugs to new event unit
   XBAR_PERIPH_BUS speriph_slave_eu_comb();
+
+`ifdef FEATURE_ICACHE_STAT
+  localparam bit          FEATURE_STAT    = 1'b1;
+`else
+  localparam bit          FEATURE_STAT    = 1'b0;
+`endif
   
   // decide between common or core-specific event sources
   generate
@@ -325,9 +331,10 @@ module cluster_peripherals
  `ifdef MP_ICACHE
    mp_pf_icache_ctrl_unit
      #(
-       .NB_CACHE_BANKS(NB_CACHE_BANKS),
-       .NB_CORES(NB_CORES),
-       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+       .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+       .NB_CORES       ( NB_CORES             ),
+       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
+       .FEATURE_STAT   ( FEATURE_STAT         )
        )
    icache_ctrl_unit_i
      (
@@ -342,9 +349,11 @@ module cluster_peripherals
   `ifdef SP_ICACHE
    sp_icache_ctrl_unit
      #(
-       .NB_CACHE_BANKS(NB_CACHE_BANKS),
-       .NB_CORES(NB_CORES),
-       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+       .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+       .NB_CORES       ( NB_CORES             ),
+       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
+       .OFFSET         ( 4                    ),
+       .FEATURE_STAT   ( FEATURE_STAT         )
        )
    icache_ctrl_unit_i
      (

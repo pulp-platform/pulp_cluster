@@ -127,7 +127,7 @@ module dmac_wrap
    
   mchan #(
 
-    //.NB_CTRLS                 ( 3                     ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
+    .NB_CTRLS                 ( NB_CTRLS                     ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
     //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
     //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
     //.GLOBAL_TRANS_QUEUE_DEPTH ( 8                     ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)

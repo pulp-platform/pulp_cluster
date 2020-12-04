@@ -264,8 +264,13 @@ module pulp_cluster
    
 );
 
-   localparam int unsigned NB_L1_CUTS      = 16;
-   localparam int unsigned RW_MARGIN_WIDTH = 4;
+  localparam int unsigned NB_L1_CUTS      = 16;
+  localparam int unsigned RW_MARGIN_WIDTH = 4;
+`ifdef FEATURE_ICACHE_STAT
+  localparam bit          FEATURE_STAT    = 1'b1;
+`else
+  localparam bit          FEATURE_STAT    = 1'b0;
+`endif
 
 
   //********************************************************
@@ -1184,6 +1189,7 @@ module pulp_cluster
     .NB_WAYS          ( SET_ASSOCIATIVE    ),
     .CACHE_SIZE       ( CACHE_SIZE         ),
     .CACHE_LINE       ( 1                  ),
+    .FEATURE_STAT     ( FEATURE_STAT       ),
     .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
     .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
     .AXI_USER         ( AXI_USER_WIDTH     ),

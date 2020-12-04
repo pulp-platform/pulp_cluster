@@ -1,0 +1,70 @@
+package:
+  name: pulp_cluster
+  authors: 
+    - "Pirmin Vogel <vogelpi@lowrisc.org>"
+    - "Angelo Garofalo <angelo.garofalo@unibo.it>"
+    - "Francesco Conti <f.conti@unibo.it>"
+    - "Jie Chen <jie.chen@greenwaves-technologies.com>"
+
+dependencies:
+  axi2mem:              { git: "git@github.com:pulp-platform/axi2mem.git", rev: "6973e0434d26ba578cdb4aa69c26c1facd1a3f15" } # deprecated, replace with axi_to_mem in axi repo
+  axi2per:              { git: "git@github.com:pulp-platform/axi2per.git", version: 1.0.1 }
+  per2axi:              { git: "git@github.com:pulp-platform/per2axi.git", version: 1.0.4 }
+  axi_size_conv:        { git: "git@github.com:pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097" } # deprecated, replace with axi_dw_converter in axi repo
+  cluster_interconnect: { git: "git@github.com:pulp-platform/cluster_interconnect.git", version: 1.1.0 }
+  event_unit_flex:      { git: "git@github.com:pulp-platform/event_unit_flex.git", rev: "1.4.1" }
+  mchan:                { git: "git@github.com:pulp-platform/mchan.git", version: 1.2.2 }
+  hier-icache:          { git: "git@github.com:pulp-platform/hier-icache.git", version: 1.2.0 }
+  icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
+  icache_private:       { git: "git@github.com:pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
+  cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", version: 2.0.0 }
+  fpu_interco:          { git: "git@github.com:pulp-platform/fpu_interco.git", rev: "83c7a1b690bffd006d8b925805aab3c1f8ba9ff1" }
+  axi:                  { git: "git@github.com:pulp-platform/axi.git", version: 0.7.1 } # to be updated (now 0.24?)
+  axi_node:             { git: "git@github.com:pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
+  axi_slice:            { git: "git@github.com:pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
+  axi_slice_dc:         { git: "git@github.com:pulp-platform/axi_slice_dc.git", version: 1.1.3 } # deprecated, replaced by axi_cdc (in axi repo)
+  timer_unit:           { git: "git@github.com:pulp-platform/timer_unit.git", version: 1.0.2 }
+  common_cells:         { git: "git@github.com:pulp-platform/common_cells.git", version: 1.13.1 }
+  tech_cells_generic:   { git: "git@github.com:pulp-platform/tech_cells_generic.git", version: 0.2.2 }
+  riscv:                { git: "git@github.com:micprog/cv32e40p.git", rev: "pulpissimo-v3.4.1"} # To be updated to openhwgroup repository
+  ibex:                 { git: "git@github.com:lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
+  scm:                  { git: "git@github.com:pulp-platform/scm.git", version: 1.0.1}
+  hwpe-mac-engine:      { git: "git@github.com:micprog/hwpe-mac-engine.git", rev: "v1.2-bender" } # To be updated with pulp-platform dependency
+  # apu_cluster ?
+  # sp_icache ?
+
+sources:
+    # Source files grouped in levels. Files in level 0 have no dependencies on files in this
+    # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
+    # levels 1 and 0, etc. Files within a level are ordered alphabetically.
+    # Level 0
+  - packages/pulp_cluster_package.sv
+  - rtl/axi2mem_wrap.sv
+  - rtl/axi2per_wrap.sv
+  - rtl/axi_slice_wrap.sv
+  - rtl/cluster_bus_wrap.sv
+  - rtl/cluster_clock_gate.sv
+  - rtl/cluster_event_map.sv
+  - rtl/cluster_interconnect_wrap.sv
+  - rtl/cluster_timer_wrap.sv
+  - rtl/dmac_wrap.sv
+  - rtl/hwpe_subsystem.sv
+  - rtl/per2axi_wrap.sv
+  - rtl/per_demux_wrap.sv
+  - rtl/periph_demux.sv
+  - rtl/periph_FIFO.sv
+  - rtl/tcdm_banks_wrap.sv
+    # Level 1
+  - rtl/cluster_peripherals.sv
+  - rtl/core_demux.sv
+    # Level 2
+  - target: rtl
+    defines:
+      TRACE_EXECUTION: ~
+    files:
+      - rtl/core_region.sv
+  - target: not(rtl)
+    files:
+      - rtl/core_region.sv
+    # Level 3
+  - rtl/pulp_cluster.sv
