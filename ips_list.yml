@@ -20,7 +20,7 @@ axi/axi_size_conv:
   domain: [cluster]
   group:  pulp-platform
 cluster_interconnect:
-  commit: tags/v1.1.0
+  commit: v1.1.0
   domain: [cluster]
   group:  pulp-platform
 event_unit_flex:
