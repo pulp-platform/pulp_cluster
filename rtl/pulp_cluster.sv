@@ -268,6 +268,15 @@ module pulp_cluster
    
 );
 
+  //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
+  `ifdef PRIVATE_ICACHE
+  if (AXI_ID_IN_WIDTH < 1 + $clog2(NB_CACHE_BANKS))
+           $error("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
+  `else
+  if (AXI_ID_IN_WIDTH < $clog2(NB_CORES+1))
+           $error("AXI input ID width must be larger than $clog2(NB_CORES+1) which is %d but was %d", $clog2(NB_CORES+1), AXI_ID_IN_WIDTH);
+  `endif
+
   localparam int unsigned NB_L1_CUTS      = 16;
   localparam int unsigned RW_MARGIN_WIDTH = 4;
 `ifdef FEATURE_ICACHE_STAT

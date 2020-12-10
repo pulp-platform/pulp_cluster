@@ -48,6 +48,13 @@ module cluster_bus_wrap
   localparam NB_SLAVE       = `NB_SLAVE;
   localparam NB_REGION      = `NB_REGION;
 
+  //Ensure that AXI_ID out width has the correct size with an elaboration system task
+  if (AXI_ID_OUT_WIDTH < AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
+    $error("ID width of AXI output ports is to small. The output id width must be input ID width + clog2(<nr slave ports>) which is %d but it was %d", AXI_ID_IN_WIDTH + $clog2(NB_SLAVE), AXI_ID_OUT_WIDTH);
+  else if (AXI_ID_OUT_WIDTH > AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
+    $warning("ID width of the AXI output port has the wrong length. It is larger than the required value. Trim it to the right length to get rid of this warning.");
+
+
   logic [NB_MASTER-1:0][AXI_ID_OUT_WIDTH-1:0] s_master_aw_id;
   logic [NB_MASTER-1:0][AXI_ADDR_WIDTH-1:0]   s_master_aw_addr;
   logic [NB_MASTER-1:0][7:0]                  s_master_aw_len;
