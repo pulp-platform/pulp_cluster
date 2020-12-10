@@ -11,9 +11,6 @@ axi/axi2per:
   commit: tags/v1.0.1
   domain: [cluster]
   group:  pulp-platform
-axi/axi_node:
-  commit: v1.1.4
-  domain: [cluster, soc]
 axi/per2axi:
   commit: v1.0.4
   domain: [soc, cluster]
@@ -74,5 +71,3 @@ hwpe-datamover-example:
   commit: v1.0
   group: pulp-platform
   domain: [cluster, pulp]
-
-  
