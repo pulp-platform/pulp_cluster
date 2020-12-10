@@ -13,7 +13,7 @@ dependencies:
   axi_size_conv:        { git: "git@github.com:pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097" } # deprecated, replace with axi_dw_converter in axi repo
   cluster_interconnect: { git: "git@github.com:pulp-platform/cluster_interconnect.git", version: 1.1.0 }
   event_unit_flex:      { git: "git@github.com:pulp-platform/event_unit_flex.git", rev: "1.4.1" }
-  mchan:                { git: "git@github.com:pulp-platform/mchan.git", version: 1.2.2 }
+  mchan:                { git: "git@github.com:pulp-platform/mchan.git", rev: 5104953034dd0df46d574b3c4c839618079342ba }
   hier-icache:          { git: "git@github.com:pulp-platform/hier-icache.git", version: 1.2.0 }
   icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
   icache_private:       { git: "git@github.com:pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
