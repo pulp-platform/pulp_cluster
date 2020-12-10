@@ -56,6 +56,20 @@ module cluster_bus_wrap
   localparam NB_SLAVE       = `NB_SLAVE;
 
 
+  //Ensure that AXI_ID out width has the correct size with an elaboration system task
+  if (AXI_ID_OUT_WIDTH < AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
+    $error("ID width of AXI output ports is to small. The output id width must be input ID width + clog2(<nr slave ports>) which is %d but it was %d", AXI_ID_IN_WIDTH + $clog2(NB_SLAVE), AXI_ID_OUT_WIDTH);
+  else if (AXI_ID_OUT_WIDTH > AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
+    $warning("ID width of the AXI output port has the wrong length. It is larger than the required value. Trim it to the right length to get rid of this warning.");
+
+  if (AXI_ADDR_WIDTH != 32)
+    $fatal(1,"Address map is only defined for 32-bit addresses!");
+  if (TCDM_SIZE == 0)
+    $fatal(1,"TCDM size must be non-zero!");
+  if (TCDM_SIZE >128*1024)
+    $fatal(1,"TCDM size exceeds available address space in cluster bus!");
+   
+
   // Crossbar
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH  ),
@@ -104,21 +118,7 @@ module cluster_bus_wrap
     start_addr: cluster_base_addr + 32'h0040_0000,
     end_addr:   32'hFFFF_FFFF
   };
-
-  // pragma translate_off
-  `ifndef VERILATOR
-    initial begin
-      assert (AXI_ADDR_WIDTH == 32)
-        else $fatal("Address map is only defined for 32-bit addresses!");
-      assert (TCDM_SIZE <= 128*1024)
-        else $fatal(1, "TCDM size exceeds available address space in cluster bus!");
-      assert (TCDM_SIZE > 0)
-        else $fatal(1, "TCDM size must be non-zero!");
-      assert (AXI_ID_IN_WIDTH + $clog2(NB_SLAVE) <= AXI_ID_OUT_WIDTH)
-        else $fatal(1, "Insufficient AXI_ID_OUT_WIDTH!");
-    end
-  `endif
-
+    
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
                                                     DMA_NB_OUTSND_BURSTS : NB_CORES;
 
