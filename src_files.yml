@@ -1,12 +1,40 @@
 pulp_cluster:
   vlog_opts: [
     -L fpnew_lib,
+    # Library load directives from deprecated axi_node IP. Remove them after switching to new AXI ips in cluster
+    -L common_cells_lib,
+    -L axi_lib
   ]
   incdirs: [
     ../../rtl/includes,
     packages,
+    # Include dirs from deprecated axi_node IP. Remove them after switching to new AXI ips in cluster
+    deps_deprecated/axi_node/src,
   ]
   files: [
+# Files from deprecated axi_node IP. Remove them after switching to new AXI ips in cluster
+    deps_deprecated/axi_node/src/apb_regs_top.sv,
+    deps_deprecated/axi_node/src/axi_address_decoder_AR.sv,
+    deps_deprecated/axi_node/src/axi_address_decoder_AW.sv,
+    deps_deprecated/axi_node/src/axi_address_decoder_BR.sv,
+    deps_deprecated/axi_node/src/axi_address_decoder_BW.sv,
+    deps_deprecated/axi_node/src/axi_address_decoder_DW.sv,
+    deps_deprecated/axi_node/src/axi_AR_allocator.sv,
+    deps_deprecated/axi_node/src/axi_ArbitrationTree.sv,
+    deps_deprecated/axi_node/src/axi_AW_allocator.sv,
+    deps_deprecated/axi_node/src/axi_BR_allocator.sv,
+    deps_deprecated/axi_node/src/axi_BW_allocator.sv,
+    deps_deprecated/axi_node/src/axi_DW_allocator.sv,
+    deps_deprecated/axi_node/src/axi_FanInPrimitive_Req.sv,
+    deps_deprecated/axi_node/src/axi_multiplexer.sv,
+    deps_deprecated/axi_node/src/axi_node.sv,
+    deps_deprecated/axi_node/src/axi_node_intf_wrap.sv,
+    deps_deprecated/axi_node/src/axi_node_wrap_with_slices.sv,
+    deps_deprecated/axi_node/src/axi_regs_top.sv,
+    deps_deprecated/axi_node/src/axi_request_block.sv,
+    deps_deprecated/axi_node/src/axi_response_block.sv,
+    deps_deprecated/axi_node/src/axi_RR_Flag_Req.sv,
+#Actual pulp_cluster files
     packages/pulp_cluster_package.sv,
     rtl/instr_width_converter.sv,
     rtl/core_region.sv,

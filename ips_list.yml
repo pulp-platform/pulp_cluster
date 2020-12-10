@@ -11,9 +11,6 @@ axi/axi2per:
   commit: tags/v1.0.1
   domain: [cluster]
   group:  pulp-platform
-axi/axi_node:
-  commit: v1.1.4
-  domain: [cluster, soc]
 axi/per2axi:
   commit: v1.0.4
   domain: [soc, cluster]
@@ -58,5 +55,13 @@ fpu_interco:
   commit: 83c7a1b690bffd006d8b925805aab3c1f8ba9ff1
   domain: [soc, cluster]
   group:  pulp-platform
-
-
+# The following IPs are only required by the archived axi_node repo which is now directly embedded into pulp_cluster
+# These dependencies become obsolet as soon as the legacy axi_node ip is replaced with the new generation of AXI ips
+common_cells:
+  commit: v1.20.0
+  domain: [soc, cluster]
+  group:  pulp-platform
+axi:
+  commit: v0.24.1
+  domain: [soc, cluster]
+  group:  pulp-platform
