@@ -44,10 +44,9 @@ module tcdm_banks_wrap
     input  logic               init_ni,
     input  logic               pwdn_i,
     input  logic               test_mode_i,
-
-    TCDM_BANK_MEM_BUS.Slave    tcdm_slave[NB_BANKS-1:0]
-    );
-
+    hci_mem_intf.slave    tcdm_slave[NB_BANKS-1:0]
+   );
+   
    generate
       for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
 
@@ -59,13 +58,15 @@ module tcdm_banks_wrap
 	 logic [32-1:0]                bank_d;
 	 logic [32-1:0]                bank_q;
 
-	 assign bank_a              = tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
-	 assign bank_d              = tcdm_slave[i].wdata;
+	 assign bank_a              =  tcdm_slave[i].add[$clog2(BANK_SIZE)+2-1:2];
+	 assign bank_d              =  tcdm_slave[i].data;
 	 assign bank_be_n           = ~tcdm_slave[i].be;
 	 assign bank_ce_n           = ~tcdm_slave[i].req;
-	 assign bank_rdwe_n         = tcdm_slave[i].wen;
-	 assign tcdm_slave[i].rdata = bank_q;
-
+	 assign bank_rdwe_n         =  tcdm_slave[i].wen;
+	 assign tcdm_slave[i].r_data = bank_q;
+         assign tcdm_slave[i].gnt    = 1'b1;
+         assign tcdm_slave[i].r_id   = '0;
+	 
 	 generic_memory
 	   #(
 	     .ADDR_WIDTH($clog2(BANK_SIZE))

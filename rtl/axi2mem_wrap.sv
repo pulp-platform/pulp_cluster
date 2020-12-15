@@ -29,7 +29,7 @@ module axi2mem_wrap
   input logic          rst_ni,
   input logic          test_en_i,
   AXI_BUS.Slave        axi_slave,
-  XBAR_TCDM_BUS.Master tcdm_master[NB_DMAS-1:0],
+  hci_core_intf.master tcdm_master[NB_DMAS-1:0],
   output logic         busy_o
 );
 
@@ -46,13 +46,15 @@ module axi2mem_wrap
     for (genvar i=0; i<NB_DMAS; i++) begin : TCDM_BIND
       assign tcdm_master[i].add    = s_tcdm_bus_add[i];
       assign tcdm_master[i].req    = s_tcdm_bus_req[i];
-      assign tcdm_master[i].wdata  = s_tcdm_bus_wdata[i];
+      assign tcdm_master[i].data   = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen    = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be     = s_tcdm_bus_be[i];
+      assign tcdm_master[i].boffs  = '0;
+      assign tcdm_master[i].lrdy   = '1;
 
       assign s_tcdm_bus_gnt[i]     = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i] = tcdm_master[i].r_valid;
-      assign s_tcdm_bus_r_rdata[i] = tcdm_master[i].r_rdata;
+      assign s_tcdm_bus_r_rdata[i] = tcdm_master[i].r_data;
     end
   endgenerate
 
