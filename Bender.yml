@@ -5,6 +5,7 @@ package:
     - "Angelo Garofalo <angelo.garofalo@unibo.it>"
     - "Francesco Conti <f.conti@unibo.it>"
     - "Jie Chen <jie.chen@greenwaves-technologies.com>"
+    - "Michael Rogenmoser <michaero@student.ethz.ch>"
 
 dependencies:
   axi2mem:              { git: "git@github.com:pulp-platform/axi2mem.git", rev: "6973e0434d26ba578cdb4aa69c26c1facd1a3f15" } # deprecated, replace with axi_to_mem in axi repo
@@ -47,6 +48,7 @@ sources:
   - rtl/cluster_timer_wrap.sv
   - rtl/dmac_wrap.sv
   - rtl/hwpe_subsystem.sv
+  - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
   - rtl/per_demux_wrap.sv
   # - rtl/periph_demux.sv
