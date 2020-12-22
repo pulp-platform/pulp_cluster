@@ -39,7 +39,7 @@ module dmac_wrap
   XBAR_PERIPH_BUS.Slave            cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave            fc_ctrl_slave,
   
-  XBAR_TCDM_BUS.Master             tcdm_master[3:0],
+  hci_core_intf.master             tcdm_master[3:0],
   AXI_BUS.Master                   ext_master,
   output logic                     term_event_cl_o,
   output logic                     term_irq_cl_o,

@@ -1,9 +1,6 @@
 // Copyright 2018 ETH Zurich and University of Bologna.
 // Copyright and related rights are licensed under the Solderpad Hardware
 // License, Version 0.51 (the "License"); you may not use this file except in
-// Copyright 2018 ETH Zurich and University of Bologna.
-// Copyright and related rights are licensed under the Solderpad Hardware
-// License, Version 0.51 (the "License"); you may not use this file except in
 // compliance with the License.  You may obtain a copy of the License at
 // http://solderpad.org/licenses/SHL-0.51. Unless required by applicable law
 // or agreed to in writing, software, hardware and materials distributed under
@@ -44,6 +41,7 @@ module tcdm_banks_wrap
     input  logic               init_ni,
     input  logic               pwdn_i,
     input  logic               test_mode_i,
+    
     hci_mem_intf.slave    tcdm_slave[NB_BANKS-1:0]
    );
    

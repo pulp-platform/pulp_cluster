@@ -18,8 +18,9 @@ import hci_package::*;
 module hwpe_subsystem
 #(
   parameter N_CORES       = 8,
-  parameter N_MASTER_PORT = 4,
-  parameter ID_WIDTH      = 8
+  parameter N_MASTER_PORT = 9,
+  parameter ID_WIDTH      = 8,
+  parameter USE_RBE       = 0
 )
 (
   input  logic                    clk,
@@ -28,7 +29,6 @@ module hwpe_subsystem
   
   hci_core_intf.master            hwpe_xbar_master,
   XBAR_PERIPH_BUS.Slave           hwpe_cfg_slave,
-  output hci_interconnect_ctrl_t  hci_ctrl_o,
 
   output logic [N_CORES-1:0][1:0] evt_o,
   output logic                    busy_o
@@ -40,20 +40,39 @@ module hwpe_subsystem
     .clk ( clk )
   );
 
-  rbe_top #(
-    .ID      ( ID_WIDTH ),
-    .N_CORES ( N_CORES  ),
-    .BW      ( 288      )
-  ) hwpe_top_wrap_i (
-    .clk_i       ( clk              ),
-    .rst_ni      ( rst_n            ),
-    .test_mode_i ( test_mode        ),
-    .evt_o       ( evt_o            ),
-    .tcdm        ( hwpe_xbar_master ),
-    .hci_ctrl_o  ( hci_ctrl_o       ),
-    .periph      ( periph           )
-  );
-  assign busy_o = 1'b1;
+  generate
+    if(USE_RBE) begin : rbe_gen
+      rbe_top #(
+        .ID      ( ID_WIDTH         ),
+        .N_CORES ( N_CORES          ),
+        .BW      ( N_MASTER_PORT*32 )
+      ) hwpe_top_wrap_i (
+        .clk_i       ( clk              ),
+        .rst_ni      ( rst_n            ),
+        .test_mode_i ( test_mode        ),
+        .evt_o       ( evt_o            ),
+        .tcdm        ( hwpe_xbar_master ),
+        .hci_ctrl_o  (                  ),
+        .periph      ( periph           )
+      );
+      assign busy_o = 1'b1;
+    end
+    else begin : datamover_gen
+      datamover_top #(
+        .ID      ( ID_WIDTH         ),
+        .N_CORES ( N_CORES          ),
+        .BW      ( N_MASTER_PORT*32 )
+      ) hwpe_top_wrap_i (
+        .clk_i       ( clk              ),
+        .rst_ni      ( rst_n            ),
+        .test_mode_i ( test_mode        ),
+        .evt_o       ( evt_o            ),
+        .tcdm        ( hwpe_xbar_master ),
+        .periph      ( periph           )
+      );
+      assign busy_o = 1'b1;
+    end
+  endgenerate
 
   always_comb
   begin

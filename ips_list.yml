@@ -47,28 +47,29 @@ icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
   group:  pulp-platform
-cluster_peripherals:
-  commit: v2.0.0
-  domain: [cluster]
-  group:  pulp-platform
-fpu_interco:
-  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
-  domain: [soc, cluster]
-  group:  pulp-platform
 hwpe-ctrl:
   commit: v1.5
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hwpe-stream:
-  commit: a3e3607
+  commit: master
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hci:
-  commit: v1.0.3
+  commit: add-no-hwpe-case
   group: pulp-platform
   domain: [cluster, pulp]
-rbe:
-  commit: verification
-  group: pulp-restricted
-  server: git@iis-git.ee.ethz.ch
+cluster_peripherals:
+  commit: hci-ctrl-integration
+  domain: [cluster]
+  group:  pulp-platform
+fpu_interco:
+  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
+  domain: [soc, cluster]
+  group: pulp-platform
+hwpe-datamover-example:
+  commit: main
+  group: pulp-platform
+  domain: [cluster, pulp]
+
   

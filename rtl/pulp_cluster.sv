@@ -290,7 +290,6 @@ module pulp_cluster
   logic [NB_CORES-1:0]                dbg_core_resume;
   logic [NB_CORES-1:0]                dbg_core_halted;
   logic [NB_CORES-1:0]                s_dbg_irq;
-  logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
   logic                     s_cluster_periphs_busy;
@@ -836,8 +835,8 @@ module pulp_cluster
     
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
-    .hwpe_sel_o             ( s_hwpe_sel                         ),
-    .hwpe_en_o              ( s_hwpe_en                          )
+    .hwpe_en_o              ( s_hwpe_en                          ),
+    .hci_ctrl_o             ( s_hci_ctrl                         ),
 `ifdef PRIVATE_ICACHE
     ,
     .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
@@ -1076,7 +1075,7 @@ module pulp_cluster
     if(HWPE_PRESENT == 1) begin : hwpe_gen
       hwpe_subsystem #(
         .N_CORES       ( NB_CORES             ),
-        .N_MASTER_PORT ( 4                    ),
+        .N_MASTER_PORT ( NB_HWPE_PORTS        ),
         .ID_WIDTH      ( NB_CORES+NB_MPERIPHS )
       ) hwpe_subsystem_i (
         .clk               ( clk_cluster    ),
@@ -1084,7 +1083,6 @@ module pulp_cluster
         .test_mode         ( test_mode_i    ),
         .hwpe_xbar_master  ( s_hci_hwpe [0] ),
         .hwpe_cfg_slave    ( s_hwpe_cfg_bus ),
-        .hci_ctrl_o        ( s_hci_ctrl     ),
         .evt_o             ( s_hwpe_evt     ),
         .busy_o            ( s_hwpe_busy    )
       );
@@ -1103,7 +1101,6 @@ module pulp_cluster
       assign s_hci_hwpe[0].lrdy  = '1;
       assign s_hwpe_busy = '0;
       assign s_hwpe_evt  = '0;
-       
     end
   endgenerate
   
