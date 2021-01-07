@@ -2,7 +2,21 @@
 # List of IPs and relative branch/commit-hash/tag.
 # Uses the YAML syntax.
 #
-
+common_cells:
+  commit: v1.20.0
+  domain: [cluster, soc]
+axi/axi:
+  commit: v0.24.1
+  domain: [cluster, soc]
+axi/axi_node:
+   commit: v1.1.4
+   domain: [cluster, soc]
+axi/axi_slice:
+  commit: v1.1.4
+  domain: [cluster, soc]
+axi/axi_slice_dc:
+  commit: v1.1.3
+  domain: [cluster, soc]
 axi/axi2mem:
   commit: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
   domain: [soc, cluster]
