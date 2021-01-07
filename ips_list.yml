@@ -3,6 +3,18 @@
 # Uses the YAML syntax.
 #
 
+axi/axi:
+  commit: v0.24.1
+  domain: [cluster, soc]
+# axi/axi_node:
+#   commit: v1.1.4
+#   domain: [cluster, soc]
+axi/axi_slice:
+  commit: v1.1.4
+  domain: [cluster, soc]
+axi/axi_slice_dc:
+  commit: v1.1.3
+  domain: [cluster, soc]
 axi/axi2mem:
   commit: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
   domain: [soc, cluster]
@@ -53,15 +65,5 @@ cluster_peripherals:
   group:  pulp-platform
 fpu_interco:
   commit: 83c7a1b690bffd006d8b925805aab3c1f8ba9ff1
-  domain: [soc, cluster]
-  group:  pulp-platform
-# The following IPs are only required by the archived axi_node repo which is now directly embedded into pulp_cluster
-# These dependencies become obsolet as soon as the legacy axi_node ip is replaced with the new generation of AXI ips
-common_cells:
-  commit: v1.20.0
-  domain: [soc, cluster]
-  group:  pulp-platform
-axi:
-  commit: v0.24.1
   domain: [soc, cluster]
   group:  pulp-platform
