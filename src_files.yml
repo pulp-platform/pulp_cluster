@@ -3,7 +3,7 @@ pulp_cluster:
     -L fpnew_lib,
     # Library load directives from deprecated axi_node IP. Remove them after switching to new AXI ips in cluster
     #-L common_cells_lib,
-    #-L axi_lib
+    -L axi_lib
   ]
   incdirs: [
     ../../rtl/includes,

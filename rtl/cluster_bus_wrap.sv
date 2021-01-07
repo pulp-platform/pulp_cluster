@@ -18,15 +18,22 @@
 
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
+`include "axi/assign.svh"
+`include "axi/typedef.svh"
+
 
 module cluster_bus_wrap
+    import axi_pkg::xbar_cfg_t;
 #(
-  parameter NB_CORES         = 4 ,
-  parameter AXI_ADDR_WIDTH   = 32,
-  parameter AXI_DATA_WIDTH   = 64,
-  parameter AXI_ID_IN_WIDTH  = 4 ,
-  parameter AXI_ID_OUT_WIDTH = 6 ,
-  parameter AXI_USER_WIDTH   = 6
+  parameter NB_CORES              = 4 ,
+  parameter AXI_ADDR_WIDTH        = 32,
+  parameter AXI_DATA_WIDTH        = 64,
+  parameter AXI_ID_IN_WIDTH       = 4 ,
+  parameter AXI_ID_OUT_WIDTH      = 6 ,
+  parameter AXI_USER_WIDTH        = 6 ,
+  parameter DMA_NB_OUTSND_BURSTS  = 8 ,
+  parameter TCDM_SIZE             = 0
+
 )
 (
   input logic       clk_i,
@@ -154,19 +161,27 @@ module cluster_bus_wrap
   end
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
                                                     DMA_NB_OUTSND_BURSTS : NB_CORES;
+
+
+    localparam xbar_cfg_t AXI_XBAR_CFG = '{
+                                                    NoSlvPorts: NB_SLAVE,
+                                                    NoMstPorts: NB_MASTER,
+                                                    MaxMstTrans: MAX_TXNS_PER_SLV_PORT,       //The TCDM ports do not support
+                                                    //outstanding transactiions anyways
+                                                    MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
+                                                    //per slave port
+                                                    FallThrough: 1'b0,       //Use the reccomended default config (for pulp_soc_interconnect is 1)
+                                                    LatencyMode: axi_pkg::CUT_ALL_AX | axi_pkg::DemuxW,
+                                                    AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
+                                                    AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
+                                                    AxiAddrWidth: AXI_ADDR_WIDTH,
+                                                    AxiDataWidth: AXI_DATA_WIDTH,
+                                                    NoAddrRules: N_RULES
+                                                    };
+
   axi_xbar_intf #(
     .AXI_USER_WIDTH         ( AXI_USER_WIDTH                        ),
-    .NO_SLV_PORTS           ( NB_SLAVE                              ),
-    .NO_MST_PORTS           ( NB_MASTER                             ),
-    .MAX_MST_TRANS          ( MAX_TXNS_PER_SLV_PORT                 ),
-    .MAX_SLV_TRANS          ( DMA_NB_OUTSND_BURSTS + NB_CORES       ),
-    .FALL_THROUGH           ( 1'b0                                  ),
-    .LATENCY_MODE           ( axi_pkg::CUT_ALL_AX | axi_pkg::DemuxW ),
-    .AXI_ID_WIDTH_SLV_PORTS ( AXI_ID_IN_WIDTH                       ),
-    .AXI_ID_USED_SLV_PORTS  ( AXI_ID_IN_WIDTH                       ),
-    .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH                        ),
-    .AXI_DATA_WIDTH         ( AXI_DATA_WIDTH                        ),
-    .NO_ADDR_RULES          ( N_RULES                               ),
+    .Cfg                   (AXI_XBAR_CFG                           ),
     .rule_t                 ( axi_pkg::xbar_rule_32_t               )
   ) i_xbar (
     .clk_i,
