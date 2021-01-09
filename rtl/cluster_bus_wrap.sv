@@ -16,7 +16,7 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`include "pulp_soc_defines.sv"
+
 `include "cluster_bus_defines.sv"
 `include "axi/assign.svh"
 `include "axi/typedef.svh"
@@ -50,10 +50,10 @@ module cluster_bus_wrap
   AXI_BUS.Master    ext_master
 );
 
-  localparam AXI_STRB_WIDTH = AXI_DATA_WIDTH/8;
+
   localparam NB_MASTER      = `NB_MASTER;
   localparam NB_SLAVE       = `NB_SLAVE;
-  localparam NB_REGION      = `NB_REGION;
+
 
   
   typedef logic [AXI_ID_OUT_WIDTH -1:0] id_mst_t;
@@ -101,28 +101,27 @@ module cluster_bus_wrap
   // Address Map
   addr_t cluster_base_addr;
   assign cluster_base_addr = 32'h1000_0000 + ( cluster_id_i << 22);
-  localparam int unsigned N_RULES = 4;
+  localparam int unsigned N_RULES = 3;
   axi_pkg::xbar_rule_32_t [N_RULES-1:0] addr_map;
-  assign addr_map[0] = '{ // everything below cluster to ext_slave
-    idx:  2,
-    start_addr: 32'h0000_0000,
-    end_addr:   cluster_base_addr
+  assign addr_map[0] = '{ // MASTER PORT TO SOC (SOC PERIPHERALS + L2)
+    idx:  0,
+    start_addr: `MASTER_0_START_ADDR + ( cluster_id_i << 22),
+    end_addr:   `MASTER_0_END_ADDR + ( cluster_id_i << 22)
   };
-  assign addr_map[1] = '{ // everything above cluster to ext_slave
-    idx:  2,
-    start_addr: cluster_base_addr + 32'h0040_0000,
-    end_addr:   32'hFFFF_FFFF
+  assign addr_map[1] = '{ // Peripherals
+    idx:  1,
+    start_addr: `MASTER_1_START_ADDR + ( cluster_id_i << 22), 
+    end_addr:   `MASTER_1_END_ADDR + ( cluster_id_i << 22) 
   };
   assign addr_map[2] = '{ // TCDM
-    idx:  0,
-    start_addr: cluster_base_addr,
-    end_addr:   cluster_base_addr + TCDM_SIZE
+    idx:  2,
+    start_addr: `MASTER_2_START_ADDR ,
+    end_addr:   `MASTER_2_END_ADDR 
   };
-  assign addr_map[3] = '{ // Peripherals
-    idx:  1,
-    start_addr: cluster_base_addr + 32'h0020_0000,
-    end_addr:   cluster_base_addr + 32'h0040_0000
-  };
+
+
+
+
   // pragma translate_off
   `ifndef VERILATOR
     initial begin
@@ -170,7 +169,7 @@ module cluster_bus_wrap
                                                     //outstanding transactiions anyways
                                                     MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
                                                     //per slave port
-                                                    FallThrough: 1'b0,       //Use the reccomended default config (for pulp_soc_interconnect is 1)
+                                                    FallThrough: 1,       //Use the reccomended default config (for pulp_soc_interconnect is 1)
                                                     LatencyMode: axi_pkg::CUT_ALL_AX | axi_pkg::DemuxW,
                                                     AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
@@ -179,9 +178,10 @@ module cluster_bus_wrap
                                                     NoAddrRules: N_RULES
                                                     };
 
+
   axi_xbar_intf #(
     .AXI_USER_WIDTH         ( AXI_USER_WIDTH                        ),
-    .Cfg                   (AXI_XBAR_CFG                           ),
+    .Cfg                    ( AXI_XBAR_CFG                          ),
     .rule_t                 ( axi_pkg::xbar_rule_32_t               )
   ) i_xbar (
     .clk_i,
