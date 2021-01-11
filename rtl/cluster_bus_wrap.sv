@@ -24,6 +24,7 @@
 
 module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
+    import pulp_cluster_package::addr_map_rule_t;
 #(
   parameter NB_CORES              = 4 ,
   parameter AXI_ADDR_WIDTH        = 32,
@@ -55,72 +56,54 @@ module cluster_bus_wrap
   localparam NB_SLAVE       = `NB_SLAVE;
 
 
+  // Crossbar
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH  ),
+    .AXI_DATA_WIDTH ( AXI_DATA_WIDTH  ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH  )
+  ) axi_slaves [NB_SLAVE-1:0]();
+
+  // assign here your axi slaves
+  `AXI_ASSIGN(axi_slaves[0] , data_slave )
+  `AXI_ASSIGN(axi_slaves[1] , instr_slave)
+  `AXI_ASSIGN(axi_slaves[2] , dma_slave  )
+  `AXI_ASSIGN(axi_slaves[3] , ext_slave  )
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH    ),
+    .AXI_DATA_WIDTH ( AXI_DATA_WIDTH    ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH  ),
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH    )
+  ) axi_masters [NB_MASTER-1:0]();
+   
+  // assign here your axi masters
+  `AXI_ASSIGN(tcdm_master  , axi_masters[0])
+  `AXI_ASSIGN(periph_master, axi_masters[1])
+  `AXI_ASSIGN(ext_master   , axi_masters[2])
   
-  typedef logic [AXI_ID_OUT_WIDTH -1:0] id_mst_t;
-  typedef logic [AXI_ID_IN_WIDTH  -1:0] id_slv_t;
-  typedef logic [AXI_ADDR_WIDTH   -1:0] addr_t;
-  typedef logic [AXI_DATA_WIDTH   -1:0] data_t;
-  typedef logic [AXI_DATA_WIDTH/8 -1:0] strb_t;
-  typedef logic [AXI_USER_WIDTH   -1:0] user_t;
-  `AXI_TYPEDEF_AW_CHAN_T ( mst_aw_chan_t, addr_t, id_mst_t,         user_t)
-  `AXI_TYPEDEF_AW_CHAN_T ( slv_aw_chan_t, addr_t, id_slv_t,         user_t)
-  `AXI_TYPEDEF_W_CHAN_T  (      w_chan_t, data_t,           strb_t, user_t)
-  `AXI_TYPEDEF_B_CHAN_T  (  mst_b_chan_t,         id_mst_t,         user_t)
-  `AXI_TYPEDEF_B_CHAN_T  (  slv_b_chan_t,         id_slv_t,         user_t)
-  `AXI_TYPEDEF_AR_CHAN_T ( mst_ar_chan_t, addr_t, id_mst_t,         user_t)
-  `AXI_TYPEDEF_AR_CHAN_T ( slv_ar_chan_t, addr_t, id_slv_t,         user_t)
-  `AXI_TYPEDEF_R_CHAN_T  (  mst_r_chan_t, data_t, id_mst_t,         user_t)
-  `AXI_TYPEDEF_R_CHAN_T  (  slv_r_chan_t, data_t, id_slv_t,         user_t)
-  `AXI_TYPEDEF_REQ_T     (     mst_req_t, mst_aw_chan_t, w_chan_t, mst_ar_chan_t)
-  `AXI_TYPEDEF_REQ_T     (     slv_req_t, slv_aw_chan_t, w_chan_t, slv_ar_chan_t)
-  `AXI_TYPEDEF_RESP_T    (    mst_resp_t,  mst_b_chan_t, mst_r_chan_t)
-  `AXI_TYPEDEF_RESP_T    (    slv_resp_t,  slv_b_chan_t, slv_r_chan_t)
-  mst_req_t   [NB_MASTER-1:0] mst_reqs;
-  mst_resp_t  [NB_MASTER-1:0] mst_resps;
-  slv_req_t   [NB_SLAVE -1:0] slv_reqs;
-  slv_resp_t  [NB_SLAVE -1:0] slv_resps;
-
-  // Binding of Master Ports
-  `AXI_ASSIGN_FROM_REQ  (tcdm_master,   mst_reqs[0]   );
-  `AXI_ASSIGN_TO_RESP   (mst_resps[0],  tcdm_master   );
-  `AXI_ASSIGN_FROM_REQ  (periph_master, mst_reqs[1]   );
-  `AXI_ASSIGN_TO_RESP   (mst_resps[1],  periph_master );
-  `AXI_ASSIGN_FROM_REQ  (ext_master,    mst_reqs[2]   );
-  `AXI_ASSIGN_TO_RESP   (mst_resps[2],  ext_master    );
-
-  // Binding of Slave Ports
-  `AXI_ASSIGN_TO_REQ    (slv_reqs[0],   ext_slave     );
-  `AXI_ASSIGN_FROM_RESP (ext_slave,     slv_resps[0]  );
-  `AXI_ASSIGN_TO_REQ    (slv_reqs[1],   dma_slave     );
-  `AXI_ASSIGN_FROM_RESP (dma_slave,     slv_resps[1]  );
-  `AXI_ASSIGN_TO_REQ    (slv_reqs[2],   data_slave    );
-  `AXI_ASSIGN_FROM_RESP (data_slave,    slv_resps[2]  );
-  `AXI_ASSIGN_TO_REQ    (slv_reqs[3],   instr_slave   );
-  `AXI_ASSIGN_FROM_RESP (instr_slave,   slv_resps[3]  );
-
-  // Address Map
-  addr_t cluster_base_addr;
+  // address map
+  logic [31:0] cluster_base_addr;
   assign cluster_base_addr = 32'h1000_0000 + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 3;
-  axi_pkg::xbar_rule_32_t [N_RULES-1:0] addr_map;
-  assign addr_map[0] = '{ // MASTER PORT TO SOC (SOC PERIPHERALS + L2)
+  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map; 
+
+
+  assign addr_map[0] = '{ // TCDM
     idx:  0,
-    start_addr: `MASTER_0_START_ADDR + ( cluster_id_i << 22),
-    end_addr:   `MASTER_0_END_ADDR + ( cluster_id_i << 22)
+    start_addr: cluster_base_addr,
+    end_addr:   cluster_base_addr + TCDM_SIZE
   };
   assign addr_map[1] = '{ // Peripherals
     idx:  1,
-    start_addr: `MASTER_1_START_ADDR + ( cluster_id_i << 22), 
-    end_addr:   `MASTER_1_END_ADDR + ( cluster_id_i << 22) 
+    start_addr: cluster_base_addr + 32'h0020_0000,
+    end_addr:   cluster_base_addr + 32'h0040_0000
   };
-  assign addr_map[2] = '{ // TCDM
+  assign addr_map[2] = '{ // everything above cluster to ext_slave
     idx:  2,
-    start_addr: `MASTER_2_START_ADDR ,
-    end_addr:   `MASTER_2_END_ADDR 
+    start_addr: cluster_base_addr + 32'h0040_0000,
+    end_addr:   32'hFFFF_FFFF
   };
-
-
-
 
   // pragma translate_off
   `ifndef VERILATOR
@@ -135,29 +118,7 @@ module cluster_bus_wrap
         else $fatal(1, "Insufficient AXI_ID_OUT_WIDTH!");
     end
   `endif
-  // pragma translate_on
 
-  // Crossbar
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH  ),
-    .AXI_DATA_WIDTH ( AXI_DATA_WIDTH  ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH  )
-  ) slv_intf [NB_SLAVE-1:0]();
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH    ),
-    .AXI_DATA_WIDTH ( AXI_DATA_WIDTH    ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH  ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH    )
-  ) mst_intf [NB_MASTER-1:0]();
-  for (genvar i = 0; i < NB_SLAVE; i++) begin : gen_assign_slv
-    `AXI_ASSIGN_FROM_REQ(slv_intf[i], slv_reqs[i])
-    `AXI_ASSIGN_TO_RESP(slv_resps[i], slv_intf[i])
-  end
-  for (genvar i = 0; i < NB_MASTER; i++) begin : gen_assign_mst
-    `AXI_ASSIGN_TO_REQ(mst_reqs[i], mst_intf[i])
-    `AXI_ASSIGN_FROM_RESP(mst_intf[i], mst_resps[i])
-  end
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
                                                     DMA_NB_OUTSND_BURSTS : NB_CORES;
 
@@ -169,8 +130,8 @@ module cluster_bus_wrap
                                                     //outstanding transactiions anyways
                                                     MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
                                                     //per slave port
-                                                    FallThrough: 1,       //Use the reccomended default config (for pulp_soc_interconnect is 1)
-                                                    LatencyMode: axi_pkg::CUT_ALL_AX | axi_pkg::DemuxW,
+                                                    FallThrough: 1'b0,       //Use the reccomended default config 
+                                                    LatencyMode: axi_pkg::NO_LATENCY, // CUT_ALL_AX | axi_pkg::DemuxW,
                                                     AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiAddrWidth: AXI_ADDR_WIDTH,
@@ -182,13 +143,13 @@ module cluster_bus_wrap
   axi_xbar_intf #(
     .AXI_USER_WIDTH         ( AXI_USER_WIDTH                        ),
     .Cfg                    ( AXI_XBAR_CFG                          ),
-    .rule_t                 ( axi_pkg::xbar_rule_32_t               )
+    .rule_t                 ( addr_map_rule_t                       )
   ) i_xbar (
     .clk_i,
     .rst_ni,
     .test_i                 (test_en_i),
-    .slv_ports              (slv_intf),
-    .mst_ports              (mst_intf),
+    .slv_ports              (axi_slaves),
+    .mst_ports              (axi_masters),
     .addr_map_i             (addr_map),
     .en_default_mst_port_i  ('0), // disable default master port for all slave ports
     .default_mst_port_i     ('0)
