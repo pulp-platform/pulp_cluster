@@ -8,9 +8,6 @@ common_cells:
 axi/axi:
   commit: v0.24.1
   domain: [cluster, soc]
-axi/axi_node:
-   commit: v1.1.4
-   domain: [cluster, soc]
 axi/axi_slice:
   commit: v1.1.4
   domain: [cluster, soc]
