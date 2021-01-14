@@ -93,7 +93,7 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
-  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
+  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o
 
   //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 

@@ -43,6 +43,7 @@ module pulp_cluster
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
   parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
@@ -710,7 +711,8 @@ module pulp_cluster
     .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH     ),
 
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
-    .PE_ROUTING_LSB     ( PE_ROUTING_LSB     )
+    .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
+    .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
 
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
@@ -836,7 +838,7 @@ module pulp_cluster
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
     .hwpe_en_o              ( s_hwpe_en                          ),
-    .hci_ctrl_o             ( s_hci_ctrl                         ),
+    .hci_ctrl_o             ( s_hci_ctrl                         )
 `ifdef PRIVATE_ICACHE
     ,
     .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
