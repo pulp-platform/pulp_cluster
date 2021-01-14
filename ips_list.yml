@@ -52,15 +52,15 @@ hwpe-ctrl:
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hwpe-stream:
-  commit: master
+  commit: v1.6.1
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hci:
-  commit: add-no-hwpe-case
+  commit: v1.0.6
   group: pulp-platform
   domain: [cluster, pulp]
 cluster_peripherals:
-  commit: hci-ctrl-integration
+  commit: v1.0.2
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
@@ -68,7 +68,7 @@ fpu_interco:
   domain: [soc, cluster]
   group: pulp-platform
 hwpe-datamover-example:
-  commit: main
+  commit: v1.0
   group: pulp-platform
   domain: [cluster, pulp]
 

@@ -333,8 +333,7 @@ module cluster_peripherals
      #(
        .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
        .NB_CORES       ( NB_CORES             ),
-       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
-       .FEATURE_STAT   ( FEATURE_STAT         )
+       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
        )
    icache_ctrl_unit_i
      (

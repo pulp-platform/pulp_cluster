@@ -1224,7 +1224,6 @@ module pulp_cluster
     .NB_WAYS          ( SET_ASSOCIATIVE    ),
     .CACHE_SIZE       ( CACHE_SIZE         ),
     .CACHE_LINE       ( 1                  ),
-    .FEATURE_STAT     ( FEATURE_STAT       ),
     .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
     .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
     .AXI_USER         ( AXI_USER_WIDTH     ),
