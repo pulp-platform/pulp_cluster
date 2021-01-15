@@ -1439,20 +1439,17 @@ module pulp_cluster
     .axi_master      ( s_data_slave_32    )
   );
 
-  axi_size_UPSIZE_32_64_wrap #(
-    .AXI_ADDR_WIDTH      ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH_IN   ( AXI_DATA_S2C_WIDTH ),
-    .AXI_USER_WIDTH_IN   ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_IN     ( AXI_ID_IN_WIDTH    ),
-    .AXI_DATA_WIDTH_OUT  ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH_OUT  ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_OUT    ( AXI_ID_IN_WIDTH    )
-  ) axi_size_UPSIZE_32_64_wrap_i (
-    .clk_i       ( clk_i           ),
-    .rst_ni      ( s_rst_n         ),
-    .test_mode_i ( test_mode_i     ),
-    .axi_slave   ( s_data_slave_32 ),
-    .axi_master  ( s_data_slave_64 )
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
+    .AXI_ADDR_WIDTH          ( AXI_ADDR_WIDTH     ),
+    .AXI_SLV_PORT_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
+    .AXI_MST_PORT_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH          ( AXI_USER_WIDTH     )
+  ) axi_dw_UPSIZE_32_64_wrap_i (
+    .clk_i  ( clk_i           ),
+    .rst_ni ( s_rst_n         ),
+    .slv    ( s_data_slave_32 ),
+    .mst    ( s_data_slave_64 )
   );
    
   /* event synchronizers */
