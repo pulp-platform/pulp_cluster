@@ -251,8 +251,7 @@ module cluster_interconnect_wrap
   //********************************************************
   //******* LOGARITHMIC INTERCONNECT TO PERIPHERALS ********
   //********************************************************
-  XBAR_PE
-  #(
+  XBAR_PE #(
     .N_CH0              ( NB_CORES             ),
     .N_CH1              ( NB_MPERIPHS          ),
     .N_SLAVE            ( NB_SPERIPHS          ),
@@ -267,9 +266,7 @@ module cluster_interconnect_wrap
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
-  )
-  xbar_pe_inst
-  (
+  ) xbar_pe_inst (
     .clk              ( clk_i),
     .rst_n            ( rst_ni),
     
