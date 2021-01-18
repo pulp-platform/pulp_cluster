@@ -60,7 +60,7 @@ hci:
   group: pulp-platform
   domain: [cluster, pulp]
 cluster_peripherals:
-  commit: v1.0.2
+  commit: v2.1.0
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
