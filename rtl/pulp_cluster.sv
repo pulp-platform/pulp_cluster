@@ -18,6 +18,7 @@
  */
 
 import pulp_cluster_package::*;
+import hci_package::*;
 
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
@@ -27,11 +28,13 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  parameter NB_CORES                = 8,
-  parameter NB_HWPE_PORTS           = 4,
-  parameter NB_DMAS                 = 4,
-  parameter NB_MPERIPHS             = NB_MPERIPHS,
-  parameter NB_SPERIPHS             = NB_SPERIPHS,
+  parameter NB_CORES           = 8,
+  parameter NB_HWPE_PORTS      = 9,
+  // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
+  // Everything will go to hell if you change this!
+  parameter NB_DMAS            = 4,
+  parameter NB_MPERIPHS        = NB_MPERIPHS,
+  parameter NB_SPERIPHS        = NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
   
@@ -40,6 +43,7 @@ module pulp_cluster
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
   parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
@@ -147,7 +151,7 @@ module pulp_cluster
   output logic                             pf_evt_valid_o,
 
   input logic  [NB_CORES-1:0]              dbg_irq_valid_i,
-   
+
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
@@ -287,7 +291,6 @@ module pulp_cluster
   logic [NB_CORES-1:0]                dbg_core_resume;
   logic [NB_CORES-1:0]                dbg_core_halted;
   logic [NB_CORES-1:0]                s_dbg_irq;
-  logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
   logic                     s_cluster_periphs_busy;
@@ -301,6 +304,7 @@ module pulp_cluster
   logic [NB_CORES-1:0][3:0] s_hwpe_remap_evt;
   logic [NB_CORES-1:0][1:0] s_hwpe_evt;
   logic                     s_hwpe_busy;
+  hci_package::hci_interconnect_ctrl_t s_hci_ctrl;
 
   logic [NB_CORES-1:0]               clk_core_en;
   logic                              clk_cluster;
@@ -360,8 +364,14 @@ module pulp_cluster
 
 
   /* logarithmic and peripheral interconnect interfaces */
-  // ext -> log interconnect 
-  XBAR_TCDM_BUS s_ext_xbar_bus[NB_DMAS-1:0]();
+  // ext -> log interconnect
+  hci_core_intf #(
+    .DW ( 32 ),
+    .AW ( 32 ),
+    .OW ( 1  )
+  ) s_hci_ext[NB_DMAS-1:0] (
+    .clk ( clk_cluster )
+  );
 
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
@@ -370,7 +380,13 @@ module pulp_cluster
   XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 
   // DMA -> log interconnect
-  XBAR_TCDM_BUS s_dma_xbar_bus[NB_DMAS-1:0]();
+  hci_core_intf #(
+    .DW ( 32 ),
+    .AW ( 32 ),
+    .OW ( 1  )
+  ) s_hci_dma[NB_DMAS-1:0] (
+    .clk ( clk_cluster )
+  );
   XBAR_TCDM_BUS    s_dma_plugin_xbar_bus[NB_DMAS-1:0]();
 
   // ext -> xbar periphs FIXME
@@ -381,8 +397,21 @@ module pulp_cluster
   XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
   
   // cores & accelerators -> log interconnect
-  XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:0]();
-  
+  hci_core_intf #(
+    .DW ( NB_HWPE_PORTS*32 ),
+    .AW ( 32               ),
+    .OW ( 1                )
+  ) s_hci_hwpe [0:0] (
+    .clk ( clk_cluster )
+  );
+  hci_core_intf #(
+    .DW ( 32 ),
+    .AW ( 32 ),
+    .OW ( 1  )
+  ) s_hci_core [NB_CORES-1:0] (
+    .clk ( clk_cluster )
+  );
+
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
   
@@ -437,10 +466,15 @@ module pulp_cluster
       `endif
   `endif
    //----------------------------------------------------------------------//
-   
-  // log interconnect -> TCDM memory banks (SRAM)
-  TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
 
+  localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
+
+  // log interconnect -> TCDM memory banks (SRAM)
+  hci_mem_intf #(
+    .IW ( TCDM_ID_WIDTH )
+  ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0](
+    .clk ( clk_cluster )
+  );
 
   //***************************************************
   /* asynchronous AXI interfaces at CLUSTER/SOC interface */
@@ -587,7 +621,7 @@ module pulp_cluster
     .rst_ni      ( rst_ni         ),
     .test_en_i   ( test_mode_i    ),
     .axi_slave   ( s_ext_tcdm_bus ),
-    .tcdm_master ( s_ext_xbar_bus ),
+    .tcdm_master ( s_hci_ext      ),
     .busy_o      ( s_axi2mem_busy )
   );
 
@@ -677,24 +711,25 @@ module pulp_cluster
     .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH     ),
 
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
-    .PE_ROUTING_LSB     ( PE_ROUTING_LSB     )
+    .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
+    .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
 
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
     .rst_ni             ( rst_ni                              ),
 
-    .core_tcdm_slave    ( s_core_xbar_bus                     ),
-    .core_periph_slave  ( s_core_periph_bus                   ),
-
-    .ext_slave          ( s_ext_xbar_bus                      ),
-
-    .dma_slave          ( s_dma_xbar_bus                      ),
-    .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
+    .core_tcdm_slave    ( s_hci_core                          ),
+    .hwpe_tcdm_slave    ( s_hci_hwpe                          ),
+    .ext_slave          ( s_hci_ext                           ),
+    .dma_slave          ( s_hci_dma                           ),
 
     .tcdm_sram_master   ( s_tcdm_bus_sram                     ),
 
+    .core_periph_slave  ( s_core_periph_bus                   ),
+    .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
     .speriph_master     ( s_xbar_speriph_bus                  ),
 
+    .hci_ctrl_i         ( s_hci_ctrl                          ),
     .TCDM_arb_policy_i  ( s_TCDM_arb_policy                   )
   );
 
@@ -723,7 +758,7 @@ module pulp_cluster
     //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
     .cl_ctrl_slave  ( s_periph_dma_bus[0]),
     .fc_ctrl_slave  ( s_periph_dma_bus[1]),
-    .tcdm_master    ( s_dma_xbar_bus     ),
+    .tcdm_master    ( s_hci_dma          ),
     .ext_master     ( s_dma_ext_bus      ),
     .term_event_cl_o( s_dma_cl_event     ),
     .term_irq_cl_o  ( s_dma_cl_irq       ),
@@ -802,8 +837,8 @@ module pulp_cluster
     
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
-    .hwpe_sel_o             ( s_hwpe_sel                         ),
-    .hwpe_en_o              ( s_hwpe_en                          )
+    .hwpe_en_o              ( s_hwpe_en                          ),
+    .hci_ctrl_o             ( s_hci_ctrl                         )
 `ifdef PRIVATE_ICACHE
     ,
     .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
@@ -903,7 +938,7 @@ module pulp_cluster
         //.debug_core_halted_o ( dbg_core_halted[i]    ),
         //.debug_core_halt_i   ( dbg_core_halt[i]      ),
         //.debug_core_resume_i ( dbg_core_resume[i]    ),
-        .tcdm_data_master    ( s_core_xbar_bus[i]    ),
+        .tcdm_data_master    ( s_hci_core[i]         ),
 
         //tcdm, dma ctrl unit, periph interco interfaces
         //.dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
@@ -1042,16 +1077,16 @@ module pulp_cluster
     if(HWPE_PRESENT == 1) begin : hwpe_gen
       hwpe_subsystem #(
         .N_CORES       ( NB_CORES             ),
-        .N_MASTER_PORT ( 4                    ),
+        .N_MASTER_PORT ( NB_HWPE_PORTS        ),
         .ID_WIDTH      ( NB_CORES+NB_MPERIPHS )
       ) hwpe_subsystem_i (
-        .clk               ( clk_cluster                                        ),
-        .rst_n             ( s_rst_n                                            ),
-        .test_mode         ( test_mode_i                                        ),
-        .hwpe_xbar_master  ( s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:NB_CORES] ),
-        .hwpe_cfg_slave    ( s_hwpe_cfg_bus                                     ),
-        .evt_o             ( s_hwpe_evt                                         ),
-        .busy_o            ( s_hwpe_busy                                        )
+        .clk               ( clk_cluster    ),
+        .rst_n             ( s_rst_n        ),
+        .test_mode         ( test_mode_i    ),
+        .hwpe_xbar_master  ( s_hci_hwpe [0] ),
+        .hwpe_cfg_slave    ( s_hwpe_cfg_bus ),
+        .evt_o             ( s_hwpe_evt     ),
+        .busy_o            ( s_hwpe_busy    )
       );
     end
     else begin : no_hwpe_gen
@@ -1059,15 +1094,15 @@ module pulp_cluster
       assign s_hwpe_cfg_bus.gnt     = '1;
       assign s_hwpe_cfg_bus.r_rdata = 32'hdeadbeef;
       assign s_hwpe_cfg_bus.r_id    = '0;
-      for (genvar i=NB_CORES; i<NB_CORES+NB_HWPE_PORTS; i++) begin : no_hwpe_bias
-        assign s_core_xbar_bus[i].req = '0;
-        assign s_core_xbar_bus[i].wen = '0;
-        assign s_core_xbar_bus[i].be  = '0;
-        assign s_core_xbar_bus[i].wdata = '0;
-      end
+      assign s_hci_hwpe[0].req   = 1'b0;
+      assign s_hci_hwpe[0].add   = '0;
+      assign s_hci_hwpe[0].wen   = '0;
+      assign s_hci_hwpe[0].data  = '0;
+      assign s_hci_hwpe[0].be    = '0;
+      assign s_hci_hwpe[0].boffs = '0;
+      assign s_hci_hwpe[0].lrdy  = '1;
       assign s_hwpe_busy = '0;
       assign s_hwpe_evt  = '0;
-       
     end
   endgenerate
   
@@ -1189,7 +1224,6 @@ module pulp_cluster
     .NB_WAYS          ( SET_ASSOCIATIVE    ),
     .CACHE_SIZE       ( CACHE_SIZE         ),
     .CACHE_LINE       ( 1                  ),
-    .FEATURE_STAT     ( FEATURE_STAT       ),
     .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
     .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
     .AXI_USER         ( AXI_USER_WIDTH     ),

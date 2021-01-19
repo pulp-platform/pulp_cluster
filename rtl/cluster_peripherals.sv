@@ -92,8 +92,8 @@ module cluster_peripherals
 
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
-  output logic                        hwpe_sel_o,
-  output logic                        hwpe_en_o
+  output logic                        hwpe_en_o,
+  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o
 
   //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 
@@ -193,8 +193,8 @@ module cluster_peripherals
         .boot_addr_o    ( boot_addr_o                  ),
 
         // SRAM SPEED REGULATION --> TCDM
-        .hwpe_sel_o     ( hwpe_sel_o                   ),
         .hwpe_en_o      ( hwpe_en_o                    ),
+        .hci_ctrl_o     ( hci_ctrl_o                   ),
 
         .fregfile_disable_o ( fregfile_disable_o       ),
 
@@ -333,8 +333,7 @@ module cluster_peripherals
      #(
        .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
        .NB_CORES       ( NB_CORES             ),
-       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
-       .FEATURE_STAT   ( FEATURE_STAT         )
+       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
        )
    icache_ctrl_unit_i
      (

@@ -47,13 +47,29 @@ icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
   group:  pulp-platform
+hwpe-ctrl:
+  commit: v1.5
+  group: pulp-platform
+  domain: [soc, cluster, pulp]
+hwpe-stream:
+  commit: v1.6.1
+  group: pulp-platform
+  domain: [soc, cluster, pulp]
+hci:
+  commit: v1.0.6
+  group: pulp-platform
+  domain: [cluster, pulp]
 cluster_peripherals:
-  commit: v2.0.0
+  commit: v2.1.0
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: 83c7a1b690bffd006d8b925805aab3c1f8ba9ff1
+  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
   domain: [soc, cluster]
-  group:  pulp-platform
+  group: pulp-platform
+hwpe-datamover-example:
+  commit: v1.0
+  group: pulp-platform
+  domain: [cluster, pulp]
 
-
+  

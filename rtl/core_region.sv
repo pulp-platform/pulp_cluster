@@ -96,11 +96,10 @@ module core_region
   //input logic             debug_core_resume_i,
               
   // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-  XBAR_TCDM_BUS.Master                   tcdm_data_master,
+  hci_core_intf.master tcdm_data_master,
   //XBAR_TCDM_BUS.Master dma_ctrl_master,
-  XBAR_PERIPH_BUS.Master                 eu_ctrl_master,
-  XBAR_PERIPH_BUS.Master                 periph_data_master
-
+  XBAR_PERIPH_BUS.Master eu_ctrl_master,
+  XBAR_PERIPH_BUS.Master periph_data_master
 
  // new interface signals
  `ifdef SHARED_FPU_CLUSTER
@@ -418,11 +417,11 @@ module core_region
     .data_req_o_SH      (  tcdm_data_master.req       ),
     .data_add_o_SH      (  tcdm_data_master.add       ),
     .data_wen_o_SH      (  tcdm_data_master.wen       ),
-    .data_wdata_o_SH    (  tcdm_data_master.wdata     ),
+    .data_wdata_o_SH    (  tcdm_data_master.data      ),
     .data_be_o_SH       (  tcdm_data_master.be        ),
     .data_gnt_i_SH      (  tcdm_data_master.gnt       ),
     .data_r_valid_i_SH  (  tcdm_data_master.r_valid   ),
-    .data_r_rdata_i_SH  (  tcdm_data_master.r_rdata   ),
+    .data_r_rdata_i_SH  (  tcdm_data_master.r_data    ),
 
     .data_req_o_EXT     (  eu_ctrl_master.req         ),
     .data_add_o_EXT     (  eu_ctrl_master.add         ),
@@ -460,6 +459,9 @@ module core_region
     .perf_l2_st_cyc_o   (  perf_counters[3]           ),
     .CLUSTER_ID         (  cluster_id_i               )
   );
+
+  assign tcdm_data_master.boffs = '0;
+  assign tcdm_data_master.lrdy  = '1;
 
   // periph_demux periph_demux_i (
   //   .clk               ( clk_int                  ),

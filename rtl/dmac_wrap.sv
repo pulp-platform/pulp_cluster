@@ -39,7 +39,7 @@ module dmac_wrap
   XBAR_PERIPH_BUS.Slave            cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave            fc_ctrl_slave,
   
-  XBAR_TCDM_BUS.Master             tcdm_master[3:0],
+  hci_core_intf.master             tcdm_master[3:0],
   AXI_BUS.Master                   ext_master,
   output logic                     term_event_cl_o,
   output logic                     term_irq_cl_o,
@@ -115,13 +115,15 @@ module dmac_wrap
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND
       assign tcdm_master[i].add      = s_tcdm_bus_add[i];
       assign tcdm_master[i].req      = s_tcdm_bus_req[i];
-      assign tcdm_master[i].wdata    = s_tcdm_bus_wdata[i];
+      assign tcdm_master[i].data     = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen      = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be       = s_tcdm_bus_be[i];
+      assign tcdm_master[i].boffs    = '0;
+      assign tcdm_master[i].lrdy     = '1;
 
       assign s_tcdm_bus_gnt[i]       = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i]   = tcdm_master[i].r_valid;
-      assign s_tcdm_bus_r_rdata[i]   = tcdm_master[i].r_rdata;
+      assign s_tcdm_bus_r_rdata[i]   = tcdm_master[i].r_data;
     end
   endgenerate
    

@@ -17,7 +17,7 @@ dependencies:
   hier-icache:          { git: "git@github.com:pulp-platform/hier-icache.git", version: 1.2.0 }
   icache_mp_128_pf:     { git: "git@github.com:pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
   icache_private:       { git: "git@github.com:pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
-  cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", version: 2.0.0 }
+  cluster_peripherals:  { git: "git@github.com:pulp-platform/cluster_peripherals.git", version: 2.1.0 }
   fpu_interco:          { git: "git@github.com:pulp-platform/fpu_interco.git", rev: "83c7a1b690bffd006d8b925805aab3c1f8ba9ff1" }
   axi:                  { git: "git@github.com:pulp-platform/axi.git", version: 0.7.1 } # to be updated (now 0.24?)
   axi_node:             { git: "git@github.com:pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
@@ -29,9 +29,7 @@ dependencies:
   riscv:                { git: "git@github.com:micprog/cv32e40p.git", rev: "pulpissimo-v3.4.1"} # To be updated to openhwgroup repository
   ibex:                 { git: "git@github.com:lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
   scm:                  { git: "git@github.com:pulp-platform/scm.git", version: 1.0.1}
-  hwpe-mac-engine:      { git: "git@github.com:micprog/hwpe-mac-engine.git", rev: "v1.2-bender" } # To be updated with pulp-platform dependency
-  # apu_cluster ?
-  # sp_icache ?
+  hwpe-datamover-example: { git: "https://github.com:pulp-platform/hwpe-datamover-example.git", version: 1.0 }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
