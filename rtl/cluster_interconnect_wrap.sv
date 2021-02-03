@@ -97,55 +97,46 @@ module cluster_interconnect_wrap
   //****** BINDING INTERFACES TO INTERNAL BUS SIGNALS ******
   //********************************************************
    
-  generate
-    for (genvar i=0; i<NB_CORES; i++)
-    begin : CORE_PERIPH_BIND
-      assign s_core_periph_bus_add[i]      =  core_periph_slave[i].add;
-      assign s_core_periph_bus_req[i]      =  core_periph_slave[i].req;
-      assign s_core_periph_bus_wdata[i]    =  core_periph_slave[i].wdata;
-      assign s_core_periph_bus_wen[i]      =  core_periph_slave[i].wen;
-      assign s_core_periph_bus_be[i]       =  core_periph_slave[i].be;
+  for (genvar i=0; i<NB_CORES; i++) begin : CORE_PERIPH_BIND
+    assign s_core_periph_bus_add[i]      =  core_periph_slave[i].add;
+    assign s_core_periph_bus_req[i]      =  core_periph_slave[i].req;
+    assign s_core_periph_bus_wdata[i]    =  core_periph_slave[i].wdata;
+    assign s_core_periph_bus_wen[i]      =  core_periph_slave[i].wen;
+    assign s_core_periph_bus_be[i]       =  core_periph_slave[i].be;
 
-      assign core_periph_slave[i].gnt      =  s_core_periph_bus_gnt[i];
-      assign core_periph_slave[i].r_opc    =  s_core_periph_bus_r_opc[i];
-      assign core_periph_slave[i].r_valid  =  s_core_periph_bus_r_valid[i];
-      assign core_periph_slave[i].r_rdata  =  s_core_periph_bus_r_rdata[i];
-    end // block: CORE_PERIPH_BIND
-  endgenerate
+    assign core_periph_slave[i].gnt      =  s_core_periph_bus_gnt[i];
+    assign core_periph_slave[i].r_opc    =  s_core_periph_bus_r_opc[i];
+    assign core_periph_slave[i].r_valid  =  s_core_periph_bus_r_valid[i];
+    assign core_periph_slave[i].r_rdata  =  s_core_periph_bus_r_rdata[i];
+  end // block: CORE_PERIPH_BIND
 
-  generate
-    for (genvar i=0; i<NB_MPERIPHS; i++)
-    begin : MPERIPHS_BIND
-      assign s_mperiph_bus_add[i]      = mperiph_slave[i].add;
-      assign s_mperiph_bus_req[i]      = mperiph_slave[i].req;
-      assign s_mperiph_bus_wdata[i]    = mperiph_slave[i].wdata;
-      assign s_mperiph_bus_wen[i]      = mperiph_slave[i].wen;
-      assign s_mperiph_bus_be[i]       = mperiph_slave[i].be;
+  for (genvar i=0; i<NB_MPERIPHS; i++) begin : MPERIPHS_BIND
+    assign s_mperiph_bus_add[i]      = mperiph_slave[i].add;
+    assign s_mperiph_bus_req[i]      = mperiph_slave[i].req;
+    assign s_mperiph_bus_wdata[i]    = mperiph_slave[i].wdata;
+    assign s_mperiph_bus_wen[i]      = mperiph_slave[i].wen;
+    assign s_mperiph_bus_be[i]       = mperiph_slave[i].be;
 
-      assign mperiph_slave[i].gnt      = s_mperiph_bus_gnt[i];
-      assign mperiph_slave[i].r_opc    = s_mperiph_bus_r_opc[i];
-      assign mperiph_slave[i].r_valid  = s_mperiph_bus_r_valid[i];
-      assign mperiph_slave[i].r_rdata  = s_mperiph_bus_r_rdata[i];
-    end // block: MPERIPHS_BIND
-  endgenerate
+    assign mperiph_slave[i].gnt      = s_mperiph_bus_gnt[i];
+    assign mperiph_slave[i].r_opc    = s_mperiph_bus_r_opc[i];
+    assign mperiph_slave[i].r_valid  = s_mperiph_bus_r_valid[i];
+    assign mperiph_slave[i].r_rdata  = s_mperiph_bus_r_rdata[i];
+  end // block: MPERIPHS_BIND
 
-  generate
-    for (genvar i=0; i<NB_SPERIPHS; i++)
-    begin : SPERIPHS_BIND
-      assign speriph_master[i].add       = s_speriph_bus_add[i];
-      assign speriph_master[i].req       = s_speriph_bus_req[i];
-      assign speriph_master[i].wdata     = s_speriph_bus_wdata[i];
-      assign speriph_master[i].wen       = s_speriph_bus_wen[i];
-      assign speriph_master[i].be        = s_speriph_bus_be[i];
-      assign speriph_master[i].id        = s_speriph_bus_id[i];
+  for (genvar i=0; i<NB_SPERIPHS; i++) begin : SPERIPHS_BIND
+    assign speriph_master[i].add       = s_speriph_bus_add[i];
+    assign speriph_master[i].req       = s_speriph_bus_req[i];
+    assign speriph_master[i].wdata     = s_speriph_bus_wdata[i];
+    assign speriph_master[i].wen       = s_speriph_bus_wen[i];
+    assign speriph_master[i].be        = s_speriph_bus_be[i];
+    assign speriph_master[i].id        = s_speriph_bus_id[i];
 
-      assign s_speriph_bus_gnt[i]        = speriph_master[i].gnt;
-      assign s_speriph_bus_r_id[i]       = speriph_master[i].r_id;
-      assign s_speriph_bus_r_opc[i]      = speriph_master[i].r_opc;
-      assign s_speriph_bus_r_valid[i]    = speriph_master[i].r_valid;
-      assign s_speriph_bus_r_rdata[i]    = speriph_master[i].r_rdata;
-    end // block: SPERIPHS_BIND
-  endgenerate
+    assign s_speriph_bus_gnt[i]        = speriph_master[i].gnt;
+    assign s_speriph_bus_r_id[i]       = speriph_master[i].r_id;
+    assign s_speriph_bus_r_opc[i]      = speriph_master[i].r_opc;
+    assign s_speriph_bus_r_valid[i]    = speriph_master[i].r_valid;
+    assign s_speriph_bus_r_rdata[i]    = speriph_master[i].r_rdata;
+  end // block: SPERIPHS_BIND
 
   //-********************************************************
   //-*********** HETEROGENEOUS INTERCONNECT TO TCDM *********
@@ -181,8 +172,7 @@ module cluster_interconnect_wrap
         .mems   ( tcdm_sram_master    )
       );
 
-    end
-    else begin : no_hci_gen
+    end else begin : no_hci_gen
 
       hci_core_intf #(
         .DW ( 32 ),
