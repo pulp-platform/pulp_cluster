@@ -41,7 +41,6 @@ sources:
   - packages/pulp_cluster_package.sv
   - rtl/axi2mem_wrap.sv
   - rtl/axi2per_wrap.sv
-  # - rtl/axi_slice_wrap.sv
   - rtl/cluster_bus_wrap.sv
   - rtl/cluster_clock_gate.sv
   - rtl/cluster_event_map.sv
@@ -52,7 +51,6 @@ sources:
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
   - rtl/per_demux_wrap.sv
-  # - rtl/periph_demux.sv
   - rtl/periph_FIFO.sv
   - rtl/tcdm_banks_wrap.sv
     # Level 1
