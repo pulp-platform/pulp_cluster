@@ -58,37 +58,37 @@ module core_region
   parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
-  input logic                            clk_i,
-  input logic                            rst_ni,
-  input logic                            init_ni,
+  input  logic                           clk_i,
+  input  logic                           rst_ni,
+  input  logic                           init_ni,
 
-  input logic [3:0]                      base_addr_i, // FOR CLUSTER VIRTUALIZATION
+  input  logic [3:0]                     base_addr_i, // FOR CLUSTER VIRTUALIZATION
 
-  input logic [5:0]                      cluster_id_i,
+  input  logic [5:0]                     cluster_id_i,
   
-  input logic                            irq_req_i,
+  input  logic                           irq_req_i,
   output logic                           irq_ack_o,
-  input logic [4:0]                      irq_id_i,
+  input  logic [4:0]                     irq_id_i,
   output logic [4:0]                     irq_ack_id_o,
   
-  input logic                            clock_en_i,
-  input logic                            fetch_en_i,
-  input logic                            fregfile_disable_i,
+  input  logic                           clock_en_i,
+  input  logic                           fetch_en_i,
+  input  logic                           fregfile_disable_i,
 
-  input logic [31:0]                     boot_addr_i,
+  input  logic [31:0]                    boot_addr_i,
 
-  input logic                            test_mode_i,
+  input  logic                           test_mode_i,
 
   output logic                           core_busy_o,
 
   // Interface to Instruction Logarithmic interconnect (Req->grant handshake)
   output logic                           instr_req_o,
-  input logic                            instr_gnt_i,
+  input  logic                           instr_gnt_i,
   output logic [31:0]                    instr_addr_o,
-  input logic [INSTR_RDATA_WIDTH-1:0]    instr_r_rdata_i,
-  input logic                            instr_r_valid_i,
+  input  logic [INSTR_RDATA_WIDTH-1:0]   instr_r_rdata_i,
+  input  logic                           instr_r_valid_i,
 
-  input logic                            debug_req_i,
+  input  logic                           debug_req_i,
               
   //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
@@ -106,7 +106,7 @@ module core_region
  // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
-  input logic                            apu_master_gnt_i,
+  input  logic                           apu_master_gnt_i,
   // request channel
   output logic [WAPUTYPE-1:0]            apu_master_type_o,
   output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
@@ -114,16 +114,16 @@ module core_region
   output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
   // response channel
   output logic                           apu_master_ready_o,
-  input logic                            apu_master_valid_i,
-  input logic [31:0]                     apu_master_result_i,
-  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
+  input  logic                           apu_master_valid_i,
+  input  logic [31:0]                    apu_master_result_i,
+  input  logic [APU_NUSFLAGS_CPU-1:0]    apu_master_flags_i
 `endif
 
 `ifdef APU_CLUSTER
  // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
-  input logic                            apu_master_gnt_i,
+  input  logic                           apu_master_gnt_i,
   // request channel
   output logic [WAPUTYPE-1:0]            apu_master_type_o,
   output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
@@ -131,13 +131,26 @@ module core_region
   output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
   // response channel
   output logic                           apu_master_ready_o,
-  input logic                            apu_master_valid_i,
-  input logic [31:0]                     apu_master_result_i,
-  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
+  input  logic                           apu_master_valid_i,
+  input  logic [31:0]                    apu_master_result_i,
+  input  logic [APU_NUSFLAGS_CPU-1:0]    apu_master_flags_i
 `endif
  
 
 );
+
+  localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
+  localparam USE_IBEX   = CORE_TYPE_CL == 1 || CORE_TYPE_CL == 2;
+  localparam IBEX_RV32M = CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
+  localparam IBEX_RV32E = CORE_TYPE_CL == 2;
+
+`ifdef TARGET_SYNTHESIS
+  localparam IBEX_RegFile = ibex_pkg::RegFileLatch;
+`elsif TARGET_FPGA
+  localparam IBEX_RegFile = ibex_pkg::RegFileFPGA;
+`else
+  localparam IBEX_RegFile = ibex_pkg::RegFileFF;
+`endif
 
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
@@ -145,7 +158,7 @@ module core_region
 
   XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
 
-  logic [4:0]      perf_counters;
+  logic [N_EXT_PERF_COUNTERS_ACTUAL-1:0]      perf_counters;
   logic            clk_int;
   logic [31:0]     hart_id;
   logic            core_sleep;
@@ -200,7 +213,7 @@ module core_region
       assign boot_addr = boot_addr_i;
       riscv_core #(
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
-        .N_EXT_PERF_COUNTERS ( 5                 ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL ),
         .PULP_SECURE         ( 0                 ),
         .FPU                 ( FPU               ),
         .FP_DIVSQRT          ( FP_DIVSQRT        ),
@@ -302,20 +315,25 @@ module core_region
 `else
       ibex_core #(
 `endif
-        .PMPEnable                ( 1'b0              ),
-        .MHPMCounterNum           ( 10                ),
-        .MHPMCounterWidth         ( 40                ),
-        .RV32E                    ( CORE_TYPE_CL == 2 ),
-        .RV32M                    ( CORE_TYPE_CL == 1 ),
-        .RV32B                    ( 1'b0              ),
-        .BranchTargetALU          ( 1'b0              ),
-        .WritebackStage           ( 1'b0              ),
-        .MultiplierImplementation ( "fast"            ),
-        .ICache                   ( 1'b0              ),
-        .DbgTriggerEn             ( 1'b1              ),
-        .SecureIbex               ( 1'b0              ),
-        .DmHaltAddr               ( 32'h1A110800      ),
-        .DmExceptionAddr          ( 32'h1A110808      )
+        .PMPEnable        ( 1'b0                ),
+        .PMPGranularity   ( 0                   ),
+        .PMPNumRegions    ( 4                   ),
+        .MHPMCounterNum   ( 29                  ),
+        .MHPMCounterWidth ( 40                  ),
+        .RV32E            ( IBEX_RV32E          ),
+        .RV32M            ( IBEX_RV32M          ),
+        .RV32B            ( ibex_pkg::RV32BNone ),
+        .RegFile          ( IBEX_RegFile        ),
+        .BranchTargetALU  ( 1'b1                ),
+        .WritebackStage   ( 1'b1                ),
+        .ICache           ( 1'b0                ),
+        .ICacheECC        ( 1'b0                ),
+        .BranchPredictor  ( 1'b0                ),
+        .DbgTriggerEn     ( 1'b1                ),
+        .DbgHwBreakNum    ( 1                   ),
+        .SecureIbex       ( 1'b0                ),
+        .DmHaltAddr       ( 32'h1A110800        ),
+        .DmExceptionAddr  ( 32'h1A110808        )
       ) IBEX_CORE (
         .clk_i                 ( clk_i              ),
         .rst_ni                ( rst_ni             ),
@@ -326,22 +344,22 @@ module core_region
         .boot_addr_i           ( boot_addr          ),
 
         // Instruction Memory Interface:  Interface to Instruction Logaritmic interconnect: Req->grant handshake
-        .instr_addr_o          ( core_instr_addr    ),
         .instr_req_o           ( core_instr_req     ),
-        .instr_rdata_i         ( core_instr_r_rdata ),
         .instr_gnt_i           ( core_instr_gnt     ),
         .instr_rvalid_i        ( core_instr_r_valid ),
+        .instr_addr_o          ( core_instr_addr    ),
+        .instr_rdata_i         ( core_instr_r_rdata ),
         .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
-        .data_addr_o           ( s_core_bus.add     ),
         .data_req_o            ( s_core_bus.req     ),
-        .data_be_o             ( s_core_bus.be      ),
-        .data_rdata_i          ( s_core_bus.r_rdata ),
-        .data_we_o             ( s_core_bus.we      ),
         .data_gnt_i            ( s_core_bus.gnt     ),
-        .data_wdata_o          ( s_core_bus.wdata   ),
         .data_rvalid_i         ( s_core_bus.r_valid ),
+        .data_we_o             ( s_core_bus.we      ),
+        .data_be_o             ( s_core_bus.be      ),
+        .data_addr_o           ( s_core_bus.add     ),
+        .data_wdata_o          ( s_core_bus.wdata   ),
+        .data_rdata_i          ( s_core_bus.r_rdata ),
         .data_err_i            ( 1'b0               ),
 
         .irq_software_i        ( 1'b0               ),
@@ -354,9 +372,13 @@ module core_region
         .irq_x_ack_o           ( irq_ack_o          ),
         .irq_x_ack_id_o        ( irq_ack_id_o       ),
 
+        .external_perf_i       ( {{{16- N_EXT_PERF_COUNTERS_ACTUAL}{'0}}, perf_counters} ),
+
         .debug_req_i           ( debug_req_i        ),
 
         .fetch_enable_i        ( fetch_en_i         ),
+        .alert_minor_o         (),
+        .alert_major_o         (),
         .core_sleep_o          ( core_sleep         )
       );
       assign core_busy_o = ~core_sleep;

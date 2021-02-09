@@ -2,6 +2,7 @@ pulp_cluster:
   vlog_opts: [
     -L fpnew_lib,
     -L hci_lib,
+    -L ibex_lib,
   ]
   incdirs: [
     ../../rtl/includes,
