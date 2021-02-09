@@ -28,9 +28,9 @@ event_unit_flex:
   domain: [cluster]
   group:  pulp-platform
 mchan:
-  commit: tags/v1.2.2
+  commit: space_pulp_tmp
   domain: [cluster]
-  group:  pulp-platform
+  group:  micprog
 hier-icache:
   commit: v1.2.0
   domain: [cluster]
@@ -47,16 +47,8 @@ icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
   group:  pulp-platform
-hwpe-ctrl:
-  commit: v1.5
-  group: pulp-platform
-  domain: [soc, cluster, pulp]
-hwpe-stream:
-  commit: v1.6.1
-  group: pulp-platform
-  domain: [soc, cluster, pulp]
 hci:
-  commit: v1.0.6
+  commit: v1.0.7
   group: pulp-platform
   domain: [cluster, pulp]
 cluster_peripherals:
@@ -64,11 +56,11 @@ cluster_peripherals:
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
+  commit: 7bfbea63bcc8875edc3adf266a679161833e9590
   domain: [soc, cluster]
-  group: pulp-platform
+  group: micprog
 hwpe-datamover-example:
-  commit: v1.0
+  commit: v1.0.1
   group: pulp-platform
   domain: [cluster, pulp]
 
