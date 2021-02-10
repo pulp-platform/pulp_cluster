@@ -21,6 +21,7 @@ import hci_package::*;
 module cluster_interconnect_wrap
 #(
   parameter NB_CORES        = 8,
+  parameter HWPE_PRESENT    = 1,
   parameter NB_HWPE_PORTS   = 4,
   parameter NB_DMAS         = 4,
   parameter NB_MPERIPHS     = 1,
@@ -143,10 +144,10 @@ module cluster_interconnect_wrap
   //-********************************************************
   // Wraps the Logarithmic Interconnect + a HWPE Interconnect
   generate
-    if(USE_HETEROGENEOUS_INTERCONNECT) begin : hci_gen
+    if(USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT) begin : hci_gen
 
       hci_interconnect #(
-        .N_HWPE ( 1                ),
+        .N_HWPE ( HWPE_PRESENT     ),
         .N_CORE ( NB_CORES         ),
         .N_DMA  ( NB_DMAS          ),
         .N_EXT  ( 4                ),
@@ -154,10 +155,10 @@ module cluster_interconnect_wrap
         .IW     ( TCDM_ID_WIDTH    ),
         .AWC    ( ADDR_WIDTH       ),
         .DW_LIC ( DATA_WIDTH       ),
-        .DW_SIC ( NB_HWPE_PORTS*32 ),
+        .DW_SIC ( NB_HWPE_PORTS*DATA_WIDTH ),
         .TS_BIT ( TEST_SET_BIT     ),
-        .AWH    ( 32               ),
-        .DWH    ( 288              ),
+        .AWH    ( ADDR_WIDTH       ),
+        .DWH    ( NB_HWPE_PORTS*DATA_WIDTH ),
         .OWH    ( 1                ),
         .AWM    ( ADDR_MEM_WIDTH+2 )
       ) i_hci_interconnect (
