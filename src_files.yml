@@ -11,7 +11,8 @@ pulp_cluster:
   files: [
     packages/pulp_cluster_package.sv,
     rtl/instr_width_converter.sv,
-    rtl/core_region.sv,
+    rtl/cluster_core_wrap.sv,
+    rtl/cluster_core_assist.sv,
     rtl/core_demux.sv,
     rtl/cluster_interconnect_wrap.sv,
     rtl/tcdm_banks_wrap.sv,

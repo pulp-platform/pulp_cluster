@@ -57,13 +57,14 @@ sources:
   - rtl/cluster_peripherals.sv
   - rtl/core_demux.sv
     # Level 2
+  - rtl/cluster_core_assist.sv
   - target: rtl
     defines:
       TRACE_EXECUTION: ~
     files:
-      - rtl/core_region.sv
+      - rtl/cluster_core_wrap.sv
   - target: not(rtl)
     files:
-      - rtl/core_region.sv
+      - rtl/cluster_core_wrap.sv
     # Level 3
   - rtl/pulp_cluster.sv
