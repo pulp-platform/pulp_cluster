@@ -172,7 +172,7 @@ module core_region
   logic            core_instr_r_valid;
 
   // clock gate of the core_region less the core itself
-  cluster_clock_gating clock_gate_i (
+  tc_clk_gating clock_gate_i (
     .clk_i     ( clk_i       ),
     .en_i      ( clock_en_i  ),
     .test_en_i ( test_mode_i ),
@@ -429,7 +429,6 @@ module core_region
     .data_wdata_i       (  s_core_bus.wdata           ),
     .data_be_i          (  s_core_bus.be              ),
     .data_gnt_o         (  s_core_bus.gnt             ),
-    .data_r_gnt_i       (  s_core_bus.r_gnt           ),
     .data_r_valid_o     (  s_core_bus.r_valid         ),
     .data_r_opc_o       (                             ),
     .data_r_rdata_o     (  s_core_bus.r_rdata         ),
@@ -477,8 +476,7 @@ module core_region
   //synopsys translate_off
 
   // CHECK IF THE CORE --> LS port is makin accesses in unmapped regions
-  always @(posedge clk_i)
-  begin : CHECK_ASSERTIONS
+  always @(posedge clk_i) begin : CHECK_ASSERTIONS
 `ifndef CLUSTER_ALIAS
     if ((s_core_bus.req == 1'b1) && (s_core_bus.add < 32'h1000_0000)) begin
       $error("ERROR_1 (0x00000000 -> 0x10000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,s_core_bus.add, $time()/1000 );
@@ -577,8 +575,7 @@ module core_region
  -----/\----- EXCLUDED -----/\----- */
 
   // SELF CHECK ROUTINES TO compare instruction fetches with slm files
-  always_ff @(posedge clk_i)
-  begin
+  always_ff @(posedge clk_i) begin
     if(instr_r_valid_i) begin
       $fwrite( FILE , "\t --> %8h\n",instr_r_rdata_i);
       case(destination)
@@ -617,16 +614,15 @@ module core_region
 `endif
   logic reg_cache_refill;
 
-  always_ff @(posedge clk_i , negedge rst_ni)
-  begin
+  always_ff @(posedge clk_i , negedge rst_ni) begin
     if ( rst_ni == 1'b0 ) begin
       reg_cache_refill <= 1'b0;
-    end
-    else begin
-      if (instr_req_o)
+    end else begin
+      if (instr_req_o) begin
         reg_cache_refill <= 1'b1;
-      else if(instr_r_valid_i && !instr_req_o)
+      end else if(instr_r_valid_i && !instr_req_o) begin
         reg_cache_refill <= 1'b0;
+      end
     end
   end
 //synopsys translate_on

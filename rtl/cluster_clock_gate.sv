@@ -45,8 +45,7 @@
 
   assign s_clockenable = ~(&r_clockgate);
 
-  always_ff @(posedge clk_i or negedge rstn_i) 
-  begin : proc_evnt_sync
+  always_ff @(posedge clk_i or negedge rstn_i) begin : proc_evnt_sync
     if(~rstn_i) begin
       r_events_sync <= 0;
     end else begin
@@ -54,24 +53,23 @@
     end
   end
 
-  always_ff @(posedge clk_i or negedge rstn_i) 
-  begin
+  always_ff @(posedge clk_i or negedge rstn_i) begin
     if(~rstn_i) begin
       r_clockgate <= 0;
-    end
-    else begin
-      if(!s_somebusy && !incoming_req_i && !r_events_sync[1])
+    end else begin
+      if(!s_somebusy && !incoming_req_i && !r_events_sync[1]) begin
         r_clockgate <= {r_clockgate[2:0],cluster_cg_en_i}; 
-      else
+      end else begin
         r_clockgate <= {r_clockgate[2:0],1'b0};
+      end
     end
   end
 
-  cluster_clock_gating u_clkgate_cluster (
-    .clk_o     ( cluster_clk_o ),
+  tc_clk_gating u_clkgate_cluster (
     .clk_i     ( clk_i         ),
     .en_i      ( s_clockenable ),
-    .test_en_i ( test_mode_i   )
+    .test_en_i ( test_mode_i   ),
+    .clk_o     ( cluster_clk_o )
   );
 
 endmodule

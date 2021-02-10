@@ -49,17 +49,17 @@ module dmac_wrap
 );
   
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
-     logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
-     logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
-     logic [NB_CTRLS-1:0]                  s_ctrl_bus_req;
-     logic [NB_CTRLS-1:0]                  s_ctrl_bus_wen;
-     logic [NB_CTRLS-1:0][BE_WIDTH-1:0]    s_ctrl_bus_be;
-     logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_id;
-     logic [NB_CTRLS-1:0]                  s_ctrl_bus_gnt;
-     logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_r_rdata;
-     logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_valid;
-     logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_opc;
-     logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_r_id;
+  logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
+  logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
+  logic [NB_CTRLS-1:0]                  s_ctrl_bus_req;
+  logic [NB_CTRLS-1:0]                  s_ctrl_bus_wen;
+  logic [NB_CTRLS-1:0][BE_WIDTH-1:0]    s_ctrl_bus_be;
+  logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_id;
+  logic [NB_CTRLS-1:0]                  s_ctrl_bus_gnt;
+  logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_r_rdata;
+  logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_valid;
+  logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_opc;
+  logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_r_id;
 
   // CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
 /* -----\/----- EXCLUDED -----\/-----
@@ -128,7 +128,6 @@ module dmac_wrap
   endgenerate
    
   mchan #(
-
     .NB_CTRLS                 ( NB_CTRLS                     ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
     //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
     //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
