@@ -47,17 +47,7 @@ module pulp_cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
-`ifdef PRIVATE_ICACHE
   parameter NB_CACHE_BANKS          = 2,
-`else
-  `ifdef MP_ICACHE
-  parameter NB_CACHE_BANKS          = 8,
-  `else
-    `ifdef SP_ICACHE
-  parameter NB_CACHE_BANKS          = 8,
-    `endif
-  `endif
-`endif
   parameter CACHE_LINE              = 1,
   parameter CACHE_SIZE              = 4096,
   parameter ICACHE_DATA_WIDTH       = 128,
