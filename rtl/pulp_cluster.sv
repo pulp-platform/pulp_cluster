@@ -33,8 +33,8 @@ module pulp_cluster
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
   parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
+  parameter NB_MPERIPHS        = `NB_MPERIPHS,
+  parameter NB_SPERIPHS        = `NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
   
@@ -364,7 +364,9 @@ module pulp_cluster
   );
 
   // periph interconnect -> slave peripherals
-  XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
+  XBAR_PERIPH_BUS #(
+    .ID_WIDTH(NB_CORES + NB_MPERIPHS)
+  ) s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
 
   // periph interconnect -> HWPE subsystem
   XBAR_PERIPH_BUS s_hwpe_cfg_bus();
