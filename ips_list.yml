@@ -6,7 +6,7 @@ common_cells:
   commit: v1.20.0
   domain: [cluster, soc]
 axi/axi:
-  commit: v0.24.1
+  commit: 49e71eb93e63f582c764adabcf19524d18f49910
   domain: [cluster, soc]
 axi/axi_slice:
   commit: v1.1.4

@@ -86,7 +86,19 @@ module pulp_cluster
   parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
-  
+  parameter LOG_DEPTH               = 3,
+  // CLUSTER TO SOC CDC AXI PARAMETER
+  parameter C2S_AW_WIDTH             = 80, 
+  parameter C2S_W_WIDTH              = 79,
+  parameter C2S_B_WIDTH              = 15,
+  parameter C2S_AR_WIDTH             = 74,
+  parameter C2S_R_WIDTH              = 80,
+  // CLUSTER TO SOC CDC AXI PARAMETERS
+  parameter S2C_AW_WIDTH             = 78, 
+  parameter S2C_W_WIDTH              = 43,
+  parameter S2C_B_WIDTH              = 13,
+  parameter S2C_AR_WIDTH             = 72,
+  parameter S2C_R_WIDTH              = 16,
   // TCDM and log interconnect parameters
   parameter DATA_WIDTH              = 32,
   parameter ADDR_WIDTH              = 32,
@@ -115,124 +127,94 @@ module pulp_cluster
   parameter APU_NUSFLAGS_CPU        = 5
 )
 (
-  input logic                              clk_i,
-  input logic                              rst_ni,
-  input logic                              ref_clk_i,
-  input logic                              pmu_mem_pwdn_i,
+  input logic                                       clk_i,
+  input logic                                       rst_ni,
+  input logic                                       ref_clk_i,
+  input logic                                       pmu_mem_pwdn_i,
 
   
-  input logic [3:0]                        base_addr_i,
+  input logic [3:0]                                 base_addr_i,
 
-  input logic                              test_mode_i,
+  input logic                                       test_mode_i,
 
-  input logic                              en_sa_boot_i,
+  input logic                                       en_sa_boot_i,
 
-  input logic [5:0]                        cluster_id_i,
+  input logic [5:0]                                 cluster_id_i,
 
-  input logic                              fetch_en_i,
+  input logic                                       fetch_en_i,
  
-  output logic                             eoc_o,
+  output logic                                      eoc_o,
   
-  output logic                             busy_o,
+  output logic                                      busy_o,
  
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  ext_events_writetoken_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] ext_events_readpointer_o,
-  input logic [EVNT_WIDTH-1:0]             ext_events_dataasync_i,
+  input logic [DC_SLICE_BUFFER_WIDTH-1:0]           ext_events_writetoken_i,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0]          ext_events_readpointer_o,
+  input logic [EVNT_WIDTH-1:0]                      ext_events_dataasync_i,
   
-  input logic                              dma_pe_evt_ack_i,
-  output logic                             dma_pe_evt_valid_o,
+  input logic                                       dma_pe_evt_ack_i,
+  output logic                                      dma_pe_evt_valid_o,
 
-  input logic                              dma_pe_irq_ack_i,
-  output logic                             dma_pe_irq_valid_o,
+  input logic                                       dma_pe_irq_ack_i,
+  output logic                                      dma_pe_irq_valid_o,
   
-  input logic                              pf_evt_ack_i,
-  output logic                             pf_evt_valid_o,
+  input logic                                       pf_evt_ack_i,
+  output logic                                      pf_evt_valid_o,
 
-  input logic [NB_CORES-1:0]               dbg_irq_valid_i,
+  input logic [NB_CORES-1:0]                        dbg_irq_valid_i,
    
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  data_slave_aw_writetoken_i,
-  input logic [AXI_ADDR_WIDTH-1:0]         data_slave_aw_addr_i,
-  input logic [2:0]                        data_slave_aw_prot_i,
-  input logic [3:0]                        data_slave_aw_region_i,
-  input logic [7:0]                        data_slave_aw_len_i,
-  input logic [2:0]                        data_slave_aw_size_i,
-  //input  logic [5:0]                       data_slave_aw_atop_i,
-  input logic [1:0]                        data_slave_aw_burst_i,
-  input logic                              data_slave_aw_lock_i,
-  input logic [3:0]                        data_slave_aw_cache_i,
-  input logic [3:0]                        data_slave_aw_qos_i,
-  input logic [AXI_ID_IN_WIDTH-1:0]        data_slave_aw_id_i,
-  input logic [AXI_USER_WIDTH-1:0]         data_slave_aw_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_readpointer_o,
-   
-  // READ ADDRESS CHANNEL
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  data_slave_ar_writetoken_i,
-  input logic [AXI_ADDR_WIDTH-1:0]         data_slave_ar_addr_i,
-  input logic [2:0]                        data_slave_ar_prot_i,
-  input logic [3:0]                        data_slave_ar_region_i,
-  input logic [7:0]                        data_slave_ar_len_i,
-  input logic [2:0]                        data_slave_ar_size_i,
-  input logic [1:0]                        data_slave_ar_burst_i,
-  input logic                              data_slave_ar_lock_i,
-  input logic [3:0]                        data_slave_ar_cache_i,
-  input logic [3:0]                        data_slave_ar_qos_i,
-  input logic [AXI_ID_IN_WIDTH-1:0]        data_slave_ar_id_i,
-  input logic [AXI_USER_WIDTH-1:0]         data_slave_ar_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_readpointer_o,
-   
-  // WRITE DATA CHANNEL
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  data_slave_w_writetoken_i,
-  input logic [AXI_DATA_S2C_WIDTH-1:0]     data_slave_w_data_i,
-  input logic [AXI_STRB_S2C_WIDTH-1:0]     data_slave_w_strb_i,
-  input logic [AXI_USER_WIDTH-1:0]         data_slave_w_user_i,
-  input logic                              data_slave_w_last_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_readpointer_o,
-   
-  // READ DATA CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_writetoken_o,
-  output logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_r_data_o,
-  output logic [1:0]                       data_slave_r_resp_o,
-  output logic                             data_slave_r_last_o,
-  output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_r_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_slave_r_user_o,
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  data_slave_r_readpointer_i,
-  
-  // WRITE RESPONSE CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_writetoken_o,
-  output logic [1:0]                       data_slave_b_resp_o,
-  output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_b_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_slave_b_user_o,
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  data_slave_b_readpointer_i,
-   
+  // WRITE ADDRESS CHANNEL
+  input logic [LOG_DEPTH:0]                        async_data_slave_aw_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0] async_data_slave_aw_data_i, 
+  output logic  [LOG_DEPTH:0]                      async_data_slave_aw_rptr_o,
+                                           
+  // READ ADDRESS CHANNEL                  
+  input logic [LOG_DEPTH:0]                        async_data_slave_ar_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AR_WIDTH-1:0] async_data_slave_ar_data_i,
+  output logic [LOG_DEPTH:0]                       async_data_slave_ar_rptr_o,
+                                           
+  // WRITE DATA CHANNEL                    
+  input logic [LOG_DEPTH:0]                        async_data_slave_w_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_W_WIDTH-1:0]  async_data_slave_w_data_i,
+  output logic [LOG_DEPTH:0]                       async_data_slave_w_rptr_o,
+                                                   
+  // READ DATA CHANNEL                             
+  output logic [LOG_DEPTH:0]                        async_data_slave_r_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][S2C_R_WIDTH-1:0]  async_data_slave_r_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_r_rptr_i,
+                                                   
+  // WRITE RESPONSE CHANNEL                        
+  output logic [LOG_DEPTH:0]                        async_data_slave_b_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][S2C_B_WIDTH-1:0]  async_data_slave_b_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_b_rptr_i,
   // AXI4 MASTER
   //***************************************
   // WRITE ADDRESS CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] async_data_master_aw_writetoken_o,
-  output logic [7:0][79:0]                 async_data_master_aw_data_o, 
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  async_data_master_aw_readpointer_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_aw_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_AW_WIDTH-1:0] async_data_master_aw_data_o, 
+  input logic [LOG_DEPTH:0]                         async_data_master_aw_rptr_i,
                                            
   // READ ADDRESS CHANNEL                  
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] async_data_master_ar_writetoken_o,
-  output logic [7:0][73:0]                 async_data_master_ar_data_o,
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  async_data_master_ar_readpointer_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_ar_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_AR_WIDTH-1:0] async_data_master_ar_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_master_ar_rptr_i,
                                            
   // WRITE DATA CHANNEL                    
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] async_data_master_w_writetoken_o,
-  output logic [7:0][78:0]                 async_data_master_w_data_o,
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  async_data_master_w_readpointer_i,
-                                           
-  // READ DATA CHANNEL                     
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  async_data_master_r_writetoken_i,
-  input logic [7:0][79:0]                  async_data_master_r_data_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] async_data_master_r_readpointer_o,
-                                           
-  // WRITE RESPONSE CHANNEL                
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]  async_data_master_b_writetoken_i,
-  input logic [7:0][14:0]                  async_data_master_b_data_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] async_data_master_b_readpointer_o
+  output logic [LOG_DEPTH:0]                        async_data_master_w_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_W_WIDTH-1:0]  async_data_master_w_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_master_w_rptr_i,
+                                                   
+  // READ DATA CHANNEL                             
+  input logic [LOG_DEPTH:0]                         async_data_master_r_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][C2S_R_WIDTH-1:0]   async_data_master_r_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_r_rptr_o,
+                                                   
+  // WRITE RESPONSE CHANNEL                        
+  input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o
    
 );
 
@@ -421,27 +403,6 @@ module pulp_cluster
   // log interconnect -> TCDM memory banks (SRAM)
   TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
 
-
-  //***************************************************
-  /* asynchronous AXI interfaces at CLUSTER/SOC interface */
-  //*************************************************** 
-  
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_slave_async(); 
-/*
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_master_async(); 
-*/
   //***************************************************
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
   //*************************************************** 
@@ -1375,140 +1336,64 @@ module pulp_cluster
   );
   
   /* AXI interconnect infrastructure (slices, size conversion) */ 
-  //********************************************************
+   //********************************************************
    //**************** AXI REGISTER SLICES *******************
    //********************************************************
-/*  axi_slice_dc_slave_wrap #(
-    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH         ), //32
-    .AXI_DATA_WIDTH  ( AXI_DATA_C2S_WIDTH     ), //64
-    .AXI_USER_WIDTH  ( AXI_USER_WIDTH         ), //6
-    .AXI_ID_WIDTH    ( AXI_ID_OUT_WIDTH       ), //7
-    .BUFFER_WIDTH    ( DC_SLICE_BUFFER_WIDTH  )
-  ) data_master_slice_i (
-    .clk_i            ( clk_cluster         ),
-    .rst_ni           ( s_rst_n             ),
-    .test_cgbypass_i  ( 1'b0                ),
-    .isolate_i        ( 1'b0                ),
-    .axi_slave        ( s_data_master       ),
-    .axi_master_async ( s_data_master_async )
-  );
-*/
-   /// CLUSTER TO SOC CDC AXI FIFO
-   /// AXI TYPE DEFINITION CLUSTER TO SOC
-   typedef logic [AXI_ID_OUT_WIDTH-1:0]     id_t;
-   typedef logic [AXI_ADDR_WIDTH-1:0]       addr_t;
-   typedef logic [AXI_DATA_C2S_WIDTH-1:0]   data_t;
-   typedef logic [AXI_DATA_C2S_WIDTH/8-1:0] strb_t;
-   typedef logic [AXI_USER_WIDTH-1:0]       user_t;
-   `AXI_TYPEDEF_AW_CHAN_T(aw_chan_t, addr_t, id_t, user_t)
-   `AXI_TYPEDEF_W_CHAN_T(w_chan_t, data_t, strb_t, user_t)
-   `AXI_TYPEDEF_B_CHAN_T(b_chan_t, id_t, user_t)
-   `AXI_TYPEDEF_AR_CHAN_T(ar_chan_t, addr_t, id_t, user_t)
-   `AXI_TYPEDEF_R_CHAN_T(r_chan_t, data_t, id_t, user_t)
-   `AXI_TYPEDEF_REQ_T(req_t, aw_chan_t, w_chan_t, ar_chan_t)
-   `AXI_TYPEDEF_RESP_T(resp_t, b_chan_t, r_chan_t)
-   req_t  src_req;
-   resp_t src_resp;
-   /// AXI ASSIGN FOR CDC FIFO INTERFACE (synchronous one)
-   `AXI_ASSIGN_TO_REQ(src_req, s_data_master)
-   `AXI_ASSIGN_FROM_RESP(s_data_master,src_resp)
-   /// (asynchronous one)
- /*  `AXI_FROM_AW(assign,s_data_master_async,src_req_async.aw)
-   `AXI_FROM_W(assign,s_data_master_async,src_req_async.w)   
-   `AXI_FROM_AR(assign,s_data_master_async,src_req_async.ar)   
-   `AXI_TO_B(assign,src_resp_async.b,s_data_master_async)   
-   `AXI_TO_R(assign,src_resp_async.r,s_data_master_async)
-*/
- 
-   cdc_fifo_gray_src #(
-        .T(logic [$bits(aw_chan_t)-1:0]),
-        .LOG_DEPTH(3)
-   ) cdc_fifo_gray_src_aw (
-     .src_rst_ni   ( s_rst_n                            ),
-     .src_clk_i    ( clk_cluster                        ),
-     .src_data_i   ( src_req.aw                         ),
-     .src_valid_i  ( src_req.aw_valid                   ),
-     .src_ready_o  ( src_resp.aw_ready                  ),
-     .async_data_o ( async_data_master_aw_data_o              ),
-     .async_wptr_o ( async_data_master_aw_writetoken_o        ),
-     .async_rptr_i ( async_data_master_aw_readpointer_i       )
-   );
-   
-
-   cdc_fifo_gray_src #(
-        .T(logic [$bits(w_chan_t)-1:0]),
-        .LOG_DEPTH(3)
-   ) cdc_fifo_gray_src_w (
-     .src_rst_ni   ( s_rst_n                            ),
-     .src_clk_i    ( clk_cluster                        ),
-     .src_data_i   ( src_req.w                          ),
-     .src_valid_i  ( src_req.w_valid                    ),
-     .src_ready_o  ( src_resp.w_ready                   ),
-     .async_data_o ( async_data_master_w_data_o               ),
-     .async_wptr_o ( async_data_master_w_writetoken_o         ),
-     .async_rptr_i ( async_data_master_w_readpointer_i        )
-   );
-
-
-   cdc_fifo_gray_dst #(
-        .T(logic [$bits(b_chan_t)-1:0]),
-        .LOG_DEPTH(3)
-   ) cdc_fifo_gray_dst_b (
-     .dst_rst_ni   ( s_rst_n                            ),
-     .dst_clk_i    ( clk_cluster                        ),
-     .dst_data_o   ( src_resp.b                         ),
-     .dst_valid_o  ( src_resp.b_valid                   ),
-     .dst_ready_i  ( src_req.b_ready                    ),
-     .async_data_i ( async_data_master_b_data_i               ),
-     .async_wptr_i ( async_data_master_b_writetoken_i         ),
-     .async_rptr_o ( async_data_master_b_readpointer_o        )
-   );
-
-
-   cdc_fifo_gray_dst #(
-        .T(logic [$bits(r_chan_t)-1:0]),
-        .LOG_DEPTH(3)
-   ) cdc_fifo_gray_dst_r (
-     .dst_rst_ni   ( s_rst_n                            ),
-     .dst_clk_i    ( clk_cluster                        ),
-     .dst_data_o   ( src_resp.r                         ),
-     .dst_valid_o  ( src_resp.r_valid                   ),
-     .dst_ready_i  ( src_req.r_ready                    ),
-     .async_data_i ( async_data_master_r_data_i               ),
-     .async_wptr_i ( async_data_master_r_writetoken_i         ),
-     .async_rptr_o ( async_data_master_r_readpointer_o        )
-   );
-
-   cdc_fifo_gray_src #(
-        .T(logic [$bits(ar_chan_t)-1:0]),
-        .LOG_DEPTH(3)
-   ) cdc_fifo_gray_src_ar (
-     .src_rst_ni   ( s_rst_n                            ),
-     .src_clk_i    ( clk_cluster                        ),
-     .src_data_i   ( src_req.ar                         ),
-     .src_valid_i  ( src_req.ar_valid                   ),
-     .src_ready_o  ( src_resp.ar_ready                  ),
-     .async_data_o ( async_data_master_ar_data_o              ),
-     .async_wptr_o ( async_data_master_ar_writetoken_o        ),
-     .async_rptr_i ( async_data_master_ar_readpointer_i       )
-   );
-   
-  axi_slice_dc_master_wrap #(
-    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH        ),
-    .AXI_DATA_WIDTH  ( AXI_DATA_S2C_WIDTH    ),
-    .AXI_USER_WIDTH  ( AXI_USER_WIDTH        ),
-    .AXI_ID_WIDTH    ( AXI_ID_IN_WIDTH       ),
-    .BUFFER_WIDTH    ( DC_SLICE_BUFFER_WIDTH )
-  ) data_slave_slice_i (
-    .clk_i           ( clk_i              ),
-    .rst_ni          ( s_rst_n            ),
-    .test_cgbypass_i ( 1'b0               ),
-    .isolate_i       ( 1'b0               ),
-    .clock_down_i    ( 1'b0               ), //s_isolate_cluster
-    .incoming_req_o  ( s_incoming_req     ),
-    .axi_slave_async ( s_data_slave_async ),
-    .axi_master      ( s_data_slave_32    )
-  );
+   // CLUSTER TO SOC
+  axi_dc_src_wrap #(
+    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH         ), 
+    .AXI_DATA_WIDTH  ( AXI_DATA_C2S_WIDTH     ), 
+    .AXI_USER_WIDTH  ( AXI_USER_WIDTH         ), 
+    .AXI_ID_WIDTH    ( AXI_ID_OUT_WIDTH       ), 
+    .LogDepth        ( LOG_DEPTH              )
+    ) axi_master_cdc_i (
+     .src_rst_ni                       ( s_rst_n                     ),
+     .src_clk_i                        ( clk_cluster                 ),
+     .src                              ( s_data_master               ),
+     .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
+     .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
+     .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
+     .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
+     .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
+     .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
+     .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
+     .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
+     .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
+     .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
+     .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
+     .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
+     .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
+     .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
+     .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
+    );
+      
+   // SOC TO CLUSTER
+  axi_dc_dst_wrap #(
+    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH         ), 
+    .AXI_DATA_WIDTH  ( AXI_DATA_S2C_WIDTH     ), 
+    .AXI_USER_WIDTH  ( AXI_USER_WIDTH         ), 
+    .AXI_ID_WIDTH    ( AXI_ID_IN_WIDTH       ), 
+    .LogDepth        ( LOG_DEPTH              )
+    ) axi_slave_cdc_i (
+     .dst_rst_ni                       ( s_rst_n                     ),
+     .dst_clk_i                        ( clk_i                       ),
+     .dst                              ( s_data_slave_32             ),
+     .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
+     .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
+     .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
+     .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
+     .async_data_slave_w_rptr_o        ( async_data_slave_w_rptr_o  ),
+     .async_data_slave_w_data_i        ( async_data_slave_w_data_i  ),
+     .async_data_slave_ar_wptr_i       ( async_data_slave_ar_wptr_i ),
+     .async_data_slave_ar_rptr_o       ( async_data_slave_ar_rptr_o ),
+     .async_data_slave_ar_data_i       ( async_data_slave_ar_data_i ),
+     .async_data_slave_b_wptr_o        ( async_data_slave_b_wptr_o  ),
+     .async_data_slave_b_rptr_i        ( async_data_slave_b_rptr_i  ),
+     .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
+     .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
+     .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
+     .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
+    );                
 
   axi_dw_converter_intf #(
     .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
@@ -1578,56 +1463,5 @@ module pulp_cluster
     .isolate_cluster_o  ( s_isolate_cluster  ),
     .cluster_clk_o      ( clk_cluster        )
   );
-    
-  /* binding of AXI SV interfaces to external Verilog buses */    
-  assign s_data_slave_async.aw_writetoken   = data_slave_aw_writetoken_i;
-  assign s_data_slave_async.aw_addr         = data_slave_aw_addr_i;
-  assign s_data_slave_async.aw_prot         = data_slave_aw_prot_i;
-  assign s_data_slave_async.aw_region       = data_slave_aw_region_i;
-  assign s_data_slave_async.aw_len          = data_slave_aw_len_i;
-  assign s_data_slave_async.aw_size         = data_slave_aw_size_i;
-  //assign s_data_slave_async.aw_atop         = data_slave_aw_atop_i;
-  assign s_data_slave_async.aw_burst        = data_slave_aw_burst_i;
-  assign s_data_slave_async.aw_lock         = data_slave_aw_lock_i;
-  assign s_data_slave_async.aw_cache        = data_slave_aw_cache_i;
-  assign s_data_slave_async.aw_qos          = data_slave_aw_qos_i;
-  assign s_data_slave_async.aw_id           = data_slave_aw_id_i;
-  assign s_data_slave_async.aw_user         = data_slave_aw_user_i;
-  assign data_slave_aw_readpointer_o        = s_data_slave_async.aw_readpointer;
-  
-  assign s_data_slave_async.ar_writetoken   = data_slave_ar_writetoken_i;
-  assign s_data_slave_async.ar_addr         = data_slave_ar_addr_i;
-  assign s_data_slave_async.ar_prot         = data_slave_ar_prot_i;
-  assign s_data_slave_async.ar_region       = data_slave_ar_region_i;
-  assign s_data_slave_async.ar_len          = data_slave_ar_len_i;
-  assign s_data_slave_async.ar_size         = data_slave_ar_size_i;
-  assign s_data_slave_async.ar_burst        = data_slave_ar_burst_i;
-  assign s_data_slave_async.ar_lock         = data_slave_ar_lock_i;
-  assign s_data_slave_async.ar_cache        = data_slave_ar_cache_i;
-  assign s_data_slave_async.ar_qos          = data_slave_ar_qos_i;
-  assign s_data_slave_async.ar_id           = data_slave_ar_id_i;
-  assign s_data_slave_async.ar_user         = data_slave_ar_user_i;
-  assign data_slave_ar_readpointer_o        = s_data_slave_async.ar_readpointer;
-  
-  assign s_data_slave_async.w_writetoken    = data_slave_w_writetoken_i;
-  assign s_data_slave_async.w_data          = data_slave_w_data_i;
-  assign s_data_slave_async.w_strb          = data_slave_w_strb_i;
-  assign s_data_slave_async.w_user          = data_slave_w_user_i;
-  assign s_data_slave_async.w_last          = data_slave_w_last_i; 
-  assign data_slave_w_readpointer_o         = s_data_slave_async.w_readpointer;
-  
-  assign data_slave_r_writetoken_o          = s_data_slave_async.r_writetoken;
-  assign data_slave_r_data_o                = s_data_slave_async.r_data;
-  assign data_slave_r_resp_o                = s_data_slave_async.r_resp;
-  assign data_slave_r_last_o                = s_data_slave_async.r_last;
-  assign data_slave_r_id_o                  = s_data_slave_async.r_id;
-  assign data_slave_r_user_o                = s_data_slave_async.r_user;
-  assign s_data_slave_async.r_readpointer   = data_slave_r_readpointer_i;
-  
-  assign data_slave_b_writetoken_o          = s_data_slave_async.b_writetoken;
-  assign data_slave_b_resp_o                = s_data_slave_async.b_resp;
-  assign data_slave_b_id_o                  = s_data_slave_async.b_id;
-  assign data_slave_b_user_o                = s_data_slave_async.b_user;
-  assign s_data_slave_async.b_readpointer   = data_slave_b_readpointer_i;
 
 endmodule
