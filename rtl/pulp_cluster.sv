@@ -29,13 +29,13 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  parameter NB_CORES           = 8,
-  parameter NB_HWPE_PORTS      = 9,
+  parameter NB_CORES                = 8,
+  parameter NB_HWPE_PORTS           = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = `NB_MPERIPHS,
-  parameter NB_SPERIPHS        = `NB_SPERIPHS,
+  parameter NB_DMAS                 = 4,
+  parameter NB_MPERIPHS             = `NB_MPERIPHS,
+  parameter NB_SPERIPHS             = `NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
   
@@ -105,7 +105,12 @@ module pulp_cluster
   parameter APU_WOP_CPU             = 6,
   parameter WAPUTYPE                = 3,
   parameter APU_NDSFLAGS_CPU        = 15,
-  parameter APU_NUSFLAGS_CPU        = 5
+  parameter APU_NUSFLAGS_CPU        = 5,
+
+  // Redundancy Parameters
+  parameter ECC_SRAM                = 0,
+  parameter ECC_INTC                = 0,
+  parameter TCLS                    = 0
 )
 (
   input  logic                             clk_i,
@@ -907,10 +912,13 @@ module pulp_cluster
         .rst_ni             ( s_rst_n              ),
         .clock_en_i         ( clk_core_en      [i] ),
         .test_mode_i        ( test_mode_i          ),
+
         .cluster_id_i       ( cluster_id_i         ),
         .base_addr_i        ( base_addr_i          ),
         .perf_counters_o    ( perf_counters    [i] ),
+
         .core_bus_slave     ( s_core_bus       [i] ),
+
         .tcdm_data_master   ( s_hci_core_tcdm  [i] ),
         .eu_ctrl_master     ( s_core_euctrl_bus[i] ),
         .periph_data_master ( s_core_periph_bus[i] )
@@ -935,23 +943,28 @@ module pulp_cluster
         .rst_ni                ( s_rst_n                  ),
         .core_id_i             ( i[3:0]                   ),
         .cluster_id_i          ( cluster_id_i             ),
+
         .irq_req_i             ( irq_req              [i] ),
         .irq_ack_o             ( irq_ack              [i] ),
         .irq_id_i              ( irq_id               [i] ),
         .irq_ack_id_o          ( irq_ack_id           [i] ),
+
         .clock_en_i            ( clk_core_en          [i] ),
         .fetch_en_i            ( fetch_en_int         [i] ),
         .fregfile_disable_i    ( s_fregfile_disable       ),
         .boot_addr_i           ( boot_addr            [i] ),
         .test_mode_i           ( test_mode_i              ),
         .core_busy_o           ( core_busy            [i] ),
+
         .instr_req_o           ( instr_req            [i] ),
         .instr_gnt_i           ( instr_gnt            [i] ),
         .instr_addr_o          ( instr_addr           [i] ),
         .instr_r_rdata_i       ( instr_r_rdata        [i] ),
         .instr_r_valid_i       ( instr_r_valid        [i] ),
+
         .debug_req_i           ( s_core_dbg_irq       [i] ),
         .core_bus_master       ( s_core_bus           [i] ),
+
         .apu_master_req_o      ( s_apu_master_req     [i] ),
         .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
         .apu_master_type_o     ( s_apu_master_type    [i] ),
@@ -962,6 +975,7 @@ module pulp_cluster
         .apu_master_ready_o    ( s_apu_master_rready  [i] ),
         .apu_master_result_i   ( s_apu_master_rdata   [i] ),
         .apu_master_flags_i    ( s_apu_master_rflags  [i] ),
+
         .perf_counters_i       ( perf_counters        [i] )
       );
     end
@@ -1115,7 +1129,7 @@ module pulp_cluster
 
   icache_hier_top #(
     .FETCH_ADDR_WIDTH     ( 32                  ), //= 32,
-    .PRI_FETCH_DATA_WIDTH ( INSTR_RDATA_WIDTH   ), //= 128,   // Tested for 32 and 128
+    .PRI_FETCH_DATA_WIDTH ( INSTR_RDATA_WIDTH   ), //= 128,   // Tested for 128
     .SH_FETCH_DATA_WIDTH  ( 128                 ), //= 128,
 
     .NB_CORES             ( NB_CORES            ), //= 8,
@@ -1414,7 +1428,9 @@ module pulp_cluster
   /* TCDM banks */
   tcdm_banks_wrap #(
     .BANK_SIZE ( TCDM_NUM_ROWS ),
-    .NB_BANKS  ( NB_TCDM_BANKS )
+    .NB_BANKS  ( NB_TCDM_BANKS ),
+    .ECC_SRAM  ( ECC_SRAM      ),
+    .ECC_INTC  ( ECC_INTC      )
   ) tcdm_banks_i (
     .clk_i       ( clk_cluster     ),
     .rst_ni      ( s_rst_n         ),

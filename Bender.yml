@@ -32,6 +32,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.7 }
+  redundancy_cells:       { git: "https://github.com/micprog/redundancy_cells.git", rev: "master" }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
