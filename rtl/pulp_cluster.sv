@@ -1350,6 +1350,7 @@ module pulp_cluster
      .src_rst_ni                       ( s_rst_n                     ),
      .src_clk_i                        ( clk_cluster                 ),
      .src                              ( s_data_master               ),
+     .isolate_i                        ( 1'b0                        ),
      .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
      .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
      .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
@@ -1375,9 +1376,10 @@ module pulp_cluster
     .AXI_ID_WIDTH    ( AXI_ID_IN_WIDTH       ), 
     .LogDepth        ( LOG_DEPTH              )
     ) axi_slave_cdc_i (
-     .dst_rst_ni                       ( s_rst_n                     ),
-     .dst_clk_i                        ( clk_i                       ),
-     .dst                              ( s_data_slave_32             ),
+     .dst_rst_ni                       ( s_rst_n                    ),
+     .dst_clk_i                        ( clk_i                      ),
+     .dst                              ( s_data_slave_32            ),
+     .isolate_i                        ( 1'b0                       ),
      .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
      .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
      .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
