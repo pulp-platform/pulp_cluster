@@ -80,6 +80,16 @@ module cluster_interconnect_wrap
   logic [NB_CORES-1:0]                               s_core_periph_bus_r_valid;
   logic [NB_CORES-1:0][DATA_WIDTH-1:0]               s_core_periph_bus_r_rdata;
 
+  // TCDM BANK MEM SIGNAL
+  logic [NB_TCDM_BANKS-1:0][ADDR_MEM_WIDTH-1:0]           s_tcdm_bus_sram_add;
+  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_req;
+  logic [NB_TCDM_BANKS-1:0][DATA_WIDTH-1:0]               s_tcdm_bus_sram_wdata;
+  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_wen;
+  logic [NB_TCDM_BANKS-1:0][BE_WIDTH-1:0]                 s_tcdm_bus_sram_be;
+  logic [NB_TCDM_BANKS-1:0][DATA_WIDTH-1:0]               s_tcdm_bus_sram_rdata;
+  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_gnt;
+   
+
   // PERIPHERAL INTERCONNECT INTERCONNECT --> SLAVE PERIPHERALS BUS SIGNALS
   logic [NB_SPERIPHS-1:0][DATA_WIDTH-1:0]            s_speriph_bus_wdata;
   logic [NB_SPERIPHS-1:0][ADDR_WIDTH-1:0]            s_speriph_bus_add;
