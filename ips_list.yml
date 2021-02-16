@@ -6,7 +6,7 @@ common_cells:
   commit: v1.20.0
   domain: [cluster, soc]
 axi/axi:
-  commit: axi_cdc_lucav
+  commit: axi_cdc_split
   domain: [cluster, soc]
 axi/axi_slice:
   commit: v1.1.4
