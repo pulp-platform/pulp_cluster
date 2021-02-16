@@ -1,7 +1,8 @@
 pulp_cluster:
   vlog_opts: [
     -L fpnew_lib,
-    -L axi_lib
+    -L axi_lib,
+    -L cluster_interconnect_lib,
   ]
   incdirs: [
     ../../rtl/includes,
