@@ -256,6 +256,11 @@ module cluster_interconnect_wrap
     .BE_WIDTH           ( BE_WIDTH             ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
+`ifdef CLUSTER_ALIAS
+    .CLUSTER_ALIAS      ( 1'b1                 ),
+`else
+    .CLUSTER_ALIAS      ( 1'b0                 ),
+`endif
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
   ) xbar_pe_inst (
     .clk              ( clk_i),

@@ -12,7 +12,7 @@ dependencies:
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", version: 1.0.1 }
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", version: 1.0.4 }
   axi_size_conv:          { git: "https://github.com/pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097" } # deprecated, replace with axi_dw_converter in axi repo
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.0 }
+  cluster_interconnect:   { git: "https://github.com/micprog/cluster_interconnect.git", rev: "441a739bec11ec35d0aec0b569977f10ab1ead12" }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
   mchan:                  { git: "https://github.com/micprog/mchan.git", rev: "space_pulp_tmp" }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", version: 1.2.0 }
