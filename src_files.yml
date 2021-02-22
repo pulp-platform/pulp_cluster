@@ -19,7 +19,6 @@ pulp_cluster:
     rtl/cluster_timer_wrap.sv,
     rtl/cluster_event_map.sv,
     rtl/dmac_wrap.sv,
-    rtl/hwpe_subsystem.sv,
     rtl/cluster_bus_wrap.sv,
     rtl/axi_slice_wrap.sv,
     rtl/axi2mem_wrap.sv,
