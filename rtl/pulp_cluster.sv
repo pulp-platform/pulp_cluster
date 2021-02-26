@@ -34,8 +34,8 @@ module pulp_cluster
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
   parameter NB_DMAS                 = 4,
-  parameter NB_MPERIPHS             = `NB_MPERIPHS,
-  parameter NB_SPERIPHS             = `NB_SPERIPHS,
+  parameter NB_MPERIPHS             = pulp_cluster_package::NB_MPERIPHS,
+  parameter NB_SPERIPHS             = pulp_cluster_package::NB_SPERIPHS,
   
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
   
@@ -108,9 +108,9 @@ module pulp_cluster
   parameter APU_NUSFLAGS_CPU        = 5,
 
   // Redundancy Parameters
-  parameter ECC_SRAM                = 0,
+  parameter ECC_SRAM                = 1,
   parameter ECC_INTC                = 0,
-  parameter TCLS                    = 0
+  parameter TCLS                    = 1
 )
 (
   input  logic                             clk_i,
@@ -448,6 +448,9 @@ module pulp_cluster
   
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
+
+  // TCLS unit
+  XBAR_PERIPH_BUS s_tcls_bus[NB_CORES/3-1:0]();
 
 
 // `ifdef SHARED_FPU_CLUSTER
@@ -813,7 +816,8 @@ module pulp_cluster
     .EVNT_WIDTH     ( EVNT_WIDTH     ),
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
-    .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
+    .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  ),
+    .GROUND_UNUSED_PERIPH ( 0 )
   
   ) cluster_peripherals_i (
 
@@ -869,25 +873,23 @@ module pulp_cluster
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
     .hwpe_en_o              ( s_hwpe_en                          ),
-    .hci_ctrl_o             ( s_hci_ctrl                         )
+    .hci_ctrl_o             ( s_hci_ctrl                         ),
 `ifdef PRIVATE_ICACHE
-    ,
     .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
     .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
-    .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
+    .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
 `else
   `ifdef SP_ICACHE
-    ,
     .L0_ctrl_unit_bus       (  L0_ctrl_unit_bus                   ),
-    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
+    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   ),
   `else
     `ifdef MP_ICACHE
-    ,
-    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
+    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   ),
     `endif
   `endif
 `endif
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
+  .unused_periph_bus        ( s_tcls_bus[0]                          )
 );
 
 
@@ -948,79 +950,90 @@ module pulp_cluster
         .InstrRdataWidth  ( INSTR_RDATA_WIDTH   ),
         .NExtPerfCounters ( N_EXT_PERF_COUNTERS ),
         .DataWidth        ( DATA_WIDTH          ),
-        .BEWidth          ( BE_WIDTH            )
+        .BEWidth          ( BE_WIDTH            ),
+        .PeriphIDWidth    ( NB_CORES + 1        )
       ) core_ctcls_i (
-        .clk_i                  ( clk_cluster ),
-        .rst_ni                 ( s_rst_n     ),
+        .clk_i                ( clk_cluster ),
+        .rst_ni               ( s_rst_n     ),
 
-        // .speriph_slave          (), // TODO implement speriph and connect
+        .periph_req_i         ( s_tcls_bus[j].req     ),
+        .periph_addr_i        ( s_tcls_bus[j].add     ),
+        .periph_wen_i         ( s_tcls_bus[j].wen     ),
+        .periph_wdata_i       ( s_tcls_bus[j].wdata   ),
+        .periph_be_i          ( s_tcls_bus[j].be      ),
+        .periph_id_i          ( s_tcls_bus[j].id      ),
+        .periph_gnt_o         ( s_tcls_bus[j].gnt     ),
+        .periph_r_valid_o     ( s_tcls_bus[j].r_valid ),
+        .periph_r_opc_o       ( s_tcls_bus[j].r_opc   ),
+        .periph_r_id_o        ( s_tcls_bus[j].r_id    ),
+        .periph_rdata_o       ( s_tcls_bus[j].r_rdata ),
 
-        .intc_core_id_i         ( { CORE_C[3:0], CORE_B[3:0], CORE_A[3:0] }     ),
-        .intc_cluster_id_i      ( { 3{ cluster_id_i }}          ),
+        .intc_core_id_i       ( { CORE_C[3:0], CORE_B[3:0], CORE_A[3:0] } ),
+        .intc_cluster_id_i    ( { 3{ cluster_id_i } }                     ),
 
-        .intc_clock_en_i        ( {clk_core_en       [CORE_C], clk_core_en       [CORE_B], clk_core_en       [CORE_A]} ),
-        .intc_fetch_en_i        ( {fetch_en_int      [CORE_C], fetch_en_int      [CORE_B], fetch_en_int      [CORE_A]} ),
-        .intc_boot_addr_i       ( {boot_addr         [CORE_C], boot_addr         [CORE_B], boot_addr         [CORE_A]} ),
-        .intc_core_busy_o       ( {core_busy         [CORE_C], core_busy         [CORE_B], core_busy         [CORE_A]} ),
+        .intc_clock_en_i      ( {clk_core_en       [CORE_C], clk_core_en       [CORE_B], clk_core_en       [CORE_A]} ),
+        .intc_fetch_en_i      ( {fetch_en_int      [CORE_C], fetch_en_int      [CORE_B], fetch_en_int      [CORE_A]} ),
+        .intc_boot_addr_i     ( {boot_addr         [CORE_C], boot_addr         [CORE_B], boot_addr         [CORE_A]} ),
+        .intc_core_busy_o     ( {core_busy         [CORE_C], core_busy         [CORE_B], core_busy         [CORE_A]} ),
 
-        .intc_irq_req_i         ( {irq_req           [CORE_C], irq_req           [CORE_B], irq_req           [CORE_A]} ),
-        .intc_irq_ack_o         ( {irq_ack           [CORE_C], irq_ack           [CORE_B], irq_ack           [CORE_A]} ),
-        .intc_irq_id_i          ( {irq_id            [CORE_C], irq_id            [CORE_B], irq_id            [CORE_A]} ),
-        .intc_irq_ack_id_o      ( {irq_ack_id        [CORE_C], irq_ack_id        [CORE_B], irq_ack_id        [CORE_A]} ), 
+        .intc_irq_req_i       ( {irq_req           [CORE_C], irq_req           [CORE_B], irq_req           [CORE_A]} ),
+        .intc_irq_ack_o       ( {irq_ack           [CORE_C], irq_ack           [CORE_B], irq_ack           [CORE_A]} ),
+        .intc_irq_id_i        ( {irq_id            [CORE_C], irq_id            [CORE_B], irq_id            [CORE_A]} ),
+        .intc_irq_ack_id_o    ( {irq_ack_id        [CORE_C], irq_ack_id        [CORE_B], irq_ack_id        [CORE_A]} ), 
 
-        .intc_instr_req_o       ( {instr_req         [CORE_C], instr_req         [CORE_B], instr_req         [CORE_A]} ),
-        .intc_instr_gnt_i       ( {instr_gnt         [CORE_C], instr_gnt         [CORE_B], instr_gnt         [CORE_A]} ),
-        .intc_instr_addr_o      ( {instr_addr        [CORE_C], instr_addr        [CORE_B], instr_addr        [CORE_A]} ),
-        .intc_instr_r_rdata_i   ( {instr_r_rdata     [CORE_C], instr_r_rdata     [CORE_B], instr_r_rdata     [CORE_A]} ),
-        .intc_instr_r_valid_i   ( {instr_r_valid     [CORE_C], instr_r_valid     [CORE_B], instr_r_valid     [CORE_A]} ),
+        .intc_instr_req_o     ( {instr_req         [CORE_C], instr_req         [CORE_B], instr_req         [CORE_A]} ),
+        .intc_instr_gnt_i     ( {instr_gnt         [CORE_C], instr_gnt         [CORE_B], instr_gnt         [CORE_A]} ),
+        .intc_instr_addr_o    ( {instr_addr        [CORE_C], instr_addr        [CORE_B], instr_addr        [CORE_A]} ),
+        .intc_instr_r_rdata_i ( {instr_r_rdata     [CORE_C], instr_r_rdata     [CORE_B], instr_r_rdata     [CORE_A]} ),
+        .intc_instr_r_valid_i ( {instr_r_valid     [CORE_C], instr_r_valid     [CORE_B], instr_r_valid     [CORE_A]} ),
 
-        .intc_debug_req_i       ( {s_core_dbg_irq    [CORE_C], s_core_dbg_irq    [CORE_B], s_core_dbg_irq    [CORE_A]} ),
+        .intc_debug_req_i     ( {s_core_dbg_irq    [CORE_C], s_core_dbg_irq    [CORE_B], s_core_dbg_irq    [CORE_A]} ),
 
-        .intc_data_req_o        ( {s_core_bus[CORE_C].req,     s_core_bus[CORE_B].req,     s_core_bus[CORE_A].req    } ),
-        .intc_data_add_o        ( {s_core_bus[CORE_C].add,     s_core_bus[CORE_B].add,     s_core_bus[CORE_A].add    } ),
-        .intc_data_wen_o        ( {s_core_bus[CORE_C].wen,     s_core_bus[CORE_B].wen,     s_core_bus[CORE_A].wen    } ),
-        .intc_data_wdata_o      ( {s_core_bus[CORE_C].data,    s_core_bus[CORE_B].data,    s_core_bus[CORE_A].data   } ),
-        .intc_data_be_o         ( {s_core_bus[CORE_C].be,      s_core_bus[CORE_B].be,      s_core_bus[CORE_A].be     } ),
-        .intc_data_gnt_i        ( {s_core_bus[CORE_C].gnt,     s_core_bus[CORE_B].gnt,     s_core_bus[CORE_A].gnt    } ),
-        .intc_data_r_opc_i      ( {s_core_bus[CORE_C].r_opc,   s_core_bus[CORE_B].r_opc,   s_core_bus[CORE_A].r_opc  } ),
-        .intc_data_r_rdata_i    ( {s_core_bus[CORE_C].r_data,  s_core_bus[CORE_B].r_data,  s_core_bus[CORE_A].r_data } ),
-        .intc_data_r_valid_i    ( {s_core_bus[CORE_C].r_valid, s_core_bus[CORE_B].r_valid, s_core_bus[CORE_A].r_valid} ),
+        .intc_data_req_o      ( {s_core_bus[CORE_C].req,     s_core_bus[CORE_B].req,     s_core_bus[CORE_A].req    } ),
+        .intc_data_add_o      ( {s_core_bus[CORE_C].add,     s_core_bus[CORE_B].add,     s_core_bus[CORE_A].add    } ),
+        .intc_data_wen_o      ( {s_core_bus[CORE_C].wen,     s_core_bus[CORE_B].wen,     s_core_bus[CORE_A].wen    } ),
+        .intc_data_wdata_o    ( {s_core_bus[CORE_C].data,    s_core_bus[CORE_B].data,    s_core_bus[CORE_A].data   } ),
+        .intc_data_be_o       ( {s_core_bus[CORE_C].be,      s_core_bus[CORE_B].be,      s_core_bus[CORE_A].be     } ),
+        .intc_data_gnt_i      ( {s_core_bus[CORE_C].gnt,     s_core_bus[CORE_B].gnt,     s_core_bus[CORE_A].gnt    } ),
+        .intc_data_r_opc_i    ( {s_core_bus[CORE_C].r_opc,   s_core_bus[CORE_B].r_opc,   s_core_bus[CORE_A].r_opc  } ),
+        .intc_data_r_rdata_i  ( {s_core_bus[CORE_C].r_data,  s_core_bus[CORE_B].r_data,  s_core_bus[CORE_A].r_data } ),
+        .intc_data_r_valid_i  ( {s_core_bus[CORE_C].r_valid, s_core_bus[CORE_B].r_valid, s_core_bus[CORE_A].r_valid} ),
 
-        .intc_perf_counters_i   ( {perf_counters     [CORE_C], perf_counters     [CORE_B], perf_counters     [CORE_A]} ),
+        .intc_perf_counters_i ( {perf_counters     [CORE_C], perf_counters     [CORE_B], perf_counters     [CORE_A]} ),
 
-        .core_rst_no            ( {core_rst_tcls_n        [CORE_C], core_rst_tcls_n        [CORE_B], core_rst_tcls_n        [CORE_A]} ),
-        .core_core_id_o         ( {core_id_tcls           [CORE_C], core_id_tcls           [CORE_B], core_id_tcls           [CORE_A]} ),
-        .core_cluster_id_o      ( {cluster_id_tcls        [CORE_C], cluster_id_tcls        [CORE_B], cluster_id_tcls        [CORE_A]} ),
+        .core_rst_no          ( {core_rst_tcls_n        [CORE_C], core_rst_tcls_n        [CORE_B], core_rst_tcls_n        [CORE_A]} ),
+        .core_core_id_o       ( {core_id_tcls           [CORE_C], core_id_tcls           [CORE_B], core_id_tcls           [CORE_A]} ),
+        .core_cluster_id_o    ( {cluster_id_tcls        [CORE_C], cluster_id_tcls        [CORE_B], cluster_id_tcls        [CORE_A]} ),
 
-        .core_clock_en_o        ( {clk_core_en_tcls       [CORE_C], clk_core_en_tcls       [CORE_B], clk_core_en_tcls       [CORE_A]} ),
-        .core_fetch_en_o        ( {fetch_en_tcls          [CORE_C], fetch_en_tcls          [CORE_B], fetch_en_tcls          [CORE_A]} ),
-        .core_boot_addr_o       ( {boot_addr_tcls         [CORE_C], boot_addr_tcls         [CORE_B], boot_addr_tcls         [CORE_A]} ),
-        .core_core_busy_i       ( {core_busy_tcls         [CORE_C], core_busy_tcls         [CORE_B], core_busy_tcls         [CORE_A]} ),
+        .core_clock_en_o      ( {clk_core_en_tcls       [CORE_C], clk_core_en_tcls       [CORE_B], clk_core_en_tcls       [CORE_A]} ),
+        .core_fetch_en_o      ( {fetch_en_tcls          [CORE_C], fetch_en_tcls          [CORE_B], fetch_en_tcls          [CORE_A]} ),
+        .core_boot_addr_o     ( {boot_addr_tcls         [CORE_C], boot_addr_tcls         [CORE_B], boot_addr_tcls         [CORE_A]} ),
+        .core_core_busy_i     ( {core_busy_tcls         [CORE_C], core_busy_tcls         [CORE_B], core_busy_tcls         [CORE_A]} ),
 
-        .core_irq_req_o         ( {irq_req_tcls           [CORE_C], irq_req_tcls           [CORE_B], irq_req_tcls           [CORE_A]} ),
-        .core_irq_ack_i         ( {irq_ack_tcls           [CORE_C], irq_ack_tcls           [CORE_B], irq_ack_tcls           [CORE_A]} ),
-        .core_irq_id_o          ( {irq_id_tcls            [CORE_C], irq_id_tcls            [CORE_B], irq_id_tcls            [CORE_A]} ),
-        .core_irq_ack_id_i      ( {irq_ack_id_tcls        [CORE_C], irq_ack_id_tcls        [CORE_B], irq_ack_id_tcls        [CORE_A]} ),
+        .core_irq_req_o       ( {irq_req_tcls           [CORE_C], irq_req_tcls           [CORE_B], irq_req_tcls           [CORE_A]} ),
+        .core_irq_ack_i       ( {irq_ack_tcls           [CORE_C], irq_ack_tcls           [CORE_B], irq_ack_tcls           [CORE_A]} ),
+        .core_irq_id_o        ( {irq_id_tcls            [CORE_C], irq_id_tcls            [CORE_B], irq_id_tcls            [CORE_A]} ),
+        .core_irq_ack_id_i    ( {irq_ack_id_tcls        [CORE_C], irq_ack_id_tcls        [CORE_B], irq_ack_id_tcls        [CORE_A]} ),
 
-        .core_instr_req_i       ( {instr_req_tcls         [CORE_C], instr_req_tcls         [CORE_B], instr_req_tcls         [CORE_A]} ),
-        .core_instr_gnt_o       ( {instr_gnt_tcls         [CORE_C], instr_gnt_tcls         [CORE_B], instr_gnt_tcls         [CORE_A]} ),
-        .core_instr_addr_i      ( {instr_addr_tcls        [CORE_C], instr_addr_tcls        [CORE_B], instr_addr_tcls        [CORE_A]} ),
-        .core_instr_r_rdata_o   ( {instr_r_rdata_tcls     [CORE_C], instr_r_rdata_tcls     [CORE_B], instr_r_rdata_tcls     [CORE_A]} ),
-        .core_instr_r_valid_o   ( {instr_r_valid_tcls     [CORE_C], instr_r_valid_tcls     [CORE_B], instr_r_valid_tcls     [CORE_A]} ),
+        .core_instr_req_i     ( {instr_req_tcls         [CORE_C], instr_req_tcls         [CORE_B], instr_req_tcls         [CORE_A]} ),
+        .core_instr_gnt_o     ( {instr_gnt_tcls         [CORE_C], instr_gnt_tcls         [CORE_B], instr_gnt_tcls         [CORE_A]} ),
+        .core_instr_addr_i    ( {instr_addr_tcls        [CORE_C], instr_addr_tcls        [CORE_B], instr_addr_tcls        [CORE_A]} ),
+        .core_instr_r_rdata_o ( {instr_r_rdata_tcls     [CORE_C], instr_r_rdata_tcls     [CORE_B], instr_r_rdata_tcls     [CORE_A]} ),
+        .core_instr_r_valid_o ( {instr_r_valid_tcls     [CORE_C], instr_r_valid_tcls     [CORE_B], instr_r_valid_tcls     [CORE_A]} ),
 
-        .core_debug_req_o       ( {s_core_dbg_irq_tcls    [CORE_C], s_core_dbg_irq_tcls    [CORE_B], s_core_dbg_irq_tcls    [CORE_A]} ),
+        .core_debug_req_o     ( {s_core_dbg_irq_tcls    [CORE_C], s_core_dbg_irq_tcls    [CORE_B], s_core_dbg_irq_tcls    [CORE_A]} ),
 
-        .core_data_req_i        ( {s_core_bus_tcls[CORE_C].req,     s_core_bus_tcls[CORE_B].req,     s_core_bus_tcls[CORE_A].req    } ),
-        .core_data_add_i        ( {s_core_bus_tcls[CORE_C].add,     s_core_bus_tcls[CORE_B].add,     s_core_bus_tcls[CORE_A].add    } ),
-        .core_data_wen_i        ( {s_core_bus_tcls[CORE_C].wen,     s_core_bus_tcls[CORE_B].wen,     s_core_bus_tcls[CORE_A].wen    } ),
-        .core_data_wdata_i      ( {s_core_bus_tcls[CORE_C].data,    s_core_bus_tcls[CORE_B].data,    s_core_bus_tcls[CORE_A].data   } ),
-        .core_data_be_i         ( {s_core_bus_tcls[CORE_C].be,      s_core_bus_tcls[CORE_B].be,      s_core_bus_tcls[CORE_A].be     } ),
-        .core_data_gnt_o        ( {s_core_bus_tcls[CORE_C].gnt,     s_core_bus_tcls[CORE_B].gnt,     s_core_bus_tcls[CORE_A].gnt    } ),
-        .core_data_r_opc_o      ( {s_core_bus_tcls[CORE_C].r_opc,   s_core_bus_tcls[CORE_B].r_opc,   s_core_bus_tcls[CORE_A].r_opc  } ),
-        .core_data_r_rdata_o    ( {s_core_bus_tcls[CORE_C].r_data,  s_core_bus_tcls[CORE_B].r_data,  s_core_bus_tcls[CORE_A].r_data } ),
-        .core_data_r_valid_o    ( {s_core_bus_tcls[CORE_C].r_valid, s_core_bus_tcls[CORE_B].r_valid, s_core_bus_tcls[CORE_A].r_valid} ),
+        .core_data_req_i      ( {s_core_bus_tcls[CORE_C].req,     s_core_bus_tcls[CORE_B].req,     s_core_bus_tcls[CORE_A].req    } ),
+        .core_data_add_i      ( {s_core_bus_tcls[CORE_C].add,     s_core_bus_tcls[CORE_B].add,     s_core_bus_tcls[CORE_A].add    } ),
+        .core_data_wen_i      ( {s_core_bus_tcls[CORE_C].wen,     s_core_bus_tcls[CORE_B].wen,     s_core_bus_tcls[CORE_A].wen    } ),
+        .core_data_wdata_i    ( {s_core_bus_tcls[CORE_C].data,    s_core_bus_tcls[CORE_B].data,    s_core_bus_tcls[CORE_A].data   } ),
+        .core_data_be_i       ( {s_core_bus_tcls[CORE_C].be,      s_core_bus_tcls[CORE_B].be,      s_core_bus_tcls[CORE_A].be     } ),
+        .core_data_gnt_o      ( {s_core_bus_tcls[CORE_C].gnt,     s_core_bus_tcls[CORE_B].gnt,     s_core_bus_tcls[CORE_A].gnt    } ),
+        .core_data_r_opc_o    ( {s_core_bus_tcls[CORE_C].r_opc,   s_core_bus_tcls[CORE_B].r_opc,   s_core_bus_tcls[CORE_A].r_opc  } ),
+        .core_data_r_rdata_o  ( {s_core_bus_tcls[CORE_C].r_data,  s_core_bus_tcls[CORE_B].r_data,  s_core_bus_tcls[CORE_A].r_data } ),
+        .core_data_r_valid_o  ( {s_core_bus_tcls[CORE_C].r_valid, s_core_bus_tcls[CORE_B].r_valid, s_core_bus_tcls[CORE_A].r_valid} ),
 
-        .core_perf_counters_o   ( {perf_counters_tcls     [CORE_C], perf_counters_tcls     [CORE_B], perf_counters_tcls     [CORE_A]} )
+        .core_perf_counters_o ( {perf_counters_tcls     [CORE_C], perf_counters_tcls     [CORE_B], perf_counters_tcls     [CORE_A]} )
       );
     end
   end else begin : no_TCLS

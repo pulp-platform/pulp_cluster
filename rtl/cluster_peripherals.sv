@@ -22,17 +22,18 @@ import pulp_cluster_package::*;
 
 module cluster_peripherals
 #(
-  parameter NB_CORES       = 8,
-  parameter NB_MPERIPHS    = 1,
-  parameter NB_CACHE_BANKS = 4,
-  parameter NB_SPERIPHS    = 8,
-  parameter NB_TCDM_BANKS  = 8,
-  parameter ROM_BOOT_ADDR  = 32'h1A000000,
-  parameter BOOT_ADDR      = 32'h1C000000,
-  parameter EVNT_WIDTH     = 8,
-  parameter FEATURE_DEMUX_MAPPED = 1,
+  parameter                NB_CORES       = 8,
+  parameter                NB_MPERIPHS    = 1,
+  parameter                NB_CACHE_BANKS = 4,
+  parameter                NB_SPERIPHS    = 8,
+  parameter                NB_TCDM_BANKS  = 8,
+  parameter                ROM_BOOT_ADDR  = 32'h1A000000,
+  parameter                BOOT_ADDR      = 32'h1C000000,
+  parameter                EVNT_WIDTH     = 8,
+  parameter          FEATURE_DEMUX_MAPPED = 1,
   parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4
+  parameter int unsigned  RW_MARGIN_WIDTH = 4,
+  parameter GROUND_UNUSED_PERIPH = 1
 )
 (
   input  logic                        clk_i,
@@ -93,30 +94,28 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
-  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o
+  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 
   // Control ports
 `ifdef PRIVATE_ICACHE
-  ,
   SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
   PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
-  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
+  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o,
 `else
-  `ifdef SP_ICACHE
-    ,
-    // Control ports
-    SP_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus[NB_CACHE_BANKS],
-    L0_CTRL_UNIT_BUS.Master             L0_ctrl_unit_bus[NB_CORES]
-  `else
-    `ifdef MP_ICACHE
-      ,
-      MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
-    `endif
-  `endif
+`ifdef SP_ICACHE
+  // Control ports
+  SP_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus[NB_CACHE_BANKS],
+  L0_CTRL_UNIT_BUS.Master             L0_ctrl_unit_bus[NB_CORES],
+`else
+`ifdef MP_ICACHE
+  MP_PF_ICACHE_CTRL_UNIT_BUS.Master   IC_ctrl_unit_bus,
+`endif
+`endif
 `endif
  
+  XBAR_PERIPH_BUS.Master              unused_periph_bus
 );
    
   logic                      s_timer_out_lo_event;
@@ -405,12 +404,26 @@ module cluster_peripherals
   assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
   assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
 
-  assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  if (GROUND_UNUSED_PERIPH) begin
+    assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
+    assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
+    assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
+    assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
+    assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  end else begin
+    assign speriph_slave[SPER_DECOMP_ID].gnt     = unused_periph_bus.gnt;
+    assign speriph_slave[SPER_DECOMP_ID].r_rdata = unused_periph_bus.r_rdata;
+    assign speriph_slave[SPER_DECOMP_ID].r_opc   = unused_periph_bus.r_opc;
+    assign speriph_slave[SPER_DECOMP_ID].r_id    = unused_periph_bus.r_id;
+    assign speriph_slave[SPER_DECOMP_ID].r_valid = unused_periph_bus.r_valid;
 
+    assign unused_periph_bus.req   = speriph_slave[SPER_DECOMP_ID].req;
+    assign unused_periph_bus.add   = speriph_slave[SPER_DECOMP_ID].add;
+    assign unused_periph_bus.wen   = speriph_slave[SPER_DECOMP_ID].wen;
+    assign unused_periph_bus.wdata = speriph_slave[SPER_DECOMP_ID].wdata;
+    assign unused_periph_bus.be    = speriph_slave[SPER_DECOMP_ID].be;
+    assign unused_periph_bus.id    = speriph_slave[SPER_DECOMP_ID].id;
+  end
 
   generate
     if(FEATURE_DEMUX_MAPPED == 0) begin : eu_not_demux_mapped_gen
