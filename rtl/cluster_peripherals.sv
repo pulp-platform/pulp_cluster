@@ -51,19 +51,19 @@ module cluster_peripherals
   output logic                        cluster_cg_en_o,
 
   output logic                        busy_o,
-
+                                    
   XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0],
   XBAR_PERIPH_BUS.Slave               core_eu_direct_link[NB_CORES-1:0],
 
-  //input  logic [NB_CORES-1:0]         dma_events_i,
-  //input  logic [NB_CORES-1:0]         dma_irq_i,
+  input  logic [NB_CORES-1:0]         dma_event_i,
+  input  logic [NB_CORES-1:0]         dma_irq_i,
 
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
   input logic                         dma_cl_irq_i,
   //input  logic                        dma_pe_irq_i,
   //output logic                        pf_event_o,
-
+ 
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
   
@@ -89,12 +89,12 @@ module cluster_peripherals
 
   // SRAM SPEED REGULATION --> TCDM
   output logic [1:0]                  TCDM_arb_policy_o,
-
+                                    
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
-  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o
-
+  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o   
+                                
   //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
 
   // Control ports
@@ -117,7 +117,8 @@ module cluster_peripherals
   `endif
 `endif
  
-);
+ 
+  );
    
   logic                      s_timer_out_lo_event;
   logic                      s_timer_out_hi_event;
@@ -158,8 +159,8 @@ module cluster_peripherals
       assign s_cluster_events[I] = 32'd0;
       assign s_acc_events[I]     = hwpe_events_i[I];
       assign s_timer_events[I]   = {s_timer_out_hi_event,s_timer_out_lo_event};
-      assign s_dma_events[I][0] = dma_cl_event_i;
-      assign s_dma_events[I][1] = dma_cl_irq_i;
+      assign s_dma_events[I][0] = dma_event_i[I];
+      assign s_dma_events[I][1] = dma_irq_i[I];
     end
   endgenerate
   
