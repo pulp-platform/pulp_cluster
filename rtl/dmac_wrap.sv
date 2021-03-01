@@ -86,30 +86,30 @@ module dmac_wrap
   logic [3:0]                 s_tcdm_bus_r_valid;
 
   // // CL CTRL PORT BINDING
-    assign s_ctrl_bus_add[0]     = cl_ctrl_slave.add;
-     assign s_ctrl_bus_req[0]     = cl_ctrl_slave.req;
-     assign s_ctrl_bus_wdata[0]   = cl_ctrl_slave.wdata;
-     assign s_ctrl_bus_wen[0]     = cl_ctrl_slave.wen;
-     assign s_ctrl_bus_be[0]      = cl_ctrl_slave.be;
-     assign s_ctrl_bus_id[0]      = cl_ctrl_slave.id;
-     assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[0];
-     assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[0];
-     assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
-     assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
-     assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
-   
-     // FC CTRL PORT BINDING
-     assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
-     assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
-     assign s_ctrl_bus_wdata[1]   = fc_ctrl_slave.wdata;
-     assign s_ctrl_bus_wen[1]     = fc_ctrl_slave.wen;
-     assign s_ctrl_bus_be[1]      = fc_ctrl_slave.be;
-     assign s_ctrl_bus_id[1]      = fc_ctrl_slave.id;
-     assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[1];
-     assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[1];
-     assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[1];
-     assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[1];
-     assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[1];
+  assign s_ctrl_bus_add[0]     = cl_ctrl_slave.add;
+  assign s_ctrl_bus_req[0]     = cl_ctrl_slave.req;
+  assign s_ctrl_bus_wdata[0]   = cl_ctrl_slave.wdata;
+  assign s_ctrl_bus_wen[0]     = cl_ctrl_slave.wen;
+  assign s_ctrl_bus_be[0]      = cl_ctrl_slave.be;
+  assign s_ctrl_bus_id[0]      = cl_ctrl_slave.id;
+  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[0];
+  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[0];
+  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
+  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
+  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
+
+  // FC CTRL PORT BINDING
+  assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
+  assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
+  assign s_ctrl_bus_wdata[1]   = fc_ctrl_slave.wdata;
+  assign s_ctrl_bus_wen[1]     = fc_ctrl_slave.wen;
+  assign s_ctrl_bus_be[1]      = fc_ctrl_slave.be;
+  assign s_ctrl_bus_id[1]      = fc_ctrl_slave.id;
+  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[1];
+  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[1];
+  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[1];
+  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[1];
+  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[1];
 
   generate
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND

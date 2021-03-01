@@ -166,47 +166,44 @@ module cluster_peripherals
   assign fetch_enable_reg_o = s_fetch_en_cc;
 
   //********************************************************
-   //************ END OF COMPUTATION UNIT *******************
-   //********************************************************
-   cluster_control_unit
-   #(
-        .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS         ),
-        .NB_CORES      ( NB_CORES                     ),
-        .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
-        .BOOT_ADDR     ( BOOT_ADDR                    )
-        //.NB_L1_CUTS      ( NB_L1_CUTS                 ),
-        //.RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH            )
-   )
-   cluster_control_unit_i
-   (
-        .clk_i          ( clk_i                        ),
-        .rst_ni         ( rst_ni                       ),
+  //************ END OF COMPUTATION UNIT *******************
+  //********************************************************
+  cluster_control_unit #(
+    .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS         ),
+    .NB_CORES      ( NB_CORES                     ),
+    .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
+    .BOOT_ADDR     ( BOOT_ADDR                    )
+    //.NB_L1_CUTS      ( NB_L1_CUTS                 ),
+    //.RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH            )
+  ) cluster_control_unit_i (
+    .clk_i          ( clk_i                        ),
+    .rst_ni         ( rst_ni                       ),
 
-        .en_sa_boot_i   ( en_sa_boot_i                 ),
-        .fetch_en_i     ( fetch_en_i                   ),
-        .speriph_slave  ( speriph_slave[SPER_EOC_ID]  ),
+    .en_sa_boot_i   ( en_sa_boot_i                 ),
+    .fetch_en_i     ( fetch_en_i                   ),
+    .speriph_slave  ( speriph_slave[SPER_EOC_ID]  ),
 
-        .event_o        (                              ),
-        .eoc_o          ( eoc_o                        ),
+    .event_o        (                              ),
+    .eoc_o          ( eoc_o                        ),
 
-        .cluster_cg_en_o( cluster_cg_en_o              ),
-        .boot_addr_o    ( boot_addr_o                  ),
+    .cluster_cg_en_o( cluster_cg_en_o              ),
+    .boot_addr_o    ( boot_addr_o                  ),
 
-        // SRAM SPEED REGULATION --> TCDM
-        .hwpe_en_o      ( hwpe_en_o                    ),
-        .hci_ctrl_o     ( hci_ctrl_o                   ),
+    // SRAM SPEED REGULATION --> TCDM
+    .hwpe_en_o      ( hwpe_en_o                    ),
+    .hci_ctrl_o     ( hci_ctrl_o                   ),
 
-        .fregfile_disable_o ( fregfile_disable_o       ),
+    .fregfile_disable_o ( fregfile_disable_o       ),
 
 
-        .core_halted_i  ( dbg_core_halted_i            ),
-        .core_halt_o    ( dbg_core_halt_o              ),
-        .core_resume_o  ( dbg_core_resume_o            ),
+    .core_halted_i  ( dbg_core_halted_i            ),
+    .core_halt_o    ( dbg_core_halt_o              ),
+    .core_resume_o  ( dbg_core_resume_o            ),
 
-        .fetch_enable_o ( s_fetch_en_cc                ),
-        .TCDM_arb_policy_o (TCDM_arb_policy_o          )
-        //.rw_margin_L1_o    ( rw_margin_L1_o            )
-   );
+    .fetch_enable_o ( s_fetch_en_cc                ),
+    .TCDM_arb_policy_o (TCDM_arb_policy_o          )
+    //.rw_margin_L1_o    ( rw_margin_L1_o            )
+  );
   
 
 
@@ -215,7 +212,7 @@ module cluster_peripherals
   //********************************************************
   
   cluster_timer_wrap #(
-    .ID_WIDTH(NB_CORES+NB_MPERIPHS)
+    .ID_WIDTH     ( NB_CORES+NB_MPERIPHS         )
   ) cluster_timer_wrap_i (
     .clk_i        ( clk_i                        ),
     .rst_ni       ( rst_ni                       ),
@@ -240,21 +237,19 @@ module cluster_peripherals
   assign eu_message_master.gnt     = 1'b1;
 
   // combine number of required slave ports for event unit
-  generate
-    for (genvar I = 0; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
-      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = speriph_slave_eu_comb.gnt;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = speriph_slave_eu_comb.r_valid;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = speriph_slave_eu_comb.r_opc;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = speriph_slave_eu_comb.r_id;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = speriph_slave_eu_comb.r_rdata;
-      assign eu_speriph_plug_req[I]   = speriph_slave[SPER_EVENT_U_ID+I].req;
-      assign eu_speriph_plug_add[I]   = speriph_slave[SPER_EVENT_U_ID+I].add;
-      assign eu_speriph_plug_wen[I]   = speriph_slave[SPER_EVENT_U_ID+I].wen;
-      assign eu_speriph_plug_wdata[I] = speriph_slave[SPER_EVENT_U_ID+I].wdata;
-      assign eu_speriph_plug_be[I]    = speriph_slave[SPER_EVENT_U_ID+I].be;
-      assign eu_speriph_plug_id[I]    = speriph_slave[SPER_EVENT_U_ID+I].id;
-    end
-  endgenerate
+  for (genvar I = 0; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
+    assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = speriph_slave_eu_comb.gnt;
+    assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = speriph_slave_eu_comb.r_valid;
+    assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = speriph_slave_eu_comb.r_opc;
+    assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = speriph_slave_eu_comb.r_id;
+    assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = speriph_slave_eu_comb.r_rdata;
+    assign eu_speriph_plug_req[I]   = speriph_slave[SPER_EVENT_U_ID+I].req;
+    assign eu_speriph_plug_add[I]   = speriph_slave[SPER_EVENT_U_ID+I].add;
+    assign eu_speriph_plug_wen[I]   = speriph_slave[SPER_EVENT_U_ID+I].wen;
+    assign eu_speriph_plug_wdata[I] = speriph_slave[SPER_EVENT_U_ID+I].wdata;
+    assign eu_speriph_plug_be[I]    = speriph_slave[SPER_EVENT_U_ID+I].be;
+    assign eu_speriph_plug_id[I]    = speriph_slave[SPER_EVENT_U_ID+I].id;
+  end
 
   assign speriph_slave_eu_comb.req   = |eu_speriph_plug_req;
   assign speriph_slave_eu_comb.add   = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_add[1]   : eu_speriph_plug_add[0];
@@ -310,122 +305,114 @@ module cluster_peripherals
 
 `ifdef PRIVATE_ICACHE   //to be integrated hier_icache
    
-   hier_icache_ctrl_unit_wrap
-     #(
-       .NB_CACHE_BANKS(NB_CACHE_BANKS),
-       .NB_CORES(NB_CORES),
-       .ID_WIDTH(NB_CORES+NB_MPERIPHS)
-       )
-   icache_ctrl_unit_i
-     (
-      .clk_i                       (  clk_i                           ),
-      .rst_ni                      (  rst_ni                          ),
-      
-      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-      .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
-      .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
-      .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
-      );
+  hier_icache_ctrl_unit_wrap #(
+    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+    .NB_CORES       ( NB_CORES             ),
+    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
+  ) icache_ctrl_unit_i (
+    .clk_i                       (  clk_i                           ),
+    .rst_ni                      (  rst_ni                          ),
+    
+    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+    .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
+    .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
+    .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
+  );
    
 `else
  `ifdef MP_ICACHE
-   mp_pf_icache_ctrl_unit
-     #(
-       .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-       .NB_CORES       ( NB_CORES             ),
-       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
-       )
-   icache_ctrl_unit_i
-     (
-      .clk_i                       (  clk_i                           ),
-      .rst_ni                      (  rst_ni                          ),
-      
-      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-      .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
-      .pf_event_o                  (                                  )
-      );
+  mp_pf_icache_ctrl_unit #(
+    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+    .NB_CORES       ( NB_CORES             ),
+    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
+    .FEATURE_STAT   ( FEATURE_STAT         )
+  ) icache_ctrl_unit_i (
+    .clk_i                       (  clk_i                           ),
+    .rst_ni                      (  rst_ni                          ),
+
+    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+    .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
+    .pf_event_o                  (                                  )
+  );
  `else
   `ifdef SP_ICACHE
-   sp_icache_ctrl_unit
-     #(
-       .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-       .NB_CORES       ( NB_CORES             ),
-       .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
-       .OFFSET         ( 4                    ),
-       .FEATURE_STAT   ( FEATURE_STAT         )
-       )
-   icache_ctrl_unit_i
-     (
-      .clk_i                       (  clk_i                           ),
-      .rst_ni                      (  rst_ni                          ),
-      
-      .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-      .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
-      .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                )
-      );
+  sp_icache_ctrl_unit #(
+    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+    .NB_CORES       ( NB_CORES             ),
+    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
+    .OFFSET         ( 4                    ),
+    .FEATURE_STAT   ( FEATURE_STAT         )
+  ) icache_ctrl_unit_i (
+    .clk_i                       (  clk_i                           ),
+    .rst_ni                      (  rst_ni                          ),
+
+    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+    .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
+    .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                )
+  );
   `endif
  `endif
 `endif
    
   //********************************************************
-    //******************** DMA CL CONFIG PORT ****************
-    //********************************************************
+  //******************** DMA CL CONFIG PORT ****************
+  //********************************************************
 
-    assign speriph_slave[SPER_DMA_CL_ID].gnt     = dma_cfg_master[0].gnt;
-    assign speriph_slave[SPER_DMA_CL_ID].r_rdata = dma_cfg_master[0].r_rdata;
-    assign speriph_slave[SPER_DMA_CL_ID].r_opc   = dma_cfg_master[0].r_opc;
-    assign speriph_slave[SPER_DMA_CL_ID].r_id    = dma_cfg_master[0].r_id;
-    assign speriph_slave[SPER_DMA_CL_ID].r_valid = dma_cfg_master[0].r_valid;
+  assign speriph_slave[SPER_DMA_CL_ID].gnt     = dma_cfg_master[0].gnt;
+  assign speriph_slave[SPER_DMA_CL_ID].r_rdata = dma_cfg_master[0].r_rdata;
+  assign speriph_slave[SPER_DMA_CL_ID].r_opc   = dma_cfg_master[0].r_opc;
+  assign speriph_slave[SPER_DMA_CL_ID].r_id    = dma_cfg_master[0].r_id;
+  assign speriph_slave[SPER_DMA_CL_ID].r_valid = dma_cfg_master[0].r_valid;
 
-    assign dma_cfg_master[0].req   = speriph_slave[SPER_DMA_CL_ID].req;
-    assign dma_cfg_master[0].add   = speriph_slave[SPER_DMA_CL_ID].add;
-    assign dma_cfg_master[0].wen   = speriph_slave[SPER_DMA_CL_ID].wen;
-    assign dma_cfg_master[0].wdata = speriph_slave[SPER_DMA_CL_ID].wdata;
-    assign dma_cfg_master[0].be    = speriph_slave[SPER_DMA_CL_ID].be;
-    assign dma_cfg_master[0].id    = speriph_slave[SPER_DMA_CL_ID].id;
+  assign dma_cfg_master[0].req   = speriph_slave[SPER_DMA_CL_ID].req;
+  assign dma_cfg_master[0].add   = speriph_slave[SPER_DMA_CL_ID].add;
+  assign dma_cfg_master[0].wen   = speriph_slave[SPER_DMA_CL_ID].wen;
+  assign dma_cfg_master[0].wdata = speriph_slave[SPER_DMA_CL_ID].wdata;
+  assign dma_cfg_master[0].be    = speriph_slave[SPER_DMA_CL_ID].be;
+  assign dma_cfg_master[0].id    = speriph_slave[SPER_DMA_CL_ID].id;
 
-    //********************************************************
-    //******************** DMA FC CONFIG PORT ****************
-    //********************************************************
+  //********************************************************
+  //******************** DMA FC CONFIG PORT ****************
+  //********************************************************
 
-    assign speriph_slave[SPER_DMA_FC_ID].gnt     = dma_cfg_master[1].gnt;
-    assign speriph_slave[SPER_DMA_FC_ID].r_rdata = dma_cfg_master[1].r_rdata;
-    assign speriph_slave[SPER_DMA_FC_ID].r_opc   = dma_cfg_master[1].r_opc;
-    assign speriph_slave[SPER_DMA_FC_ID].r_id    = dma_cfg_master[1].r_id;
-    assign speriph_slave[SPER_DMA_FC_ID].r_valid = dma_cfg_master[1].r_valid;
+  assign speriph_slave[SPER_DMA_FC_ID].gnt     = dma_cfg_master[1].gnt;
+  assign speriph_slave[SPER_DMA_FC_ID].r_rdata = dma_cfg_master[1].r_rdata;
+  assign speriph_slave[SPER_DMA_FC_ID].r_opc   = dma_cfg_master[1].r_opc;
+  assign speriph_slave[SPER_DMA_FC_ID].r_id    = dma_cfg_master[1].r_id;
+  assign speriph_slave[SPER_DMA_FC_ID].r_valid = dma_cfg_master[1].r_valid;
 
-    assign dma_cfg_master[1].req   = speriph_slave[SPER_DMA_FC_ID].req;
-    assign dma_cfg_master[1].add   = speriph_slave[SPER_DMA_FC_ID].add;
-    assign dma_cfg_master[1].wen   = speriph_slave[SPER_DMA_FC_ID].wen;
-    assign dma_cfg_master[1].wdata = speriph_slave[SPER_DMA_FC_ID].wdata;
-    assign dma_cfg_master[1].be    = speriph_slave[SPER_DMA_FC_ID].be;
-    assign dma_cfg_master[1].id    = speriph_slave[SPER_DMA_FC_ID].id;
-    
-    //********************************************************
-    //******************** HW ACC  ***************************
-    //********************************************************
+  assign dma_cfg_master[1].req   = speriph_slave[SPER_DMA_FC_ID].req;
+  assign dma_cfg_master[1].add   = speriph_slave[SPER_DMA_FC_ID].add;
+  assign dma_cfg_master[1].wen   = speriph_slave[SPER_DMA_FC_ID].wen;
+  assign dma_cfg_master[1].wdata = speriph_slave[SPER_DMA_FC_ID].wdata;
+  assign dma_cfg_master[1].be    = speriph_slave[SPER_DMA_FC_ID].be;
+  assign dma_cfg_master[1].id    = speriph_slave[SPER_DMA_FC_ID].id;
+  
+  //********************************************************
+  //******************** HW ACC  ***************************
+  //********************************************************
 
-    assign speriph_slave[SPER_HWPE_ID].gnt     = hwpe_cfg_master.gnt;
-    assign speriph_slave[SPER_HWPE_ID].r_rdata = hwpe_cfg_master.r_rdata;
-    assign speriph_slave[SPER_HWPE_ID].r_opc   = hwpe_cfg_master.r_opc;
-    assign speriph_slave[SPER_HWPE_ID].r_id    = hwpe_cfg_master.r_id;
-    assign speriph_slave[SPER_HWPE_ID].r_valid = hwpe_cfg_master.r_valid;
+  assign speriph_slave[SPER_HWPE_ID].gnt     = hwpe_cfg_master.gnt;
+  assign speriph_slave[SPER_HWPE_ID].r_rdata = hwpe_cfg_master.r_rdata;
+  assign speriph_slave[SPER_HWPE_ID].r_opc   = hwpe_cfg_master.r_opc;
+  assign speriph_slave[SPER_HWPE_ID].r_id    = hwpe_cfg_master.r_id;
+  assign speriph_slave[SPER_HWPE_ID].r_valid = hwpe_cfg_master.r_valid;
 
-    assign hwpe_cfg_master.req   = speriph_slave[SPER_HWPE_ID].req;
-    assign hwpe_cfg_master.add   = speriph_slave[SPER_HWPE_ID].add;
-    assign hwpe_cfg_master.wen   = speriph_slave[SPER_HWPE_ID].wen;
-    assign hwpe_cfg_master.wdata = speriph_slave[SPER_HWPE_ID].wdata;
-    assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
-    assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
+  assign hwpe_cfg_master.req   = speriph_slave[SPER_HWPE_ID].req;
+  assign hwpe_cfg_master.add   = speriph_slave[SPER_HWPE_ID].add;
+  assign hwpe_cfg_master.wen   = speriph_slave[SPER_HWPE_ID].wen;
+  assign hwpe_cfg_master.wdata = speriph_slave[SPER_HWPE_ID].wdata;
+  assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
+  assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
 
-    assign speriph_slave[SPER_DECOMP_ID].gnt     =    '0;
-    assign speriph_slave[SPER_DECOMP_ID].r_rdata =  '0;
-    assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
-    assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
-    assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
+  assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
+  assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
+  assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
+  assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
 
 
-    generate
+  generate
     if(FEATURE_DEMUX_MAPPED == 0) begin : eu_not_demux_mapped_gen
       for(genvar i=0;i< NB_CORES; i++) begin
         assign core_eu_direct_link[i].gnt     = 1'b0;

@@ -90,7 +90,7 @@ module core_region
 
   input logic                            debug_req_i,
               
-              //XBAR_TCDM_BUS.Slave debug_bus,
+  //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
   //input logic             debug_core_halt_i,
   //input logic             debug_core_resume_i,
@@ -144,7 +144,6 @@ module core_region
   //********************************************************
 
   XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
-  XBAR_PERIPH_BUS   periph_demux_bus();   // Internal interface between CORE_DEMUX <--> PERIPHERAL DEMUX
 
   logic [4:0]      perf_counters;
   logic            clk_int;
@@ -169,26 +168,26 @@ module core_region
 
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
- `ifndef APU_CLUSTER
+`ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
- // TODO: Disable if CORE_TYPE_CL != 0
-   logic                     apu_master_req_o;
-   logic                     apu_master_gnt_i;
-   // request channel
-   logic [WAPUTYPE-1:0]             apu_master_type_o;
-   logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
-   logic [APU_WOP_CPU-1:0]          apu_master_op_o;
-   logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
-   // response channel
-   logic                        apu_master_ready_o;
-   logic                        apu_master_valid_i;
-   logic [31:0]                 apu_master_result_i;
-   logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
+  // TODO: Disable if CORE_TYPE_CL != 0
+  logic                     apu_master_req_o;
+  logic                     apu_master_gnt_i;
+  // request channel
+  logic [WAPUTYPE-1:0]             apu_master_type_o;
+  logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
+  logic [APU_WOP_CPU-1:0]          apu_master_op_o;
+  logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
+  // response channel
+  logic                        apu_master_ready_o;
+  logic                        apu_master_valid_i;
+  logic [31:0]                 apu_master_result_i;
+  logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
 
-   assign apu_master_gnt_i      = '1;
-   assign apu_master_valid_i    = '0;
-   assign apu_master_result_i   = '0;
-   assign apu_master_flags_i    = '0;
+  assign apu_master_gnt_i      = '1;
+  assign apu_master_valid_i    = '0;
+  assign apu_master_result_i   = '0;
+  assign apu_master_flags_i    = '0;
  `endif
 `endif
 
@@ -345,11 +344,11 @@ module core_region
         .data_rvalid_i         ( s_core_bus.r_valid ),
         .data_err_i            ( 1'b0               ),
 
-        .irq_software_i        ( 1'b0               ),             // TODO!!!
-        .irq_timer_i           ( 1'b0               ),             // TODO!!!
-        .irq_external_i        ( 1'b0               ),             // TODO!!!
-        .irq_fast_i            ( 15'b0              ),             // TODO!!!
-        .irq_nm_i              ( 1'b0               ),             // TODO!!!
+        .irq_software_i        ( 1'b0               ),
+        .irq_timer_i           ( 1'b0               ),
+        .irq_external_i        ( 1'b0               ),
+        .irq_fast_i            ( 15'b0              ),
+        .irq_nm_i              ( 1'b0               ),
 
         .irq_x_i               ( core_irq_x         ),
         .irq_x_ack_o           ( irq_ack_o          ),
@@ -365,10 +364,10 @@ module core_region
       // Ibex supports 32 additional fast interrupts and reads the interrupt lines directly.
       // Convert ID back to interrupt lines
       always_comb begin : gen_core_irq_x
-          core_irq_x = '0;
-          if (irq_req_i) begin
-              core_irq_x[irq_id_i] = 1'b1;
-          end
+        core_irq_x = '0;
+        if (irq_req_i) begin
+            core_irq_x[irq_id_i] = 1'b1;
+        end
       end
     end
   endgenerate
@@ -395,7 +394,6 @@ module core_region
     .DATA_WIDTH         ( 32                 ),
     .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
-    //.REMAP_ADDRESS      (   0 )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
@@ -433,16 +431,6 @@ module core_region
     .data_r_rdata_i_EXT (  eu_ctrl_master.r_rdata     ),
     .data_r_opc_i_EXT   (  eu_ctrl_master.r_opc       ),
 
-    // .data_req_o_EXT     (  periph_demux_bus.req       ),
-    // .data_add_o_EXT     (  periph_demux_bus.add       ),
-    // .data_wen_o_EXT     (  periph_demux_bus.wen       ),
-    // .data_wdata_o_EXT   (  periph_demux_bus.wdata     ),
-    // .data_be_o_EXT      (  periph_demux_bus.be        ),
-    // .data_gnt_i_EXT     (  periph_demux_bus.gnt       ),
-    // .data_r_valid_i_EXT (  periph_demux_bus.r_valid   ),
-    // .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata   ),
-    // .data_r_opc_i_EXT   (  periph_demux_bus.r_opc     ),
-
     .data_req_o_PE      (  periph_data_master.req     ),
     .data_add_o_PE      (  periph_data_master.add     ),
     .data_wen_o_PE      (  periph_data_master.wen     ),
@@ -462,44 +450,6 @@ module core_region
 
   assign tcdm_data_master.boffs = '0;
   assign tcdm_data_master.lrdy  = '1;
-
-  // periph_demux periph_demux_i (
-  //   .clk               ( clk_int                  ),
-  //   .rst_ni            ( rst_ni                   ),
-
-  //   .data_req_i        ( periph_demux_bus.req     ),
-  //   .data_add_i        ( periph_demux_bus.add     ),
-  //   .data_wen_i        ( periph_demux_bus.wen     ),
-  //   .data_wdata_i      ( periph_demux_bus.wdata   ),
-  //   .data_be_i         ( periph_demux_bus.be      ),
-  //   .data_gnt_o        ( periph_demux_bus.gnt     ),
-
-  //   .data_r_valid_o    ( periph_demux_bus.r_valid ),
-  //   .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-  //   .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
-
-  //   .data_req_o_MH     ( dma_ctrl_master.req      ),
-  //   .data_add_o_MH     ( dma_ctrl_master.add      ),
-  //   .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-  //   .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
-  //   .data_be_o_MH      ( dma_ctrl_master.be       ),
-  //   .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
-
-  //   .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-  //   .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
-  //   .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
-
-  //   .data_req_o_EU     ( eu_ctrl_master.req       ),
-  //   .data_add_o_EU     ( eu_ctrl_master.add       ),
-  //   .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-  //   .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-  //   .data_be_o_EU      ( eu_ctrl_master.be        ),
-  //   .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
-
-  //   .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-  //   .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-  //   .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-  // );
 
   /* debug stuff */
   //synopsys translate_off

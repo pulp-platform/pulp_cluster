@@ -17,55 +17,52 @@
  */
 
 module cluster_timer_wrap
-  #(
-    parameter ID_WIDTH  = 2
-    )
-   (
-    input  logic          clk_i,
-    input  logic          rst_ni,
-    input  logic          ref_clk_i,
-    
-    XBAR_PERIPH_BUS.Slave periph_slave,
-    
-    input  logic          event_lo_i,
-    input  logic          event_hi_i,
-    
-    output logic          irq_lo_o,
-    output logic          irq_hi_o,
-    
-    output logic          busy_o
-    );
+#(
+  parameter ID_WIDTH  = 2
+)
+(
+  input  logic          clk_i,
+  input  logic          rst_ni,
+  input  logic          ref_clk_i,
+  
+  XBAR_PERIPH_BUS.Slave periph_slave,
+  
+  input  logic          event_lo_i,
+  input  logic          event_hi_i,
+  
+  output logic          irq_lo_o,
+  output logic          irq_hi_o,
+  
+  output logic          busy_o
+);
    
-   timer_unit
-     #(
-       .ID_WIDTH        ( ID_WIDTH             )
-       )
-   timer_unit_i
-     (
-      .clk_i            ( clk_i                ),
-      .rst_ni           ( rst_ni               ),
-      .ref_clk_i        ( ref_clk_i            ),
-      
-      .req_i            ( periph_slave.req     ),
-      .addr_i           ( periph_slave.add     ),
-      .wen_i            ( periph_slave.wen     ),
-      .wdata_i          ( periph_slave.wdata   ),
-      .be_i             ( periph_slave.be      ),
-      .id_i             ( periph_slave.id      ),
-      .gnt_o            ( periph_slave.gnt     ),
-      
-      .r_valid_o        ( periph_slave.r_valid ),
-      .r_opc_o          ( periph_slave.r_opc   ),
-      .r_id_o           ( periph_slave.r_id    ),
-      .r_rdata_o        ( periph_slave.r_rdata ),
-      
-      .event_lo_i       ( event_lo_i           ),
-      .event_hi_i       ( event_hi_i           ),
-      
-      .irq_lo_o         ( irq_lo_o             ),
-      .irq_hi_o         ( irq_hi_o             ),
-      
-      .busy_o           ( busy_o               )
-      );
+  timer_unit #(
+    .ID_WIDTH        ( ID_WIDTH             )
+  ) timer_unit_i (
+    .clk_i            ( clk_i                ),
+    .rst_ni           ( rst_ni               ),
+    .ref_clk_i        ( ref_clk_i            ),
+
+    .req_i            ( periph_slave.req     ),
+    .addr_i           ( periph_slave.add     ),
+    .wen_i            ( periph_slave.wen     ),
+    .wdata_i          ( periph_slave.wdata   ),
+    .be_i             ( periph_slave.be      ),
+    .id_i             ( periph_slave.id      ),
+    .gnt_o            ( periph_slave.gnt     ),
+
+    .r_valid_o        ( periph_slave.r_valid ),
+    .r_opc_o          ( periph_slave.r_opc   ),
+    .r_id_o           ( periph_slave.r_id    ),
+    .r_rdata_o        ( periph_slave.r_rdata ),
+
+    .event_lo_i       ( event_lo_i           ),
+    .event_hi_i       ( event_hi_i           ),
+
+    .irq_lo_o         ( irq_lo_o             ),
+    .irq_hi_o         ( irq_hi_o             ),
+
+    .busy_o           ( busy_o               )
+  );
    
 endmodule
