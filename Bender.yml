@@ -53,6 +53,7 @@ sources:
   - rtl/per_demux_wrap.sv
   - rtl/periph_FIFO.sv
   - rtl/tcdm_banks_wrap.sv
+  - rtl/periph_demux.sv
     # Level 1
   - rtl/cluster_peripherals.sv
   - rtl/core_demux.sv
