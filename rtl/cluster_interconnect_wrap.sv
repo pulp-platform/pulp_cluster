@@ -58,95 +58,6 @@ module cluster_interconnect_wrap
 
   localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
 
-  // MASTER PERIPHERALS --> PERIPHERAL INTERCONNECT BUS SIGNALS
-  logic [NB_MPERIPHS-1:0][DATA_WIDTH-1:0]            s_mperiph_bus_wdata;
-  logic [NB_MPERIPHS-1:0][ADDR_WIDTH-1:0]            s_mperiph_bus_add;
-  logic [NB_MPERIPHS-1:0]                            s_mperiph_bus_req;
-  logic [NB_MPERIPHS-1:0]                            s_mperiph_bus_wen;
-  logic [NB_MPERIPHS-1:0][BE_WIDTH-1:0]              s_mperiph_bus_be;
-  logic [NB_MPERIPHS-1:0]                            s_mperiph_bus_gnt;
-  logic [NB_MPERIPHS-1:0]                            s_mperiph_bus_r_opc;
-  logic [NB_MPERIPHS-1:0][DATA_WIDTH-1:0]            s_mperiph_bus_r_rdata;
-  logic [NB_MPERIPHS-1:0]                            s_mperiph_bus_r_valid;
-
-  // DEMUX -->  PERIPHERAL INTERCONNECT BUS SIGNALS
-  logic [NB_CORES-1:0][ADDR_WIDTH-1:0]               s_core_periph_bus_add;
-  logic [NB_CORES-1:0]                               s_core_periph_bus_req;
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0]               s_core_periph_bus_wdata;
-  logic [NB_CORES-1:0]                               s_core_periph_bus_wen;
-  logic [NB_CORES-1:0][BE_WIDTH-1:0]                 s_core_periph_bus_be;
-  logic [NB_CORES-1:0]                               s_core_periph_bus_gnt;
-  logic [NB_CORES-1:0]                               s_core_periph_bus_r_opc;
-  logic [NB_CORES-1:0]                               s_core_periph_bus_r_valid;
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0]               s_core_periph_bus_r_rdata;
-
-  // TCDM BANK MEM SIGNAL
-  logic [NB_TCDM_BANKS-1:0][ADDR_MEM_WIDTH-1:0]           s_tcdm_bus_sram_add;
-  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_req;
-  logic [NB_TCDM_BANKS-1:0][DATA_WIDTH-1:0]               s_tcdm_bus_sram_wdata;
-  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_wen;
-  logic [NB_TCDM_BANKS-1:0][BE_WIDTH-1:0]                 s_tcdm_bus_sram_be;
-  logic [NB_TCDM_BANKS-1:0][DATA_WIDTH-1:0]               s_tcdm_bus_sram_rdata;
-  logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_gnt;
-   
-
-  // PERIPHERAL INTERCONNECT INTERCONNECT --> SLAVE PERIPHERALS BUS SIGNALS
-  logic [NB_SPERIPHS-1:0][DATA_WIDTH-1:0]            s_speriph_bus_wdata;
-  logic [NB_SPERIPHS-1:0][ADDR_WIDTH-1:0]            s_speriph_bus_add;
-  logic [NB_SPERIPHS-1:0]                            s_speriph_bus_req;
-  logic [NB_SPERIPHS-1:0]                            s_speriph_bus_wen;
-  logic [NB_SPERIPHS-1:0][BE_WIDTH-1:0]              s_speriph_bus_be;
-  logic [NB_SPERIPHS-1:0][NB_CORES+NB_MPERIPHS-1:0]  s_speriph_bus_id;
-  logic [NB_SPERIPHS-1:0]                            s_speriph_bus_gnt;
-  logic [NB_SPERIPHS-1:0]                            s_speriph_bus_r_opc;
-  logic [NB_SPERIPHS-1:0][NB_CORES+NB_MPERIPHS-1:0]  s_speriph_bus_r_id;
-  logic [NB_SPERIPHS-1:0][DATA_WIDTH-1:0]            s_speriph_bus_r_rdata;
-  logic [NB_SPERIPHS-1:0]                            s_speriph_bus_r_valid;
-
-  //********************************************************
-  //****** BINDING INTERFACES TO INTERNAL BUS SIGNALS ******
-  //********************************************************
-   
-  for (genvar i=0; i<NB_CORES; i++) begin : CORE_PERIPH_BIND
-    assign s_core_periph_bus_add[i]      =  core_periph_slave[i].add;
-    assign s_core_periph_bus_req[i]      =  core_periph_slave[i].req;
-    assign s_core_periph_bus_wdata[i]    =  core_periph_slave[i].wdata;
-    assign s_core_periph_bus_wen[i]      =  core_periph_slave[i].wen;
-    assign s_core_periph_bus_be[i]       =  core_periph_slave[i].be;
-
-    assign core_periph_slave[i].gnt      =  s_core_periph_bus_gnt[i];
-    assign core_periph_slave[i].r_opc    =  s_core_periph_bus_r_opc[i];
-    assign core_periph_slave[i].r_valid  =  s_core_periph_bus_r_valid[i];
-    assign core_periph_slave[i].r_rdata  =  s_core_periph_bus_r_rdata[i];
-  end // block: CORE_PERIPH_BIND
-
-  for (genvar i=0; i<NB_MPERIPHS; i++) begin : MPERIPHS_BIND
-    assign s_mperiph_bus_add[i]      = mperiph_slave[i].add;
-    assign s_mperiph_bus_req[i]      = mperiph_slave[i].req;
-    assign s_mperiph_bus_wdata[i]    = mperiph_slave[i].wdata;
-    assign s_mperiph_bus_wen[i]      = mperiph_slave[i].wen;
-    assign s_mperiph_bus_be[i]       = mperiph_slave[i].be;
-
-    assign mperiph_slave[i].gnt      = s_mperiph_bus_gnt[i];
-    assign mperiph_slave[i].r_opc    = s_mperiph_bus_r_opc[i];
-    assign mperiph_slave[i].r_valid  = s_mperiph_bus_r_valid[i];
-    assign mperiph_slave[i].r_rdata  = s_mperiph_bus_r_rdata[i];
-  end // block: MPERIPHS_BIND
-
-  for (genvar i=0; i<NB_SPERIPHS; i++) begin : SPERIPHS_BIND
-    assign speriph_master[i].add       = s_speriph_bus_add[i];
-    assign speriph_master[i].req       = s_speriph_bus_req[i];
-    assign speriph_master[i].wdata     = s_speriph_bus_wdata[i];
-    assign speriph_master[i].wen       = s_speriph_bus_wen[i];
-    assign speriph_master[i].be        = s_speriph_bus_be[i];
-    assign speriph_master[i].id        = s_speriph_bus_id[i];
-
-    assign s_speriph_bus_gnt[i]        = speriph_master[i].gnt;
-    assign s_speriph_bus_r_id[i]       = speriph_master[i].r_id;
-    assign s_speriph_bus_r_opc[i]      = speriph_master[i].r_opc;
-    assign s_speriph_bus_r_valid[i]    = speriph_master[i].r_valid;
-    assign s_speriph_bus_r_rdata[i]    = speriph_master[i].r_rdata;
-  end // block: SPERIPHS_BIND
 
   //-********************************************************
   //-*********** HETEROGENEOUS INTERCONNECT TO TCDM *********
@@ -251,49 +162,26 @@ module cluster_interconnect_wrap
   //********************************************************
   //******* LOGARITHMIC INTERCONNECT TO PERIPHERALS ********
   //********************************************************
-  XBAR_PE #(
-    .N_CH0              ( NB_CORES             ),
-    .N_CH1              ( NB_MPERIPHS          ),
-    .N_SLAVE            ( NB_SPERIPHS          ),
-    .ID_WIDTH           ( NB_CORES+NB_MPERIPHS ),
-    .PE_LSB             ( 0                    ),
-    .PE_MSB             ( ADDR_WIDTH-1         ),
-    
-    .LOG_CLUSTER        ( LOG_CLUSTER          ),
+  xbar_pe_wrap
+  #(
+    .NB_CORES           ( NB_CORES             ),
+    .NB_MPERIPHS        ( NB_MPERIPHS          ),
+    .NB_SPERIPHS        ( NB_SPERIPHS          ),
     .ADDR_WIDTH         ( ADDR_WIDTH           ),
     .DATA_WIDTH         ( DATA_WIDTH           ),
     .BE_WIDTH           ( BE_WIDTH             ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
-  ) xbar_pe_inst (
-    .clk              ( clk_i),
-    .rst_n            ( rst_ni),
-    
-    //.CLUSTER_ID(cluster_id),
-    .CLUSTER_ID       ( 5'b00000),
+   ) 
+   xbar_pe_inst
+   (
+    .clk_i            ( clk_i ),
+    .rst_ni           ( rst_ni),
+    .core_periph_slave( core_periph_slave),
+    .speriph_master   ( speriph_master   ),
+    .mperiph_slave    ( mperiph_slave    )
+    );
 
-    .data_req_i       ( {s_mperiph_bus_req,     s_core_periph_bus_req}     ),
-    .data_add_i       ( {s_mperiph_bus_add,     s_core_periph_bus_add}     ),
-    .data_wen_i       ( {s_mperiph_bus_wen,     s_core_periph_bus_wen}     ),
-    .data_wdata_i     ( {s_mperiph_bus_wdata,   s_core_periph_bus_wdata}   ),
-    .data_be_i        ( {s_mperiph_bus_be,      s_core_periph_bus_be}      ),
-    .data_gnt_o       ( {s_mperiph_bus_gnt,     s_core_periph_bus_gnt}     ),
-    .data_r_valid_o   ( {s_mperiph_bus_r_valid, s_core_periph_bus_r_valid} ),
-    .data_r_rdata_o   ( {s_mperiph_bus_r_rdata, s_core_periph_bus_r_rdata} ),
-    .data_r_opc_o     ( {s_mperiph_bus_r_opc,   s_core_periph_bus_r_opc}   ),
-    
-    .data_req_o       ( s_speriph_bus_req     [NB_SPERIPHS-1:0] ),
-    .data_add_o       ( s_speriph_bus_add     [NB_SPERIPHS-1:0] ),
-    .data_wen_o       ( s_speriph_bus_wen     [NB_SPERIPHS-1:0] ),
-    .data_wdata_o     ( s_speriph_bus_wdata   [NB_SPERIPHS-1:0] ),
-    .data_be_o        ( s_speriph_bus_be      [NB_SPERIPHS-1:0] ),
-    .data_ID_o        ( s_speriph_bus_id      [NB_SPERIPHS-1:0] ),
-    .data_gnt_i       ( s_speriph_bus_gnt     [NB_SPERIPHS-1:0] ),
-    .data_r_rdata_i   ( s_speriph_bus_r_rdata [NB_SPERIPHS-1:0] ),
-    .data_r_valid_i   ( s_speriph_bus_r_valid [NB_SPERIPHS-1:0] ),
-    .data_r_ID_i      ( s_speriph_bus_r_id    [NB_SPERIPHS-1:0] ),
-    .data_r_opc_i     ( s_speriph_bus_r_opc   [NB_SPERIPHS-1:0] )
-  );
 
 endmodule

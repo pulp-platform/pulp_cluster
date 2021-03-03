@@ -41,7 +41,8 @@ package pulp_cluster_package;
   parameter SPER_DMA_FC_ID   = 7;
   parameter SPER_DECOMP_ID   = 8; // Currently unused / grounded, available for specific designs
   parameter SPER_EXT_ID      = 9;
-
+  parameter SPER_ERROR_ID    = 10;
+   
   // if set to 1, then instantiate APU in the cluster
  // parameter APU_CLUSTER = 0;
 
