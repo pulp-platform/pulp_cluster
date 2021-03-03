@@ -3,6 +3,7 @@ pulp_cluster:
     -L fpnew_lib,
     -L axi_lib,
     -L cluster_interconnect_lib,
+    -L common_cells_lib,
   ]
   incdirs: [
     ../../rtl/includes,
@@ -21,6 +22,7 @@ pulp_cluster:
     rtl/periph_demux.sv,
     rtl/per_demux_wrap.sv,
     rtl/periph_FIFO.sv,
+    rtl/xbar_pe_wrap.sv,
     rtl/cluster_peripherals.sv,
     rtl/cluster_clock_gate.sv,
     rtl/cluster_timer_wrap.sv,
