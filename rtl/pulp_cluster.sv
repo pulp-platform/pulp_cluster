@@ -260,8 +260,11 @@ module pulp_cluster
   input  logic [1:0]                       data_master_b_resp_i,
   input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_b_id_i,
   input  logic [AXI_USER_WIDTH-1:0]        data_master_b_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o,
    
+
+  TCDM_BANK_MEM_BUS.Master                 tcdm_l1_bus[NB_TCDM_BANKS-1:0]
+
 );
 
    localparam int unsigned NB_L1_CUTS      = 16;
@@ -433,9 +436,6 @@ module pulp_cluster
   `endif
    //----------------------------------------------------------------------//
    
-  // log interconnect -> TCDM memory banks (SRAM)
-  TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
-
 
   //***************************************************
   /* asynchronous AXI interfaces at CLUSTER/SOC interface */
@@ -686,7 +686,7 @@ module pulp_cluster
     .dma_slave          ( s_dma_xbar_bus                      ),
     .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
 
-    .tcdm_sram_master   ( s_tcdm_bus_sram                     ),
+    .tcdm_sram_master   ( tcdm_l1_bus                         ),
 
     .speriph_master     ( s_xbar_speriph_bus                  ),
 
@@ -1381,18 +1381,11 @@ module pulp_cluster
 
 
    
-  /* TCDM banks */
-  tcdm_banks_wrap #(
-    .BANK_SIZE ( TCDM_NUM_ROWS ),
-    .NB_BANKS  ( NB_TCDM_BANKS )
-  ) tcdm_banks_i (
-    .clk_i       ( clk_cluster     ),
-    .rst_ni      ( s_rst_n         ),
-    .init_ni     ( s_init_n        ),
-    .test_mode_i ( test_mode_i     ),
-    .pwdn_i      ( 1'b0            ),
-    .tcdm_slave  ( s_tcdm_bus_sram )   //PMU ??
-  );
+  //
+  // TCDM banks
+  //
+
+  // NOTE: The L1 memories are outside the control-pulp module!
   
   /* AXI interconnect infrastructure (slices, size conversion) */ 
   //********************************************************
