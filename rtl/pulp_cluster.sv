@@ -23,6 +23,7 @@ import hci_package::*;
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
 `include "periph_bus_defines.sv"
+`include "register_interface/typedef.svh"
 
 
 module pulp_cluster
@@ -450,7 +451,7 @@ module pulp_cluster
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
   // TCLS unit
-  XBAR_PERIPH_BUS s_tcls_bus[NB_CORES/3-1:0]();
+  XBAR_PERIPH_BUS s_tcls_bus();
 
 
 // `ifdef SHARED_FPU_CLUSTER
@@ -817,7 +818,7 @@ module pulp_cluster
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
     .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  ),
-    .GROUND_UNUSED_PERIPH ( 0 )
+    .GROUND_UNUSED_PERIPH ( !TCLS )
   
   ) cluster_peripherals_i (
 
@@ -889,7 +890,7 @@ module pulp_cluster
   `endif
 `endif
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
-  .unused_periph_bus        ( s_tcls_bus[0]                          )
+  .unused_periph_bus        ( s_tcls_bus                          )
 );
 
 
@@ -942,31 +943,73 @@ module pulp_cluster
 
   if (TCLS) begin : cTCLS_gen
     localparam REDUNDANT_CORES = NB_CORES/3;
+
+    // Peripheral communication signals for cTCLS unit
+    import ctcls_manager_reg_pkg::* ;
+    `REG_BUS_TYPEDEF_ALL(tcls, logic[31:0], logic[31:0], logic[3:0])
+
+    tcls_req_t [REDUNDANT_CORES-1:0] tcls_request;
+    tcls_rsp_t [REDUNDANT_CORES-1:0] tcls_response;
+    tcls_req_t                       all_tcls_request;
+    tcls_rsp_t                       all_tcls_response;
+
+    periph_to_reg #(
+      .AW   ( 32           ),
+      .DW   ( DATA_WIDTH   ),
+      .BW   ( 8            ),
+      .IW   ( NB_CORES + 1 ),
+      .req_t( tcls_req_t   ),
+      .rsp_t( tcls_rsp_t   )
+    ) i_periph_translate (
+      .clk_i    ( clk_i              ),
+      .rst_ni   ( rst_ni             ),
+      .req_i    ( s_tcls_bus.req     ),
+      .add_i    ( s_tcls_bus.add     ),
+      .wen_i    ( s_tcls_bus.wen     ),
+      .wdata_i  ( s_tcls_bus.wdata   ),
+      .be_i     ( s_tcls_bus.be      ),
+      .id_i     ( s_tcls_bus.id      ),
+      .gnt_o    ( s_tcls_bus.gnt     ),
+      .r_rdata_o( s_tcls_bus.r_rdata ),
+      .r_opc_o  ( s_tcls_bus.r_opc   ),
+      .r_id_o   ( s_tcls_bus.r_id    ),
+      .r_valid_o( s_tcls_bus.r_valid ),
+      .reg_req_o( all_tcls_request   ),
+      .reg_rsp_i( all_tcls_response  )
+    );
+
+    localparam TCLS_ADD_DEMUX = $clog2(REDUNDANT_CORES)-1;
+
+    reg_demux #(
+      .NoPorts     ( REDUNDANT_CORES ),
+      .req_t       ( tcls_req_t      ),
+      .rsp_t       ( tcls_rsp_t      )
+    ) i_tcls_reg_demux (
+      .clk_i       ( clk_i                              ),
+      .rst_ni      ( s_rst_n                            ),
+      .in_select_i ( s_tcls_bus.add[8+TCLS_ADD_DEMUX:8] ),
+      .in_req_i    ( all_tcls_request                   ),
+      .in_rsp_o    ( all_tcls_response                  ),
+      .out_req_o   ( tcls_request                       ),
+      .out_rsp_i   ( tcls_response                      )
+    );
+
     for (genvar j = 0; j < REDUNDANT_CORES; j++) begin : cTCLS
       localparam CORE_A = j;
       localparam CORE_B = j + REDUNDANT_CORES;
       localparam CORE_C = j + 2*REDUNDANT_CORES;
+
       cTCLS_unit #(
         .InstrRdataWidth  ( INSTR_RDATA_WIDTH   ),
         .NExtPerfCounters ( N_EXT_PERF_COUNTERS ),
         .DataWidth        ( DATA_WIDTH          ),
-        .BEWidth          ( BE_WIDTH            ),
-        .PeriphIDWidth    ( NB_CORES + 1        )
+        .BEWidth          ( BE_WIDTH            )
       ) core_ctcls_i (
-        .clk_i                ( clk_cluster ),
-        .rst_ni               ( s_rst_n     ),
+        .clk_i                ( clk_cluster      ),
+        .rst_ni               ( s_rst_n          ),
 
-        .periph_req_i         ( s_tcls_bus[j].req     ),
-        .periph_addr_i        ( s_tcls_bus[j].add     ),
-        .periph_wen_i         ( s_tcls_bus[j].wen     ),
-        .periph_wdata_i       ( s_tcls_bus[j].wdata   ),
-        .periph_be_i          ( s_tcls_bus[j].be      ),
-        .periph_id_i          ( s_tcls_bus[j].id      ),
-        .periph_gnt_o         ( s_tcls_bus[j].gnt     ),
-        .periph_r_valid_o     ( s_tcls_bus[j].r_valid ),
-        .periph_r_opc_o       ( s_tcls_bus[j].r_opc   ),
-        .periph_r_id_o        ( s_tcls_bus[j].r_id    ),
-        .periph_rdata_o       ( s_tcls_bus[j].r_rdata ),
+        .speriph_request      ( tcls_request[j]  ),
+        .speriph_response     ( tcls_response[j] ),
 
         .intc_core_id_i       ( { CORE_C[3:0], CORE_B[3:0], CORE_A[3:0] } ),
         .intc_cluster_id_i    ( { 3{ cluster_id_i } }                     ),
@@ -1038,25 +1081,25 @@ module pulp_cluster
     end
   end else begin : no_TCLS
     for (genvar i = 0; i < NB_CORES; i++) begin: tcls_assign
-      assign core_rst_tcls_n[i] = s_rst_n;
-      assign core_id_tcls[i] = i[3:0];
-      assign cluster_id_tcls[i] = cluster_id_i;
+      assign core_rst_tcls_n    [i] = s_rst_n;
+      assign core_id_tcls       [i] = i[3:0];
+      assign cluster_id_tcls    [i] = cluster_id_i;
 
-      assign clk_core_en_tcls[i] = clk_core_en[i];
-      assign fetch_en_tcls[i] = fetch_en_int[i];
-      assign boot_addr_tcls[i] = boot_addr[i];
-      assign core_busy[i] = core_busy_tcls[i];
+      assign clk_core_en_tcls   [i] = clk_core_en[i];
+      assign fetch_en_tcls      [i] = fetch_en_int[i];
+      assign boot_addr_tcls     [i] = boot_addr[i];
+      assign core_busy          [i] = core_busy_tcls[i];
 
-      assign irq_req_tcls[i] = irq_req[i];
-      assign irq_ack[i] = irq_ack_tcls[i];
-      assign irq_id_tcls[i] = irq_id_tcls[i];
-      assign irq_ack_id[i] = irq_ack_id_tcls[i];
+      assign irq_req_tcls       [i] = irq_req[i];
+      assign irq_ack            [i] = irq_ack_tcls[i];
+      assign irq_id_tcls        [i] = irq_id_tcls[i];
+      assign irq_ack_id         [i] = irq_ack_id_tcls[i];
 
-      assign instr_req[i] = instr_req_tcls[i];
-      assign instr_gnt_tcls[i] = instr_gnt[i];
-      assign instr_addr[i] = instr_addr_tcls[i];
-      assign instr_r_rdata_tcls[i] = instr_r_rdata[i];
-      assign instr_r_valid_tcls[i] = instr_r_valid[i];
+      assign instr_req          [i] = instr_req_tcls[i];
+      assign instr_gnt_tcls     [i] = instr_gnt[i];
+      assign instr_addr         [i] = instr_addr_tcls[i];
+      assign instr_r_rdata_tcls [i] = instr_r_rdata[i];
+      assign instr_r_valid_tcls [i] = instr_r_valid[i];
 
       assign s_core_dbg_irq_tcls[i] = s_core_dbg_irq[i];
 
