@@ -58,7 +58,7 @@ hwpe-stream:
 hci:
   commit: v1.0.6
   group: pulp-platform
-  domain: [cluster, pulp]
+  domain: [soc, cluster, pulp]
 cluster_peripherals:
   commit: v2.1.0
   domain: [cluster]

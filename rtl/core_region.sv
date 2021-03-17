@@ -26,11 +26,15 @@
 `endif
 //`define DATA_MISS
 //`define DUMP_INSTR_FETCH
-
+// CORE_TYPE_CL = 0 -> RISCY 
+//                1 -> IBEX RV32IMC ( formerly ZERORISCY  ) 
+//                2 -> IBEX RV32EC  ( formerly MICRORISCY )
+//                3 -> CV32E40P     ( formerly RISCY      )
+//                4 -> RISCY_NN     ( SIMD RISCY          )
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL        = 0, 
   // parameter USE_FPU             = 1,
   // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
@@ -197,7 +201,7 @@ module core_region
    //********************************************************
 
   generate
-    if ( CORE_TYPE_CL == 0 ) begin: CL_CORE
+     if (CORE_TYPE_CL == 0)  begin: CL_CORE
       assign boot_addr = boot_addr_i;
       riscv_core #(
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
@@ -268,7 +272,10 @@ module core_region
         .ext_perf_counters_i   ( perf_counters         ),
         .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
-    end else begin: CL_CORE
+    
+    end  
+    else if ( CORE_TYPE_CL == 1 | CORE_TYPE_CL == 2) begin: CL_CORE
+       
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
       
       if (INSTR_RDATA_WIDTH == 128) begin
@@ -370,6 +377,79 @@ module core_region
             core_irq_x[irq_id_i] = 1'b1;
         end
       end
+    end                      
+    else if ( CORE_TYPE_CL == 4) begin: CL_CORE
+   
+       assign boot_addr = boot_addr_i;
+       riscv_nn_core #(
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
+        .N_EXT_PERF_COUNTERS ( 5                 ),
+        .PULP_SECURE         ( 0                 ),
+        .FPU                 ( FPU               ),
+        .FP_DIVSQRT          ( FP_DIVSQRT        ),
+        .SHARED_FP           ( SHARED_FP         ),
+        .SHARED_DSP_MULT     ( 0                 ),
+        .SHARED_INT_DIV      ( 0                 ),
+        .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
+        .WAPUTYPE            ( WAPUTYPE          ),
+        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
+
+      ) RISCV_CORE (
+        .clk_i                 ( clk_i             ),
+        .rst_ni                ( rst_ni            ),
+
+        .clock_en_i            ( clock_en_i        ),
+        .test_en_i             ( test_mode_i       ),
+
+        .boot_addr_i           ( boot_addr         ),
+        .core_id_i             ( CORE_ID[3:0]      ),
+        .cluster_id_i          ( cluster_id_i      ),
+
+        .instr_addr_o          ( instr_addr_o             ),
+        .instr_req_o           ( instr_req_o              ),
+        .instr_rdata_i         ( instr_r_rdata_i          ),
+        .instr_gnt_i           ( instr_gnt_i              ),
+        .instr_rvalid_i        ( instr_r_valid_i          ),
+
+        .data_addr_o           ( s_core_bus.add           ),
+        .data_wdata_o          ( s_core_bus.wdata         ),
+        .data_we_o             ( s_core_bus.we            ),
+        .data_req_o            ( s_core_bus.req           ),
+        .data_be_o             ( s_core_bus.be            ),
+        .data_rdata_i          ( s_core_bus.r_rdata       ),
+        .data_gnt_i            ( s_core_bus.gnt           ),
+        .data_rvalid_i         ( s_core_bus.r_valid       ),
+
+        .irq_i                 ( irq_req_i                ),
+        .irq_id_i              ( irq_id_i                 ),
+        .irq_id_o              ( irq_ack_id_o             ),
+        .irq_ack_o             ( irq_ack_o                ),
+
+        .sec_lvl_o             (                          ),
+        .irq_sec_i             (      1'b0                ),
+
+        .debug_req_i           ( debug_req_i              ),
+
+        .fetch_enable_i        ( fetch_en_i               ),
+        .core_busy_o           ( core_busy_o              ),
+
+
+         // apu-interconnect
+        .apu_master_req_o      ( apu_master_req_o      ),
+        .apu_master_gnt_i      ( apu_master_gnt_i      ),
+        .apu_master_type_o     ( apu_master_type_o     ),
+        .apu_master_operands_o ( apu_master_operands_o ),
+        .apu_master_op_o       ( apu_master_op_o       ),
+        .apu_master_flags_o    ( apu_master_flags_o    ),
+
+        .apu_master_valid_i    ( apu_master_valid_i    ),
+        .apu_master_ready_o    ( apu_master_ready_o    ),
+        .apu_master_result_i   ( apu_master_result_i   ),
+        .apu_master_flags_i    ( apu_master_flags_i    ),
+
+        .ext_perf_counters_i   ( perf_counters         ),
+        .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
+      );          
     end
   endgenerate
 

@@ -23,11 +23,16 @@ import hci_package::*;
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
 
+// CORE_TYPE_CL = 0 -> RISCY 
+//                1 -> IBEX RV32IMC ( formerly ZERORISCY  ) 
+//                2 -> IBEX RV32EC  ( formerly MICRORISCY )
+//                3 -> CV32E40P     ( formerly RISCY      )
+//                4 -> RISCY_NN     ( SIMD RISCY          )
 
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL       = 4,
   parameter NB_CORES           = 8,
   parameter NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
