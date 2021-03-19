@@ -18,7 +18,8 @@ module cluster_core_assist #(
   parameter BE_WIDTH           = DATA_WIDTH/8,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
 
-  parameter N_EXT_PERF_COUNTERS  = 5
+  parameter N_EXT_PERF_COUNTERS  = 5,
+  parameter bit ECC_INTC           = 0
 ) (
   input  logic                           clk_i,
   input  logic                           rst_ni,
@@ -38,7 +39,37 @@ module cluster_core_assist #(
   XBAR_PERIPH_BUS.Master                 periph_data_master
 );
 
+  localparam EccDataWidth = ECC_INTC ? DATA_WIDTH+7 : DATA_WIDTH;
+
   logic clk_int;
+
+  logic [EccDataWidth-1:0] core_bus_data, core_bus_r_data, tcdm_data, tcdm_r_data, eu_data, eu_r_data, periph_data, periph_r_data;
+
+  if ( ECC_INTC ) begin
+    assign core_bus_data = {core_bus_slave.user, core_bus_slave.data};
+    assign {core_bus_slave.r_user, core_bus_slave.r_data} = core_bus_r_data;
+    assign {tcdm_data_master.user, tcdm_data_master.data} = tcdm_data;
+    assign tcdm_r_data = {tcdm_data_master.r_user, tcdm_data_master.r_data};
+    assign eu_ctrl_master.wdata = eu_data[31:0];
+    prim_secded_39_32_enc eu_rdata_enc_i (
+      .in (eu_ctrl_master.r_rdata),
+      .out(eu_r_data)
+    );
+    assign periph_data_master.wdata = periph_data[31:0];
+    prim_secded_39_32_enc periph_rdata_enc_i (
+      .in (periph_data_master.r_rdata),
+      .out(periph_r_data)
+    );
+  end else begin
+    assign core_bus_data = core_bus_slave.data;
+    assign core_bus_slave.r_data = core_bus_r_data;
+    assign tcdm_data_master.data = tcdm_data;
+    assign tcdm_r_data = tcdm_data_master.r_data;
+    assign eu_ctrl_master.wdata = eu_data;
+    assign eu_r_data = eu_ctrl_master.r_rdata;
+    assign periph_data_master.wdata = periph_data;
+    assign periph_r_data = periph_data_master.r_rdata;
+  end
 
   tc_clk_gating clock_gate_i (
     .clk_i    (clk_i),
@@ -54,7 +85,7 @@ module cluster_core_assist #(
 
   core_demux #(
     .ADDR_WIDTH         ( ADDR_WIDTH         ),
-    .DATA_WIDTH         ( DATA_WIDTH         ),
+    .DATA_WIDTH         ( EccDataWidth       ),
     .BYTE_ENABLE_BIT    ( BE_WIDTH           ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
   ) core_demux_i (
@@ -67,42 +98,42 @@ module cluster_core_assist #(
     .data_req_i         ( core_bus_slave.req         ),
     .data_add_i         ( core_bus_slave.add         ),
     .data_wen_i         ( core_bus_slave.wen         ),
-    .data_wdata_i       ( core_bus_slave.data        ),
+    .data_wdata_i       ( core_bus_data        ),
     .data_be_i          ( core_bus_slave.be          ),
     .data_gnt_o         ( core_bus_slave.gnt         ),
     .data_r_valid_o     ( core_bus_slave.r_valid     ),
-    .data_r_rdata_o     ( core_bus_slave.r_data      ),
+    .data_r_rdata_o     ( core_bus_r_data      ),
     .data_r_opc_o       ( core_bus_slave.r_opc       ),
 
     .data_req_o_SH      ( tcdm_data_master.req       ),
     .data_add_o_SH      ( tcdm_data_master.add       ),
     .data_wen_o_SH      ( tcdm_data_master.wen       ),
-    .data_wdata_o_SH    ( tcdm_data_master.data      ),
+    .data_wdata_o_SH    ( tcdm_data      ),
     .data_be_o_SH       ( tcdm_data_master.be        ),
     .data_gnt_i_SH      ( tcdm_data_master.gnt       ),
     .data_r_valid_i_SH  ( tcdm_data_master.r_valid   ),
-    .data_r_rdata_i_SH  ( tcdm_data_master.r_data   ),
+    .data_r_rdata_i_SH  ( tcdm_r_data   ),
 
     .data_req_o_EXT     ( eu_ctrl_master.req         ),
     .data_add_o_EXT     ( eu_ctrl_master.add         ),
     .data_wen_o_EXT     ( eu_ctrl_master.wen         ),
-    .data_wdata_o_EXT   ( eu_ctrl_master.wdata       ),
+    .data_wdata_o_EXT   ( eu_data       ),
     .data_be_o_EXT      ( eu_ctrl_master.be          ),
     .data_gnt_i_EXT     ( eu_ctrl_master.gnt         ),
     .data_r_valid_i_EXT ( eu_ctrl_master.r_valid     ),
-    .data_r_rdata_i_EXT ( eu_ctrl_master.r_rdata     ),
+    .data_r_rdata_i_EXT ( eu_r_data     ),
     .data_r_opc_i_EXT   ( eu_ctrl_master.r_opc       ),
     // What happens to eu_ctrl_master.id, .r_id?
 
     .data_req_o_PE      ( periph_data_master.req     ),
     .data_add_o_PE      ( periph_data_master.add     ),
     .data_wen_o_PE      ( periph_data_master.wen     ),
-    .data_wdata_o_PE    ( periph_data_master.wdata   ),
+    .data_wdata_o_PE    ( periph_data   ),
     .data_be_o_PE       ( periph_data_master.be      ),
     .data_gnt_i_PE      ( periph_data_master.gnt     ),
     .data_r_valid_i_PE  ( periph_data_master.r_valid ),
     .data_r_opc_i_PE    ( periph_data_master.r_opc   ),
-    .data_r_rdata_i_PE  ( periph_data_master.r_rdata ),
+    .data_r_rdata_i_PE  ( periph_r_data ),
     // What happens to periph_ctrl_master.id, .r_id?
 
     .perf_l2_ld_o       ( perf_counters_o[0]         ),

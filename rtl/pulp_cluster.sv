@@ -376,7 +376,33 @@ module pulp_cluster
   ) s_hci_ext[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
-
+  hci_core_intf #(
+    .DW ( 32 ),
+    .AW ( 32 ),
+    .OW ( 1  ),
+    .UW ( ECC_INTC ? 7 : 0 )
+  ) s_hci_ext_ecc[NB_DMAS-1:0] (
+    .clk ( clk_cluster )
+  );
+  for ( genvar i = 0; i < NB_DMAS; i++ ) begin
+    if ( ECC_INTC ) begin
+      hci_core_intf_ecc_enc #(
+        .DropECC   ( 1  ),
+        .DW        ( 32 ),
+        .UW        ( 0  )
+      ) i_ext_enc (
+        .bus_in     ( s_hci_ext[i]     ),
+        .bus_out    ( s_hci_ext_ecc[i] ),
+        .syndrome_o (                  ),
+        .err_o      (                  )
+      );
+    end else begin
+      hci_core_assign i_ext_assign (
+        .tcdm_slave  ( s_hci_ext[i]     ),
+        .tcdm_master ( s_hci_ext_ecc[i] )
+      );
+    end
+  end
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS #(
     .ID_WIDTH(NB_CORES + NB_MPERIPHS)
@@ -393,6 +419,33 @@ module pulp_cluster
   ) s_hci_dma[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
+  hci_core_intf #(
+    .DW ( 32 ),
+    .AW ( 32 ),
+    .OW ( 1  ),
+    .UW ( ECC_INTC ? 7 : 0 )
+  ) s_hci_dma_ecc[NB_DMAS-1:0] (
+    .clk ( clk_cluster )
+  );
+  for ( genvar i = 0; i < NB_DMAS; i++ ) begin
+    if ( ECC_INTC ) begin
+      hci_core_intf_ecc_enc #(
+        .DropECC   ( 1  ),
+        .DW        ( 32 ),
+        .UW        ( 0  )
+      ) i_dma_enc (
+        .bus_in     ( s_hci_dma[i]     ),
+        .bus_out    ( s_hci_dma_ecc[i] ),
+        .syndrome_o (                  ),
+        .err_o      (                  )
+      );
+    end else begin
+      hci_core_assign i_dma_assign (
+        .tcdm_slave  ( s_hci_dma[i]     ),
+        .tcdm_master ( s_hci_dma_ecc[i] )
+      );
+    end
+  end
   XBAR_TCDM_BUS    s_dma_plugin_xbar_bus[NB_DMAS-1:0]();
 
   // ext -> xbar periphs FIXME
@@ -410,10 +463,12 @@ module pulp_cluster
   ) s_hci_hwpe [0:0] (
     .clk ( clk_cluster )
   );
+
   hci_core_intf #(
     .DW ( 32 ),
     .AW ( 32 ),
-    .OW ( 1  )
+    .OW ( 1  ),
+    .UW ( ECC_INTC ? 7 : 0 )
   ) s_hci_core_tcdm [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
@@ -421,7 +476,8 @@ module pulp_cluster
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1          )
+    .OW ( 1          ),
+    .UW ( ECC_INTC ? 7 : 0 )
   ) s_core_bus [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
@@ -429,7 +485,8 @@ module pulp_cluster
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1          )
+    .OW ( 1          ),
+    .UW ( ECC_INTC ? 7 : 0 )
   ) s_core_bus_tcls [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
@@ -505,7 +562,8 @@ module pulp_cluster
 
   // log interconnect -> TCDM memory banks (SRAM)
   hci_mem_intf #(
-    .IW ( TCDM_ID_WIDTH )
+    .IW ( TCDM_ID_WIDTH ),
+    .UW ( ECC_INTC ? 7 : 0 )
   ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0](
     .clk ( clk_cluster )
   );
@@ -741,6 +799,7 @@ module pulp_cluster
     .DATA_WIDTH         ( DATA_WIDTH         ),
     .ADDR_WIDTH         ( ADDR_WIDTH         ),
     .BE_WIDTH           ( BE_WIDTH           ),
+    .HCI_UW             ( ECC_INTC ? 7 : 0   ),
 
     .TEST_SET_BIT       ( TEST_SET_BIT       ),
     .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH     ),
@@ -755,8 +814,8 @@ module pulp_cluster
 
     .core_tcdm_slave    ( s_hci_core_tcdm                     ),
     .hwpe_tcdm_slave    ( s_hci_hwpe                          ),
-    .ext_slave          ( s_hci_ext                           ),
-    .dma_slave          ( s_hci_dma                           ),
+    .ext_slave          ( s_hci_ext_ecc                       ),
+    .dma_slave          ( s_hci_dma_ecc                       ),
 
     .tcdm_sram_master   ( s_tcdm_bus_sram                     ),
 
@@ -922,7 +981,8 @@ module pulp_cluster
       .DATA_WIDTH          ( DATA_WIDTH          ),
       .BE_WIDTH            ( DATA_WIDTH/8        ),
       .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE  ),
-      .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS )
+      .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS ),
+      .ECC_INTC            ( ECC_INTC            )
     ) core_assist_i (
       .clk_i              ( clk_cluster          ),
       .rst_ni             ( s_rst_n              ),
@@ -1003,7 +1063,8 @@ module pulp_cluster
         .InstrRdataWidth  ( INSTR_RDATA_WIDTH   ),
         .NExtPerfCounters ( N_EXT_PERF_COUNTERS ),
         .DataWidth        ( DATA_WIDTH          ),
-        .BEWidth          ( BE_WIDTH            )
+        .BEWidth          ( BE_WIDTH            ),
+        .UserWidth        ( ECC_INTC ? 7 : 0    )
       ) core_ctcls_i (
         .clk_i                ( clk_cluster      ),
         .rst_ni               ( s_rst_n          ),
@@ -1036,10 +1097,12 @@ module pulp_cluster
         .intc_data_add_o      ( {s_core_bus[CORE_C].add,     s_core_bus[CORE_B].add,     s_core_bus[CORE_A].add    } ),
         .intc_data_wen_o      ( {s_core_bus[CORE_C].wen,     s_core_bus[CORE_B].wen,     s_core_bus[CORE_A].wen    } ),
         .intc_data_wdata_o    ( {s_core_bus[CORE_C].data,    s_core_bus[CORE_B].data,    s_core_bus[CORE_A].data   } ),
+        .intc_data_user_o     ( {s_core_bus[CORE_C].user,    s_core_bus[CORE_B].user,    s_core_bus[CORE_A].user   } ),
         .intc_data_be_o       ( {s_core_bus[CORE_C].be,      s_core_bus[CORE_B].be,      s_core_bus[CORE_A].be     } ),
         .intc_data_gnt_i      ( {s_core_bus[CORE_C].gnt,     s_core_bus[CORE_B].gnt,     s_core_bus[CORE_A].gnt    } ),
         .intc_data_r_opc_i    ( {s_core_bus[CORE_C].r_opc,   s_core_bus[CORE_B].r_opc,   s_core_bus[CORE_A].r_opc  } ),
         .intc_data_r_rdata_i  ( {s_core_bus[CORE_C].r_data,  s_core_bus[CORE_B].r_data,  s_core_bus[CORE_A].r_data } ),
+        .intc_data_r_user_i   ( {s_core_bus[CORE_C].r_user,  s_core_bus[CORE_B].r_user,  s_core_bus[CORE_A].r_user } ),
         .intc_data_r_valid_i  ( {s_core_bus[CORE_C].r_valid, s_core_bus[CORE_B].r_valid, s_core_bus[CORE_A].r_valid} ),
 
         .intc_perf_counters_i ( {perf_counters     [CORE_C], perf_counters     [CORE_B], perf_counters     [CORE_A]} ),
@@ -1070,10 +1133,12 @@ module pulp_cluster
         .core_data_add_i      ( {s_core_bus_tcls[CORE_C].add,     s_core_bus_tcls[CORE_B].add,     s_core_bus_tcls[CORE_A].add    } ),
         .core_data_wen_i      ( {s_core_bus_tcls[CORE_C].wen,     s_core_bus_tcls[CORE_B].wen,     s_core_bus_tcls[CORE_A].wen    } ),
         .core_data_wdata_i    ( {s_core_bus_tcls[CORE_C].data,    s_core_bus_tcls[CORE_B].data,    s_core_bus_tcls[CORE_A].data   } ),
+        .core_data_user_i     ( {s_core_bus_tcls[CORE_C].user,    s_core_bus_tcls[CORE_B].user,    s_core_bus_tcls[CORE_A].user   } ),
         .core_data_be_i       ( {s_core_bus_tcls[CORE_C].be,      s_core_bus_tcls[CORE_B].be,      s_core_bus_tcls[CORE_A].be     } ),
         .core_data_gnt_o      ( {s_core_bus_tcls[CORE_C].gnt,     s_core_bus_tcls[CORE_B].gnt,     s_core_bus_tcls[CORE_A].gnt    } ),
         .core_data_r_opc_o    ( {s_core_bus_tcls[CORE_C].r_opc,   s_core_bus_tcls[CORE_B].r_opc,   s_core_bus_tcls[CORE_A].r_opc  } ),
         .core_data_r_rdata_o  ( {s_core_bus_tcls[CORE_C].r_data,  s_core_bus_tcls[CORE_B].r_data,  s_core_bus_tcls[CORE_A].r_data } ),
+        .core_data_r_user_o   ( {s_core_bus_tcls[CORE_C].r_user,  s_core_bus_tcls[CORE_B].r_user,  s_core_bus_tcls[CORE_A].r_user } ),
         .core_data_r_valid_o  ( {s_core_bus_tcls[CORE_C].r_valid, s_core_bus_tcls[CORE_B].r_valid, s_core_bus_tcls[CORE_A].r_valid} ),
 
         .core_perf_counters_o ( {perf_counters_tcls     [CORE_C], perf_counters_tcls     [CORE_B], perf_counters_tcls     [CORE_A]} )
@@ -1126,7 +1191,8 @@ module pulp_cluster
       .APU_NARGS_CPU       ( APU_NARGS_CPU           ),
       .APU_WOP_CPU         ( APU_WOP_CPU             ),
       .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU        ),
-      .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU        )
+      .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU        ),
+      .ECC_INTC            ( ECC_INTC                )
     ) core_wrap_i (
       .clk_i                 ( clk_cluster              ),
       .rst_ni                ( core_rst_tcls_n      [i] ),

@@ -28,7 +28,8 @@ module cluster_core_wrap #(
   parameter APU_NARGS_CPU       = 2,
   parameter APU_WOP_CPU         = 1,
   parameter APU_NDSFLAGS_CPU    = 3,
-  parameter APU_NUSFLAGS_CPU    = 5
+  parameter APU_NUSFLAGS_CPU    = 5,
+  parameter ECC_INTC            = 0
 ) (
   input  logic                                 clk_i,                 // Clock
   input  logic                                 rst_ni,                // Asynchronous reset active low
@@ -90,6 +91,24 @@ module cluster_core_wrap #(
   logic [31:0] core_instr_r_rdata;
   logic        core_instr_r_valid;
 
+  // For ECC
+  logic [31:0] core_wdata, core_rdata;
+  if ( ECC_INTC ) begin
+    prim_secded_39_32_enc data_ecc_enc_i (
+      .in  ( core_wdata           ),
+      .out ( {core_bus_master.user, core_bus_master.data} )
+    );
+    prim_secded_39_32_dec data_ecc_dec_i (
+      .in         ( {core_bus_master.r_user, core_bus_master.r_data} ),
+      .d_o        ( core_rdata             ),
+      .syndrome_o (  ),
+      .err_o      (  )  // TODO log
+    );
+  end else begin
+    assign core_bus_master.data = core_wdata;
+    assign core_rdata = core_bus_master.r_data;
+  end
+
   assign core_bus_master.boffs = '0;
   assign core_bus_master.lrdy  = '0;
 
@@ -128,14 +147,14 @@ module cluster_core_wrap #(
         .instr_gnt_i           ( instr_gnt_i              ),
         .instr_rvalid_i        ( instr_r_valid_i          ),
 
-        .data_addr_o           ( core_bus_master.add           ),
-        .data_wdata_o          ( core_bus_master.data          ),
-        .data_we_o             ( core_bus_master_we            ),
-        .data_req_o            ( core_bus_master.req           ),
-        .data_be_o             ( core_bus_master.be            ),
-        .data_rdata_i          ( core_bus_master.r_data        ),
-        .data_gnt_i            ( core_bus_master.gnt           ),
-        .data_rvalid_i         ( core_bus_master.r_valid       ),
+        .data_addr_o           ( core_bus_master.add      ),
+        .data_wdata_o          ( core_wdata               ),
+        .data_we_o             ( core_bus_master_we       ),
+        .data_req_o            ( core_bus_master.req      ),
+        .data_be_o             ( core_bus_master.be       ),
+        .data_rdata_i          ( core_rdata               ),
+        .data_gnt_i            ( core_bus_master.gnt      ),
+        .data_rvalid_i         ( core_bus_master.r_valid  ),
 
         .irq_i                 ( irq_req_i                ),
         .irq_id_i              ( irq_id_i                 ),
@@ -251,8 +270,8 @@ module cluster_core_wrap #(
         .data_we_o             ( core_bus_master_we      ),
         .data_be_o             ( core_bus_master.be      ),
         .data_addr_o           ( core_bus_master.add     ),
-        .data_wdata_o          ( core_bus_master.data    ),
-        .data_rdata_i          ( core_bus_master.r_data  ),
+        .data_wdata_o          ( core_wdata              ),
+        .data_rdata_i          ( core_rdata              ),
         .data_err_i            ( core_bus_master.r_opc   ),
 
         .irq_software_i        ( 1'b0               ),

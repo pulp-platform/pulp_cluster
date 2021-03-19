@@ -31,6 +31,7 @@ module cluster_interconnect_wrap
   parameter DATA_WIDTH      = 32,
   parameter ADDR_WIDTH      = 32,
   parameter BE_WIDTH        = DATA_WIDTH/8,
+  parameter HCI_UW          = 0,
 
   //TCDM PARAMETERS
   parameter TEST_SET_BIT    = 20,
@@ -147,20 +148,21 @@ module cluster_interconnect_wrap
     if(USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT) begin : hci_gen
 
       hci_interconnect #(
-        .N_HWPE ( HWPE_PRESENT     ),
-        .N_CORE ( NB_CORES         ),
-        .N_DMA  ( NB_DMAS          ),
-        .N_EXT  ( 4                ),
-        .N_MEM  ( NB_TCDM_BANKS    ),
-        .IW     ( TCDM_ID_WIDTH    ),
-        .AWC    ( ADDR_WIDTH       ),
-        .DW_LIC ( DATA_WIDTH       ),
+        .N_HWPE ( HWPE_PRESENT             ),
+        .N_CORE ( NB_CORES                 ),
+        .N_DMA  ( NB_DMAS                  ),
+        .N_EXT  ( 4                        ),
+        .N_MEM  ( NB_TCDM_BANKS            ),
+        .IW     ( TCDM_ID_WIDTH            ),
+        .AWC    ( ADDR_WIDTH               ),
+        .DW_LIC ( DATA_WIDTH               ),
+        .UW_LIC ( HCI_UW                   ),
         .DW_SIC ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .TS_BIT ( TEST_SET_BIT     ),
-        .AWH    ( ADDR_WIDTH       ),
+        .TS_BIT ( TEST_SET_BIT             ),
+        .AWH    ( ADDR_WIDTH               ),
         .DWH    ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .OWH    ( 1                ),
-        .AWM    ( ADDR_MEM_WIDTH+2 )
+        .OWH    ( 1                        ),
+        .AWM    ( ADDR_MEM_WIDTH+2         )
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),

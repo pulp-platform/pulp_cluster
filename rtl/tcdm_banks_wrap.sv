@@ -91,23 +91,43 @@ module tcdm_banks_wrap
         );
       end else begin
         assign tcdm_slave[i].r_id = '0;
-        ecc_sram_wrap #(
-          .BankSize         ( BANK_SIZE ),
-          .InputECC         ( ECC_INTC  ),
-          .UnprotectedWidth ( 32        ),
-          .ProtectedWidth   ( 39        )
-        ) i_ecc_bank (
-          .clk_i        ( clk_i                ),
-          .rst_ni       ( rst_ni               ),
+        if ( ECC_INTC ) begin
+          ecc_sram_wrap #(
+            .BankSize         ( BANK_SIZE ),
+            .InputECC         ( ECC_INTC  ),
+            .UnprotectedWidth ( 32        ),
+            .ProtectedWidth   ( 39        )
+          ) i_ecc_bank (
+            .clk_i        ( clk_i                                        ),
+            .rst_ni       ( rst_ni                                       ),
 
-          .tcdm_wdata_i ( tcdm_slave[i].data   ),
-          .tcdm_add_i   ( tcdm_slave[i].add    ),
-          .tcdm_req_i   ( tcdm_slave[i].req    ),
-          .tcdm_wen_i   ( tcdm_slave[i].wen    ),
-          .tcdm_be_i    ( tcdm_slave[i].be     ),
-          .tcdm_rdata_o ( tcdm_slave[i].r_data ),
-          .tcdm_gnt_o   ( tcdm_slave[i].gnt    )
-        );
+            .tcdm_wdata_i ( {tcdm_slave[i].user, tcdm_slave[i].data}     ),
+            .tcdm_add_i   ( tcdm_slave[i].add                            ),
+            .tcdm_req_i   ( tcdm_slave[i].req                            ),
+            .tcdm_wen_i   ( tcdm_slave[i].wen                            ),
+            .tcdm_be_i    ( tcdm_slave[i].be                             ),
+            .tcdm_rdata_o ( {tcdm_slave[i].r_user, tcdm_slave[i].r_data} ),
+            .tcdm_gnt_o   ( tcdm_slave[i].gnt                            )
+          );
+        end else begin
+          ecc_sram_wrap #(
+            .BankSize         ( BANK_SIZE ),
+            .InputECC         ( ECC_INTC  ),
+            .UnprotectedWidth ( 32        ),
+            .ProtectedWidth   ( 39        )
+          ) i_ecc_bank (
+            .clk_i        ( clk_i                ),
+            .rst_ni       ( rst_ni               ),
+
+            .tcdm_wdata_i ( tcdm_slave[i].data   ),
+            .tcdm_add_i   ( tcdm_slave[i].add    ),
+            .tcdm_req_i   ( tcdm_slave[i].req    ),
+            .tcdm_wen_i   ( tcdm_slave[i].wen    ),
+            .tcdm_be_i    ( tcdm_slave[i].be     ),
+            .tcdm_rdata_o ( tcdm_slave[i].r_data ),
+            .tcdm_gnt_o   ( tcdm_slave[i].gnt    )
+          );
+        end
       end
 
 `else // !`ifndef PULP_EMU_FPGA
