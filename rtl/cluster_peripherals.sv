@@ -242,11 +242,11 @@ module cluster_peripherals
   // combine number of required slave ports for event unit
   generate
     for (genvar I = 0; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
-      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = speriph_slave_eu_comb.gnt;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = speriph_slave_eu_comb.r_valid;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = speriph_slave_eu_comb.r_opc;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = speriph_slave_eu_comb.r_id;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = speriph_slave_eu_comb.r_rdata;
+      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = ( I == 0 ) ? speriph_slave_eu_comb.gnt     : '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = ( I == 0 ) ? speriph_slave_eu_comb.r_valid : '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = ( I == 0 ) ? speriph_slave_eu_comb.r_opc   : '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = ( I == 0 ) ? speriph_slave_eu_comb.r_id    : '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = ( I == 0 ) ? speriph_slave_eu_comb.r_rdata : 32'hDEADB33F;
       assign eu_speriph_plug_req[I]   = speriph_slave[SPER_EVENT_U_ID+I].req;
       assign eu_speriph_plug_add[I]   = speriph_slave[SPER_EVENT_U_ID+I].add;
       assign eu_speriph_plug_wen[I]   = speriph_slave[SPER_EVENT_U_ID+I].wen;

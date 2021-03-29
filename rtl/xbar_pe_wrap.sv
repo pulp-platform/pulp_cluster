@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2013-2017 ETH Zurich, University of Bologna
  * All rights reserved.
@@ -183,26 +184,26 @@ module xbar_pe_wrap
     );
     logic [PE_XBAR_N_OUPS-1:0] pe_oup_reqs;
     for (genvar j = 0; j < PE_XBAR_N_OUPS; j++) begin : gen_pe_xbar_inps_oup_reqs
-      assign pe_oup_reqs[j] = pe_oup_rvalid[j] & (pe_oup_rdata[j].id == 1 << i);
+          assign pe_oup_reqs[j] = pe_oup_rvalid[j] & (pe_oup_rdata[j].id == 1 << i);
     end
-   rr_arb_tree #(
-      .NumIn      (PE_XBAR_N_OUPS),
-      .DataType   (pe_resp_t),
-      .ExtPrio    (1'b0),
-      .AxiVldRdy  (1'b1),
-      .LockIn     (1'b1)
-    ) i_arb_mux (
-      .clk_i,
-      .rst_ni,
-      .flush_i(1'b0),
-      .rr_i   ('0),
-      .req_i  (pe_oup_reqs),
-      .gnt_o  (/*unused*/),
-      .data_i (pe_oup_rdata),
-      .gnt_i  (1'b1),
-      .req_o  (pe_inp_rvalid[i]),
-      .data_o (pe_inp_rdata[i]),
-      .idx_o  ()
+    pe_idx_t oup_sel;
+    onehot_to_bin #(
+      .ONEHOT_WIDTH (PE_XBAR_N_OUPS)
+    ) i_ohb (
+      .onehot (pe_oup_reqs),
+      .bin    (oup_sel)
+    );
+    stream_mux #(
+      .DATA_T (pe_resp_t),
+      .N_INP  (PE_XBAR_N_OUPS)
+    ) i_resp_mux (
+      .inp_data_i   (pe_oup_rdata),
+      .inp_valid_i  (pe_oup_reqs),
+      .inp_ready_o  (/* unused */),
+      .inp_sel_i    (oup_sel),
+      .oup_data_o   (pe_inp_rdata[i]),
+      .oup_valid_o  (pe_inp_rvalid[i]),
+      .oup_ready_i  (1'b1)
     );
   end
   // Arbitrate requests to outputs.
@@ -218,7 +219,7 @@ module xbar_pe_wrap
       .ExtPrio    (1'b0),
       .AxiVldRdy  (1'b0),
       .LockIn     (1'b0)
-    ) i_arb_demux (
+    ) i_arb (
       .clk_i,
       .rst_ni,
       .flush_i  (1'b0),
