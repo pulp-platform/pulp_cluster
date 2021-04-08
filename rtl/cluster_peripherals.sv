@@ -52,7 +52,7 @@ module cluster_peripherals
 
   output logic                        busy_o,
 
-  XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0],
+  XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0], // SPER_EXT_ID NOT PLUGGED HERE 
   XBAR_PERIPH_BUS.Slave               core_eu_direct_link[NB_CORES-1:0],
 
   //input  logic [NB_CORES-1:0]         dma_events_i,
@@ -239,29 +239,17 @@ module cluster_peripherals
   assign eu_message_master.r_opc   = 1'b0;
   assign eu_message_master.gnt     = 1'b1;
 
-  // combine number of required slave ports for event unit
+  // With new interconnect xbar_pe, all requests to EU pass through SPER_EVENT_U_ID speriph_slave. The other plugs are tied to 0.
   generate
-    for (genvar I = 0; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
-      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     = ( I == 0 ) ? speriph_slave_eu_comb.gnt     : '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid = ( I == 0 ) ? speriph_slave_eu_comb.r_valid : '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   = ( I == 0 ) ? speriph_slave_eu_comb.r_opc   : '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    = ( I == 0 ) ? speriph_slave_eu_comb.r_id    : '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata = ( I == 0 ) ? speriph_slave_eu_comb.r_rdata : 32'hDEADB33F;
-      assign eu_speriph_plug_req[I]   = speriph_slave[SPER_EVENT_U_ID+I].req;
-      assign eu_speriph_plug_add[I]   = speriph_slave[SPER_EVENT_U_ID+I].add;
-      assign eu_speriph_plug_wen[I]   = speriph_slave[SPER_EVENT_U_ID+I].wen;
-      assign eu_speriph_plug_wdata[I] = speriph_slave[SPER_EVENT_U_ID+I].wdata;
-      assign eu_speriph_plug_be[I]    = speriph_slave[SPER_EVENT_U_ID+I].be;
-      assign eu_speriph_plug_id[I]    = speriph_slave[SPER_EVENT_U_ID+I].id;
+    for (genvar I = 1; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
+      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     =  '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid =  '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   =  '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    =  '0;
+      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata =  32'hDEADB33F;
     end
   endgenerate
 
-  assign speriph_slave_eu_comb.req   = |eu_speriph_plug_req;
-  assign speriph_slave_eu_comb.add   = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_add[1]   : eu_speriph_plug_add[0];
-  assign speriph_slave_eu_comb.wen   = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_wen[1]   : eu_speriph_plug_wen[0];
-  assign speriph_slave_eu_comb.wdata = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_wdata[1] : eu_speriph_plug_wdata[0];
-  assign speriph_slave_eu_comb.be    = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_be[1]    : eu_speriph_plug_be[0];
-  assign speriph_slave_eu_comb.id    = (eu_speriph_plug_req == 2'b10) ? eu_speriph_plug_id[1]    : eu_speriph_plug_id[0];
 
 
   event_unit_top #(
@@ -291,7 +279,7 @@ module cluster_peripherals
     .core_busy_i            ( core_busy_i            ),
     .core_clock_en_o        ( core_clk_en_o          ),
     
-    .speriph_slave          ( speriph_slave_eu_comb  ),
+    .speriph_slave          ( speriph_slave[SPER_EVENT_U_ID]  ),
     .eu_direct_link         ( core_eu_direct_link    ),
     
     .soc_periph_evt_valid_i ( soc_periph_evt_valid_i ),
