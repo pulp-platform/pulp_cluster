@@ -85,8 +85,8 @@ module pulp_cluster
   parameter AXI_DATA_C2S_WIDTH      = 64,
   parameter AXI_DATA_S2C_WIDTH      = 32,
   parameter AXI_USER_WIDTH          = 6,
-  parameter AXI_ID_IN_WIDTH         = 4,
-  parameter AXI_ID_OUT_WIDTH        = 6, 
+  parameter AXI_ID_IN_WIDTH         = 5,
+  parameter AXI_ID_OUT_WIDTH        = 7, 
   parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
@@ -102,7 +102,7 @@ module pulp_cluster
   parameter S2C_W_WIDTH              = 43,
   parameter S2C_B_WIDTH              = 13,
   parameter S2C_AR_WIDTH             = 72,
-  parameter S2C_R_WIDTH              = 16,
+  parameter S2C_R_WIDTH              = 46,
   // TCDM and log interconnect parameters
   parameter DATA_WIDTH              = 32,
   parameter ADDR_WIDTH              = 32,
@@ -489,7 +489,7 @@ module pulp_cluster
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH   ),
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_core_instr_bus(); 
 
