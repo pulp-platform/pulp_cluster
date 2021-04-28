@@ -49,6 +49,7 @@ module core_region
 
   parameter FPU                 =  0,
   parameter FP_DIVSQRT          =  0,
+  parameter ZFINX               =  0,
   parameter SHARED_FP           =  0,
   parameter SHARED_FP_DIVSQRT   =  0,
 

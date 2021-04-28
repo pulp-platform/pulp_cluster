@@ -167,19 +167,19 @@ module pulp_cluster
   //***************************************
   // WRITE ADDRESS CHANNEL
   // WRITE ADDRESS CHANNEL
-  input logic [LOG_DEPTH:0]                        async_data_slave_aw_wptr_i,
-  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0] async_data_slave_aw_data_i,
-  output logic  [LOG_DEPTH:0]                      async_data_slave_aw_rptr_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_aw_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0]  async_data_slave_aw_data_i,
+  output logic  [LOG_DEPTH:0]                       async_data_slave_aw_rptr_o,
 
   // READ ADDRESS CHANNEL
-  input logic [LOG_DEPTH:0]                        async_data_slave_ar_wptr_i,
-  input logic [2**LOG_DEPTH-1:0][S2C_AR_WIDTH-1:0] async_data_slave_ar_data_i,
-  output logic [LOG_DEPTH:0]                       async_data_slave_ar_rptr_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_ar_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AR_WIDTH-1:0]  async_data_slave_ar_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_slave_ar_rptr_o,
 
   // WRITE DATA CHANNEL
-  input logic [LOG_DEPTH:0]                        async_data_slave_w_wptr_i,
-  input logic [2**LOG_DEPTH-1:0][S2C_W_WIDTH-1:0]  async_data_slave_w_data_i,
-  output logic [LOG_DEPTH:0]                       async_data_slave_w_rptr_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_w_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_W_WIDTH-1:0]   async_data_slave_w_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_slave_w_rptr_o,
 
   // READ DATA CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_slave_r_wptr_o,
@@ -215,7 +215,7 @@ module pulp_cluster
   // WRITE RESPONSE CHANNEL
   input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
   input logic [2**LOG_DEPTH-1:0][C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
-  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o
+  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o,
 
 
   TCDM_BANK_MEM_BUS.Master                 tcdm_l1_bus[NB_TCDM_BANKS-1:0]

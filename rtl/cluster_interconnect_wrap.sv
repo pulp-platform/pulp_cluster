@@ -4,7 +4,7 @@
  *
  * This code is under development and not yet released to the public.
  * Until it is released, the code is under the copyright of ETH Zurich and
- * the University of Bologna, and may contain confidential and/or unpublished 
+ * the University of Bologna, and may contain confidential and/or unpublished
  * work. Any reuse/redistribution is strictly forbidden without written
  * permission from ETH Zurich.
  *
@@ -13,11 +13,11 @@
  * (http://www.pulp-platform.org), under the copyright of ETH Zurich and the
  * University of Bologna.
  */
- 
+
 `include "pulp_soc_defines.sv"
 
 module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
-   
+
 #(
   parameter NB_CORES        = 8,
   parameter NB_HWPE_PORTS   = 4,
@@ -32,7 +32,7 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
 
   //TCDM PARAMETERS
   parameter TEST_SET_BIT    = 20,
-  parameter ADDR_MEM_WIDTH  = 11,   
+  parameter ADDR_MEM_WIDTH  = 11,
   parameter LOG_CLUSTER     = 5,
   parameter PE_ROUTING_LSB  = 16,
   parameter PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
@@ -83,7 +83,7 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
   logic [NB_TCDM_BANKS-1:0][BE_WIDTH-1:0]                 s_tcdm_bus_sram_be;
   logic [NB_TCDM_BANKS-1:0][DATA_WIDTH-1:0]               s_tcdm_bus_sram_rdata;
   logic [NB_TCDM_BANKS-1:0]                               s_tcdm_bus_sram_gnt;
-   
+
 
   //********************************************************
   //****** BINDING INTERFACES TO XBAR_TCDM BUS SIGNALS *****
@@ -144,8 +144,8 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
       assign tcdm_sram_master[i].be    = s_tcdm_bus_sram_be    [i];
       assign s_tcdm_bus_sram_rdata[i]  = tcdm_sram_master[i].rdata;
       assign s_tcdm_bus_sram_gnt[i]    = s_tcdm_bus_sram_req[i];
-     
-    end 
+
+    end
   endgenerate
 
   //-********************************************************
@@ -176,7 +176,7 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
     .gnt_o    ( { s_dma_bus_gnt,      s_core_tcdm_bus_gnt}      ),
     .vld_o    ( { s_dma_bus_r_valid,  s_core_tcdm_bus_r_valid}  ),
     .rdata_o  ( { s_dma_bus_r_rdata,  s_core_tcdm_bus_r_rdata}  ),
-                         
+
     .req_o    ( s_tcdm_bus_sram_req                             ),
     .gnt_i    ( s_tcdm_bus_sram_gnt                             ),
     .add_o    ( s_tcdm_bus_sram_add                             ),
@@ -185,7 +185,7 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
     .be_o     ( s_tcdm_bus_sram_be                              ),
     .rdata_i  ( s_tcdm_bus_sram_rdata                           )
   );
-   
+
   //********************************************************
   //******* LOGARITHMIC INTERCONNECT TO PERIPHERALS ********
   //********************************************************
@@ -194,14 +194,14 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
     .NB_CORES           ( NB_CORES             ),
     .NB_MPERIPHS        ( NB_MPERIPHS          ),
     .NB_SPERIPHS        ( NB_SPERIPHS          ),
-    
+
     .ADDR_WIDTH         ( ADDR_WIDTH           ),
     .DATA_WIDTH         ( DATA_WIDTH           ),
     .BE_WIDTH           ( BE_WIDTH             ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
-   ) 
+   )
    xbar_pe_inst
    (
     .clk_i            ( clk_i ),
