@@ -76,17 +76,17 @@ module cluster_bus_wrap
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH  ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH    )
   ) axi_masters [NB_MASTER-1:0]();
-   
+
   // assign here your axi masters
   `AXI_ASSIGN(tcdm_master  , axi_masters[0])
   `AXI_ASSIGN(periph_master, axi_masters[1])
   `AXI_ASSIGN(ext_master   , axi_masters[2])
-  
+
   // address map
   logic [31:0] cluster_base_addr;
   assign cluster_base_addr = 32'h1000_0000 + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 3;
-  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map; 
+  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map;
 
 
   assign addr_map[0] = '{ // TCDM
@@ -105,19 +105,19 @@ module cluster_bus_wrap
     end_addr:   32'hFFFF_FFFF
   };
 
-  // pragma translate_off
-  `ifndef VERILATOR
-    initial begin
-      assert (AXI_ADDR_WIDTH == 32)
-        else $fatal("Address map is only defined for 32-bit addresses!");
-      assert (TCDM_SIZE <= 128*1024)
-        else $fatal(1, "TCDM size exceeds available address space in cluster bus!");
-      assert (TCDM_SIZE > 0)
-        else $fatal(1, "TCDM size must be non-zero!");
-      assert (AXI_ID_IN_WIDTH + $clog2(NB_SLAVE) <= AXI_ID_OUT_WIDTH)
-        else $fatal(1, "Insufficient AXI_ID_OUT_WIDTH!");
-    end
-  `endif
+//  // pragma translate_off
+//  `ifndef VERILATOR
+//    initial begin
+//      assert (AXI_ADDR_WIDTH == 32)
+//        else $fatal("Address map is only defined for 32-bit addresses!");
+//      assert (TCDM_SIZE <= 128*1024)
+//        else $fatal(1, "TCDM size exceeds available address space in cluster bus!");
+//      assert (TCDM_SIZE > 0)
+//        else $fatal(1, "TCDM size must be non-zero!");
+//      assert (AXI_ID_IN_WIDTH + $clog2(NB_SLAVE) <= AXI_ID_OUT_WIDTH)
+//        else $fatal(1, "Insufficient AXI_ID_OUT_WIDTH!");
+//    end
+//  `endif
 
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
                                                     DMA_NB_OUTSND_BURSTS : NB_CORES;
@@ -130,7 +130,7 @@ module cluster_bus_wrap
                                                     //outstanding transactiions anyways
                                                     MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
                                                     //per slave port
-                                                    FallThrough: 1'b0,       //Use the reccomended default config 
+                                                    FallThrough: 1'b0,       //Use the reccomended default config
                                                     LatencyMode: axi_pkg::NO_LATENCY, // CUT_ALL_AX | axi_pkg::DemuxW,
                                                     AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
@@ -156,5 +156,3 @@ module cluster_bus_wrap
   );
 
 endmodule
-
-
