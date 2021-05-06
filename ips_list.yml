@@ -67,7 +67,7 @@ hwpe-stream:
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hci:
-  commit: new_xbar
+  commit: v1.0.6
   group: pulp-platform
   domain: [cluster, pulp]
 cluster_peripherals:
