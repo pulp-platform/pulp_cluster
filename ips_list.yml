@@ -43,7 +43,7 @@ mchan:
   domain: [cluster]
   group:  pulp-platform
 hier-icache:
-  commit: v1.2.0
+  commit: axi_node_dep
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
