@@ -39,11 +39,11 @@ event_unit_flex:
   domain: [cluster]
   group:  pulp-platform
 mchan:
-  commit: 5104953034dd0df46d574b3c4c839618079342ba
+  commit: clusterv2
   domain: [cluster]
   group:  pulp-platform
 hier-icache:
-  commit: axi_node_dep
+  commit: v1.2.0
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
