@@ -3,10 +3,10 @@
 # Uses the YAML syntax.
 #
 common_cells:
-  commit: v1.20.0
+  commit: v1.21.0
   domain: [cluster, soc]
 axi/axi:
-  commit: axi_cdc_split
+  commit: v0.28.0
   domain: [cluster, soc]
 axi/axi_slice:
   commit: v1.1.4
@@ -31,7 +31,7 @@ axi/axi_size_conv:
   domain: [cluster]
   group:  pulp-platform
 cluster_interconnect:
-  commit: v1.1.0
+  commit: v1.1.1
   domain: [cluster]
   group:  pulp-platform
 event_unit_flex:
@@ -43,7 +43,7 @@ mchan:
   domain: [cluster]
   group:  pulp-platform
 hier-icache:
-  commit: v1.2.0
+  commit: axi_node_dep
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
@@ -59,15 +59,15 @@ icache_private:
   domain: [cluster]
   group:  pulp-platform
 hwpe-ctrl:
-  commit: v1.5
-  group: pulp-platform
-  domain: [soc, cluster, pulp]
-hwpe-stream:
   commit: v1.6.1
   group: pulp-platform
   domain: [soc, cluster, pulp]
+hwpe-stream:
+  commit: v1.6.3
+  group: pulp-platform
+  domain: [soc, cluster, pulp]
 hci:
-  commit: v1.0.6
+  commit: new_xbar
   group: pulp-platform
   domain: [soc, cluster, pulp]
 cluster_peripherals:

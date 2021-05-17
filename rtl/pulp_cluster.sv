@@ -103,6 +103,19 @@ module pulp_cluster
   parameter S2C_B_WIDTH              = 13,
   parameter S2C_AR_WIDTH             = 72,
   parameter S2C_R_WIDTH              = 46,
+
+  localparam ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
+  localparam ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
+  localparam ASYNC_C2S_B_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_B_WIDTH,
+  localparam ASYNC_C2S_AR_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AR_WIDTH,
+  localparam ASYNC_C2S_R_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_R_WIDTH,
+  
+  localparam ASYNC_S2C_AW_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AW_WIDTH,
+  localparam ASYNC_S2C_W_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_W_WIDTH,
+  localparam ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
+  localparam ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
+  localparam ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
+ 
   // TCDM and log interconnect parameters
   parameter DATA_WIDTH              = 32,
   parameter ADDR_WIDTH              = 32,
@@ -123,6 +136,7 @@ module pulp_cluster
   parameter EVNT_WIDTH              = 8,  // size of the event bus
   parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
 
+  localparam ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
   // FPU PARAMETERS
   parameter APU_NARGS_CPU           = 3,
   parameter APU_WOP_CPU             = 6,
@@ -131,93 +145,95 @@ module pulp_cluster
   parameter APU_NUSFLAGS_CPU        = 5
 )
 (
-  input logic                                       clk_i,
-  input logic                                       rst_ni,
-  input logic                                       ref_clk_i,
-  input logic                                       pmu_mem_pwdn_i,
+  input logic                                    clk_i,
+  input logic                                    rst_ni,
+  input logic                                    ref_clk_i,
+  input logic                                    pmu_mem_pwdn_i,
 
   
-  input logic [3:0]                                 base_addr_i,
+  input logic [3:0]                              base_addr_i,
 
-  input logic                                       test_mode_i,
+  input logic                                    test_mode_i,
 
-  input logic                                       en_sa_boot_i,
+  input logic                                    en_sa_boot_i,
 
-  input logic [5:0]                                 cluster_id_i,
+  input logic [5:0]                              cluster_id_i,
 
-  input logic                                       fetch_en_i,
+  input logic                                    fetch_en_i,
  
-  output logic                                      eoc_o,
+  output logic                                   eoc_o,
   
-  output logic                                      busy_o,
+  output logic                                   busy_o,
  
-  input logic [DC_SLICE_BUFFER_WIDTH-1:0]           ext_events_writetoken_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0]          ext_events_readpointer_o,
-  input logic [EVNT_WIDTH-1:0]                      ext_events_dataasync_i,
-  
-  input logic                                       dma_pe_evt_ack_i,
-  output logic                                      dma_pe_evt_valid_o,
+ 
+  input logic                                    dma_pe_evt_ack_i,
+  output logic                                   dma_pe_evt_valid_o,
 
-  input logic                                       dma_pe_irq_ack_i,
-  output logic                                      dma_pe_irq_valid_o,
+  input logic                                    dma_pe_irq_ack_i,
+  output logic                                   dma_pe_irq_valid_o,
   
-  input logic                                       pf_evt_ack_i,
-  output logic                                      pf_evt_valid_o,
+  input logic                                    pf_evt_ack_i,
+  output logic                                   pf_evt_valid_o,
 
-  input logic [NB_CORES-1:0]                        dbg_irq_valid_i,
+  input logic [NB_CORES-1:0]                     dbg_irq_valid_i,
+
+  input logic [LOG_DEPTH:0]                      async_cluster_events_wptr_i,
+  output logic [LOG_DEPTH:0]                     async_cluster_events_rptr_o,
+  input logic [ASYNC_EVENT_DATA_WIDTH-1:0]       async_cluster_events_data_i,
+
+ 
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
-  // WRITE ADDRESS CHANNEL
-  input logic [LOG_DEPTH:0]                        async_data_slave_aw_wptr_i,
-  input logic [(2**LOG_DEPTH)*S2C_AW_WIDTH-1:0] async_data_slave_aw_data_i, 
-  output logic  [LOG_DEPTH:0]                      async_data_slave_aw_rptr_o,
+  input logic [LOG_DEPTH:0]                      async_data_slave_aw_wptr_i,
+  input logic [ASYNC_S2C_AW_DATA_WIDTH-1:0]      async_data_slave_aw_data_i, 
+  output logic [LOG_DEPTH:0]                     async_data_slave_aw_rptr_o,
                                            
   // READ ADDRESS CHANNEL                  
-  input logic [LOG_DEPTH:0]                        async_data_slave_ar_wptr_i,
-  input logic [(2**LOG_DEPTH)*S2C_AR_WIDTH-1:0] async_data_slave_ar_data_i,
-  output logic [LOG_DEPTH:0]                       async_data_slave_ar_rptr_o,
+  input logic [LOG_DEPTH:0]                      async_data_slave_ar_wptr_i,
+  input logic [ASYNC_S2C_AR_DATA_WIDTH-1:0]      async_data_slave_ar_data_i,
+  output logic [LOG_DEPTH:0]                     async_data_slave_ar_rptr_o,
                                            
   // WRITE DATA CHANNEL                    
-  input logic [LOG_DEPTH:0]                        async_data_slave_w_wptr_i,
-  input logic [(2**LOG_DEPTH)*S2C_W_WIDTH-1:0]  async_data_slave_w_data_i,
-  output logic [LOG_DEPTH:0]                       async_data_slave_w_rptr_o,
+  input logic [LOG_DEPTH:0]                      async_data_slave_w_wptr_i,
+  input logic [ASYNC_S2C_W_DATA_WIDTH-1:0]       async_data_slave_w_data_i,
+  output logic [LOG_DEPTH:0]                     async_data_slave_w_rptr_o,
                                                    
   // READ DATA CHANNEL                             
-  output logic [LOG_DEPTH:0]                        async_data_slave_r_wptr_o,
-  output logic [(2**LOG_DEPTH)*S2C_R_WIDTH-1:0]  async_data_slave_r_data_o,
-  input logic [LOG_DEPTH:0]                         async_data_slave_r_rptr_i,
+  output logic [LOG_DEPTH:0]                     async_data_slave_r_wptr_o,
+  output logic [ASYNC_S2C_R_DATA_WIDTH-1:0]      async_data_slave_r_data_o,
+  input logic [LOG_DEPTH:0]                      async_data_slave_r_rptr_i,
                                                    
   // WRITE RESPONSE CHANNEL                        
-  output logic [LOG_DEPTH:0]                        async_data_slave_b_wptr_o,
-  output logic [(2**LOG_DEPTH)*S2C_B_WIDTH-1:0]  async_data_slave_b_data_o,
-  input logic [LOG_DEPTH:0]                         async_data_slave_b_rptr_i,
+  output logic [LOG_DEPTH:0]                     async_data_slave_b_wptr_o,
+  output logic [ASYNC_S2C_B_DATA_WIDTH-1:0]      async_data_slave_b_data_o,
+  input logic [LOG_DEPTH:0]                      async_data_slave_b_rptr_i,
   // AXI4 MASTER
   //***************************************
   // WRITE ADDRESS CHANNEL
-  output logic [LOG_DEPTH:0]                        async_data_master_aw_wptr_o,
-  output logic [(2**LOG_DEPTH)*C2S_AW_WIDTH-1:0] async_data_master_aw_data_o, 
-  input logic [LOG_DEPTH:0]                         async_data_master_aw_rptr_i,
+  output logic [LOG_DEPTH:0]                     async_data_master_aw_wptr_o,
+  output logic [ASYNC_C2S_AW_DATA_WIDTH-1:0]     async_data_master_aw_data_o, 
+  input logic [LOG_DEPTH:0]                      async_data_master_aw_rptr_i,
                                            
   // READ ADDRESS CHANNEL                  
-  output logic [LOG_DEPTH:0]                        async_data_master_ar_wptr_o,
-  output logic [(2**LOG_DEPTH)*C2S_AR_WIDTH-1:0] async_data_master_ar_data_o,
-  input logic [LOG_DEPTH:0]                         async_data_master_ar_rptr_i,
+  output logic [LOG_DEPTH:0]                     async_data_master_ar_wptr_o,
+  output logic [ASYNC_C2S_AR_DATA_WIDTH-1:0]     async_data_master_ar_data_o,
+  input logic [LOG_DEPTH:0]                      async_data_master_ar_rptr_i,
                                            
   // WRITE DATA CHANNEL                    
-  output logic [LOG_DEPTH:0]                        async_data_master_w_wptr_o,
-  output logic [(2**LOG_DEPTH)*C2S_W_WIDTH-1:0]  async_data_master_w_data_o,
-  input logic [LOG_DEPTH:0]                         async_data_master_w_rptr_i,
+  output logic [LOG_DEPTH:0]                     async_data_master_w_wptr_o,
+  output logic [ASYNC_C2S_W_DATA_WIDTH-1:0]      async_data_master_w_data_o,
+  input logic [LOG_DEPTH:0]                      async_data_master_w_rptr_i,
                                                    
   // READ DATA CHANNEL                             
-  input logic [LOG_DEPTH:0]                         async_data_master_r_wptr_i,
-  input logic [(2**LOG_DEPTH)*C2S_R_WIDTH-1:0]   async_data_master_r_data_i,
-  output logic [LOG_DEPTH:0]                        async_data_master_r_rptr_o,
+  input logic [LOG_DEPTH:0]                      async_data_master_r_wptr_i,
+  input logic [ASYNC_C2S_R_DATA_WIDTH-1:0]       async_data_master_r_data_i,
+  output logic [LOG_DEPTH:0]                     async_data_master_r_rptr_o,
                                                    
   // WRITE RESPONSE CHANNEL                        
-  input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
-  input logic [(2**LOG_DEPTH)*C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
-  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o
+  input logic [LOG_DEPTH:0]                      async_data_master_b_wptr_i,
+  input logic [ASYNC_C2S_B_DATA_WIDTH-1:0]       async_data_master_b_data_i,
+  output logic [LOG_DEPTH:0]                     async_data_master_b_rptr_o
    
 );
 
@@ -438,26 +454,6 @@ module pulp_cluster
     .clk ( clk_cluster )
   );
 
-  //***************************************************
-  /* asynchronous AXI interfaces at CLUSTER/SOC interface */
-  //*************************************************** 
-  
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_slave_async(); 
-/*
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_master_async(); 
-*/
   //***************************************************
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
   //*************************************************** 
@@ -1418,7 +1414,6 @@ module pulp_cluster
      .src_clk_i                        ( clk_cluster                 ),
      .src_req_i                        ( src_req                     ),
      .src_resp_o                       ( src_resp                    ),
-     .isolate_i                        ( 1'b0                        ),
      .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
      .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
      .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
@@ -1468,7 +1463,6 @@ module pulp_cluster
      .dst_clk_i                        ( clk_i                      ),
      .dst_req_o                        ( dst_req                    ),
      .dst_resp_i                       ( dst_resp                   ),
-     .isolate_i                        ( 1'b0                       ),
      .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
      .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
      .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
@@ -1501,18 +1495,19 @@ module pulp_cluster
   );
    
   /* event synchronizers */
-  dc_token_ring_fifo_dout #(
-    .DATA_WIDTH   ( EVNT_WIDTH            ),
-    .BUFFER_DEPTH ( DC_SLICE_BUFFER_WIDTH )
+  cdc_fifo_gray_dst #(
+    .T(logic[EVNT_WIDTH-1:0]),
+    .LOG_DEPTH(LOG_DEPTH),
+    .SYNC_STAGES(2)
   ) u_event_dc (
-    .clk          ( clk_i                    ),
-    .rstn         ( s_rst_n                  ),
-    .data         ( s_events_data            ),
-    .valid        ( s_events_valid           ),
-    .ready        ( s_events_ready           ),
-    .write_token  ( ext_events_writetoken_i  ),
-    .read_pointer ( ext_events_readpointer_o ),
-    .data_async   ( ext_events_dataasync_i   )
+    .dst_clk_i                ( clk_i                       ),
+    .dst_rst_ni               ( s_rst_n                     ),
+    .dst_data_o               ( s_events_data               ),
+    .dst_valid_o              ( s_events_valid              ),
+    .dst_ready_i              ( s_events_ready              ),
+    (* async *) .async_data_i ( async_cluster_events_data_i ),
+    (* async *) .async_wptr_i ( async_cluster_events_wptr_i ),
+    (* async *) .async_rptr_o ( async_cluster_events_rptr_o )
   ); 
   assign s_events_async = s_events_valid;
     
