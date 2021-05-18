@@ -511,7 +511,7 @@ module pulp_cluster
     .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   )
   ) cluster_bus_wrap_i (
     .clk_i         ( clk_cluster       ),
-    .rst_ni        ( rst_ni            ),
+    .rst_ni        ( s_rst_n            ),
     .test_en_i     ( test_mode_i       ),
     .cluster_id_i  ( cluster_id_i      ),
     .instr_slave   ( s_core_instr_bus  ),
@@ -531,7 +531,7 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
   ) axi2mem_wrap_i (
     .clk_i       ( clk_cluster    ),
-    .rst_ni      ( rst_ni         ),
+    .rst_ni      ( s_rst_n         ),
     .test_en_i   ( test_mode_i    ),
     .axi_slave   ( s_ext_tcdm_bus ),
     .tcdm_master ( s_ext_xbar_bus ),
@@ -545,7 +545,7 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) axi2per_wrap_i (
     .clk_i         ( clk_cluster       ),
-    .rst_ni        ( rst_ni            ),
+    .rst_ni        ( s_rst_n            ),
     .test_en_i     ( test_mode_i       ),
     .axi_slave     ( s_ext_mperiph_bus ),
     .periph_master ( s_mperiph_bus     ),
@@ -557,7 +557,7 @@ module pulp_cluster
     .ADDR_OFFSET ( 20 )
   ) per_demux_wrap_i (
     .clk_i   ( clk_cluster         ),
-    .rst_ni  ( rst_ni              ),
+    .rst_ni  ( s_rst_n              ),
     .slave   ( s_mperiph_bus       ),
     .masters ( s_mperiph_demux_bus )
   );
@@ -596,7 +596,7 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
   ) per2axi_wrap_i (
     .clk_i          ( clk_cluster                     ),
-    .rst_ni         ( rst_ni                          ),
+    .rst_ni         ( s_rst_n                         ),
     .test_en_i      ( test_mode_i                     ),
     .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
     .axi_master     ( s_core_ext_bus                  ),
@@ -628,7 +628,7 @@ module pulp_cluster
 
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
-    .rst_ni             ( rst_ni                              ),
+    .rst_ni             ( s_rst_n                             ),
 
     .core_tcdm_slave    ( s_core_xbar_bus                     ),
     .core_periph_slave  ( s_core_periph_bus                   ),
@@ -665,7 +665,7 @@ module pulp_cluster
     .BE_WIDTH           ( BE_WIDTH           )
   ) dmac_wrap_i (
     .clk_i          ( clk_cluster        ),
-    .rst_ni         ( rst_ni             ),
+    .rst_ni         ( s_rst_n            ),
     .test_mode_i    ( test_mode_i        ),
     //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
     .cl_ctrl_slave  ( s_periph_dma_bus[0]),
@@ -699,7 +699,7 @@ module pulp_cluster
   ) cluster_peripherals_i (
 
     .clk_i                  ( clk_cluster                        ),
-    .rst_ni                 ( rst_ni                             ),
+    .rst_ni                 ( s_rst_n                            ),
     .ref_clk_i              ( ref_clk_i                          ),
     .test_mode_i            ( test_mode_i                        ),
     .busy_o                 ( s_cluster_periphs_busy             ),
