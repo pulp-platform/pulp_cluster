@@ -25,7 +25,7 @@ tcdm_bank_i \
   .wea   ( wea   ), \
   .addra ( add   ), \
   .dina  ( wdata ), \
-  .douta ( rdata )  \
+  .douta ( rdata ) \
 )
 
 module tcdm_banks_wrap
@@ -93,10 +93,13 @@ module tcdm_banks_wrap
 
          assign rsta  = ~rst_ni;
          assign ena   = 1'b1;
-         assign wdata = tcdm_slave[i].wdata;
-         assign add   = tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
+         assign wdata = tcdm_slave[i].data;
+         assign add   = tcdm_slave[i].add[$clog2(BANK_SIZE)+2-1:2];
          assign wea   = {4{tcdm_slave[i].req}} & {4{~tcdm_slave[i].wen}} & tcdm_slave[i].be;
-         assign tcdm_slave[i].rdata = rdata;
+         assign tcdm_slave[i].r_data = rdata;
+
+         assign tcdm_slave[i].gnt    = 1'b1;
+         assign tcdm_slave[i].r_id   = '0;
 
          case(BANK_SIZE)
            128:
