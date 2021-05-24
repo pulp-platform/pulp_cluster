@@ -30,7 +30,7 @@
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY), 3 for CV32E40P
   // parameter USE_FPU             = 1,
   // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
@@ -268,6 +268,76 @@ module core_region
         .ext_perf_counters_i   ( perf_counters         ),
         .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
+    
+   else if ( CORE_TYPE_CL == 3 ) begin: CL_CORE
+      assign boot_addr = boot_addr_i;
+         cv32e40p_core #(
+        .PULP_XPULP          ( 1                 ),
+        .PULP_CLUSTER        ( 1                 ),
+        .FPU                 ( 0                 ),
+        .PULP_ZFINX          ( 0                 ),
+        .NUM_MHPMCOUNTERS    ( 1                 )
+      )
+       RISCV_CORE
+      (
+        .clk_i                 ( clk_i             ),
+        .rst_ni                ( rst_ni            ),
+    
+        .pulp_clock_en_i       ( clock_en_i        ),
+        .scan_cg_en_i          ( test_mode_i       ),
+    
+        .boot_addr_i           ( boot_addr_i       ),
+        .hart_id_i             ( hart_id           ),
+        .dm_halt_addr_i        ( 32'h1A110800      ),
+    
+        .instr_addr_o          ( instr_addr_o             ),
+        .instr_req_o           ( obi_instr_req            ),
+        .instr_rdata_i         ( instr_r_rdata_i          ),
+        .instr_gnt_i           ( instr_gnt_i              ),
+        .instr_rvalid_i        ( instr_r_valid_i          ),
+    
+        .data_addr_o           ( s_core_bus.add           ),
+        .data_wdata_o          ( s_core_bus.wdata         ),
+        .data_we_o             ( s_core_bus.we            ),
+        .data_req_o            ( s_core_bus.req           ),
+        .data_be_o             ( s_core_bus.be            ),
+        .data_rdata_i          ( s_core_bus.r_rdata       ),
+        .data_gnt_i            ( s_core_bus.gnt           ),
+        .data_rvalid_i         ( s_core_bus.r_valid       ),
+    
+        .irq_i                 ( irq_req                  ), // New interface with 32 physical lines (one-hot)
+        .irq_id_o              ( irq_ack_id_o             ), // New interface with 32 lines
+        .irq_ack_o             ( irq_ack_o                ),
+    
+        .debug_req_i           ( debug_req_i              ),
+    
+        .fetch_enable_i        ( fetch_en_i               ),
+        .core_sleep_o          ( core_sleep               ),
+    
+    
+         // apu-interconnect
+        .apu_req_o      ( apu_master_req_o      ),
+        .apu_gnt_i      ( apu_master_gnt_i      ),
+        .apu_operands_o ( apu_master_operands_o ),
+        .apu_op_o       ( apu_master_op_o       ),
+        .apu_flags_o    ( apu_master_flags_o    ),
+    
+        .apu_rvalid_i   ( apu_master_valid_i    ),
+        .apu_result_i   ( apu_master_result_i   ),
+        .apu_flags_i    ( apu_master_flags_i    )
+      );
+    
+      // OBI-PULP adapter
+      obi_pulp_adapter i_obi_pulp_adapter (
+        .rst_ni(rst_ni),
+        .clk_i(clk_i),
+        .core_req_i(obi_instr_req),
+        .mem_gnt_i(instr_gnt_i),
+        .mem_rvalid_i(instr_r_valid_i),
+        .mem_req_o(pulp_instr_req)
+      );
+      assign instr_req_o = pulp_instr_req;
+
     end else begin: CL_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
       

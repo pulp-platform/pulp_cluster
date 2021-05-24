@@ -82,3 +82,7 @@ hwpe-datamover-example:
   commit: v1.0
   group: pulp-platform
   domain: [cluster, pulp]
+cv32e40p:
+  group : pulp-platform
+  commit: 73718cf5ac881040dd1e2087769b638e5da4a415
+  domain: [cluster, soc]

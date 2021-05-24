@@ -14,6 +14,7 @@ pulp_cluster:
   files: [
     ../axi/axi/include/axi/typedef.svh,
     packages/pulp_cluster_package.sv,
+    rtl/obi_pulp_adapter.sv,
     rtl/instr_width_converter.sv,
     rtl/core_region.sv,
     rtl/core_demux.sv,
