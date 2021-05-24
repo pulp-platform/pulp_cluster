@@ -270,7 +270,7 @@ module core_region
         .ext_perf_counters_i   ( perf_counters         ),
         .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
-    
+   end 
    else if ( CORE_TYPE_CL == 3 ) begin: CL_CORE
       assign boot_addr = boot_addr_i;
          cv32e40p_core #(

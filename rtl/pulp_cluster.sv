@@ -29,7 +29,7 @@ import hci_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL            = 3, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
   parameter NB_CORES           = 8,
   parameter NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
