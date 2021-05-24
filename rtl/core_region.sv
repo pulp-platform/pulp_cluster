@@ -159,6 +159,8 @@ module core_region
   logic [31:0]     core_instr_r_rdata;
   logic            core_instr_r_valid;
 
+  logic            core_data_req;
+
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
     .clk_i     ( clk_i       ),
@@ -274,8 +276,8 @@ module core_region
          cv32e40p_core #(
         .PULP_XPULP          ( 1                 ),
         .PULP_CLUSTER        ( 1                 ),
-        .FPU                 ( 0                 ),
-        .PULP_ZFINX          ( 0                 ),
+        .FPU                 ( FPU               ),
+        .PULP_ZFINX          ( FPU ? 1 : 0       ),
         .NUM_MHPMCOUNTERS    ( 1                 )
       )
        RISCV_CORE
@@ -299,13 +301,13 @@ module core_region
         .data_addr_o           ( s_core_bus.add           ),
         .data_wdata_o          ( s_core_bus.wdata         ),
         .data_we_o             ( s_core_bus.we            ),
-        .data_req_o            ( s_core_bus.req           ),
+        .data_req_o            ( core_data_req            ),
         .data_be_o             ( s_core_bus.be            ),
         .data_rdata_i          ( s_core_bus.r_rdata       ),
         .data_gnt_i            ( s_core_bus.gnt           ),
         .data_rvalid_i         ( s_core_bus.r_valid       ),
     
-        .irq_i                 ( irq_req                  ), // New interface with 32 physical lines (one-hot)
+        .irq_i                 ( core_irq_x               ), // New interface with 32 physical lines (one-hot)
         .irq_id_o              ( irq_ack_id_o             ), // New interface with 32 lines
         .irq_ack_o             ( irq_ack_o                ),
     
@@ -328,7 +330,7 @@ module core_region
       );
     
       // OBI-PULP adapter
-      obi_pulp_adapter i_obi_pulp_adapter (
+      obi_pulp_adapter i_obi_pulp_adapter_instr (
         .rst_ni(rst_ni),
         .clk_i(clk_i),
         .core_req_i(obi_instr_req),
@@ -337,6 +339,25 @@ module core_region
         .mem_req_o(pulp_instr_req)
       );
       assign instr_req_o = pulp_instr_req;
+
+      obi_pulp_adapter i_obi_pulp_adapter_data (
+        .rst_ni(rst_ni),
+        .clk_i(clk_i),
+        .core_req_i(core_data_req),
+        .mem_gnt_i(s_core_bus.gnt),
+        .mem_rvalid_i(s_core_bus.r_valid),
+        .mem_req_o(s_core_bus.req)
+    );
+
+      
+      // CV32E40P supports 32 additional fast interrupts and reads the interrupt lines directly.
+      // Convert ID back to interrupt lines
+      always_comb begin : gen_core_irq_x
+        core_irq_x = '0;
+        if (irq_req_i) begin
+            core_irq_x[irq_id_i] = 1'b1;
+        end
+      end
 
     end else begin: CL_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
