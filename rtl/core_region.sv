@@ -198,83 +198,81 @@ module core_region
    //***************** PROCESSOR ****************************
    //********************************************************
 
-  riscv_core #(
-    .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
-    .N_EXT_PERF_COUNTERS ( 5                 ),
-    .PULP_SECURE         ( 0                 ),
-    .N_PMP_ENTRIES       ( 16                ),
-    .USE_PMP             ( 1                 ),
-    .PULP_CLUSTER        ( 1                 ),
-    .FPU                 ( FPU               ),
-    .Zfinx               ( ZFINX             ), // 1: shared gp and fp register
-    .FP_DIVSQRT          ( FP_DIVSQRT        ),
-    .SHARED_FP           ( SHARED_FP         ),
-    .SHARED_DSP_MULT     ( 0                 ),
-    .SHARED_INT_MULT     ( 0                 ),
-    .SHARED_INT_DIV      ( 0                 ),
-    .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
-    .WAPUTYPE            ( WAPUTYPE          ),
-    .APU_NARGS_CPU       ( 3                 ),
-    .APU_WOP_CPU         ( 6                 ),
-    .APU_NDSFLAGS_CPU    ( 15                ),
-    .APU_NUSFLAGS_CPU    ( 5                 ),
-    .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-  ) RISCV_CORE (
-    .clk_i                 ( clk_i             ),
-    .rst_ni                ( rst_ni            ),
+   cv32e40p_core #(
+     .PULP_XPULP          ( 1                 ),
+     .PULP_CLUSTER        ( 1                 ),
+     .FPU                 ( 1                 ),
+     .PULP_ZFINX          ( 0                 ),
+     .NUM_MHPMCOUNTERS    ( 1                 )
+   )
+    RISCV_CORE
+   (
+     .clk_i                 ( clk_i             ),
+     .rst_ni                ( rst_ni            ),
 
-    .clock_en_i            ( clock_en_i        ),
-    .test_en_i             ( test_mode_i       ),
+     .pulp_clock_en_i       ( clock_en_i        ),
+     .scan_cg_en_i          ( test_mode_i       ),
 
-    .boot_addr_i           ( boot_addr_i       ),
-    .core_id_i             ( CORE_ID[3:0]      ),
-    .cluster_id_i          ( cluster_id_i      ),
+     .boot_addr_i           ( boot_addr_i       ),
+     .mtvec_addr_i          (                   ),
+     .hart_id_i             ( hart_id           ),
+     .dm_halt_addr_i        ( 32'h1A110800      ),
 
-    .instr_addr_o          ( instr_addr_o             ),
-    .instr_req_o           ( instr_req_o              ),
-    .instr_rdata_i         ( instr_r_rdata_i          ),
-    .instr_gnt_i           ( instr_gnt_i              ),
-    .instr_rvalid_i        ( instr_r_valid_i          ),
+     .instr_addr_o          ( instr_addr_o             ),
+     .instr_req_o           ( obi_instr_req            ),
+     .instr_rdata_i         ( instr_r_rdata_i          ),
+     .instr_gnt_i           ( instr_gnt_i              ),
+     .instr_rvalid_i        ( instr_r_valid_i          ),
 
-    .data_addr_o           ( s_core_bus.add           ),
-    .data_wdata_o          ( s_core_bus.wdata         ),
-    .data_we_o             ( s_core_bus.we            ),
-    .data_req_o            ( s_core_bus.req           ),
-    .data_be_o             ( s_core_bus.be            ),
-    .data_rdata_i          ( s_core_bus.r_rdata       ),
-    .data_gnt_i            ( s_core_bus.gnt           ),
-    .data_rvalid_i         ( s_core_bus.r_valid       ),
+     .data_addr_o           ( s_core_bus.add           ),
+     .data_wdata_o          ( s_core_bus.wdata         ),
+     .data_we_o             ( s_core_bus.we            ),
+     .data_req_o            ( s_core_bus.req           ),
+     .data_be_o             ( s_core_bus.be            ),
+     .data_rdata_i          ( s_core_bus.r_rdata       ),
+     .data_gnt_i            ( s_core_bus.gnt           ),
+     .data_rvalid_i         ( s_core_bus.r_valid       ),
 
-    .irq_i                 ( irq_req_i                ),
-    .irq_id_i              ( irq_id_i                 ),
-    .irq_id_o              ( irq_ack_id_o             ),
-    .irq_ack_o             ( irq_ack_o                ),
+     .irq_i                 ( core_irq_x               ), // New interface with 32 physical lines (one-hot)
+     .irq_id_o              ( irq_ack_id_o             ), // New interface with 32 lines
+     .irq_ack_o             ( irq_ack_o                ),
 
-    .sec_lvl_o             (                          ),
-    .irq_sec_i             (      1'b0                ),
+     .debug_req_i           ( debug_req_i              ),
 
-    .debug_req_i           ( debug_req_i              ),
-
-    .fetch_enable_i        ( fetch_en_i               ),
-    .core_busy_o           ( core_busy_o              ),
+     .fetch_enable_i        ( fetch_en_i               ),
+     .core_sleep_o          ( core_sleep               ),
 
 
-     // apu-interconnect
-    .apu_master_req_o      ( apu_master_req_o      ),
-    .apu_master_gnt_i      ( apu_master_gnt_i      ),
-    .apu_master_type_o     ( apu_master_type_o     ),
-    .apu_master_operands_o ( apu_master_operands_o ),
-    .apu_master_op_o       ( apu_master_op_o       ),
-    .apu_master_flags_o    ( apu_master_flags_o    ),
+      // apu-interconnect
+     .apu_req_o      ( apu_master_req_o      ),
+     .apu_gnt_i      ( apu_master_gnt_i      ),
+     .apu_operands_o ( apu_master_operands_o ),
+     .apu_op_o       ( apu_master_op_o       ),
+     .apu_flags_o    ( apu_master_flags_o    ),
 
-    .apu_master_valid_i    ( apu_master_valid_i    ),
-    .apu_master_ready_o    ( apu_master_ready_o    ),
-    .apu_master_result_i   ( apu_master_result_i   ),
-    .apu_master_flags_i    ( apu_master_flags_i    ),
+     .apu_rvalid_i   ( apu_master_valid_i    ),
+     .apu_result_i   ( apu_master_result_i   ),
+     .apu_flags_i    ( apu_master_flags_i    )
+   );
 
-    .ext_perf_counters_i   ( perf_counters         ),
-    .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
-  );
+   // OBI-PULP adapter
+   obi_pulp_adapter i_obi_pulp_adapter (
+     .rst_ni(rst_ni),
+     .clk_i(clk_i),
+     .core_req_i(obi_instr_req),
+     .mem_gnt_i(instr_gnt_i),
+     .mem_rvalid_i(instr_r_valid_i),
+     .mem_req_o(pulp_instr_req)
+   );
+  assign instr_req_o = pulp_instr_req;
+  assign core_busy_o = ~core_sleep;
+
+  always_comb begin : gen_core_irq_x
+      core_irq_x = '0;
+      if (irq_req_i) begin
+          core_irq_x[irq_id_i] = 1'b1;
+      end
+  end
 
   //assign debug_bus.r_opc = 1'b0;
 
