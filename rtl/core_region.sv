@@ -198,7 +198,11 @@ module core_region
    //***************** PROCESSOR ****************************
    //********************************************************
 
-   cv32e40p_core #(
+`ifndef PULP_FPGA_EMUL
+    cv32e40p_wrapper #(
+`else
+    cv32e40p_core #(
+`endif
      .PULP_XPULP          ( 1                 ),
      .PULP_CLUSTER        ( 1                 ),
      .FPU                 ( 1                 ),
