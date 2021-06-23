@@ -34,9 +34,9 @@ module pulp_cluster
   parameter NB_DMAS                 = 4,
   parameter NB_MPERIPHS             = NB_MPERIPHS,
   parameter NB_SPERIPHS             = NB_SPERIPHS,
-  
+
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
-  
+
   parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
@@ -75,26 +75,27 @@ module pulp_cluster
   parameter CLUST_FP_DIVSQRT        = 1,
   parameter CLUST_SHARED_FP         = 2,
   parameter CLUST_SHARED_FP_DIVSQRT = 2,
-  
+  parameter CLUST_ZFINX             = 0,
+
   // AXI parameters
   parameter AXI_ADDR_WIDTH          = 32,
   parameter AXI_DATA_C2S_WIDTH      = 64,
   parameter AXI_DATA_S2C_WIDTH      = 32,
   parameter AXI_USER_WIDTH          = 6,
   parameter AXI_ID_IN_WIDTH         = 4,
-  parameter AXI_ID_OUT_WIDTH        = 6, 
+  parameter AXI_ID_OUT_WIDTH        = 6,
   parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
   // CLUSTER TO SOC CDC AXI PARAMETER
-  parameter C2S_AW_WIDTH             = 80, 
+  parameter C2S_AW_WIDTH             = 80,
   parameter C2S_W_WIDTH              = 79,
   parameter C2S_B_WIDTH              = 15,
   parameter C2S_AR_WIDTH             = 74,
   parameter C2S_R_WIDTH              = 80,
   // CLUSTER TO SOC CDC AXI PARAMETERS
-  parameter S2C_AW_WIDTH             = 78, 
+  parameter S2C_AW_WIDTH             = 78,
   parameter S2C_W_WIDTH              = 43,
   parameter S2C_B_WIDTH              = 13,
   parameter S2C_AR_WIDTH             = 72,
@@ -105,7 +106,7 @@ module pulp_cluster
   parameter BE_WIDTH                = DATA_WIDTH/8,
   parameter TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
   parameter ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
-  
+
   // DMA parameters
   parameter TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
   parameter NB_OUTSND_BURSTS        = 8,
@@ -132,7 +133,7 @@ module pulp_cluster
   input logic                                       ref_clk_i,
   input logic                                       pmu_mem_pwdn_i,
 
-  
+
   input logic [3:0]                                 base_addr_i,
 
   input logic                                       test_mode_i,
@@ -142,50 +143,50 @@ module pulp_cluster
   input logic [5:0]                                 cluster_id_i,
 
   input logic                                       fetch_en_i,
- 
+
   output logic                                      eoc_o,
-  
+
   output logic                                      busy_o,
- 
+
   input logic [DC_SLICE_BUFFER_WIDTH-1:0]           ext_events_writetoken_i,
   output logic [DC_SLICE_BUFFER_WIDTH-1:0]          ext_events_readpointer_o,
   input logic [EVNT_WIDTH-1:0]                      ext_events_dataasync_i,
-  
+
   input logic                                       dma_pe_evt_ack_i,
   output logic                                      dma_pe_evt_valid_o,
 
   input logic                                       dma_pe_irq_ack_i,
   output logic                                      dma_pe_irq_valid_o,
-  
+
   input logic                                       pf_evt_ack_i,
   output logic                                      pf_evt_valid_o,
 
   input logic [NB_CORES-1:0]                        dbg_irq_valid_i,
-   
+
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
   // WRITE ADDRESS CHANNEL
   input logic [LOG_DEPTH:0]                        async_data_slave_aw_wptr_i,
-  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0] async_data_slave_aw_data_i, 
+  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0] async_data_slave_aw_data_i,
   output logic  [LOG_DEPTH:0]                      async_data_slave_aw_rptr_o,
-                                           
-  // READ ADDRESS CHANNEL                  
+
+  // READ ADDRESS CHANNEL
   input logic [LOG_DEPTH:0]                        async_data_slave_ar_wptr_i,
   input logic [2**LOG_DEPTH-1:0][S2C_AR_WIDTH-1:0] async_data_slave_ar_data_i,
   output logic [LOG_DEPTH:0]                       async_data_slave_ar_rptr_o,
-                                           
-  // WRITE DATA CHANNEL                    
+
+  // WRITE DATA CHANNEL
   input logic [LOG_DEPTH:0]                        async_data_slave_w_wptr_i,
   input logic [2**LOG_DEPTH-1:0][S2C_W_WIDTH-1:0]  async_data_slave_w_data_i,
   output logic [LOG_DEPTH:0]                       async_data_slave_w_rptr_o,
-                                                   
-  // READ DATA CHANNEL                             
+
+  // READ DATA CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_slave_r_wptr_o,
   output logic [2**LOG_DEPTH-1:0][S2C_R_WIDTH-1:0]  async_data_slave_r_data_o,
   input logic [LOG_DEPTH:0]                         async_data_slave_r_rptr_i,
-                                                   
-  // WRITE RESPONSE CHANNEL                        
+
+  // WRITE RESPONSE CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_slave_b_wptr_o,
   output logic [2**LOG_DEPTH-1:0][S2C_B_WIDTH-1:0]  async_data_slave_b_data_o,
   input logic [LOG_DEPTH:0]                         async_data_slave_b_rptr_i,
@@ -193,29 +194,32 @@ module pulp_cluster
   //***************************************
   // WRITE ADDRESS CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_master_aw_wptr_o,
-  output logic [2**LOG_DEPTH-1:0][C2S_AW_WIDTH-1:0] async_data_master_aw_data_o, 
+  output logic [2**LOG_DEPTH-1:0][C2S_AW_WIDTH-1:0] async_data_master_aw_data_o,
   input logic [LOG_DEPTH:0]                         async_data_master_aw_rptr_i,
-                                           
-  // READ ADDRESS CHANNEL                  
+
+  // READ ADDRESS CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_master_ar_wptr_o,
   output logic [2**LOG_DEPTH-1:0][C2S_AR_WIDTH-1:0] async_data_master_ar_data_o,
   input logic [LOG_DEPTH:0]                         async_data_master_ar_rptr_i,
-                                           
-  // WRITE DATA CHANNEL                    
+
+  // WRITE DATA CHANNEL
   output logic [LOG_DEPTH:0]                        async_data_master_w_wptr_o,
   output logic [2**LOG_DEPTH-1:0][C2S_W_WIDTH-1:0]  async_data_master_w_data_o,
   input logic [LOG_DEPTH:0]                         async_data_master_w_rptr_i,
-                                                   
-  // READ DATA CHANNEL                             
+
+  // READ DATA CHANNEL
   input logic [LOG_DEPTH:0]                         async_data_master_r_wptr_i,
   input logic [2**LOG_DEPTH-1:0][C2S_R_WIDTH-1:0]   async_data_master_r_data_i,
   output logic [LOG_DEPTH:0]                        async_data_master_r_rptr_o,
-                                                   
-  // WRITE RESPONSE CHANNEL                        
+
+  // WRITE RESPONSE CHANNEL
   input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
   input logic [2**LOG_DEPTH-1:0][C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
   output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o
-   
+
+
+  TCDM_BANK_MEM_BUS.Master                 tcdm_l1_bus[NB_TCDM_BANKS-1:0]
+
 );
 
   //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
@@ -239,8 +243,8 @@ module pulp_cluster
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
   //********************************************************
-   
-    
+
+
   logic [NB_CORES-1:0]                fetch_enable_reg_int;
   logic [NB_CORES-1:0]                fetch_en_int;
   logic                               s_rst_n;
@@ -296,7 +300,7 @@ module pulp_cluster
   logic               s_dma_pe_event;
   logic               s_dma_pe_irq;
   logic               s_pf_event;
-  
+
   logic[NB_CORES-1:0][4:0] irq_id;
   logic[NB_CORES-1:0][4:0] irq_ack_id;
   logic[NB_CORES-1:0]      irq_req;
@@ -304,7 +308,7 @@ module pulp_cluster
 
   logic [NB_CORES-1:0]                s_core_dbg_irq;
 
-  
+
   logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] s_rw_margin_L1;
 
   logic                                       s_dma_cl_event;
@@ -322,7 +326,7 @@ module pulp_cluster
 
 
   /* logarithmic and peripheral interconnect interfaces */
-  // ext -> log interconnect 
+  // ext -> log interconnect
   XBAR_TCDM_BUS s_ext_xbar_bus[NB_DMAS-1:0]();
 
   // periph interconnect -> slave peripherals
@@ -341,23 +345,23 @@ module pulp_cluster
   // periph demux
   XBAR_TCDM_BUS s_mperiph_bus();
   XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
-  
+
   // cores & accelerators -> log interconnect
   XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:0]();
-  
+
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
-  
+
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
-  
+
   // debug
   XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
-  
+
   /* other interfaces */
   // cores -> DMA ctrl
   XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
-  
+
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
@@ -399,35 +403,35 @@ module pulp_cluster
       `endif
   `endif
    //----------------------------------------------------------------------//
-   
+
   // log interconnect -> TCDM memory banks (SRAM)
   TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
 
   //***************************************************
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
-  //*************************************************** 
-    
-  
+  //***************************************************
+
+
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_64(); 
+  ) s_data_slave_64();
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_32(); 
+  ) s_data_slave_32();
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_master(); 
+  ) s_data_master();
 
   //assign s_data_master.aw_atop = 6'b0;
 
@@ -436,7 +440,7 @@ module pulp_cluster
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_instr_bus(); 
+  ) s_core_instr_bus();
 
 
    // ***********************************************************************************************+
@@ -444,18 +448,18 @@ module pulp_cluster
    // ***********************************************************************************************+
    // ***********************************************************************************************+
    // ***********************************************************************************************+
-   
+
   //***************************************************
   /* synchronous AXI interfaces internal to the cluster */
-  //*************************************************** 
-  
+  //***************************************************
+
   // core per2axi -> ext
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_ext_bus(); 
+  ) s_core_ext_bus();
 
   // DMA -> ext
   AXI_BUS #(
@@ -463,7 +467,7 @@ module pulp_cluster
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_dma_ext_bus(); 
+  ) s_dma_ext_bus();
 
   // ext -> axi2mem
   AXI_BUS #(
@@ -471,9 +475,9 @@ module pulp_cluster
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_ext_tcdm_bus(); 
+  ) s_ext_tcdm_bus();
 
-  // cluster bus -> axi2per 
+  // cluster bus -> axi2per
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
@@ -489,7 +493,7 @@ module pulp_cluster
     .rst_no     ( s_rst_n     ),
     .init_no    ( s_init_n    )
   );
-  
+
   /* fetch & busy genertion */
   assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
   assign busy_o = s_cluster_int_busy | (|core_busy);
@@ -559,19 +563,19 @@ module pulp_cluster
   );
 
   `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
-    
+
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wen   = s_mperiph_demux_bus[0].wen;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wdata = s_mperiph_demux_bus[0].wdata;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].be    = s_mperiph_demux_bus[0].be;
-                                        
+
   // assign s_mperiph_demux_bus[0].gnt       = s_mperiph_xbar_bus[NB_MPERIPHS-1].gnt;
   // assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
   // assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
   // assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
- 
-/* not used in vega   
+
+/* not used in vega
   per_demux_wrap #(
     .NB_MASTERS  ( NB_CORES ),
     .ADDR_OFFSET ( 15       )
@@ -598,12 +602,12 @@ module pulp_cluster
     .axi_master     ( s_core_ext_bus                  ),
     .busy_o         ( s_per2axi_busy                  )
   );
-    
+
 
   //***************************************************
   /* cluster (log + periph) interconnect and attached peripherals */
-  //*************************************************** 
-  
+  //***************************************************
+
   cluster_interconnect_wrap #(
     .NB_CORES           ( NB_CORES           ),
     .NB_HWPE_PORTS      ( NB_HWPE_PORTS      ),
@@ -634,7 +638,7 @@ module pulp_cluster
     .dma_slave          ( s_dma_xbar_bus                      ),
     .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
 
-    .tcdm_sram_master   ( s_tcdm_bus_sram                     ),
+    .tcdm_sram_master   ( tcdm_l1_bus                         ),
 
     .speriph_master     ( s_xbar_speriph_bus                  ),
 
@@ -643,8 +647,8 @@ module pulp_cluster
 
   //***************************************************
   //*********************DMAC WRAP*********************
-  //*************************************************** 
-  
+  //***************************************************
+
   dmac_wrap #(
     .NB_CTRLS           ( 2                  ),
     .NB_CORES           ( NB_CORES           ),
@@ -677,7 +681,7 @@ module pulp_cluster
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************
-  //*************************************************** 
+  //***************************************************
 
   cluster_peripherals #(
     .NB_CORES       ( NB_CORES       ),
@@ -691,7 +695,7 @@ module pulp_cluster
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
     .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
-  
+
   ) cluster_peripherals_i (
 
     .clk_i                  ( clk_cluster                        ),
@@ -707,7 +711,7 @@ module pulp_cluster
     .core_clk_en_o          ( clk_core_en                        ),
 
     .speriph_slave          ( s_xbar_speriph_bus[NB_SPERIPHS-2:0]),
-    .core_eu_direct_link    ( s_core_euctrl_bus                  ), 
+    .core_eu_direct_link    ( s_core_euctrl_bus                  ),
 
     .dma_cfg_master         ( s_periph_dma_bus                   ),
 
@@ -729,7 +733,7 @@ module pulp_cluster
     .dbg_core_halted_i      ( dbg_core_halted                    ),
     .dbg_core_resume_o      ( dbg_core_resume                    ),
 
-    .eoc_o                  ( eoc_o                              ), 
+    .eoc_o                  ( eoc_o                              ),
     .cluster_cg_en_o        ( s_cluster_cg_en                    ),
     .fetch_enable_reg_o     ( fetch_enable_reg_int               ),
     .irq_id_o               ( irq_id                             ),
@@ -739,10 +743,10 @@ module pulp_cluster
     .dbg_req_i              ( s_dbg_irq                          ),
     .dbg_req_o              ( s_core_dbg_irq                     ),
 
-    .fregfile_disable_o     ( s_fregfile_disable                 ),   
-    
+    .fregfile_disable_o     ( s_fregfile_disable                 ),
+
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
-    
+
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
     .hwpe_sel_o             ( s_hwpe_sel                         ),
@@ -773,14 +777,14 @@ module pulp_cluster
   //***************** CORE ISLANDS *************************
   //********************************************************
   //------------------------------------------------------//
-  //          ██████╗ ██████╗ ██████╗ ███████╗            //
-  //         ██╔════╝██╔═══██╗██╔══██╗██╔════╝            //
-  //         ██║     ██║   ██║██████╔╝█████╗              //
-  //         ██║     ██║   ██║██╔══██╗██╔══╝              //
-  //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
-  //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
+  //          âââââââ âââââââ âââââââ ââââââââ            //
+  //         âââââââââââââââââââââââââââââââââ            //
+  //         âââ     âââ   âââââââââââââââââ              //
+  //         âââ     âââ   âââââââââââââââââ              //
+  //         ââââââââââââââââââââ  âââââââââââ            //
+  //          âââââââ âââââââ âââ  âââââââââââ            //
   //------------------------------------------------------//
-  
+
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -810,10 +814,11 @@ module pulp_cluster
 
         .FPU                 ( CLUST_FPU               ),
         .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
+        .ZFINX               ( CLUST_ZFINX             ),
         .SHARED_FP           ( CLUST_SHARED_FP         ),
         .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
 
-                    
+
       ) core_region_i (
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
@@ -823,17 +828,17 @@ module pulp_cluster
         .cluster_id_i        ( cluster_id_i          ),
         .clock_en_i          ( clk_core_en[i]        ),
         .fetch_en_i          ( fetch_en_int[i]       ),
-       
+
         .boot_addr_i         ( boot_addr[i]          ),
         .irq_id_i            ( irq_id[i]             ),
         .irq_ack_id_o        ( irq_ack_id[i]         ),
         .irq_req_i           ( irq_req[i]            ),
         .irq_ack_o           ( irq_ack[i]            ),
-  
+
         .test_mode_i         ( test_mode_i           ),
         .core_busy_o         ( core_busy[i]          ),
 
-        //instruction cache bind 
+        //instruction cache bind
         .instr_req_o         ( instr_req[i]          ),
         .instr_gnt_i         ( instr_gnt[i]          ),
         .instr_addr_o        ( instr_addr[i]         ),
@@ -852,10 +857,10 @@ module pulp_cluster
         //.dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
-      
+
         .fregfile_disable_i  (  s_fregfile_disable     )
 `ifdef SHARED_FPU_CLUSTER
-        ,        
+        ,
         .apu_master_req_o      ( s_apu_master_req     [i] ),
         .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
         .apu_master_type_o     ( s_apu_master_type    [i] ),
@@ -1010,10 +1015,10 @@ module pulp_cluster
       end
       assign s_hwpe_busy = '0;
       assign s_hwpe_evt  = '0;
-       
+
     end
   endgenerate
-  
+
   generate
     for(genvar i=0; i<NB_CORES; i++) begin : hwpe_event_interrupt_gen
       assign s_hwpe_remap_evt[i][3:2] = '0;
@@ -1138,7 +1143,7 @@ module pulp_cluster
     .AXI_USER         ( AXI_USER_WIDTH     ),
     .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
     .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            ) 
+    .L2_SIZE          ( L2_SIZE            )
   ) icache_top_i (
     .clk                    ( clk_cluster                ),
     .rst_n                  ( s_rst_n                    ),
@@ -1147,19 +1152,19 @@ module pulp_cluster
     .fetch_addr_i           ( instr_addr                 ),
     .fetch_gnt_o            ( instr_gnt                  ),
     .fetch_rvalid_o         ( instr_r_valid              ),
-    .fetch_rdata_o          ( instr_r_rdata              ), 
+    .fetch_rdata_o          ( instr_r_rdata              ),
     .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
     .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
+    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),
+    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),
+    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),
+    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),
     .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
     .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
     .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
+    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),
+    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),
+    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),
     .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
     .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
     .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
@@ -1321,21 +1326,14 @@ module pulp_cluster
 `endif // Closes `ifdef PRI_ICACHE
 
 
-   
-  /* TCDM banks */
-  tcdm_banks_wrap #(
-    .BANK_SIZE ( TCDM_NUM_ROWS ),
-    .NB_BANKS  ( NB_TCDM_BANKS )
-  ) tcdm_banks_i (
-    .clk_i       ( clk_cluster     ),
-    .rst_ni      ( s_rst_n         ),
-    .init_ni     ( s_init_n        ),
-    .test_mode_i ( test_mode_i     ),
-    .pwdn_i      ( 1'b0            ),
-    .tcdm_slave  ( s_tcdm_bus_sram )   //PMU ??
-  );
-  
-  /* AXI interconnect infrastructure (slices, size conversion) */ 
+
+  //
+  // TCDM banks
+  //
+
+  // NOTE: The L1 memories are outside the control-pulp module!
+
+  /* AXI interconnect infrastructure (slices, size conversion) */
    //********************************************************
    //**************** AXI REGISTER SLICES *******************
    //********************************************************
@@ -1346,20 +1344,20 @@ module pulp_cluster
    `AXI_TYPEDEF_B_CHAN_T(c2s_b_chan_t,logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_AR_CHAN_T(c2s_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_R_CHAN_T(c2s_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   
+
   `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
   `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
 
    c2s_req_t   src_req ;
-   c2s_resp_t  src_resp;   
-   
+   c2s_resp_t  src_resp;
+
   `AXI_ASSIGN_TO_REQ(src_req,s_data_master)
   `AXI_ASSIGN_FROM_RESP(s_data_master,src_resp)
 
   axi_cdc_src #(
      .aw_chan_t (c2s_aw_chan_t),
      .w_chan_t  (c2s_w_chan_t),
-     .b_chan_t  (c2s_b_chan_t),     
+     .b_chan_t  (c2s_b_chan_t),
      .r_chan_t  (c2s_r_chan_t),
      .ar_chan_t (c2s_ar_chan_t),
      .axi_req_t (c2s_req_t    ),
@@ -1371,7 +1369,7 @@ module pulp_cluster
      .src_req_i                        ( src_req                     ),
      .src_resp_o                       ( src_resp                    ),
      .isolate_i                        ( 1'b0                        ),
-     .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
+     .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),
      .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
      .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
      .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
@@ -1385,31 +1383,31 @@ module pulp_cluster
      .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
      .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
      .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
-     .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
+     .async_data_master_r_data_i       ( async_data_master_r_data_i  )
     );
-      
+
    // SOC TO CLUSTER
 
-      
+
    `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_W_CHAN_T(s2c_w_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_DATA_S2C_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_B_CHAN_T(s2c_b_chan_t,logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_AR_CHAN_T(s2c_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
    `AXI_TYPEDEF_R_CHAN_T(s2c_r_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   
+
   `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
   `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
    s2c_req_t      dst_req;
    s2c_resp_t     dst_resp;
-   
+
   `AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
   `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
-   
+
   axi_cdc_dst #(
      .aw_chan_t (s2c_aw_chan_t),
      .w_chan_t  (s2c_w_chan_t ),
-     .b_chan_t  (s2c_b_chan_t ),     
+     .b_chan_t  (s2c_b_chan_t ),
      .r_chan_t  (s2c_r_chan_t ),
      .ar_chan_t (s2c_ar_chan_t),
      .axi_req_t (s2c_req_t    ),
@@ -1421,7 +1419,7 @@ module pulp_cluster
      .dst_req_o                        ( dst_req                    ),
      .dst_resp_i                       ( dst_resp                   ),
      .isolate_i                        ( 1'b0                       ),
-     .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
+     .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),
      .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
      .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
      .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
@@ -1435,8 +1433,8 @@ module pulp_cluster
      .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
      .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
      .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
-     .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
-    );                
+     .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )
+    );
 
   axi_dw_converter_intf #(
     .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
@@ -1450,7 +1448,7 @@ module pulp_cluster
     .slv    ( s_data_slave_32 ),
     .mst    ( s_data_slave_64 )
   );
-   
+
   /* event synchronizers */
   dc_token_ring_fifo_dout #(
     .DATA_WIDTH   ( EVNT_WIDTH            ),
@@ -1464,9 +1462,9 @@ module pulp_cluster
     .write_token  ( ext_events_writetoken_i  ),
     .read_pointer ( ext_events_readpointer_o ),
     .data_async   ( ext_events_dataasync_i   )
-  ); 
+  );
   assign s_events_async = s_events_valid;
-    
+
   edge_propagator_tx ep_dma_pe_evt_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -1474,7 +1472,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_evt_ack_i   ),
     .valid_o ( dma_pe_evt_valid_o )
   );
-   
+
   edge_propagator_tx ep_dma_pe_irq_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -1482,7 +1480,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_irq_ack_i   ),
     .valid_o ( dma_pe_irq_valid_o )
   );
-   
+
   // edge_propagator_tx ep_pf_evt_i (
   //   .clk_i   ( clk_i          ),
   //   .rstn_i  ( s_rst_n        ),
@@ -1490,7 +1488,7 @@ module pulp_cluster
   //   .ack_i   ( pf_evt_ack_i   ),
   //   .valid_o ( pf_evt_valid_o )
   // );
-   
+
   /* centralized gating */
   cluster_clock_gate #(
     .NB_CORES ( NB_CORES )
