@@ -32,13 +32,13 @@ module dmac_wrap
   parameter ADDR_WIDTH         = 32,
   parameter BE_WIDTH           = DATA_WIDTH/8
 )
-( 
+(
   input logic                      clk_i,
   input logic                      rst_ni,
   input logic                      test_mode_i,
   XBAR_PERIPH_BUS.Slave            cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave            fc_ctrl_slave,
-  
+
   XBAR_TCDM_BUS.Master             tcdm_master[3:0],
   AXI_BUS.Master                   ext_master,
   output logic                     term_event_cl_o,
@@ -47,7 +47,7 @@ module dmac_wrap
   output logic                     term_irq_pe_o,
   output logic                     busy_o
 );
-  
+
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
      logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
      logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
@@ -97,7 +97,7 @@ module dmac_wrap
      assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
      assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
      assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
-   
+
      // FC CTRL PORT BINDING
      assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
      assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
@@ -124,24 +124,24 @@ module dmac_wrap
       assign s_tcdm_bus_r_rdata[i]   = tcdm_master[i].r_rdata;
     end
   endgenerate
-   
+
   mchan #(
 
-    .NB_CTRLS                 ( NB_CTRLS               ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
+    .NB_CTRLS                   ( NB_CTRLS              ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
     //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
     //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
     //.GLOBAL_TRANS_QUEUE_DEPTH ( 8                     ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
-     
+
     //.TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
     //.EXT_ADD_WIDTH            ( 32                    ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
     //.NB_OUTSND_TRANS          ( 8                     ),    // NUMBER OF OUTSTANDING TRANSACTIONS
     //.MCHAN_BURST_LENGTH       ( 256                   ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
-     
+
     //.AXI_ADDR_WIDTH           ( 32                    ),
     //.AXI_DATA_WIDTH           ( 64                    ),
     //.AXI_USER_WIDTH           ( 6                     ),
     //.AXI_ID_WIDTH             ( 4                     ),
-     
+
     //.PE_ID_WIDTH              ( PE_ID_WIDTH           )
     //.NB_CORES                 ( NB_CORES              ),    // NUMBER OF CORES
     .NB_TRANSFERS             ( 2*NB_CORES            ),
@@ -160,7 +160,7 @@ module dmac_wrap
     .clk_i                     ( clk_i                              ),
     .rst_ni                    ( rst_ni                             ),
     .test_mode_i               ( test_mode_i                        ),
-    
+
     //.ctrl_pe_targ_req_i        (                                    ),
     //.ctrl_pe_targ_add_i        (                                    ),
     //.ctrl_pe_targ_type_i       (                                    ),
@@ -172,7 +172,7 @@ module dmac_wrap
     //.ctrl_pe_targ_r_data_o     (                                    ),
     //.ctrl_pe_targ_r_opc_o      (                                    ),
     //.ctrl_pe_targ_r_id_o       (                                    ),
-    
+
     .ctrl_targ_req_i           ( s_ctrl_bus_req                     ),
     .ctrl_targ_add_i           ( s_ctrl_bus_add                     ),
     .ctrl_targ_type_i          ( s_ctrl_bus_wen                     ),
@@ -185,7 +185,7 @@ module dmac_wrap
 
     .ctrl_targ_r_valid_o       ( s_ctrl_bus_r_valid                 ),
     .ctrl_targ_r_data_o        ( s_ctrl_bus_r_rdata                 ),
-    
+
 
     // TCDM INITIATOR
       //***************************************
@@ -194,7 +194,7 @@ module dmac_wrap
     .tcdm_init_type_o          ( s_tcdm_bus_wen                     ),
     .tcdm_init_be_o            ( s_tcdm_bus_be                      ),
     .tcdm_init_data_o          ( s_tcdm_bus_wdata                   ),
-    
+    .tcdm_init_sid_o           (                                    ),
     .tcdm_init_gnt_i           ( s_tcdm_bus_gnt                     ),
     .tcdm_init_r_valid_i       ( s_tcdm_bus_r_valid                 ),
     .tcdm_init_r_data_i        ( s_tcdm_bus_r_rdata                 ),

@@ -21,261 +21,230 @@ import pulp_cluster_package::*;
 
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
+`include "axi/typedef.svh"
+`include "axi/assign.svh"
 
 
 module pulp_cluster
 #(
   // cluster parameters
-  parameter NB_CORES           = 8,
-  parameter NB_HWPE_PORTS      = 4,
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
-  
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
-  
-  parameter TCDM_SIZE          = 64*1024,                 // [B], must be 2**N
-  parameter NB_TCDM_BANKS      = 16,                      // must be 2**N
-  parameter TCDM_BANK_SIZE     = TCDM_SIZE/NB_TCDM_BANKS, // [B]
-  parameter TCDM_NUM_ROWS      = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT       = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter NB_CORES                = 8,
+  parameter NB_HWPE_PORTS           = 4,
+  parameter NB_DMAS                 = 4,
+  parameter NB_MPERIPHS             = NB_MPERIPHS,
+  parameter NB_SPERIPHS             = NB_SPERIPHS,
+
+  parameter CLUSTER_ALIAS_BASE      = 12'h000,
+
+  parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
+  parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
+  parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
+  parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
+  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
 
   // I$ parameters
-  parameter SET_ASSOCIATIVE       = 4,
+  parameter SET_ASSOCIATIVE         = 4,
 `ifdef PRIVATE_ICACHE
-    parameter NB_CACHE_BANKS        = 2,
+  parameter NB_CACHE_BANKS          = 2,
+`else
+  `ifdef MP_ICACHE
+  parameter NB_CACHE_BANKS          = 8,
+  `else
+    `ifdef SP_ICACHE
+  parameter NB_CACHE_BANKS          = 8,
+    `endif
+  `endif
 `endif
-
-`ifdef MP_ICACHE
-    parameter NB_CACHE_BANKS        = 8,
-`endif
-
-`ifdef SP_ICACHE
-    parameter NB_CACHE_BANKS        = 8,
-`endif
-  parameter CACHE_LINE            = 1,
-  parameter CACHE_SIZE            = 4096,
-  parameter ICACHE_DATA_WIDTH     = 128,
-  parameter L0_BUFFER_FEATURE     = "DISABLED",
-  parameter MULTICAST_FEATURE     = "DISABLED",
-  parameter SHARED_ICACHE         = "ENABLED",
-  parameter DIRECT_MAPPED_FEATURE = "DISABLED",
-  parameter L2_SIZE               = 512*1024,
-  parameter USE_REDUCED_TAG       = "TRUE",
+  parameter CACHE_LINE              = 1,
+  parameter CACHE_SIZE              = 4096,
+  parameter ICACHE_DATA_WIDTH       = 128,
+  parameter L0_BUFFER_FEATURE       = "DISABLED",
+  parameter MULTICAST_FEATURE       = "DISABLED",
+  parameter SHARED_ICACHE           = "ENABLED",
+  parameter DIRECT_MAPPED_FEATURE   = "DISABLED",
+  parameter L2_SIZE                 = 512*1024,
+  parameter USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
-  parameter ROM_BOOT_ADDR     = 32'h1A000000,
-  parameter BOOT_ADDR         = 32'h1C000000,
-  parameter INSTR_RDATA_WIDTH = 128,
+  parameter ROM_BOOT_ADDR           = 32'h1A000000,
+  parameter BOOT_ADDR               = 32'h1C000000,
+  parameter INSTR_RDATA_WIDTH       = 128,
 
   parameter CLUST_FPU               = 1,
   parameter CLUST_FP_DIVSQRT        = 1,
   parameter CLUST_SHARED_FP         = 2,
   parameter CLUST_SHARED_FP_DIVSQRT = 2,
   parameter CLUST_ZFINX             = 0,
-  
+
   // AXI parameters
-  parameter AXI_ADDR_WIDTH        = 32,
-  parameter AXI_DATA_C2S_WIDTH    = 64,
-  parameter AXI_DATA_S2C_WIDTH    = 32,
-  parameter AXI_USER_WIDTH        = 6,
-  parameter AXI_ID_IN_WIDTH       = 4,
-  parameter AXI_ID_OUT_WIDTH      = 6, 
-  parameter AXI_STRB_C2S_WIDTH    = AXI_DATA_C2S_WIDTH/8,
-  parameter AXI_STRB_S2C_WIDTH    = AXI_DATA_S2C_WIDTH/8,
-  parameter DC_SLICE_BUFFER_WIDTH = 8,
-  
+  parameter AXI_ADDR_WIDTH          = 32,
+  parameter AXI_DATA_C2S_WIDTH      = 64,
+  parameter AXI_DATA_S2C_WIDTH      = 32,
+  parameter AXI_USER_WIDTH          = 6,
+  parameter AXI_ID_IN_WIDTH         = 4,
+  parameter AXI_ID_OUT_WIDTH        = 6,
+  parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
+  parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
+  parameter DC_SLICE_BUFFER_WIDTH   = 8,
+  parameter LOG_DEPTH               = 3,
+  // CLUSTER TO SOC CDC AXI PARAMETER
+  parameter C2S_AW_WIDTH             = 80,
+  parameter C2S_W_WIDTH              = 79,
+  parameter C2S_B_WIDTH              = 15,
+  parameter C2S_AR_WIDTH             = 74,
+  parameter C2S_R_WIDTH              = 80,
+  // CLUSTER TO SOC CDC AXI PARAMETERS
+  parameter S2C_AW_WIDTH             = 78,
+  parameter S2C_W_WIDTH              = 43,
+  parameter S2C_B_WIDTH              = 13,
+  parameter S2C_AR_WIDTH             = 72,
+  parameter S2C_R_WIDTH              = 16,
   // TCDM and log interconnect parameters
-  parameter DATA_WIDTH     = 32,
-  parameter ADDR_WIDTH     = 32,
-  parameter BE_WIDTH       = DATA_WIDTH/8,
-  parameter TEST_SET_BIT   = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
-  parameter ADDR_MEM_WIDTH = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
-  
+  parameter DATA_WIDTH              = 32,
+  parameter ADDR_WIDTH              = 32,
+  parameter BE_WIDTH                = DATA_WIDTH/8,
+  parameter TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
+
   // DMA parameters
-  parameter TCDM_ADD_WIDTH     = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter NB_OUTSND_BURSTS   = 8,
-  parameter MCHAN_BURST_LENGTH = 256,
+  parameter TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
+  parameter NB_OUTSND_BURSTS        = 8,
+  parameter MCHAN_BURST_LENGTH      = 256,
 
 
   // peripheral and periph interconnect parameters
-  parameter LOG_CLUSTER    = 5,  // unused
-  parameter PE_ROUTING_LSB = 10, // LSB used as routing BIT in periph interco
-  //parameter PE_ROUTING_MSB = 13, // MSB used as routing BIT in periph interco
-  parameter EVNT_WIDTH     = 8,  // size of the event bus
-  parameter REMAP_ADDRESS  = 1,   // for cluster virtualization
+  parameter LOG_CLUSTER             = 5,  // unused
+  parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
+  // parameter PE_ROUTING_MSB          = 13, // MSB used as routing BIT in periph interco
+  parameter EVNT_WIDTH              = 8,  // size of the event bus
+  parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
 
   // FPU PARAMETERS
-  parameter APU_NARGS_CPU         = 3,
-  parameter APU_WOP_CPU           = 6,
-  parameter WAPUTYPE              = 3,
-  parameter APU_NDSFLAGS_CPU      = 15,
-  parameter APU_NUSFLAGS_CPU      = 5
+  parameter APU_NARGS_CPU           = 3,
+  parameter APU_WOP_CPU             = 6,
+  parameter WAPUTYPE                = 3,
+  parameter APU_NDSFLAGS_CPU        = 15,
+  parameter APU_NUSFLAGS_CPU        = 5
 )
 (
-  input  logic                             clk_i,
-  input  logic                             rst_ni,
-  input  logic                             ref_clk_i,
-  input  logic                             pmu_mem_pwdn_i,
+  input logic                                       clk_i,
+  input logic                                       rst_ni,
+  input logic                                       ref_clk_i,
+  input logic                                       pmu_mem_pwdn_i,
 
-  
-  input logic [3:0]                        base_addr_i,
 
-  input logic                              test_mode_i,
+  input logic [3:0]                                 base_addr_i,
 
-  input logic                              en_sa_boot_i,
+  input logic                                       test_mode_i,
 
-  input logic [5:0]                        cluster_id_i,
+  input logic                                       en_sa_boot_i,
 
-  input logic                              fetch_en_i,
- 
-  output logic                             eoc_o,
-  
-  output logic                             busy_o,
- 
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] ext_events_writetoken_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] ext_events_readpointer_o,
-  input  logic            [EVNT_WIDTH-1:0] ext_events_dataasync_i,
-  
-  input  logic                             dma_pe_evt_ack_i,
-  output logic                             dma_pe_evt_valid_o,
+  input logic [5:0]                                 cluster_id_i,
 
-  input  logic                             dma_pe_irq_ack_i,
-  output logic                             dma_pe_irq_valid_o,
-  
-  input  logic                             pf_evt_ack_i,
-  output logic                             pf_evt_valid_o,
+  input logic                                       fetch_en_i,
 
-  input logic  [NB_CORES-1:0]               dbg_irq_valid_i,
-   
+  output logic                                      eoc_o,
+
+  output logic                                      busy_o,
+
+  input logic [DC_SLICE_BUFFER_WIDTH-1:0]           ext_events_writetoken_i,
+  output logic [DC_SLICE_BUFFER_WIDTH-1:0]          ext_events_readpointer_o,
+  input logic [EVNT_WIDTH-1:0]                      ext_events_dataasync_i,
+
+  input logic                                       dma_pe_evt_ack_i,
+  output logic                                      dma_pe_evt_valid_o,
+
+  input logic                                       dma_pe_irq_ack_i,
+  output logic                                      dma_pe_irq_valid_o,
+
+  input logic                                       pf_evt_ack_i,
+  output logic                                      pf_evt_valid_o,
+
+  input logic [NB_CORES-1:0]                        dbg_irq_valid_i,
+
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_writetoken_i,
-  input  logic [AXI_ADDR_WIDTH-1:0]        data_slave_aw_addr_i,
-  input  logic [2:0]                       data_slave_aw_prot_i,
-  input  logic [3:0]                       data_slave_aw_region_i,
-  input  logic [7:0]                       data_slave_aw_len_i,
-  input  logic [2:0]                       data_slave_aw_size_i,
-  //input  logic [5:0]                       data_slave_aw_atop_i,
-  input  logic [1:0]                       data_slave_aw_burst_i,
-  input  logic                             data_slave_aw_lock_i,
-  input  logic [3:0]                       data_slave_aw_cache_i,
-  input  logic [3:0]                       data_slave_aw_qos_i,
-  input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_aw_id_i,
-  input  logic [AXI_USER_WIDTH-1:0]        data_slave_aw_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_aw_readpointer_o,
-   
+  // WRITE ADDRESS CHANNEL
+  input logic [LOG_DEPTH:0]                         async_data_slave_aw_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AW_WIDTH-1:0]  async_data_slave_aw_data_i,
+  output logic  [LOG_DEPTH:0]                       async_data_slave_aw_rptr_o,
+
   // READ ADDRESS CHANNEL
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_writetoken_i,
-  input  logic [AXI_ADDR_WIDTH-1:0]        data_slave_ar_addr_i,
-  input  logic [2:0]                       data_slave_ar_prot_i,
-  input  logic [3:0]                       data_slave_ar_region_i,
-  input  logic [7:0]                       data_slave_ar_len_i,
-  input  logic [2:0]                       data_slave_ar_size_i,
-  input  logic [1:0]                       data_slave_ar_burst_i,
-  input  logic                             data_slave_ar_lock_i,
-  input  logic [3:0]                       data_slave_ar_cache_i,
-  input  logic [3:0]                       data_slave_ar_qos_i,
-  input  logic [AXI_ID_IN_WIDTH-1:0]       data_slave_ar_id_i,
-  input  logic [AXI_USER_WIDTH-1:0]        data_slave_ar_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_ar_readpointer_o,
-   
+  input logic [LOG_DEPTH:0]                         async_data_slave_ar_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_AR_WIDTH-1:0]  async_data_slave_ar_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_slave_ar_rptr_o,
+
   // WRITE DATA CHANNEL
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_writetoken_i,
-  input  logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_w_data_i,
-  input  logic [AXI_STRB_S2C_WIDTH-1:0]    data_slave_w_strb_i,
-  input  logic [AXI_USER_WIDTH-1:0]        data_slave_w_user_i,
-  input  logic                             data_slave_w_last_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_w_readpointer_o,
-   
+  input logic [LOG_DEPTH:0]                         async_data_slave_w_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][S2C_W_WIDTH-1:0]   async_data_slave_w_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_slave_w_rptr_o,
+
   // READ DATA CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_writetoken_o,
-  output logic [AXI_DATA_S2C_WIDTH-1:0]    data_slave_r_data_o,
-  output logic [1:0]                       data_slave_r_resp_o,
-  output logic                             data_slave_r_last_o,
-  output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_r_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_slave_r_user_o,
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_r_readpointer_i,
-  
+  output logic [LOG_DEPTH:0]                        async_data_slave_r_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][S2C_R_WIDTH-1:0]  async_data_slave_r_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_r_rptr_i,
+
   // WRITE RESPONSE CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_writetoken_o,
-  output logic [1:0]                       data_slave_b_resp_o,
-  output logic [AXI_ID_IN_WIDTH-1:0]       data_slave_b_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_slave_b_user_o,
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_slave_b_readpointer_i,
-   
+  output logic [LOG_DEPTH:0]                        async_data_slave_b_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][S2C_B_WIDTH-1:0]  async_data_slave_b_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_slave_b_rptr_i,
   // AXI4 MASTER
   //***************************************
   // WRITE ADDRESS CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_aw_writetoken_o,
-  output logic [AXI_ADDR_WIDTH-1:0]        data_master_aw_addr_o,
-  output logic [2:0]                       data_master_aw_prot_o,
-  output logic [3:0]                       data_master_aw_region_o,
-  output logic [7:0]                       data_master_aw_len_o,
-  output logic [2:0]                       data_master_aw_size_o,
-  output logic [1:0]                       data_master_aw_burst_o,
-  //output logic [5:0]                       data_master_aw_atop_o,
-  output logic                             data_master_aw_lock_o,
-  output logic [3:0]                       data_master_aw_cache_o,
-  output logic [3:0]                       data_master_aw_qos_o,
-  output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_aw_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_master_aw_user_o,
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_aw_readpointer_i,
-  
+  output logic [LOG_DEPTH:0]                        async_data_master_aw_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_AW_WIDTH-1:0] async_data_master_aw_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_master_aw_rptr_i,
+
   // READ ADDRESS CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_writetoken_o,
-  output logic [AXI_ADDR_WIDTH-1:0]        data_master_ar_addr_o,
-  output logic [2:0]                       data_master_ar_prot_o,
-  output logic [3:0]                       data_master_ar_region_o,
-  output logic [7:0]                       data_master_ar_len_o,
-  output logic [2:0]                       data_master_ar_size_o,
-  output logic [1:0]                       data_master_ar_burst_o,
-  output logic                             data_master_ar_lock_o,
-  output logic [3:0]                       data_master_ar_cache_o,
-  output logic [3:0]                       data_master_ar_qos_o,
-  output logic [AXI_ID_OUT_WIDTH-1:0]      data_master_ar_id_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_master_ar_user_o,
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_ar_readpointer_i,
-   
+  output logic [LOG_DEPTH:0]                        async_data_master_ar_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_AR_WIDTH-1:0] async_data_master_ar_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_master_ar_rptr_i,
+
   // WRITE DATA CHANNEL
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_writetoken_o,
-  output logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_w_data_o,
-  output logic [AXI_STRB_C2S_WIDTH-1:0]    data_master_w_strb_o,
-  output logic [AXI_USER_WIDTH-1:0]        data_master_w_user_o,
-  output logic                             data_master_w_last_o,
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_w_readpointer_i,
-  
+  output logic [LOG_DEPTH:0]                        async_data_master_w_wptr_o,
+  output logic [2**LOG_DEPTH-1:0][C2S_W_WIDTH-1:0]  async_data_master_w_data_o,
+  input logic [LOG_DEPTH:0]                         async_data_master_w_rptr_i,
+
   // READ DATA CHANNEL
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_writetoken_i,
-  input  logic [AXI_DATA_C2S_WIDTH-1:0]    data_master_r_data_i,
-  input  logic [1:0]                       data_master_r_resp_i,
-  input  logic                             data_master_r_last_i,
-  input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_r_id_i,
-  input  logic [AXI_USER_WIDTH-1:0]        data_master_r_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_r_readpointer_o,
-  
+  input logic [LOG_DEPTH:0]                         async_data_master_r_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][C2S_R_WIDTH-1:0]   async_data_master_r_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_r_rptr_o,
+
   // WRITE RESPONSE CHANNEL
-  input  logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_writetoken_i,
-  input  logic [1:0]                       data_master_b_resp_i,
-  input  logic [AXI_ID_OUT_WIDTH-1:0]      data_master_b_id_i,
-  input  logic [AXI_USER_WIDTH-1:0]        data_master_b_user_i,
-  output logic [DC_SLICE_BUFFER_WIDTH-1:0] data_master_b_readpointer_o,
-   
+  input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
+  input logic [2**LOG_DEPTH-1:0][C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
+  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o,
+
 
   TCDM_BANK_MEM_BUS.Master                 tcdm_l1_bus[NB_TCDM_BANKS-1:0]
 
 );
 
-   localparam int unsigned NB_L1_CUTS      = 16;
-   localparam int unsigned RW_MARGIN_WIDTH = 4;
+  //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
+  `ifdef PRIVATE_ICACHE
+  if (AXI_ID_IN_WIDTH < 1 + $clog2(NB_CACHE_BANKS))
+           $error("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
+  `else
+  if (AXI_ID_IN_WIDTH < $clog2(NB_CORES+1))
+           $error("AXI input ID width must be larger than $clog2(NB_CORES+1) which is %d but was %d", $clog2(NB_CORES+1), AXI_ID_IN_WIDTH);
+  `endif
+
+  localparam int unsigned NB_L1_CUTS      = 16;
+  localparam int unsigned RW_MARGIN_WIDTH = 4;
+`ifdef FEATURE_ICACHE_STAT
+  localparam bit          FEATURE_STAT    = 1'b1;
+`else
+  localparam bit          FEATURE_STAT    = 1'b0;
+`endif
 
 
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
   //********************************************************
-   
-    
+
+
   logic [NB_CORES-1:0]                fetch_enable_reg_int;
   logic [NB_CORES-1:0]                fetch_en_int;
   logic                               s_rst_n;
@@ -288,17 +257,17 @@ module pulp_cluster
   logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
-  logic                s_cluster_periphs_busy;
-  logic                s_axi2mem_busy;
-  logic                s_per2axi_busy;
-  logic                s_axi2per_busy;
-  logic                s_dmac_busy;
-  logic                s_cluster_cg_en;
-  logic [NB_CORES-1:0] s_dma_event;
-  logic [NB_CORES-1:0] s_dma_irq;
-  logic [NB_CORES-1:0][3:0]  s_hwpe_remap_evt;
-  logic [NB_CORES-1:0][1:0]  s_hwpe_evt;
-  logic                      s_hwpe_busy;
+  logic                     s_cluster_periphs_busy;
+  logic                     s_axi2mem_busy;
+  logic                     s_per2axi_busy;
+  logic                     s_axi2per_busy;
+  logic                     s_dmac_busy;
+  logic                     s_cluster_cg_en;
+  logic [NB_CORES-1:0]      s_dma_event;
+  logic [NB_CORES-1:0]      s_dma_irq;
+  logic [NB_CORES-1:0][3:0] s_hwpe_remap_evt;
+  logic [NB_CORES-1:0][1:0] s_hwpe_evt;
+  logic                     s_hwpe_busy;
 
   logic [NB_CORES-1:0]               clk_core_en;
   logic                              clk_cluster;
@@ -331,16 +300,15 @@ module pulp_cluster
   logic               s_dma_pe_event;
   logic               s_dma_pe_irq;
   logic               s_pf_event;
-  
+
   logic[NB_CORES-1:0][4:0] irq_id;
   logic[NB_CORES-1:0][4:0] irq_ack_id;
   logic[NB_CORES-1:0]      irq_req;
   logic[NB_CORES-1:0]      irq_ack;
-  
 
   logic [NB_CORES-1:0]                s_core_dbg_irq;
 
-  
+
   logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] s_rw_margin_L1;
 
   logic                                       s_dma_cl_event;
@@ -358,7 +326,7 @@ module pulp_cluster
 
 
   /* logarithmic and peripheral interconnect interfaces */
-  // ext -> log interconnect 
+  // ext -> log interconnect
   XBAR_TCDM_BUS s_ext_xbar_bus[NB_DMAS-1:0]();
 
   // periph interconnect -> slave peripherals
@@ -377,23 +345,23 @@ module pulp_cluster
   // periph demux
   XBAR_TCDM_BUS s_mperiph_bus();
   XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
-  
+
   // cores & accelerators -> log interconnect
   XBAR_TCDM_BUS s_core_xbar_bus[NB_CORES+NB_HWPE_PORTS-1:0]();
-  
+
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
-  
+
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
-  
+
   // debug
   XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
-  
+
   /* other interfaces */
   // cores -> DMA ctrl
   XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
-  
+
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
@@ -435,33 +403,15 @@ module pulp_cluster
       `endif
   `endif
    //----------------------------------------------------------------------//
-   
 
-  //***************************************************
-  /* asynchronous AXI interfaces at CLUSTER/SOC interface */
-  //*************************************************** 
-  
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_slave_async();
-
-  AXI_BUS_ASYNC #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .BUFFER_WIDTH   ( DC_SLICE_BUFFER_WIDTH       )
-  ) s_data_master_async();
+  // log interconnect -> TCDM memory banks (SRAM)
+  TCDM_BANK_MEM_BUS s_tcdm_bus_sram[NB_TCDM_BANKS-1:0]();
 
   //***************************************************
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
-  //*************************************************** 
-    
-  
+  //***************************************************
+
+
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
@@ -498,11 +448,11 @@ module pulp_cluster
    // ***********************************************************************************************+
    // ***********************************************************************************************+
    // ***********************************************************************************************+
-   
+
   //***************************************************
   /* synchronous AXI interfaces internal to the cluster */
-  //*************************************************** 
-  
+  //***************************************************
+
   // core per2axi -> ext
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -527,7 +477,7 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_ext_tcdm_bus();
 
-  // cluster bus -> axi2per 
+  // cluster bus -> axi2per
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
@@ -543,7 +493,7 @@ module pulp_cluster
     .rst_no     ( s_rst_n     ),
     .init_no    ( s_init_n    )
   );
-  
+
   /* fetch & busy genertion */
   assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
   assign busy_o = s_cluster_int_busy | (|core_busy);
@@ -551,15 +501,17 @@ module pulp_cluster
 
   /* cluster bus and attached peripherals */
   cluster_bus_wrap #(
-    .NB_CORES         ( NB_CORES           ),
-    .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
-    .AXI_ID_IN_WIDTH  ( AXI_ID_IN_WIDTH    ),
-    .AXI_ID_OUT_WIDTH ( AXI_ID_OUT_WIDTH   )
+    .NB_CORES             ( NB_CORES           ),
+    .DMA_NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
+    .TCDM_SIZE            ( TCDM_SIZE          ),
+    .AXI_ADDR_WIDTH       ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH       ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH       ( AXI_USER_WIDTH     ),
+    .AXI_ID_IN_WIDTH      ( AXI_ID_IN_WIDTH    ),
+    .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   )
   ) cluster_bus_wrap_i (
     .clk_i         ( clk_cluster       ),
-    .rst_ni        ( rst_ni            ),
+    .rst_ni        ( s_rst_n            ),
     .test_en_i     ( test_mode_i       ),
     .cluster_id_i  ( cluster_id_i      ),
     .instr_slave   ( s_core_instr_bus  ),
@@ -579,7 +531,7 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
   ) axi2mem_wrap_i (
     .clk_i       ( clk_cluster    ),
-    .rst_ni      ( rst_ni         ),
+    .rst_ni      ( s_rst_n         ),
     .test_en_i   ( test_mode_i    ),
     .axi_slave   ( s_ext_tcdm_bus ),
     .tcdm_master ( s_ext_xbar_bus ),
@@ -593,7 +545,7 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) axi2per_wrap_i (
     .clk_i         ( clk_cluster       ),
-    .rst_ni        ( rst_ni            ),
+    .rst_ni        ( s_rst_n            ),
     .test_en_i     ( test_mode_i       ),
     .axi_slave     ( s_ext_mperiph_bus ),
     .periph_master ( s_mperiph_bus     ),
@@ -605,25 +557,25 @@ module pulp_cluster
     .ADDR_OFFSET ( 20 )
   ) per_demux_wrap_i (
     .clk_i   ( clk_cluster         ),
-    .rst_ni  ( rst_ni              ),
+    .rst_ni  ( s_rst_n              ),
     .slave   ( s_mperiph_bus       ),
     .masters ( s_mperiph_demux_bus )
   );
 
   `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
-    
+
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wen   = s_mperiph_demux_bus[0].wen;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wdata = s_mperiph_demux_bus[0].wdata;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].be    = s_mperiph_demux_bus[0].be;
-                                        
+
   // assign s_mperiph_demux_bus[0].gnt       = s_mperiph_xbar_bus[NB_MPERIPHS-1].gnt;
   // assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
   // assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
   // assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
- 
-/* not used in vega   
+
+/* not used in vega
   per_demux_wrap #(
     .NB_MASTERS  ( NB_CORES ),
     .ADDR_OFFSET ( 15       )
@@ -644,18 +596,18 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
   ) per2axi_wrap_i (
     .clk_i          ( clk_cluster                     ),
-    .rst_ni         ( rst_ni                          ),
+    .rst_ni         ( s_rst_n                         ),
     .test_en_i      ( test_mode_i                     ),
     .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
     .axi_master     ( s_core_ext_bus                  ),
     .busy_o         ( s_per2axi_busy                  )
   );
-    
+
 
   //***************************************************
   /* cluster (log + periph) interconnect and attached peripherals */
-  //*************************************************** 
-  
+  //***************************************************
+
   cluster_interconnect_wrap #(
     .NB_CORES           ( NB_CORES           ),
     .NB_HWPE_PORTS      ( NB_HWPE_PORTS      ),
@@ -676,7 +628,7 @@ module pulp_cluster
 
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
-    .rst_ni             ( rst_ni                              ),
+    .rst_ni             ( s_rst_n                             ),
 
     .core_tcdm_slave    ( s_core_xbar_bus                     ),
     .core_periph_slave  ( s_core_periph_bus                   ),
@@ -695,8 +647,8 @@ module pulp_cluster
 
   //***************************************************
   //*********************DMAC WRAP*********************
-  //*************************************************** 
-  
+  //***************************************************
+
   dmac_wrap #(
     .NB_CTRLS           ( 2                  ),
     .NB_CORES           ( NB_CORES           ),
@@ -713,7 +665,7 @@ module pulp_cluster
     .BE_WIDTH           ( BE_WIDTH           )
   ) dmac_wrap_i (
     .clk_i          ( clk_cluster        ),
-    .rst_ni         ( rst_ni             ),
+    .rst_ni         ( s_rst_n            ),
     .test_mode_i    ( test_mode_i        ),
     //.ctrl_slave     ( s_core_dmactrl_bus ), // eliminate
     .cl_ctrl_slave  ( s_periph_dma_bus[0]),
@@ -729,7 +681,7 @@ module pulp_cluster
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************
-  //*************************************************** 
+  //***************************************************
 
   cluster_peripherals #(
     .NB_CORES       ( NB_CORES       ),
@@ -743,11 +695,11 @@ module pulp_cluster
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
     .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
-  
+
   ) cluster_peripherals_i (
 
     .clk_i                  ( clk_cluster                        ),
-    .rst_ni                 ( rst_ni                             ),
+    .rst_ni                 ( s_rst_n                            ),
     .ref_clk_i              ( ref_clk_i                          ),
     .test_mode_i            ( test_mode_i                        ),
     .busy_o                 ( s_cluster_periphs_busy             ),
@@ -759,7 +711,7 @@ module pulp_cluster
     .core_clk_en_o          ( clk_core_en                        ),
 
     .speriph_slave          ( s_xbar_speriph_bus[NB_SPERIPHS-2:0]),
-    .core_eu_direct_link    ( s_core_euctrl_bus                  ), 
+    .core_eu_direct_link    ( s_core_euctrl_bus                  ),
 
     .dma_cfg_master         ( s_periph_dma_bus                   ),
 
@@ -781,7 +733,7 @@ module pulp_cluster
     .dbg_core_halted_i      ( dbg_core_halted                    ),
     .dbg_core_resume_o      ( dbg_core_resume                    ),
 
-    .eoc_o                  ( eoc_o                              ), 
+    .eoc_o                  ( eoc_o                              ),
     .cluster_cg_en_o        ( s_cluster_cg_en                    ),
     .fetch_enable_reg_o     ( fetch_enable_reg_int               ),
     .irq_id_o               ( irq_id                             ),
@@ -791,27 +743,29 @@ module pulp_cluster
     .dbg_req_i              ( s_dbg_irq                          ),
     .dbg_req_o              ( s_core_dbg_irq                     ),
 
-    .fregfile_disable_o     ( s_fregfile_disable                 ),   
-    
+    .fregfile_disable_o     ( s_fregfile_disable                 ),
+
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
-    
+
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
     .hwpe_sel_o             ( s_hwpe_sel                         ),
-    .hwpe_en_o              ( s_hwpe_en                          ),
+    .hwpe_en_o              ( s_hwpe_en                          )
 `ifdef PRIVATE_ICACHE
-      .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
-      .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
-      .special_core_icache_cfg_o ( s_special_core_icache_cfg        ),
-      .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
+    ,
+    .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
+    .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
+    .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
 `else
   `ifdef SP_ICACHE
-      .L0_ctrl_unit_bus       (  L0_ctrl_unit_bus                   ),
-      .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
+    ,
+    .L0_ctrl_unit_bus       (  L0_ctrl_unit_bus                   ),
+    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
   `else
-     `ifdef MP_ICACHE
-      .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
-     `endif
+    `ifdef MP_ICACHE
+    ,
+    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
+    `endif
   `endif
 `endif
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
@@ -823,14 +777,14 @@ module pulp_cluster
   //***************** CORE ISLANDS *************************
   //********************************************************
   //------------------------------------------------------//
-  //          ██████╗ ██████╗ ██████╗ ███████╗            //
-  //         ██╔════╝██╔═══██╗██╔══██╗██╔════╝            //
-  //         ██║     ██║   ██║██████╔╝█████╗              //
-  //         ██║     ██║   ██║██╔══██╗██╔══╝              //
-  //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
-  //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
+  //          âââââââ âââââââ âââââââ ââââââââ            //
+  //         âââââââââââââââââââââââââââââââââ            //
+  //         âââ     âââ   âââââââââââââââââ              //
+  //         âââ     âââ   âââââââââââââââââ              //
+  //         ââââââââââââââââââââ  âââââââââââ            //
+  //          âââââââ âââââââ âââ  âââââââââââ            //
   //------------------------------------------------------//
-  
+
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate
     for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -845,6 +799,7 @@ module pulp_cluster
 
 
       core_region #(
+        .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
         .CORE_ID             ( i                  ),
         .ADDR_WIDTH          ( 32                 ),
         .DATA_WIDTH          ( 32                 ),
@@ -863,7 +818,7 @@ module pulp_cluster
         .SHARED_FP           ( CLUST_SHARED_FP         ),
         .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
 
-                    
+
       ) core_region_i (
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
@@ -873,17 +828,17 @@ module pulp_cluster
         .cluster_id_i        ( cluster_id_i          ),
         .clock_en_i          ( clk_core_en[i]        ),
         .fetch_en_i          ( fetch_en_int[i]       ),
-       
+
         .boot_addr_i         ( boot_addr[i]          ),
         .irq_id_i            ( irq_id[i]             ),
-	      .irq_ack_id_o        ( irq_ack_id[i]         ),
+        .irq_ack_id_o        ( irq_ack_id[i]         ),
         .irq_req_i           ( irq_req[i]            ),
         .irq_ack_o           ( irq_ack[i]            ),
-	
+
         .test_mode_i         ( test_mode_i           ),
         .core_busy_o         ( core_busy[i]          ),
 
-        //instruction cache bind 
+        //instruction cache bind
         .instr_req_o         ( instr_req[i]          ),
         .instr_gnt_i         ( instr_gnt[i]          ),
         .instr_addr_o        ( instr_addr[i]         ),
@@ -902,10 +857,10 @@ module pulp_cluster
         //.dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
-      
+
         .fregfile_disable_i  (  s_fregfile_disable     )
 `ifdef SHARED_FPU_CLUSTER
-        ,        
+        ,
         .apu_master_req_o      ( s_apu_master_req     [i] ),
         .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
         .apu_master_type_o     ( s_apu_master_type    [i] ),
@@ -956,7 +911,7 @@ module pulp_cluster
    //**** Shared FPU cluster - Shared execution units ***
    //****************************************************
 
-  `ifdef SHARED_FPU_CLUSTER
+`ifdef SHARED_FPU_CLUSTER
 
       // request channel
       logic [NB_CORES-1:0][2:0][31:0]                s_apu__operands;
@@ -984,7 +939,7 @@ module pulp_cluster
          .FP_TYPE_WIDTH    ( 3                 ),
 
          .NB_CORE_ARGS      ( 3                ),
-	       .CORE_DATA_WIDTH   ( 32               ),
+         .CORE_DATA_WIDTH   ( 32               ),
          .CORE_OPCODE_WIDTH ( 6                ),
          .CORE_DSFLAGS_CPU  ( 15               ),
          .CORE_USFLAGS_CPU  ( 5                ),
@@ -1014,7 +969,7 @@ module pulp_cluster
       (
          .clk                   ( clk_cluster                               ),
          .rst_n                 ( s_rst_n                                   ),
-	       .test_mode_i           ( test_mode_i                               ),
+         .test_mode_i           ( test_mode_i                               ),
          .core_slave_req_i      ( s_apu_master_req                          ),
          .core_slave_gnt_o      ( s_apu_master_gnt                          ),
          .core_slave_type_i     ( s_apu__type                               ),
@@ -1026,7 +981,7 @@ module pulp_cluster
          .core_slave_rdata_o    ( s_apu_master_rdata                        ),
          .core_slave_rflags_o   ( s_apu__rflags                             )
       );
-  `endif
+`endif
 
   //**************************************************************
   //**** HW Processing Engines / Cluster-Coupled Accelerators ****
@@ -1060,10 +1015,10 @@ module pulp_cluster
       end
       assign s_hwpe_busy = '0;
       assign s_hwpe_evt  = '0;
-       
+
     end
   endgenerate
-  
+
   generate
     for(genvar i=0; i<NB_CORES; i++) begin : hwpe_event_interrupt_gen
       assign s_hwpe_remap_evt[i][3:2] = '0;
@@ -1073,88 +1028,82 @@ module pulp_cluster
 
 `ifdef PRIVATE_ICACHE
 
-   icache_hier_top
-   #(
-      .FETCH_ADDR_WIDTH  ( 32       ), //= 32,
-      .FETCH_DATA_WIDTH  ( 128      ), //= 128,
+   icache_hier_top #(
+      .FETCH_ADDR_WIDTH     ( 32                  ), //= 32,
+      .PRI_FETCH_DATA_WIDTH ( INSTR_RDATA_WIDTH   ), //= 128,   // Tested for 32 and 128
+      .SH_FETCH_DATA_WIDTH  ( 128                 ), //= 128,
 
-      .NB_CORES          ( NB_CORES ), //= 8,
+      .NB_CORES             ( NB_CORES            ), //= 8,
 
-      .SH_NB_BANKS       ( NB_CACHE_BANKS ), //= 1,
-      .SH_NB_WAYS        ( 4              ), //= 4,
-      .SH_CACHE_SIZE     ( 4*1024         ), //= 4*1024, // in Byte
-      .SH_CACHE_LINE     ( 1              ), //= 1,       // in word of [FETCH_DATA_WIDTH]
+      .SH_NB_BANKS          ( NB_CACHE_BANKS      ), //= 1,
+      .SH_NB_WAYS           ( 4                   ), //= 4,
+      .SH_CACHE_SIZE        ( 4*1024              ), //= 4*1024,  // in Byte
+      .SH_CACHE_LINE        ( 1                   ), //= 1,       // in word of [SH_FETCH_DATA_WIDTH]
 
-      .PRI_NB_WAYS       ( 4              ), //= 4,
-      .PRI_CACHE_SIZE    ( 512            ), //= 512, // in Byte
-      .PRI_CACHE_LINE    ( 1              ), //= 1,   // in word of [FETCH_DATA_WIDTH]
+      .PRI_NB_WAYS          ( 4                   ), //= 4,
+      .PRI_CACHE_SIZE       ( 512                 ), //= 512,     // in Byte
+      .PRI_CACHE_LINE       ( 1                   ), //= 1,       // in word of [PRI_FETCH_DATA_WIDTH]
 
-      .USE_SPECIAL_CORE       ( "FALSE"     ),
-      .SPECIAL_CORE_ID        ( 0          ),
-      .SPECIAL_PRI_CACHE_SIZE ( 0       ), // in Byte
+      .AXI_ID               ( AXI_ID_OUT_WIDTH    ), //= 6,
+      .AXI_ADDR             ( AXI_ADDR_WIDTH      ), //= 32,
+      .AXI_USER             ( AXI_USER_WIDTH      ), //= 6,
+      .AXI_DATA             ( AXI_DATA_C2S_WIDTH  ), //= 64,
 
-      .AXI_ID            ( AXI_ID_OUT_WIDTH ), //= 6,
-      .AXI_ADDR          ( AXI_ADDR_WIDTH   ), //= 32,
-      .AXI_USER          ( AXI_USER_WIDTH   ), //= 6,
-      .AXI_DATA          ( AXI_DATA_C2S_WIDTH   ), //= 64,
+      .USE_REDUCED_TAG      ( USE_REDUCED_TAG     ), //= "TRUE",  // TRUE | FALSE
+      .L2_SIZE              ( L2_SIZE             )  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
+   ) icache_top_i (
+       .clk                       ( clk_cluster     ),
+       .rst_n                     ( s_rst_n         ),
+       .test_en_i                 ( test_mode_i     ),
 
-      .USE_REDUCED_TAG   ( USE_REDUCED_TAG ), //= "TRUE",   // TRUE | FALSE
-      .L2_SIZE           ( L2_SIZE         )  //= 512*1024    // Size of max(L2 ,ROM) program memory in Byte
-   )
-   icache_top_i
-   (
-       .clk              ( clk_cluster     ),
-       .rst_n            ( s_rst_n         ),
-       .test_en_i        ( test_mode_i     ),
+       .fetch_req_i               ( instr_req       ),
+       .fetch_addr_i              ( instr_addr      ),
+       .fetch_gnt_o               ( instr_gnt       ),
 
-       .fetch_req_i      ( instr_req       ),
-       .fetch_addr_i     ( instr_addr      ),
-       .fetch_gnt_o      ( instr_gnt       ),
+       .fetch_rvalid_o            ( instr_r_valid   ),
+       .fetch_rdata_o             ( instr_r_rdata   ),
 
-       .fetch_rvalid_o   ( instr_r_valid   ),
-       .fetch_rdata_o    ( instr_r_rdata   ),
-
-       .enable_l1_l15_prefetch_i (   s_enable_l1_l15_prefetch     ),   // set it to 1 to use prefetch feature
+       .enable_l1_l15_prefetch_i  ( s_enable_l1_l15_prefetch ), // set it to 1 to use prefetch feature
 
        //AXI read address bus -------------------------------------------
-       .axi_master_arid_o      ( s_core_instr_bus.ar_id    ),
-       .axi_master_araddr_o    ( s_core_instr_bus.ar_addr  ),
-       .axi_master_arlen_o     ( s_core_instr_bus.ar_len   ),    //burst length - 1 to 16
-       .axi_master_arsize_o    ( s_core_instr_bus.ar_size  ),   //size of each transfer in burst
-       .axi_master_arburst_o   ( s_core_instr_bus.ar_burst ),   //accept only incr burst=01
-       .axi_master_arlock_o    ( s_core_instr_bus.ar_lock  ),   //only normal access supported axs_awlock=00
-       .axi_master_arcache_o   ( s_core_instr_bus.ar_cache ),
-       .axi_master_arprot_o    ( s_core_instr_bus.ar_prot  ),
+       .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
+       .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
+       .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),  //burst length - 1 to 16
+       .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),  //size of each transfer in burst
+       .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),  //accept only incr burst=01
+       .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),  //only normal access supported axs_awlock=00
+       .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
+       .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
        .axi_master_arregion_o  ( s_core_instr_bus.ar_region ), //
-       .axi_master_aruser_o    ( s_core_instr_bus.ar_user  ),   //
-       .axi_master_arqos_o     ( s_core_instr_bus.ar_qos   ),    //
-       .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid ),  //master addr valid
-       .axi_master_arready_i   ( s_core_instr_bus.ar_ready ),  //slave ready to accept
+       .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),  //
+       .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),  //
+       .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),  //master addr valid
+       .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),  //slave ready to accept
        // ---------------------------------------------------------------
 
        //AXI BACKWARD read data bus ----------------------------------------------
        .axi_master_rid_i       ( s_core_instr_bus.r_id     ),
        .axi_master_rdata_i     ( s_core_instr_bus.r_data   ),
        .axi_master_rresp_i     ( s_core_instr_bus.r_resp   ),
-       .axi_master_rlast_i     ( s_core_instr_bus.r_last   ),    //last transfer in burst
+       .axi_master_rlast_i     ( s_core_instr_bus.r_last   ), //last transfer in burst
        .axi_master_ruser_i     ( s_core_instr_bus.r_user   ),
-       .axi_master_rvalid_i    ( s_core_instr_bus.r_valid  ),   //slave data valid
-       .axi_master_rready_o    ( s_core_instr_bus.r_ready  ),    //master ready to accept
+       .axi_master_rvalid_i    ( s_core_instr_bus.r_valid  ), //slave data valid
+       .axi_master_rready_o    ( s_core_instr_bus.r_ready  ), //master ready to accept
 
        // NOT USED ----------------------------------------------
-       .axi_master_awid_o      ( s_core_instr_bus.aw_id    ),
-       .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr  ),
-       .axi_master_awlen_o     ( s_core_instr_bus.aw_len   ),
-       .axi_master_awsize_o    ( s_core_instr_bus.aw_size  ),
-       .axi_master_awburst_o   ( s_core_instr_bus.aw_burst ),
-       .axi_master_awlock_o    ( s_core_instr_bus.aw_lock  ),
-       .axi_master_awcache_o   ( s_core_instr_bus.aw_cache ),
-       .axi_master_awprot_o    ( s_core_instr_bus.aw_prot  ),
+       .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
+       .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
+       .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
+       .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
+       .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
+       .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
+       .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
+       .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
        .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
-       .axi_master_awuser_o    ( s_core_instr_bus.aw_user  ),
-       .axi_master_awqos_o     ( s_core_instr_bus.aw_qos   ),
-       .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid ),
-       .axi_master_awready_i   ( s_core_instr_bus.aw_ready ),
+       .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
+       .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
+       .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
+       .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
 
        // NOT USED ----------------------------------------------
        .axi_master_wdata_o     ( s_core_instr_bus.w_data   ),
@@ -1173,13 +1122,12 @@ module pulp_cluster
        .axi_master_bready_o    ( s_core_instr_bus.b_ready  ),
        // ---------------------------------------------------------------
 
-       .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri        ),
-       .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main       ),
-       .special_core_dest_i    (  '0  ) //s_special_core_icache_cfg
+       .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
+       .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
 );
 
 `else
- `ifdef MP_ICACHE
+  `ifdef MP_ICACHE
   /* instruction cache */
   icache_top_mp_128_PF #(
     .FETCH_ADDR_WIDTH ( 32                 ),
@@ -1189,12 +1137,13 @@ module pulp_cluster
     .NB_WAYS          ( SET_ASSOCIATIVE    ),
     .CACHE_SIZE       ( CACHE_SIZE         ),
     .CACHE_LINE       ( 1                  ),
+    .FEATURE_STAT     ( FEATURE_STAT       ),
     .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
     .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
     .AXI_USER         ( AXI_USER_WIDTH     ),
     .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
     .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            ) 
+    .L2_SIZE          ( L2_SIZE            )
   ) icache_top_i (
     .clk                    ( clk_cluster                ),
     .rst_n                  ( s_rst_n                    ),
@@ -1203,19 +1152,19 @@ module pulp_cluster
     .fetch_addr_i           ( instr_addr                 ),
     .fetch_gnt_o            ( instr_gnt                  ),
     .fetch_rvalid_o         ( instr_r_valid              ),
-    .fetch_rdata_o          ( instr_r_rdata              ), 
+    .fetch_rdata_o          ( instr_r_rdata              ),
     .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
     .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
+    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),
+    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),
+    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),
+    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),
     .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
     .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
     .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
+    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),
+    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),
+    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),
     .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
     .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
     .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
@@ -1251,12 +1200,11 @@ module pulp_cluster
     .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
   );
 
-   `else
-      `ifdef SP_ICACHE
+  `else
+    `ifdef SP_ICACHE
          localparam NB_BANKS_SP   = NB_CORES;
          localparam CACHE_LINE_SP = 1;
-         icache_top
-         #(
+         icache_top #(
              // Parameter for MULTIBANK CACHE
              .NB_CORES              ( NB_CORES          ),  // Number of  Processor
              .NB_REFILL_PORT        ( 1                 ),  // 1 refill port
@@ -1292,9 +1240,7 @@ module pulp_cluster
              .AXI_USER              ( AXI_USER_WIDTH    ),
              .AXI_DATA              ( AXI_DATA_C2S_WIDTH    ),
              .AXI_ADDR              ( AXI_ADDR_WIDTH    )
-         )
-         icache_top_i
-         (
+         ) icache_top_i (
              // ---------------------------------------------------------------
              // CORES I$ PLUG -----------------------------------------
              // ---------------------------------------------------------------
@@ -1375,70 +1321,133 @@ module pulp_cluster
              .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus        ),
              .L0_ctrl_unit_slave_if  ( L0_ctrl_unit_bus        )
          );
-      `endif // Closes `ifdef SP_ICACHE
-   `endif // Closes `ifdef MP_ICACHE
+    `endif // Closes `ifdef SP_ICACHE
+  `endif // Closes `ifdef MP_ICACHE
 `endif // Closes `ifdef PRI_ICACHE
 
 
-   
+
   //
   // TCDM banks
   //
 
   // NOTE: The L1 memories are outside the control-pulp module!
-  
-  /* AXI interconnect infrastructure (slices, size conversion) */ 
-  //********************************************************
+
+  /* AXI interconnect infrastructure (slices, size conversion) */
+   //********************************************************
    //**************** AXI REGISTER SLICES *******************
    //********************************************************
-  axi_slice_dc_slave_wrap #(
-    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH         ),
-    .AXI_DATA_WIDTH  ( AXI_DATA_C2S_WIDTH     ),
-    .AXI_USER_WIDTH  ( AXI_USER_WIDTH         ),
-    .AXI_ID_WIDTH    ( AXI_ID_OUT_WIDTH       ),
-    .BUFFER_WIDTH    ( DC_SLICE_BUFFER_WIDTH  )
-  ) data_master_slice_i (
-    .clk_i            ( clk_cluster         ),
-    .rst_ni           ( s_rst_n             ),
-    .test_cgbypass_i  ( 1'b0                ),
-    .isolate_i        ( 1'b0                ),
-    .axi_slave        ( s_data_master       ),
-    .axi_master_async ( s_data_master_async )
+   // CLUSTER TO SOC
+
+   `AXI_TYPEDEF_AW_CHAN_T(c2s_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_W_CHAN_T(c2s_w_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_DATA_C2S_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_B_CHAN_T(c2s_b_chan_t,logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_AR_CHAN_T(c2s_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_R_CHAN_T(c2s_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+
+  `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
+
+   c2s_req_t   src_req ;
+   c2s_resp_t  src_resp;
+
+  `AXI_ASSIGN_TO_REQ(src_req,s_data_master)
+  `AXI_ASSIGN_FROM_RESP(s_data_master,src_resp)
+
+  axi_cdc_src #(
+     .aw_chan_t (c2s_aw_chan_t),
+     .w_chan_t  (c2s_w_chan_t),
+     .b_chan_t  (c2s_b_chan_t),
+     .r_chan_t  (c2s_r_chan_t),
+     .ar_chan_t (c2s_ar_chan_t),
+     .axi_req_t (c2s_req_t    ),
+     .axi_resp_t(c2s_resp_t   ),
+    .LogDepth        ( LOG_DEPTH              )
+    ) axi_master_cdc_i (
+     .src_rst_ni                       ( s_rst_n                     ),
+     .src_clk_i                        ( clk_cluster                 ),
+     .src_req_i                        ( src_req                     ),
+     .src_resp_o                       ( src_resp                    ),
+     .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),
+     .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
+     .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
+     .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
+     .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
+     .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
+     .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
+     .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
+     .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
+     .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
+     .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
+     .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
+     .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
+     .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
+     .async_data_master_r_data_i       ( async_data_master_r_data_i  )
+    );
+
+   // SOC TO CLUSTER
+
+
+   `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_W_CHAN_T(s2c_w_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_DATA_S2C_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_B_CHAN_T(s2c_b_chan_t,logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_AR_CHAN_T(s2c_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+   `AXI_TYPEDEF_R_CHAN_T(s2c_r_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+
+  `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
+
+   s2c_req_t      dst_req;
+   s2c_resp_t     dst_resp;
+
+  `AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
+  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
+
+  axi_cdc_dst #(
+     .aw_chan_t (s2c_aw_chan_t),
+     .w_chan_t  (s2c_w_chan_t ),
+     .b_chan_t  (s2c_b_chan_t ),
+     .r_chan_t  (s2c_r_chan_t ),
+     .ar_chan_t (s2c_ar_chan_t),
+     .axi_req_t (s2c_req_t    ),
+     .axi_resp_t(s2c_resp_t   ),
+     .LogDepth        ( LOG_DEPTH              )
+    ) axi_slave_cdc_i (
+     .dst_rst_ni                       ( s_rst_n                    ),
+     .dst_clk_i                        ( clk_i                      ),
+     .dst_req_o                        ( dst_req                    ),
+     .dst_resp_i                       ( dst_resp                   ),
+     .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),
+     .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
+     .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
+     .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
+     .async_data_slave_w_rptr_o        ( async_data_slave_w_rptr_o  ),
+     .async_data_slave_w_data_i        ( async_data_slave_w_data_i  ),
+     .async_data_slave_ar_wptr_i       ( async_data_slave_ar_wptr_i ),
+     .async_data_slave_ar_rptr_o       ( async_data_slave_ar_rptr_o ),
+     .async_data_slave_ar_data_i       ( async_data_slave_ar_data_i ),
+     .async_data_slave_b_wptr_o        ( async_data_slave_b_wptr_o  ),
+     .async_data_slave_b_rptr_i        ( async_data_slave_b_rptr_i  ),
+     .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
+     .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
+     .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
+     .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )
+    );
+
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
+    .AXI_ADDR_WIDTH          ( AXI_ADDR_WIDTH     ),
+    .AXI_SLV_PORT_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
+    .AXI_MST_PORT_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH          ( AXI_USER_WIDTH     ),
+    .AXI_MAX_READS           ( 1                  )
+  ) axi_dw_UPSIZE_32_64_wrap_i (
+    .clk_i  ( clk_i           ),
+    .rst_ni ( s_rst_n         ),
+    .slv    ( s_data_slave_32 ),
+    .mst    ( s_data_slave_64 )
   );
 
-  axi_slice_dc_master_wrap #(
-    .AXI_ADDR_WIDTH  ( AXI_ADDR_WIDTH        ),
-    .AXI_DATA_WIDTH  ( AXI_DATA_S2C_WIDTH    ),
-    .AXI_USER_WIDTH  ( AXI_USER_WIDTH        ),
-    .AXI_ID_WIDTH    ( AXI_ID_IN_WIDTH       ),
-    .BUFFER_WIDTH    ( DC_SLICE_BUFFER_WIDTH )
-  ) data_slave_slice_i (
-    .clk_i           ( clk_i              ),
-    .rst_ni          ( s_rst_n            ),
-    .test_cgbypass_i ( 1'b0               ),
-    .isolate_i       ( 1'b0               ),
-    .clock_down_i    ( 1'b0               ), //s_isolate_cluster
-    .incoming_req_o  ( s_incoming_req     ),
-    .axi_slave_async ( s_data_slave_async ),
-    .axi_master      ( s_data_slave_32    )
-  );
-
-  axi_size_UPSIZE_32_64_wrap #(
-    .AXI_ADDR_WIDTH      ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH_IN   ( AXI_DATA_S2C_WIDTH ),
-    .AXI_USER_WIDTH_IN   ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_IN     ( AXI_ID_IN_WIDTH    ),
-    .AXI_DATA_WIDTH_OUT  ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH_OUT  ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH_OUT    ( AXI_ID_IN_WIDTH    )
-  ) axi_size_UPSIZE_32_64_wrap_i (
-    .clk_i       ( clk_i           ),
-    .rst_ni      ( s_rst_n         ),
-    .test_mode_i ( test_mode_i     ),
-    .axi_slave   ( s_data_slave_32 ),
-    .axi_master  ( s_data_slave_64 )
-  );
-   
   /* event synchronizers */
   dc_token_ring_fifo_dout #(
     .DATA_WIDTH   ( EVNT_WIDTH            ),
@@ -1452,9 +1461,9 @@ module pulp_cluster
     .write_token  ( ext_events_writetoken_i  ),
     .read_pointer ( ext_events_readpointer_o ),
     .data_async   ( ext_events_dataasync_i   )
-  ); 
+  );
   assign s_events_async = s_events_valid;
-    
+
   edge_propagator_tx ep_dma_pe_evt_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -1462,7 +1471,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_evt_ack_i   ),
     .valid_o ( dma_pe_evt_valid_o )
   );
-   
+
   edge_propagator_tx ep_dma_pe_irq_i (
     .clk_i   ( clk_i              ),
     .rstn_i  ( s_rst_n            ),
@@ -1470,7 +1479,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_irq_ack_i   ),
     .valid_o ( dma_pe_irq_valid_o )
   );
-   
+
   // edge_propagator_tx ep_pf_evt_i (
   //   .clk_i   ( clk_i          ),
   //   .rstn_i  ( s_rst_n        ),
@@ -1478,7 +1487,7 @@ module pulp_cluster
   //   .ack_i   ( pf_evt_ack_i   ),
   //   .valid_o ( pf_evt_valid_o )
   // );
-   
+
   /* centralized gating */
   cluster_clock_gate #(
     .NB_CORES ( NB_CORES )
@@ -1494,106 +1503,5 @@ module pulp_cluster
     .isolate_cluster_o  ( s_isolate_cluster  ),
     .cluster_clk_o      ( clk_cluster        )
   );
-    
-  /* binding of AXI SV interfaces to external Verilog buses */    
-  assign s_data_slave_async.aw_writetoken   = data_slave_aw_writetoken_i;
-  assign s_data_slave_async.aw_addr         = data_slave_aw_addr_i;
-  assign s_data_slave_async.aw_prot         = data_slave_aw_prot_i;
-  assign s_data_slave_async.aw_region       = data_slave_aw_region_i;
-  assign s_data_slave_async.aw_len          = data_slave_aw_len_i;
-  assign s_data_slave_async.aw_size         = data_slave_aw_size_i;
-  //assign s_data_slave_async.aw_atop         = data_slave_aw_atop_i;
-  assign s_data_slave_async.aw_burst        = data_slave_aw_burst_i;
-  assign s_data_slave_async.aw_lock         = data_slave_aw_lock_i;
-  assign s_data_slave_async.aw_cache        = data_slave_aw_cache_i;
-  assign s_data_slave_async.aw_qos          = data_slave_aw_qos_i;
-  assign s_data_slave_async.aw_id           = data_slave_aw_id_i;
-  assign s_data_slave_async.aw_user         = data_slave_aw_user_i;
-  assign data_slave_aw_readpointer_o        = s_data_slave_async.aw_readpointer;
-  
-  assign s_data_slave_async.ar_writetoken   = data_slave_ar_writetoken_i;
-  assign s_data_slave_async.ar_addr         = data_slave_ar_addr_i;
-  assign s_data_slave_async.ar_prot         = data_slave_ar_prot_i;
-  assign s_data_slave_async.ar_region       = data_slave_ar_region_i;
-  assign s_data_slave_async.ar_len          = data_slave_ar_len_i;
-  assign s_data_slave_async.ar_size         = data_slave_ar_size_i;
-  assign s_data_slave_async.ar_burst        = data_slave_ar_burst_i;
-  assign s_data_slave_async.ar_lock         = data_slave_ar_lock_i;
-  assign s_data_slave_async.ar_cache        = data_slave_ar_cache_i;
-  assign s_data_slave_async.ar_qos          = data_slave_ar_qos_i;
-  assign s_data_slave_async.ar_id           = data_slave_ar_id_i;
-  assign s_data_slave_async.ar_user         = data_slave_ar_user_i;
-  assign data_slave_ar_readpointer_o        = s_data_slave_async.ar_readpointer;
-  
-  assign s_data_slave_async.w_writetoken    = data_slave_w_writetoken_i;
-  assign s_data_slave_async.w_data          = data_slave_w_data_i;
-  assign s_data_slave_async.w_strb          = data_slave_w_strb_i;
-  assign s_data_slave_async.w_user          = data_slave_w_user_i;
-  assign s_data_slave_async.w_last          = data_slave_w_last_i; 
-  assign data_slave_w_readpointer_o         = s_data_slave_async.w_readpointer;
-  
-  assign data_slave_r_writetoken_o          = s_data_slave_async.r_writetoken;
-  assign data_slave_r_data_o                = s_data_slave_async.r_data;
-  assign data_slave_r_resp_o                = s_data_slave_async.r_resp;
-  assign data_slave_r_last_o                = s_data_slave_async.r_last;
-  assign data_slave_r_id_o                  = s_data_slave_async.r_id;
-  assign data_slave_r_user_o                = s_data_slave_async.r_user;
-  assign s_data_slave_async.r_readpointer   = data_slave_r_readpointer_i;
-  
-  assign data_slave_b_writetoken_o          = s_data_slave_async.b_writetoken;
-  assign data_slave_b_resp_o                = s_data_slave_async.b_resp;
-  assign data_slave_b_id_o                  = s_data_slave_async.b_id;
-  assign data_slave_b_user_o                = s_data_slave_async.b_user;
-  assign s_data_slave_async.b_readpointer   = data_slave_b_readpointer_i;
-  
-  assign data_master_aw_writetoken_o        = s_data_master_async.aw_writetoken;
-  assign data_master_aw_addr_o              = s_data_master_async.aw_addr;
-  assign data_master_aw_prot_o              = s_data_master_async.aw_prot;
-  assign data_master_aw_region_o            = s_data_master_async.aw_region;
-  assign data_master_aw_len_o               = s_data_master_async.aw_len;
-  assign data_master_aw_size_o              = s_data_master_async.aw_size;
-  assign data_master_aw_burst_o             = s_data_master_async.aw_burst;
-  //assign data_master_aw_atop_o              = s_data_master_async.aw_atop;
-  assign data_master_aw_lock_o              = s_data_master_async.aw_lock;
-  assign data_master_aw_cache_o             = s_data_master_async.aw_cache;
-  assign data_master_aw_qos_o               = s_data_master_async.aw_qos;
-  assign data_master_aw_id_o                = s_data_master_async.aw_id;
-  assign data_master_aw_user_o              = s_data_master_async.aw_user;
-  assign s_data_master_async.aw_readpointer = data_master_aw_readpointer_i;
 
-  assign data_master_ar_writetoken_o        = s_data_master_async.ar_writetoken;
-  assign data_master_ar_addr_o              = s_data_master_async.ar_addr;
-  assign data_master_ar_prot_o              = s_data_master_async.ar_prot;
-  assign data_master_ar_region_o            = s_data_master_async.ar_region;
-  assign data_master_ar_len_o               = s_data_master_async.ar_len;
-  assign data_master_ar_size_o              = s_data_master_async.ar_size;
-  assign data_master_ar_burst_o             = s_data_master_async.ar_burst;
-  assign data_master_ar_lock_o              = s_data_master_async.ar_lock;
-  assign data_master_ar_cache_o             = s_data_master_async.ar_cache;
-  assign data_master_ar_qos_o               = s_data_master_async.ar_qos;
-  assign data_master_ar_id_o                = s_data_master_async.ar_id;
-  assign data_master_ar_user_o              = s_data_master_async.ar_user;
-  assign s_data_master_async.ar_readpointer = data_master_ar_readpointer_i;
-
-  assign data_master_w_writetoken_o         = s_data_master_async.w_writetoken;
-  assign data_master_w_data_o               = s_data_master_async.w_data;
-  assign data_master_w_strb_o               = s_data_master_async.w_strb;
-  assign data_master_w_user_o               = s_data_master_async.w_user;
-  assign data_master_w_last_o               = s_data_master_async.w_last;
-  assign s_data_master_async.w_readpointer  = data_master_w_readpointer_i;
-
-  assign s_data_master_async.r_writetoken   = data_master_r_writetoken_i;
-  assign s_data_master_async.r_data         = data_master_r_data_i;
-  assign s_data_master_async.r_resp         = data_master_r_resp_i;
-  assign s_data_master_async.r_last         = data_master_r_last_i;
-  assign s_data_master_async.r_id           = data_master_r_id_i;
-  assign s_data_master_async.r_user         = data_master_r_user_i;
-  assign data_master_r_readpointer_o        = s_data_master_async.r_readpointer;
-
-  assign s_data_master_async.b_writetoken   = data_master_b_writetoken_i;
-  assign s_data_master_async.b_resp         = data_master_b_resp_i;
-  assign s_data_master_async.b_id           = data_master_b_id_i;
-  assign s_data_master_async.b_user         = data_master_b_user_i;
-  assign data_master_b_readpointer_o        = s_data_master_async.b_readpointer;
-   
 endmodule

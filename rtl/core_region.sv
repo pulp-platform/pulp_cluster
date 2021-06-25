@@ -30,80 +30,82 @@
 module core_region
 #(
   // CORE PARAMETERS
-  //parameter USE_FPU             = 1,
-  //parameter USE_HWPE            = 1,
+  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  // parameter USE_FPU             = 1,
+  // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
-  parameter CORE_ID            = 0,
-  parameter ADDR_WIDTH         = 32,
-  parameter DATA_WIDTH         = 32,
-  parameter INSTR_RDATA_WIDTH  = 32,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
-  parameter REMAP_ADDRESS      = 0,
+  parameter CORE_ID             = 0,
+  parameter ADDR_WIDTH          = 32,
+  parameter DATA_WIDTH          = 32,
+  parameter INSTR_RDATA_WIDTH   = 32,
+  parameter CLUSTER_ALIAS_BASE  = 12'h000,
+  parameter REMAP_ADDRESS       = 0,
 
-  parameter APU_NARGS_CPU      = 2,
-  parameter APU_WOP_CPU        = 1,
-  parameter WAPUTYPE           = 3,
-  parameter APU_NDSFLAGS_CPU   = 3,
-  parameter APU_NUSFLAGS_CPU   = 5,
-  
-  parameter FPU                =  0,
-  parameter FP_DIVSQRT         =  0,
-  parameter ZFINX              =  0,
-  parameter SHARED_FP          =  0,
-  parameter SHARED_FP_DIVSQRT  =  0,
+  parameter APU_NARGS_CPU       = 2,
+  parameter APU_WOP_CPU         = 1,
+  parameter WAPUTYPE            = 3,
+  parameter APU_NDSFLAGS_CPU    = 3,
+  parameter APU_NUSFLAGS_CPU    = 5,
 
-  parameter DEBUG_START_ADDR   = `DEBUG_START_ADDR,
+  parameter FPU                 =  0,
+  parameter FP_DIVSQRT          =  0,
+  parameter ZFINX               =  0,
+  parameter SHARED_FP           =  0,
+  parameter SHARED_FP_DIVSQRT   =  0,
 
-  parameter L2_SLM_FILE   = "./slm_files/l2_stim.slm",
-  parameter ROM_SLM_FILE  = "../sw/apps/boot/slm_files/l2_stim.slm"
+  parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
+
+  parameter L2_SLM_FILE         = "./slm_files/l2_stim.slm",
+  parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
-  input logic 			      clk_i,
-  input logic 			      rst_ni,
-  input logic 			      init_ni,
+  input logic                            clk_i,
+  input logic                            rst_ni,
+  input logic                            init_ni,
 
-  input logic [3:0] 		      base_addr_i, // FOR CLUSTER VIRTUALIZATION
+  input logic [3:0]                      base_addr_i, // FOR CLUSTER VIRTUALIZATION
 
-  input logic [5:0] 		      cluster_id_i,
-  
-  input logic 			      irq_req_i,
-  output logic 			      irq_ack_o,
-  input logic [4:0] 		      irq_id_i,
-  output logic [4:0] 		      irq_ack_id_o,
-  
-  input logic 			      clock_en_i,
-  input logic 			      fetch_en_i,
-  input logic 			      fregfile_disable_i,
+  input logic [5:0]                      cluster_id_i,
 
-  input logic [31:0] 		      boot_addr_i,
+  input logic                            irq_req_i,
+  output logic                           irq_ack_o,
+  input logic [4:0]                      irq_id_i,
+  output logic [4:0]                     irq_ack_id_o,
 
-  input logic 			      test_mode_i,
+  input logic                            clock_en_i,
+  input logic                            fetch_en_i,
+  input logic                            fregfile_disable_i,
 
-  output logic 			      core_busy_o,
+  input logic [31:0]                     boot_addr_i,
+
+  input logic                            test_mode_i,
+
+  output logic                           core_busy_o,
 
   // Interface to Instruction Logarithmic interconnect (Req->grant handshake)
-  output logic 			      instr_req_o,
-  input logic 			      instr_gnt_i,
-  output logic [31:0] 		      instr_addr_o,
-  input logic [INSTR_RDATA_WIDTH-1:0] instr_r_rdata_i,
-  input logic 			      instr_r_valid_i,
+  output logic                           instr_req_o,
+  input logic                            instr_gnt_i,
+  output logic [31:0]                    instr_addr_o,
+  input logic [INSTR_RDATA_WIDTH-1:0]    instr_r_rdata_i,
+  input logic                            instr_r_valid_i,
 
-  input logic             debug_req_i,
-				      
-				      //XBAR_TCDM_BUS.Slave debug_bus,
-  //output logic 			      debug_core_halted_o,
-  //input logic 			      debug_core_halt_i,
-  //input logic 			      debug_core_resume_i,
-				      
-				      // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-				      XBAR_TCDM_BUS.Master tcdm_data_master,
-				      //XBAR_TCDM_BUS.Master dma_ctrl_master,
-				      XBAR_PERIPH_BUS.Master eu_ctrl_master,
-				      XBAR_PERIPH_BUS.Master periph_data_master
+  input logic                            debug_req_i,
+
+              //XBAR_TCDM_BUS.Slave debug_bus,
+  //output logic            debug_core_halted_o,
+  //input logic             debug_core_halt_i,
+  //input logic             debug_core_resume_i,
+
+  // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
+  XBAR_TCDM_BUS.Master                   tcdm_data_master,
+  //XBAR_TCDM_BUS.Master dma_ctrl_master,
+  XBAR_PERIPH_BUS.Master                 eu_ctrl_master,
+  XBAR_PERIPH_BUS.Master                 periph_data_master
 
 
  // new interface signals
  `ifdef SHARED_FPU_CLUSTER
+ // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
@@ -120,6 +122,7 @@ module core_region
 `endif
 
 `ifdef APU_CLUSTER
+ // TODO: Ensure disable if CORE_TYPE_CL != 0
   ,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
@@ -134,7 +137,7 @@ module core_region
   input logic [31:0]                     apu_master_result_i,
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
 `endif
- 
+
 
 );
 
@@ -147,6 +150,16 @@ module core_region
 
   logic [4:0]      perf_counters;
   logic            clk_int;
+  logic [31:0]     hart_id;
+  logic            core_sleep;
+  logic [31:0]     boot_addr;
+  logic [31:0]     core_irq_x;
+
+  logic            core_instr_req;
+  logic            core_instr_gnt;
+  logic [31:0]     core_instr_addr;
+  logic [31:0]     core_instr_r_rdata;
+  logic            core_instr_r_valid;
 
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
@@ -156,20 +169,23 @@ module core_region
     .clk_o     ( clk_int     )
   );
 
+  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
+
  `ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
+ // TODO: Disable if CORE_TYPE_CL != 0
    logic                     apu_master_req_o;
    logic                     apu_master_gnt_i;
    // request channel
-   logic [WAPUTYPE-1:0]            apu_master_type_o;
-   logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o;
-   logic [APU_WOP_CPU-1:0]     apu_master_op_o;
-   logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o;
+   logic [WAPUTYPE-1:0]             apu_master_type_o;
+   logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
+   logic [APU_WOP_CPU-1:0]          apu_master_op_o;
+   logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
    // response channel
-   logic         apu_master_ready_o;
-   logic         apu_master_valid_i;
-   logic [31:0]        apu_master_result_i;
-   logic [APU_NUSFLAGS_CPU-1:0]    apu_master_flags_i;
+   logic                        apu_master_ready_o;
+   logic                        apu_master_valid_i;
+   logic [31:0]                 apu_master_result_i;
+   logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
 
    assign apu_master_gnt_i      = '1;
    assign apu_master_valid_i    = '0;
@@ -258,7 +274,7 @@ module core_region
 
     .ext_perf_counters_i   ( perf_counters         ),
     .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
-  ); 
+  );
 
   //assign debug_bus.r_opc = 1'b0;
 
@@ -275,7 +291,7 @@ module core_region
   //********************************************************
   //****** DEMUX TO TCDM AND PERIPHERAL INTERCONNECT *******
   //********************************************************
-   
+
   // demuxes to TCDM & memory hierarchy
   core_demux #(
     .ADDR_WIDTH         ( 32                 ),
@@ -488,7 +504,7 @@ module core_region
   endgenerate
  -----/\----- EXCLUDED -----/\----- */
 
-  // SELF CHECK ROUTINES TO compare isntruction fetches with slm files
+  // SELF CHECK ROUTINES TO compare instruction fetches with slm files
   always_ff @(posedge clk_i)
   begin
     if(instr_r_valid_i) begin
