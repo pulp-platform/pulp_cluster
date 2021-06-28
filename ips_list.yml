@@ -28,7 +28,7 @@ event_unit_flex:
   domain: [cluster]
   group : pulp-platform
 mchan:
-  commit: master
+  commit: a9c71f2d9845a4ca05cf2c6ad089b4753f76fc2e
   domain: [cluster]
   group : pulp-platform
 icache-intc:
