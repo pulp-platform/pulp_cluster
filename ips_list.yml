@@ -37,7 +37,7 @@ cluster_peripherals:
   commit: aa58c62d9c7ca1866311ba67e539ef9e527a268e
   group:  pulp-platform
 fpu_interco:
-  commit: master
+  commit: c2166ffb4a995aeb58f4be926049e231f5d18cf2
   group: pulp-platform
 
 
