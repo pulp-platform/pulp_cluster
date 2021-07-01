@@ -67,6 +67,7 @@ module pulp_cluster
   parameter USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
+  parameter PULP_XPULP              = 1,
   parameter ROM_BOOT_ADDR           = 32'h1A000000,
   parameter BOOT_ADDR               = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH       = 128,
@@ -800,6 +801,7 @@ module pulp_cluster
 
       core_region #(
         .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
+        .PULP_XPULP          ( PULP_XPULP         ),
         .CORE_ID             ( i                  ),
         .ADDR_WIDTH          ( 32                 ),
         .DATA_WIDTH          ( 32                 ),

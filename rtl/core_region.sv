@@ -37,8 +37,7 @@ module core_region
 #(
   // CORE PARAMETERS
   parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  // parameter USE_FPU             = 1,
-  // parameter USE_HWPE            = 1,
+  parameter PULP_XPULP          = 1,
   parameter CORE_ID             = 0,
   parameter ADDR_WIDTH          = 32,
   parameter DATA_WIDTH          = 32,
@@ -219,7 +218,7 @@ module core_region
 `else
     cv32e40p_core #(
 `endif
-     .PULP_XPULP          ( 1                 ),
+     .PULP_XPULP          ( PULP_XPULP        ),
      .PULP_CLUSTER        ( 1                 ),
      .FPU                 ( FPU               ),
      .PULP_ZFINX          ( ZFINX             ),
