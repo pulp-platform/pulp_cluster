@@ -6,7 +6,7 @@ common_cells:
   commit: v1.21.0
   domain: [cluster, soc]
 axi/axi:
-  commit: v0.28.0
+  commit: v0.29.1
   domain: [cluster, soc]
 axi/axi_slice:
   commit: v1.1.4
@@ -75,7 +75,7 @@ cluster_peripherals:
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: be7808b84a1dcdb1ecdb6e40814cc4864acd9451
+  commit: cv32e40p_integration
   domain: [soc, cluster]
   group: pulp-platform
 hwpe-datamover-example:
@@ -84,5 +84,5 @@ hwpe-datamover-example:
   domain: [cluster, pulp]
 cv32e40p:
   group : pulp-platform
-  commit: 73718cf5ac881040dd1e2087769b638e5da4a415
+  commit: pulp-open
   domain: [cluster, soc]
