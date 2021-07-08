@@ -68,7 +68,7 @@ module cluster_bus_wrap
     $fatal(1,"TCDM size must be non-zero!");
   if (TCDM_SIZE >128*1024)
     $fatal(1,"TCDM size exceeds available address space in cluster bus!");
-   
+
 
   // Crossbar
   AXI_BUS #(
@@ -90,17 +90,17 @@ module cluster_bus_wrap
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH  ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH    )
   ) axi_masters [NB_MASTER-1:0]();
-   
+
   // assign here your axi masters
   `AXI_ASSIGN(tcdm_master  , axi_masters[0])
   `AXI_ASSIGN(periph_master, axi_masters[1])
   `AXI_ASSIGN(ext_master   , axi_masters[2])
-  
+
   // address map
   logic [31:0] cluster_base_addr;
   assign cluster_base_addr = 32'h1000_0000 + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 3;
-  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map; 
+  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map;
 
 
   assign addr_map[0] = '{ // TCDM
@@ -118,7 +118,7 @@ module cluster_bus_wrap
     start_addr: cluster_base_addr + 32'h0040_0000,
     end_addr:   32'hFFFF_FFFF
   };
-    
+
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
                                                     DMA_NB_OUTSND_BURSTS : NB_CORES;
 
@@ -130,13 +130,14 @@ module cluster_bus_wrap
                                                     //outstanding transactiions anyways
                                                     MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
                                                     //per slave port
-                                                    FallThrough: 1'b0,       //Use the reccomended default config 
+                                                    FallThrough: 1'b0,       //Use the reccomended default config
                                                     LatencyMode: axi_pkg::NO_LATENCY, // CUT_ALL_AX | axi_pkg::DemuxW,
                                                     AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
                                                     AxiAddrWidth: AXI_ADDR_WIDTH,
                                                     AxiDataWidth: AXI_DATA_WIDTH,
-                                                    NoAddrRules: N_RULES
+                                                    NoAddrRules: N_RULES,
+                                                    UniqueIds: 0
                                                     };
 
 
@@ -156,5 +157,3 @@ module cluster_bus_wrap
   );
 
 endmodule
-
-
