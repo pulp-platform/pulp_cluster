@@ -1,6 +1,6 @@
 package:
   name: pulp_cluster
-  authors: 
+  authors:
     - "Pirmin Vogel <vogelpi@lowrisc.org>"
     - "Angelo Garofalo <angelo.garofalo@unibo.it>"
     - "Francesco Conti <f.conti@unibo.it>"
@@ -19,7 +19,7 @@ dependencies:
   icache_mp_128_pf:       { git: "https://github.com/pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
   icache_private:         { git: "https://github.com/pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
-  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "83c7a1b690bffd006d8b925805aab3c1f8ba9ff1" }
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "cv32e40p_integration" }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.7.1 } # to be updated (now 0.24?)
   axi_node:               { git: "https://github.com/pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
@@ -27,7 +27,7 @@ dependencies:
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.13.1 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.2 }
-  riscv:                  { git: "https://github.com/pulp-platform/cv32e40p.git", rev: "pulpissimo-v3.4.0-rev1"} # To be updated to openhwgroup repository
+  riscv:                  { git: "https://github.com/pulp-platform/cv32e40p.git", rev: "pulp-open"} # To be updated to openhwgroup repository
   ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
@@ -58,7 +58,7 @@ sources:
   - deps_deprecated/axi_node/src/axi_request_block.sv
   - deps_deprecated/axi_node/src/axi_response_block.sv
   - deps_deprecated/axi_node/src/axi_RR_Flag_Req.sv
-  
+
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
     # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
     # levels 1 and 0, etc. Files within a level are ordered alphabetically.
