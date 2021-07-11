@@ -51,6 +51,7 @@ module core_region
   parameter FP_DIVSQRT          =  0,
   parameter SHARED_FP           =  0,
   parameter SHARED_FP_DIVSQRT   =  0,
+  parameter USE_ZFINX           =  1,
 
   parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
 
@@ -192,7 +193,20 @@ module core_region
   assign apu_master_result_i   = '0;
   assign apu_master_flags_i    = '0;
  `endif
+`endif //  `ifndef APU_CLUSTER
+
+   
+    // Number of performance counters. As previously in RI5CY (riscv_cs_registers.sv),
+    // we distinguish between:
+    // (a) ASIC implementation: 1 performance counter active
+    // (b) RTL simulation/FPGA emulation: 16 performance counters active, one for each event
+
+`ifdef ASIC_SYNTHESIS
+      localparam int unsigned NUM_MHPMCOUNTERS = 1;
+`else
+      localparam int unsigned NUM_MHPMCOUNTERS = 16;
 `endif
+   
 
    //********************************************************
    //***************** PROCESSOR ****************************
@@ -277,8 +291,8 @@ module core_region
         .PULP_XPULP          ( 1                 ),
         .PULP_CLUSTER        ( 1                 ),
         .FPU                 ( FPU               ),
-        .PULP_ZFINX          ( FPU ? 1 : 0       ),
-        .NUM_MHPMCOUNTERS    ( 1                 )
+        .PULP_ZFINX          ( USE_ZFINX         ),
+        .NUM_MHPMCOUNTERS    ( NUM_MHPMCOUNTERS  )
       )
        RISCV_CORE
       (
