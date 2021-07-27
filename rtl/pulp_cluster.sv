@@ -368,22 +368,20 @@ module pulp_cluster
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
 
-`ifdef SHARED_FPU_CLUSTER
-      // apu-interconnect
-      // handshake signals
-      logic [NB_CORES-1:0]                           s_apu_master_req;
-      logic [NB_CORES-1:0]                           s_apu_master_gnt;
-      // request channel
-      logic [NB_CORES-1:0][APU_NARGS_CPU-1:0][31:0]  s_apu_master_operands;
-      logic [NB_CORES-1:0][APU_WOP_CPU-1:0]          s_apu_master_op;
-      logic [NB_CORES-1:0][WAPUTYPE-1:0]             s_apu_master_type;
-      logic [NB_CORES-1:0][APU_NDSFLAGS_CPU-1:0]     s_apu_master_flags;
-      // response channel
-      logic [NB_CORES-1:0]                           s_apu_master_rready;
-      logic [NB_CORES-1:0]                           s_apu_master_rvalid;
-      logic [NB_CORES-1:0][31:0]                     s_apu_master_rdata;
-      logic [NB_CORES-1:0][APU_NUSFLAGS_CPU-1:0]     s_apu_master_rflags;
-`endif
+  // apu-interconnect
+  // handshake signals
+  logic [NB_CORES-1:0]                           s_apu_master_req;
+  logic [NB_CORES-1:0]                           s_apu_master_gnt;
+  // request channel
+  logic [NB_CORES-1:0][APU_NARGS_CPU-1:0][31:0]  s_apu_master_operands;
+  logic [NB_CORES-1:0][APU_WOP_CPU-1:0]          s_apu_master_op;
+  logic [NB_CORES-1:0][WAPUTYPE-1:0]             s_apu_master_type;
+  logic [NB_CORES-1:0][APU_NDSFLAGS_CPU-1:0]     s_apu_master_flags;
+  // response channel
+  logic [NB_CORES-1:0]                           s_apu_master_rready;
+  logic [NB_CORES-1:0]                           s_apu_master_rvalid;
+  logic [NB_CORES-1:0][31:0]                     s_apu_master_rdata;
+  logic [NB_CORES-1:0][APU_NUSFLAGS_CPU-1:0]     s_apu_master_rflags;
 
    //----------------------------------------------------------------------//
    // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
@@ -864,9 +862,8 @@ module pulp_cluster
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
 
-        .fregfile_disable_i  (  s_fregfile_disable     )
-`ifdef SHARED_FPU_CLUSTER
-        ,
+        .fregfile_disable_i  (  s_fregfile_disable     ),
+
         .apu_master_req_o      ( s_apu_master_req     [i] ),
         .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
         .apu_master_type_o     ( s_apu_master_type    [i] ),
@@ -877,7 +874,6 @@ module pulp_cluster
         .apu_master_ready_o    ( s_apu_master_rready  [i] ),
         .apu_master_result_i   ( s_apu_master_rdata   [i] ),
         .apu_master_flags_i    ( s_apu_master_rflags  [i] )
-`endif
       );
     end
   endgenerate
@@ -987,7 +983,30 @@ module pulp_cluster
          .core_slave_rdata_o    ( s_apu_master_rdata                        ),
          .core_slave_rflags_o   ( s_apu__rflags                             )
       );
+`endif //  `ifdef SHARED_FPU_CLUSTER
+
+
+  //****************************************
+  //**** Private FPUs - One FPU per-core ***
+  //****************************************
+
+`ifdef PRIVATE_FPU_CLUSTER
+      for (genvar i=0; i<NB_CORES; i++) begin : PRIVATE_FPU_CORE
+         cv32e40p_fp_wrapper fp_wrapper_cluster_i (
+             .clk_i         (clk_cluster),
+             .rst_ni        (s_rst_n),
+             .apu_req_i     (s_apu_master_req[i]),
+             .apu_gnt_o     (s_apu_master_gnt[i]),
+             .apu_operands_i(s_apu_master_operands[i]),
+             .apu_op_i      (s_apu_master_op[i]),
+             .apu_flags_i   (s_apu_master_flags[i]),
+             .apu_rvalid_o  (s_apu_master_rvalid[i]),
+             .apu_rdata_o   (s_apu_master_rdata[i]),
+             .apu_rflags_o  (s_apu_master_rflags[i])
+         );
+      end // block: PRIVATE_FPU_CORE
 `endif
+
 
   //**************************************************************
   //**** HW Processing Engines / Cluster-Coupled Accelerators ****
