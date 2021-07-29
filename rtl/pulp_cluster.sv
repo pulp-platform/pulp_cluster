@@ -131,6 +131,7 @@ module pulp_cluster
 (
   input logic                                       clk_i,
   input logic                                       rst_ni,
+  output logic                                      rst_l1_no,
   input logic                                       ref_clk_i,
   input logic                                       pmu_mem_pwdn_i,
 
@@ -494,6 +495,9 @@ module pulp_cluster
     .rst_no     ( s_rst_n     ),
     .init_no    ( s_init_n    )
   );
+
+  // Propagate rst_l1_no
+  assign rst_l1_no = s_rst_n;
 
   /* fetch & busy genertion */
   assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
