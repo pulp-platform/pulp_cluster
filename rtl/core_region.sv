@@ -214,7 +214,11 @@ module core_region
    //********************************************************
 
 `ifndef PULP_FPGA_EMUL
+  `ifdef SYNTHESIS
+    cv32e40p_core #(
+  `else
     cv32e40p_wrapper #(
+  `endif
 `else
     cv32e40p_core #(
 `endif
