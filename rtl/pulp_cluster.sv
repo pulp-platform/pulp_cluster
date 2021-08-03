@@ -79,6 +79,7 @@ module pulp_cluster
   parameter CLUST_NB_FPU            = 1,
   parameter CLUST_NB_EXT_DIVSQRT    = 1,
   parameter CLUST_ZFINX             = 0,
+  parameter NUM_INTERRUPTS          = 0,
 
   // AXI parameters
   parameter AXI_ADDR_WIDTH          = 32,
@@ -303,8 +304,8 @@ module pulp_cluster
 
   logic                                       s_pf_event;
 
-  logic[NB_CORES-1:0][4:0] irq_id;
-  logic[NB_CORES-1:0][4:0] irq_ack_id;
+  logic[NB_CORES-1:0][$clog2(NUM_INTERRUPTS)-1:0] irq_id;
+  logic[NB_CORES-1:0][$clog2(NUM_INTERRUPTS)-1:0] irq_ack_id;
   logic[NB_CORES-1:0]      irq_req;
   logic[NB_CORES-1:0]      irq_ack;
 
@@ -693,7 +694,8 @@ module pulp_cluster
     .EVNT_WIDTH     ( EVNT_WIDTH     ),
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
-    .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
+    .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  ),
+    .NUM_INTERRUPTS  ( NUM_INTERRUPTS   )
 
   ) cluster_peripherals_i (
 
@@ -813,7 +815,8 @@ module pulp_cluster
         .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
 
         .FPU                 ( CLUST_FPU          ),
-        .ZFINX               ( CLUST_ZFINX        )
+        .ZFINX               ( CLUST_ZFINX        ),
+        .NUM_INTERRUPTS      ( NUM_INTERRUPTS     )
 
       ) core_region_i (
         .clk_i               ( clk_cluster           ),

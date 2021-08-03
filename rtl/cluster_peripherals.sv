@@ -32,7 +32,8 @@ module cluster_peripherals
   parameter EVNT_WIDTH     = 8,
   parameter FEATURE_DEMUX_MAPPED = 1,
   parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4
+  parameter int unsigned  RW_MARGIN_WIDTH = 4,
+  parameter int unsigned  NUM_INTERRUPTS  = 0
 )
 (
   input  logic                        clk_i,
@@ -80,8 +81,8 @@ module cluster_peripherals
 
   output logic                        eoc_o,
   output logic [NB_CORES-1:0]         fetch_enable_reg_o, //fetch enable driven by the internal register
-  output logic [NB_CORES-1:0][4:0]    irq_id_o,
-  input  logic [NB_CORES-1:0][4:0]    irq_ack_id_i,
+  output logic [NB_CORES-1:0][$clog2(NUM_INTERRUPTS)-1:0]    irq_id_o,
+  input  logic [NB_CORES-1:0][$clog2(NUM_INTERRUPTS)-1:0]    irq_ack_id_i,
   output logic [NB_CORES-1:0]         irq_req_o,
   input  logic [NB_CORES-1:0]         irq_ack_i,
 
@@ -257,7 +258,8 @@ module cluster_peripherals
     .NB_CORES     ( NB_CORES   ),
     .NB_BARR      ( NB_CORES   ),
     .PER_ID_WIDTH ( NB_CORES+1 ),
-    .EVNT_WIDTH   ( EVNT_WIDTH )
+    .EVNT_WIDTH   ( EVNT_WIDTH ),
+    .NUM_INTERRUPTS ( NUM_INTERRUPTS )
   ) event_unit_flex_i (
     .clk_i                  ( clk_i                  ),
     .rst_ni                 ( rst_ni                 ),
@@ -285,8 +287,8 @@ module cluster_peripherals
     
     .soc_periph_evt_valid_i ( soc_periph_evt_valid_i ),
     .soc_periph_evt_ready_o ( soc_periph_evt_ready_o ),
-    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),  
-    
+    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),
+
     .message_master         ( eu_message_master      )
   );
 

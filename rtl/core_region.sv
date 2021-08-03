@@ -53,6 +53,7 @@ module core_region
 
   parameter FPU                 =  0,
   parameter ZFINX               =  0,
+  parameter NUM_INTERRUPTS      =  0,
 
   parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
 
@@ -70,8 +71,8 @@ module core_region
 
   input logic                            irq_req_i,
   output logic                           irq_ack_o,
-  input logic [4:0]                      irq_id_i,
-  output logic [4:0]                     irq_ack_id_o,
+  input logic [$clog2(NUM_INTERRUPTS)-1:0] irq_id_i,
+  output logic [$clog2(NUM_INTERRUPTS)-1:0] irq_ack_id_o,
 
   input logic                            clock_en_i,
   input logic                            fetch_en_i,
@@ -122,6 +123,7 @@ module core_region
 
 );
 
+
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
   //********************************************************
@@ -134,7 +136,7 @@ module core_region
   logic [31:0]     hart_id;
   logic            core_sleep;
   logic [31:0]     boot_addr;
-  logic [31:0]     core_irq_x;
+  logic [NUM_INTERRUPTS-1:0]     core_irq_x;
 
   logic            core_instr_req;
   logic            core_instr_gnt;
@@ -163,6 +165,7 @@ module core_region
      localparam int unsigned NUM_MHPMCOUNTERS = 16;
    `endif
 
+
    //********************************************************
    //***************** PROCESSOR ****************************
    //********************************************************
@@ -180,7 +183,8 @@ module core_region
      .PULP_CLUSTER        ( 1                 ),
      .FPU                 ( FPU               ),
      .PULP_ZFINX          ( ZFINX             ),
-     .NUM_MHPMCOUNTERS    ( NUM_MHPMCOUNTERS  )
+     .NUM_MHPMCOUNTERS    ( NUM_MHPMCOUNTERS  ),
+     .NUM_INTERRUPTS      ( NUM_INTERRUPTS )
    )
     RISCV_CORE
    (
