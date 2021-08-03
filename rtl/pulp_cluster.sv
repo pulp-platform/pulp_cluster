@@ -73,9 +73,8 @@ module pulp_cluster
   parameter INSTR_RDATA_WIDTH       = 128,
 
   parameter CLUST_FPU               = 1,
-  parameter CLUST_FP_DIVSQRT        = 1,
-  parameter CLUST_SHARED_FP         = 2,
-  parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter CLUST_NB_FPU            = 1,
+  parameter CLUST_NB_EXT_DIVSQRT    = 1,
   parameter CLUST_ZFINX             = 0,
 
   // AXI parameters
@@ -816,12 +815,8 @@ module pulp_cluster
         .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU   ), //= 3,
         .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
 
-        .FPU                 ( CLUST_FPU               ),
-        .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
-        .ZFINX               ( CLUST_ZFINX             ),
-        .SHARED_FP           ( CLUST_SHARED_FP         ),
-        .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
-
+        .FPU                 ( CLUST_FPU          ),
+        .ZFINX               ( CLUST_ZFINX        )
 
       ) core_region_i (
         .clk_i               ( clk_cluster           ),
@@ -879,41 +874,11 @@ module pulp_cluster
   endgenerate
 
 
-//**********************************************
-//**** APU cluster - Shared execution units ****
-//**********************************************
-
-`ifdef APU_CLUSTER
-
-   apu_cluster
-     #(
-       .C_NB_CORES         ( NB_CORES                ),
-       .NDSFLAGS_CPU       ( APU_NDSFLAGS_CPU        ),
-       .NUSFLAGS_CPU       ( APU_NUSFLAGS_CPU        ),
-       .WOP_CPU            ( APU_WOP_CPU             ),
-       .NARGS_CPU          ( APU_NARGS_CPU           ),
-       .WAPUTYPE           ( WAPUTYPE                ),
-       .SHARED_FP          ( CLUST_SHARED_FP         ),
-       .SHARED_DSP_MULT    ( 0                       ),
-       .SHARED_INT_MULT    ( 0                       ),
-       .SHARED_INT_DIV     ( 0                       ),
-       .SHARED_FP_DIVSQRT  ( CLUST_SHARED_FP_DIVSQRT )
-       )
-   apu_cluster_i
-     (
-      .clk_i  ( clk_cluster       ),
-      .rst_ni ( s_rst_n           ),
-      .cpus   ( s_apu_cluster_bus )
-      );
-
-`endif
-
-
    //****************************************************
    //**** Shared FPU cluster - Shared execution units ***
    //****************************************************
 
-`ifdef SHARED_FPU_CLUSTER
+`ifdef FPU_CLUSTER
 
       // request channel
       logic [NB_CORES-1:0][2:0][31:0]                s_apu__operands;
@@ -936,8 +901,8 @@ module pulp_cluster
        shared_fpu_cluster
       #(
          .NB_CORES         ( NB_CORES          ),
-         .NB_APUS          ( 1                 ),
-         .NB_FPNEW         ( 4                 ),
+         .NB_APUS          ( CLUST_NB_EXT_DIVSQRT ),
+         .NB_FPNEW         ( CLUST_NB_FPU      ),
          .FP_TYPE_WIDTH    ( 3                 ),
 
          .NB_CORE_ARGS      ( 3                ),
@@ -983,30 +948,18 @@ module pulp_cluster
          .core_slave_rdata_o    ( s_apu_master_rdata                        ),
          .core_slave_rflags_o   ( s_apu__rflags                             )
       );
-`endif //  `ifdef SHARED_FPU_CLUSTER
-
-
-  //****************************************
-  //**** Private FPUs - One FPU per-core ***
-  //****************************************
-
-`ifdef PRIVATE_FPU_CLUSTER
-      for (genvar i=0; i<NB_CORES; i++) begin : PRIVATE_FPU_CORE
-         cv32e40p_fp_wrapper fp_wrapper_cluster_i (
-             .clk_i         (clk_cluster),
-             .rst_ni        (s_rst_n),
-             .apu_req_i     (s_apu_master_req[i]),
-             .apu_gnt_o     (s_apu_master_gnt[i]),
-             .apu_operands_i(s_apu_master_operands[i]),
-             .apu_op_i      (s_apu_master_op[i]),
-             .apu_flags_i   (s_apu_master_flags[i]),
-             .apu_rvalid_o  (s_apu_master_rvalid[i]),
-             .apu_rdata_o   (s_apu_master_rdata[i]),
-             .apu_rflags_o  (s_apu_master_rflags[i])
-         );
-      end // block: PRIVATE_FPU_CORE
-`endif
-
+`elsif
+      assign s_apu_master_req    = 1'b0;
+      assign s_apu_master_gnt    = 1'b0;
+      assign s_apu__type         = 1'b0;
+      assign s_apu__operands     = 1'b0;
+      assign s_apu__op           = 1'b0;
+      assign s_apu__flags        = 1'b0;
+      assign s_apu_master_rready = 1'b0;
+      assign s_apu_master_rvalid = 1'b0;
+      assign s_apu_master_rdata  = 1'b0;
+      assign s_apu__rflags       = 1'b0;
+`endif //  `ifdef FPU_CLUSTER
 
   //**************************************************************
   //**** HW Processing Engines / Cluster-Coupled Accelerators ****

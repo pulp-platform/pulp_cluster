@@ -52,10 +52,7 @@ module core_region
   parameter APU_NUSFLAGS_CPU    = 5,
 
   parameter FPU                 =  0,
-  parameter FP_DIVSQRT          =  0,
   parameter ZFINX               =  0,
-  parameter SHARED_FP           =  0,
-  parameter SHARED_FP_DIVSQRT   =  0,
 
   parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
 
