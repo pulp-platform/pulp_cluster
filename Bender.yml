@@ -28,7 +28,7 @@ dependencies:
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.13.1 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.2 }
   riscv:                  { git: "https://github.com/pulp-platform/cv32e40p.git", rev: "pulpissimo-v3.4.0-rev1"} # To be updated to openhwgroup repository
-  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
+  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.7 }
