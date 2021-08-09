@@ -11,9 +11,6 @@ axi/axi:
 axi/axi_slice:
   commit: v1.1.4
   domain: [cluster, soc]
-axi/axi_slice_dc:
-  commit: v1.1.3
-  domain: [cluster, soc]
 axi/axi2mem:
   commit: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
   domain: [soc, cluster]
@@ -25,10 +22,6 @@ axi/axi2per:
 axi/per2axi:
   commit: v1.0.4
   domain: [soc, cluster]
-  group:  pulp-platform
-axi/axi_size_conv:
-  commit: 5239f87fe772111ec368fb08dbb971516edce097
-  domain: [cluster]
   group:  pulp-platform
 cluster_interconnect:
   commit: v1.1.1
@@ -67,7 +60,7 @@ hwpe-stream:
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hci:
-  commit: new_xbar
+  commit: 8fb848e8f6722c1c21b44533535f430960c31b0b
   group: pulp-platform
   domain: [soc, cluster, pulp]
 cluster_peripherals:
