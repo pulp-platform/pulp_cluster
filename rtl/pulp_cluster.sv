@@ -179,7 +179,7 @@ module pulp_cluster
 
   input logic [LOG_DEPTH:0]                      async_cluster_events_wptr_i,
   output logic [LOG_DEPTH:0]                     async_cluster_events_rptr_o,
-  input logic [ASYNC_EVENT_DATA_WIDTH-1:0]       async_cluster_events_data_i,
+  input logic [EVNT_WIDTH-1:0][2**LOG_DEPTH-1:0] async_cluster_events_data_i,
 
  
   // AXI4 SLAVE
