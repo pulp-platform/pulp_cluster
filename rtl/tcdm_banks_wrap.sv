@@ -16,71 +16,59 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`define XILINX_BRAM_BANK_INSTANCE \
-tcdm_bank_i \
-( \
-  .clka  ( clk_i ), \
-  .rsta  ( rsta  ), \
-  .ena   ( ena   ), \
-  .wea   ( wea   ), \
-  .addra ( add   ), \
-  .dina  ( wdata ), \
-  .douta ( rdata ) \
-)
-
 module tcdm_banks_wrap #(
-  parameter BANK_SIZE = 256,   //- -> OVERRIDE
-  parameter NB_BANKS  = 1,     // --> OVERRIDE
-  parameter RM_SIZE   = 1,     // only for SRAM
-  parameter WM_SIZE   = 1      // only for SRAM
+  parameter BankSize  = 256,         //- -> OVERRIDE
+  parameter NbBanks   = 1,           // --> OVERRIDE
+  parameter DataWidth = 32,
+  parameter AddrWidth = 32,
+  parameter BeWidth   = DataWidth/8,
+  parameter IdWidth   = 1
 ) (
-  input  logic               clk_i,
-  input  logic               rst_ni,
-  input  logic               init_ni,
-  input  logic               pwdn_i,
-  input  logic               test_mode_i,
-  
-  hci_mem_intf.slave         tcdm_slave[NB_BANKS-1:0]
+  input logic        clk_i,
+  input logic        rst_ni,
+  input logic        test_mode_i,
+
+  hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
 );
    
-  for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
+  for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
-    logic                         bank_req;
-    logic                         bank_we;
-    logic [$clog2(BANK_SIZE)-1:0] bank_add;
-    logic [31:0]                  bank_wdata;
-    logic [3:0]                   bank_be;
-    logic [31:0]                  bank_rdata;
+    // r_id is same as request id -> Don't know if this is needed, but OBI protocol requires it
+    logic [IdWidth-1:0] resp_id_d, resp_id_q;
+    assign resp_id_d = tcdm_slave[i].id;
+    assign tcdm_slave[i].r_id = resp_id_q;
 
-    assign bank_req             =  tcdm_slave[i].req;
-    assign bank_we              = ~tcdm_slave[i].wen;
-    assign bank_add             =  tcdm_slave[i].add[$clog2(BANK_SIZE)+2-1:2];
-    assign bank_wdata           =  tcdm_slave[i].data;
-    assign bank_be              =  tcdm_slave[i].be;
+    always_ff @(posedge clk_i or negedge rst_ni) begin : proc_resp_id
+      if(~rst_ni) begin
+        resp_id_q <= '0;
+      end else begin
+        resp_id_q <= resp_id_d;
+      end
+    end
 
-    assign tcdm_slave[i].r_data =  bank_rdata;
     assign tcdm_slave[i].gnt    =  1'b1;
-    assign tcdm_slave[i].r_id   =  '0;
  
+
+
     tc_sram #(
-      .NumWords    ( BANK_SIZE ), // Number of Words in data array
-      .DataWidth   ( 32        ), // Data signal width
-      .ByteWidth   ( 8         ), // Width of a data byte
-      .NumPorts    ( 1         ), // Number of read and write ports
-      .Latency     ( 1         ), // Latency when the read data is available
-      .SimInit     ( "ones"    ), // Simulation initialization
-      .PrintSimCfg ( 0         )  // Print configuration
+      .NumWords   (BankSize ), // Number of Words in data array
+      .DataWidth  (DataWidth), // Data signal width
+      .ByteWidth  (8        ), // Width of a data byte
+      .NumPorts   (1        ), // Number of read and write ports
+      .Latency    (1        ), // Latency when the read data is available
+      .SimInit    ("ones"   ), // Simulation initialization
+      .PrintSimCfg(0        )  // Print configuration
     ) i_bank (
-      .clk_i   ( clk_i      ),    // Clock
-      .rst_ni  ( rst_ni     ),    // Asynchronous reset active low
-
-      .req_i   ( bank_req   ),    // request
-      .we_i    ( bank_we    ),    // write enable
-      .addr_i  ( bank_add   ),    // request address
-      .wdata_i ( bank_wdata ),    // write data
-      .be_i    ( bank_be    ),    // write byte enable
-
-      .rdata_o ( bank_rdata )     // read data
+      .clk_i  (clk_i                                    ), // Clock
+      .rst_ni (rst_ni                                   ), // Asynchronous reset active low
+      
+      .req_i  (tcdm_slave[i].req                        ), // request
+      .we_i   (~tcdm_slave[i].wen                       ), // write enable
+      .addr_i (tcdm_slave[i].add[$clog2(BankSize)+2-1:2]), // request address
+      .wdata_i(tcdm_slave[i].data                       ), // write data
+      .be_i   (tcdm_slave[i].be                         ), // write byte enable
+      
+      .rdata_o(tcdm_slave[i].r_data                     )  // read data
     );
 
 

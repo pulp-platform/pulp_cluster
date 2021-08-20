@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 ### Fixed
-- 
+- ibex implementation
+- ID compliance of tcdm_banks
 
 ## [2.0.0] - 2021-05-20
 - Initial version prior to Changelog
