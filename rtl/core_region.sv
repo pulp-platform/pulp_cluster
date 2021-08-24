@@ -172,6 +172,8 @@ module core_region
   logic [31:0]     core_instr_r_rdata;
   logic            core_instr_r_valid;
 
+  logic            core_mem_req;
+
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
     .clk_i     ( clk_i       ),
@@ -302,13 +304,29 @@ module core_region
           .core_r_valid_o   ( core_instr_r_valid )
         );
       end else begin
-        assign instr_req_o        = core_instr_req;
+        obi_pulp_adapter i_obi_pulp_adapter_instr (
+          .clk_i       (clk_i          ),
+          .rst_ni      (rst_ni         ),
+          .core_req_i  (core_instr_req ),
+          .mem_req_o   (instr_req_o    ),
+          .mem_gnt_i   (instr_gnt_i    ),
+          .mem_rvalid_i(instr_r_valid_i)
+        );
         assign core_instr_gnt     = instr_gnt_i;
         assign instr_addr_o       = core_instr_addr;
         assign core_instr_r_rdata = instr_r_rdata_i;
         assign core_instr_r_valid = instr_r_valid_i;
       end
       
+      obi_pulp_adapter i_obi_pulp_adapter_mem (
+        .clk_i       (clk_i             ),
+        .rst_ni      (rst_ni            ),
+        .core_req_i  (core_mem_req      ),
+        .mem_req_o   (s_core_bus.req    ),
+        .mem_gnt_i   (s_core_bus.gnt    ),
+        .mem_rvalid_i(s_core_bus.r_valid)
+      );
+
 `ifdef VERILATOR
       ibex_core #(
 `elsif TRACE_EXECUTION
@@ -353,7 +371,7 @@ module core_region
         .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
-        .data_req_o            ( s_core_bus.req     ),
+        .data_req_o            ( core_mem_req       ),
         .data_gnt_i            ( s_core_bus.gnt     ),
         .data_rvalid_i         ( s_core_bus.r_valid ),
         .data_we_o             ( s_core_bus.we      ),
