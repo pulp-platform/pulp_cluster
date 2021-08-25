@@ -60,7 +60,7 @@ hwpe-stream:
   group: pulp-platform
   domain: [soc, cluster, pulp]
 hci:
-  commit: 8fb848e8f6722c1c21b44533535f430960c31b0b
+  commit: v1.0.8
   group: pulp-platform
   domain: [soc, cluster, pulp]
 cluster_peripherals:

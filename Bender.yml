@@ -28,7 +28,7 @@ dependencies:
   ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: "8fb848e8f6722c1c21b44533535f430960c31b0b" }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
