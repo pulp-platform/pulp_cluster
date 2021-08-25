@@ -68,7 +68,7 @@ cluster_peripherals:
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: 811ed5aa2dc87343103460c7cd860eb7482c3b01
+  commit: 66b4084117546d5b748c30b5500769805f489d2f
   domain: [soc, cluster]
   group: pulp-platform
 hwpe-datamover-example:
