@@ -31,6 +31,7 @@ module pulp_cluster
   // cluster parameters
   parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
   parameter NB_CORES                = 8,
+  parameter CTRL_TRANS_QUEUE_DEPTH  = 2,
   parameter NB_HWPE_PORTS           = 4,
   parameter NB_DMAS                 = 4,
   parameter NB_MPERIPHS             = NB_MPERIPHS,
@@ -653,19 +654,20 @@ module pulp_cluster
   //***************************************************
 
   dmac_wrap #(
-    .NB_CTRLS           ( NB_CORES + 2       ),
-    .NB_CORES           ( NB_CORES           ),
-    .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
-    .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
-    .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
-    .PE_ID_WIDTH        ( NB_CORES + 1       ),
-    .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
-    .DATA_WIDTH         ( DATA_WIDTH         ),
-    .ADDR_WIDTH         ( ADDR_WIDTH         ),
-    .BE_WIDTH           ( BE_WIDTH           )
+    .NB_CTRLS               ( NB_CORES + 2           ),
+    .NB_CORES               ( NB_CORES               ),
+    .NB_OUTSND_BURSTS       ( NB_OUTSND_BURSTS       ),
+    .CTRL_TRANS_QUEUE_DEPTH ( CTRL_TRANS_QUEUE_DEPTH ),
+    .MCHAN_BURST_LENGTH     ( MCHAN_BURST_LENGTH     ),
+    .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH         ),
+    .AXI_DATA_WIDTH         ( AXI_DATA_C2S_WIDTH     ),
+    .AXI_ID_WIDTH           ( AXI_ID_IN_WIDTH        ),
+    .AXI_USER_WIDTH         ( AXI_USER_WIDTH         ),
+    .PE_ID_WIDTH            ( NB_CORES + 1           ),
+    .TCDM_ADD_WIDTH         ( TCDM_ADD_WIDTH         ),
+    .DATA_WIDTH             ( DATA_WIDTH             ),
+    .ADDR_WIDTH             ( ADDR_WIDTH             ),
+    .BE_WIDTH               ( BE_WIDTH               )
   ) dmac_wrap_i (
     .clk_i          ( clk_cluster        ),
     .rst_ni         ( s_rst_n            ),

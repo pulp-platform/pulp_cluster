@@ -18,19 +18,20 @@
 
 module dmac_wrap
 #(
-  parameter NB_CTRLS           = 2,
-  parameter NB_CORES           = 8,
-  parameter NB_OUTSND_BURSTS   = 8,
-  parameter MCHAN_BURST_LENGTH = 256,
-  parameter AXI_ADDR_WIDTH     = 32,
-  parameter AXI_DATA_WIDTH     = 64,
-  parameter AXI_USER_WIDTH     = 6,
-  parameter AXI_ID_WIDTH       = 4,
-  parameter PE_ID_WIDTH        = 1,
-  parameter TCDM_ADD_WIDTH     = 13,
-  parameter DATA_WIDTH         = 32,
-  parameter ADDR_WIDTH         = 32,
-  parameter BE_WIDTH           = DATA_WIDTH/8
+  parameter NB_CTRLS               = 2,
+  parameter NB_CORES               = 8,
+  parameter CTRL_TRANS_QUEUE_DEPTH = 2,
+  parameter NB_OUTSND_BURSTS       = 8,
+  parameter MCHAN_BURST_LENGTH     = 256,
+  parameter AXI_ADDR_WIDTH         = 32,
+  parameter AXI_DATA_WIDTH         = 64,
+  parameter AXI_USER_WIDTH         = 6,
+  parameter AXI_ID_WIDTH           = 4,
+  parameter PE_ID_WIDTH            = 1,
+  parameter TCDM_ADD_WIDTH         = 13,
+  parameter DATA_WIDTH             = 32,
+  parameter ADDR_WIDTH             = 32,
+  parameter BE_WIDTH               = DATA_WIDTH/8
 )
 (
   input logic                      clk_i,
@@ -138,35 +139,35 @@ module dmac_wrap
 
   mchan #(
 
-    .NB_CTRLS                   ( NB_CTRLS              ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
-    //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
-    //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
-    //.GLOBAL_TRANS_QUEUE_DEPTH ( 8                     ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
+    .NB_CTRLS                    ( NB_CTRLS                        ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
+    //.NB_TRANSFERS              ( 16                              ),    // NUMBER OF AVAILABLE DMA CHANNELS
+    .CTRL_TRANS_QUEUE_DEPTH      ( CTRL_TRANS_QUEUE_DEPTH          ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT )
+    //.GLOBAL_TRANS_QUEUE_DEPTH  ( 8                               ),    // DEPTH OF GLOBAL COMMAND QUEUE           (CTRL_UNIT )
 
-    //.TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
-    //.EXT_ADD_WIDTH            ( 32                    ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
-    //.NB_OUTSND_TRANS          ( 8                     ),    // NUMBER OF OUTSTANDING TRANSACTIONS
-    //.MCHAN_BURST_LENGTH       ( 256                   ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
+    //.TCDM_ADD_WIDTH            ( TCDM_ADD_WIDTH                  ),    // WIDTH OF TCDM ADDRESS
+    //.EXT_ADD_WIDTH             ( 32                              ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
+    //.NB_OUTSND_TRANS           ( 8                               ),    // NUMBER OF OUTSTANDING TRANSACTIONS
+    //.MCHAN_BURST_LENGTH        ( 256                             ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
 
-    //.AXI_ADDR_WIDTH           ( 32                    ),
-    //.AXI_DATA_WIDTH           ( 64                    ),
-    //.AXI_USER_WIDTH           ( 6                     ),
-    //.AXI_ID_WIDTH             ( 4                     ),
+    //.AXI_ADDR_WIDTH            ( 32                              ),
+    //.AXI_DATA_WIDTH            ( 64                              ),
+    //.AXI_USER_WIDTH            ( 6                               ),
+    //.AXI_ID_WIDTH              ( 4                               ),
 
-    //.PE_ID_WIDTH              ( PE_ID_WIDTH           )
-    //.NB_CORES                 ( NB_CORES              ),    // NUMBER OF CORES
-    .NB_TRANSFERS             ( 2*NB_CORES            ),
-    //.CORE_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
-    .GLOBAL_TRANS_QUEUE_DEPTH ( 2*NB_CORES            ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
-    .TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
-    .EXT_ADD_WIDTH            ( AXI_ADDR_WIDTH        ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
-    .NB_OUTSND_TRANS          ( NB_OUTSND_BURSTS      ),    // NUMBER OF OUTSTANDING TRANSACTIONS
-    .MCHAN_BURST_LENGTH       ( MCHAN_BURST_LENGTH    ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
-    .AXI_ADDR_WIDTH           ( AXI_ADDR_WIDTH        ),
-    .AXI_DATA_WIDTH           ( AXI_DATA_WIDTH        ),
-    .AXI_USER_WIDTH           ( AXI_USER_WIDTH        ),
-    .AXI_ID_WIDTH             ( AXI_ID_WIDTH          ),
-    .PE_ID_WIDTH              ( PE_ID_WIDTH           )
+    //.PE_ID_WIDTH               ( PE_ID_WIDTH                     )
+    //.NB_CORES                  ( NB_CORES                        ),    // NUMBER OF CORES
+    .NB_TRANSFERS                ( 2*NB_CORES                      ),
+    //.CORE_TRANS_QUEUE_DEPTH    ( 2                               ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT )
+    .GLOBAL_TRANS_QUEUE_DEPTH    ( 2*NB_CORES                      ),    // DEPTH OF GLOBAL COMMAND QUEUE         (CTRL_UNIT   )
+    .TCDM_ADD_WIDTH              ( TCDM_ADD_WIDTH                  ),    // WIDTH OF TCDM ADDRESS
+    .EXT_ADD_WIDTH               ( AXI_ADDR_WIDTH                  ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
+    .NB_OUTSND_TRANS             ( NB_OUTSND_BURSTS                ),    // NUMBER OF OUTSTANDING TRANSACTIONS
+    .MCHAN_BURST_LENGTH          ( MCHAN_BURST_LENGTH              ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
+    .AXI_ADDR_WIDTH              ( AXI_ADDR_WIDTH                  ),
+    .AXI_DATA_WIDTH              ( AXI_DATA_WIDTH                  ),
+    .AXI_USER_WIDTH              ( AXI_USER_WIDTH                  ),
+    .AXI_ID_WIDTH                ( AXI_ID_WIDTH                    ),
+    .PE_ID_WIDTH                 ( PE_ID_WIDTH                     )
   ) mchan_i (
     .clk_i                     ( clk_i                              ),
     .rst_ni                    ( rst_ni                             ),
