@@ -21,6 +21,7 @@ module dmac_wrap
   parameter NB_CTRLS               = 2,
   parameter NB_CORES               = 8,
   parameter CTRL_TRANS_QUEUE_DEPTH = 2,
+  parameter TWD_QUEUE_DEPTH        = 4,
   parameter NB_OUTSND_BURSTS       = 8,
   parameter MCHAN_BURST_LENGTH     = 256,
   parameter AXI_ADDR_WIDTH         = 32,
@@ -140,9 +141,7 @@ module dmac_wrap
   mchan #(
 
     .NB_CTRLS                    ( NB_CTRLS                        ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
-    //.NB_TRANSFERS              ( 16                              ),    // NUMBER OF AVAILABLE DMA CHANNELS
     .CTRL_TRANS_QUEUE_DEPTH      ( CTRL_TRANS_QUEUE_DEPTH          ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT )
-    //.GLOBAL_TRANS_QUEUE_DEPTH  ( 8                               ),    // DEPTH OF GLOBAL COMMAND QUEUE           (CTRL_UNIT )
 
     //.TCDM_ADD_WIDTH            ( TCDM_ADD_WIDTH                  ),    // WIDTH OF TCDM ADDRESS
     //.EXT_ADD_WIDTH             ( 32                              ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
@@ -156,9 +155,10 @@ module dmac_wrap
 
     //.PE_ID_WIDTH               ( PE_ID_WIDTH                     )
     //.NB_CORES                  ( NB_CORES                        ),    // NUMBER OF CORES
-    .NB_TRANSFERS                ( 2*NB_CORES                      ),
+    .NB_TRANSFERS                ( 2*NB_CORES                      ),    // NUMBER OF TRANSFERS IS LIMITED BY THE BY THE DATA WITDH
     //.CORE_TRANS_QUEUE_DEPTH    ( 2                               ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT )
-    .GLOBAL_TRANS_QUEUE_DEPTH    ( 2*NB_CORES                      ),    // DEPTH OF GLOBAL COMMAND QUEUE         (CTRL_UNIT   )
+    .GLOBAL_TRANS_QUEUE_DEPTH    ( 8*NB_CORES                      ),    // DEPTH OF GLOBAL COMMAND QUEUE         (CTRL_UNIT   )
+    .TWD_QUEUE_DEPTH             ( TWD_QUEUE_DEPTH                 ),
     .TCDM_ADD_WIDTH              ( TCDM_ADD_WIDTH                  ),    // WIDTH OF TCDM ADDRESS
     .EXT_ADD_WIDTH               ( AXI_ADDR_WIDTH                  ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
     .NB_OUTSND_TRANS             ( NB_OUTSND_BURSTS                ),    // NUMBER OF OUTSTANDING TRANSACTIONS
