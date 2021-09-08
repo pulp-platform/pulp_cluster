@@ -313,7 +313,7 @@ module pulp_cluster
   logic                                       tcdm_sleep;
 
   logic               s_dma_pe_event;
-  logic               s_dma_pe_irq;
+  logic               s_dma_fc_irq;
   logic               s_pf_event;
   
   logic[NB_CORES-1:0][4:0] irq_id;
@@ -335,9 +335,6 @@ module pulp_cluster
   logic                                       s_dma_decompr_event;
   logic                                       s_dma_decompr_irq;
 
-  logic                                       s_decompr_done_evt;
-
-  assign s_dma_fc_irq = s_decompr_done_evt;
 
 
 
@@ -727,7 +724,7 @@ module pulp_cluster
     .term_event_cl_o   ( s_dma_cl_event     ),
     .term_irq_cl_o     ( s_dma_cl_irq       ),
     .term_event_pe_o   ( s_dma_fc_event     ),
-    .term_irq_pe_o     ( s_dma_pe_irq       ),
+    .term_irq_pe_o     ( s_dma_fc_irq       ),
     .term_event_o      ( s_dma_event        ),
     .term_irq_o        ( s_dma_irq          ),
     .busy_o            ( s_dmac_busy        )
@@ -773,8 +770,6 @@ module pulp_cluster
     .dma_cl_irq_i           ( s_dma_cl_irq                       ),
     .dma_event_i            ( s_dma_event                        ),
     .dma_irq_i              ( s_dma_irq                          ),
-
-    // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
     .dma_fc_event_i         ( s_dma_fc_event                     ),
     .dma_fc_irq_i           (                                    ),
