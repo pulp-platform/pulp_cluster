@@ -3,7 +3,8 @@ pulp_cluster:
     -L fpnew_lib,
     -L hci_lib,
     -L common_cells_lib,
-    -L axi_lib
+    -L axi_lib,
+    -L ibex_lib
   ]
   incdirs: [
     ../../rtl/includes,

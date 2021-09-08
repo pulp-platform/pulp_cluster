@@ -67,7 +67,7 @@
     end
   end
 
-  cluster_clock_gating u_clkgate_cluster (
+  tc_clk_gating u_clkgate_cluster (
     .clk_o     ( cluster_clk_o ),
     .clk_i     ( clk_i         ),
     .en_i      ( s_clockenable ),

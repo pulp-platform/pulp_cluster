@@ -344,8 +344,8 @@ module pulp_cluster
   /* logarithmic and peripheral interconnect interfaces */
   // ext -> log interconnect
   hci_core_intf #(
-    .DW ( 32 ),
-    .AW ( 32 ),
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
     .OW ( 1  )
   ) s_hci_ext[NB_DMAS-1:0] (
     .clk ( clk_cluster )
@@ -359,8 +359,8 @@ module pulp_cluster
 
   // DMA -> log interconnect
   hci_core_intf #(
-    .DW ( 32 ),
-    .AW ( 32 ),
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
     .OW ( 1  )
   ) s_hci_dma[NB_DMAS-1:0] (
     .clk ( clk_cluster )
@@ -376,15 +376,15 @@ module pulp_cluster
   
   // cores & accelerators -> log interconnect
   hci_core_intf #(
-    .DW ( NB_HWPE_PORTS*32 ),
-    .AW ( 32               ),
+    .DW ( NB_HWPE_PORTS*DATA_WIDTH ),
+    .AW ( ADDR_WIDTH               ),
     .OW ( 1                )
   ) s_hci_hwpe [0:0] (
     .clk ( clk_cluster )
   );
   hci_core_intf #(
-    .DW ( 32 ),
-    .AW ( 32 ),
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
     .OW ( 1  )
   ) s_hci_core [NB_CORES-1:0] (
     .clk ( clk_cluster )
@@ -449,8 +449,11 @@ module pulp_cluster
 
   // log interconnect -> TCDM memory banks (SRAM)
   hci_mem_intf #(
+    .AW (ADDR_WIDTH     ),
+    .DW ( DATA_WIDTH    ),
+    .BW ( 8      ),
     .IW ( TCDM_ID_WIDTH )
-  ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0](
+  ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0] (
     .clk ( clk_cluster )
   );
 
@@ -657,6 +660,7 @@ module pulp_cluster
   
   cluster_interconnect_wrap #(
     .NB_CORES           ( NB_CORES           ),
+    .HWPE_PRESENT       ( HWPE_PRESENT       ),
     .NB_HWPE_PORTS      ( NB_HWPE_PORTS      ),
     .NB_DMAS            ( NB_DMAS            ),
     .NB_MPERIPHS        ( NB_MPERIPHS        ),
@@ -1368,15 +1372,18 @@ module pulp_cluster
    
   /* TCDM banks */
   tcdm_banks_wrap #(
-    .BANK_SIZE ( TCDM_NUM_ROWS ),
-    .NB_BANKS  ( NB_TCDM_BANKS )
+    .BankSize (TCDM_NUM_ROWS),
+    .NbBanks  (NB_TCDM_BANKS),
+    .DataWidth(DATA_WIDTH   ),
+    .AddrWidth(ADDR_WIDTH   ),
+    .BeWidth  (BE_WIDTH     ),
+    .IdWidth  (TCDM_ID_WIDTH)
   ) tcdm_banks_i (
-    .clk_i       ( clk_cluster     ),
-    .rst_ni      ( s_rst_n         ),
-    .init_ni     ( s_init_n        ),
-    .test_mode_i ( test_mode_i     ),
-    .pwdn_i      ( 1'b0            ),
-    .tcdm_slave  ( s_tcdm_bus_sram )   //PMU ??
+    .clk_i      (clk_cluster    ),
+    .rst_ni     (s_rst_n        ),
+    .test_mode_i(test_mode_i    ),
+    
+    .tcdm_slave (s_tcdm_bus_sram)  //PMU ??
   );
   
   /* AXI interconnect infrastructure (slices, size conversion) */ 

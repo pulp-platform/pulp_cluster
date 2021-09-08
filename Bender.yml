@@ -11,54 +11,26 @@ dependencies:
   axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git", rev: "6973e0434d26ba578cdb4aa69c26c1facd1a3f15" } # deprecated, replace with axi_to_mem in axi repo
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", version: 1.0.1 }
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", version: 1.0.4 }
-  axi_size_conv:          { git: "https://github.com/pulp-platform/axi_size_conv.git", rev: "5239f87fe772111ec368fb08dbb971516edce097" } # deprecated, replace with axi_dw_converter in axi repo
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.0 }
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.1 }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
-  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.2 }
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", version: 1.2.0 }
+  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.3 }
+  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "axi_node_dep" }
   icache_mp_128_pf:       { git: "https://github.com/pulp-platform/icache_mp_128_pf.git", rev: "6f2e54102001230db9c82432bf9e011842419a48" }
-  icache_private:         { git: "https://github.com/pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
+  # icache_private:         { git: "https://github.com/pulp-platform/icache_private.git", rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
-  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "83c7a1b690bffd006d8b925805aab3c1f8ba9ff1" }
-  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.7.1 } # to be updated (now 0.24?)
-  axi_node:               { git: "https://github.com/pulp-platform/axi_node.git", version: 1.1.4 } # deprecated, replaced by axi_xbar (in axi repo)
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "66b4084117546d5b748c30b5500769805f489d2f" }
+  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.29.1 }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
-  axi_slice_dc:           { git: "https://github.com/pulp-platform/axi_slice_dc.git", version: 1.1.3 } # deprecated, replaced by axi_cdc (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
-  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.13.1 }
-  tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.2 }
-  riscv:                  { git: "https://github.com/pulp-platform/cv32e40p.git", rev: "pulpissimo-v3.4.0-rev1"} # To be updated to openhwgroup repository
-  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "b148f3af51066ac3537c7c6eb4acbc17004bf868" }
+  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
+  tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
+  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: "pulpissimo-v3.4.0-rev3"} # To be updated to openhwgroup repository
+  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.7 }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
 
 sources:
-  # Files from deprecated axi_node IP. Remove them after switching to new AXI ips in cluster
-  - include_dirs:
-      - deps_deprecated/axi_node/src
-  - deps_deprecated/axi_node/src/apb_regs_top.sv
-  - deps_deprecated/axi_node/src/axi_address_decoder_AR.sv
-  - deps_deprecated/axi_node/src/axi_address_decoder_AW.sv
-  - deps_deprecated/axi_node/src/axi_address_decoder_BR.sv
-  - deps_deprecated/axi_node/src/axi_address_decoder_BW.sv
-  - deps_deprecated/axi_node/src/axi_address_decoder_DW.sv
-  - deps_deprecated/axi_node/src/axi_AR_allocator.sv
-  - deps_deprecated/axi_node/src/axi_ArbitrationTree.sv
-  - deps_deprecated/axi_node/src/axi_AW_allocator.sv
-  - deps_deprecated/axi_node/src/axi_BR_allocator.sv
-  - deps_deprecated/axi_node/src/axi_BW_allocator.sv
-  - deps_deprecated/axi_node/src/axi_DW_allocator.sv
-  - deps_deprecated/axi_node/src/axi_FanInPrimitive_Req.sv
-  - deps_deprecated/axi_node/src/axi_multiplexer.sv
-  - deps_deprecated/axi_node/src/axi_node.sv
-  - deps_deprecated/axi_node/src/axi_node_intf_wrap.sv
-  - deps_deprecated/axi_node/src/axi_node_wrap_with_slices.sv
-  - deps_deprecated/axi_node/src/axi_regs_top.sv
-  - deps_deprecated/axi_node/src/axi_request_block.sv
-  - deps_deprecated/axi_node/src/axi_response_block.sv
-  - deps_deprecated/axi_node/src/axi_RR_Flag_Req.sv
-  
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
     # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
     # levels 1 and 0, etc. Files within a level are ordered alphabetically.
@@ -69,17 +41,18 @@ sources:
   - rtl/cluster_bus_wrap.sv
   - rtl/cluster_clock_gate.sv
   - rtl/cluster_event_map.sv
-  - rtl/cluster_interconnect_wrap.sv
   - rtl/cluster_timer_wrap.sv
   - rtl/dmac_wrap.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
+  - rtl/periph_demux.sv
   - rtl/per_demux_wrap.sv
   - rtl/periph_FIFO.sv
   - rtl/tcdm_banks_wrap.sv
-  - rtl/periph_demux.sv
+  - rtl/xbar_pe_wrap.sv
     # Level 1
+  - rtl/cluster_interconnect_wrap.sv
   - rtl/cluster_peripherals.sv
   - rtl/core_demux.sv
     # Level 2
