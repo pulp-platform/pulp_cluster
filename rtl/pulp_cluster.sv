@@ -312,9 +312,6 @@ module pulp_cluster
   logic [1:0]                                 s_TCDM_arb_policy;
   logic                                       tcdm_sleep;
 
-  logic               s_dma_pe_event;
-  logic               s_dma_fc_irq;
-  logic               s_pf_event;
   
   logic[NB_CORES-1:0][4:0] irq_id;
   logic[NB_CORES-1:0][4:0] irq_ack_id;
@@ -331,9 +328,6 @@ module pulp_cluster
   logic                                       s_dma_fc_event;
   logic                                       s_dma_fc_irq;
    
-  
-  logic                                       s_dma_decompr_event;
-  logic                                       s_dma_decompr_irq;
 
 
 
@@ -1528,14 +1522,7 @@ module pulp_cluster
     .ack_i   ( dma_pe_irq_ack_i   ),
     .valid_o ( dma_pe_irq_valid_o )
   );
-   
-  // edge_propagator_tx ep_pf_evt_i (
-  //   .clk_i   ( clk_i          ),
-  //   .rstn_i  ( s_rst_n        ),
-  //   .valid_i ( s_pf_event     ),
-  //   .ack_i   ( pf_evt_ack_i   ),
-  //   .valid_o ( pf_evt_valid_o )
-  // );
+
    
   /* centralized gating */
   cluster_clock_gate #(
