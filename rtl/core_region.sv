@@ -224,6 +224,7 @@ module core_region
      .apu_req_o      ( apu_master_req_o      ),
      .apu_gnt_i      ( apu_master_gnt_i      ),
      .apu_operands_o ( apu_master_operands_o ),
+     .apu_type_o     ( apu_master_type_o     ),
      .apu_op_o       ( apu_master_op_o       ),
      .apu_flags_o    ( apu_master_flags_o    ),
 

@@ -4,6 +4,7 @@ pulp_cluster:
     -L axi_lib,
     -L cluster_interconnect_lib,
     -L common_cells_lib,
+    -L cv32e40p_lib
   ]
   incdirs: [
     ../../rtl/includes,

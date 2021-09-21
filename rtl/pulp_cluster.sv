@@ -18,6 +18,7 @@
  */
 
 import pulp_cluster_package::*;
+import cv32e40p_pkg::*;
 
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
@@ -888,14 +889,36 @@ module pulp_cluster
       // response channel
       logic [NB_CORES-1:0][4:0]                      s_apu__rflags;
 
-      genvar k;
-      for(k=0;k<NB_CORES;k++)
-      begin
+      localparam int unsigned FPNEWTYPE_ID = 0; // for general fp operations
+      localparam int unsigned APUTYPE_ID   = 1; // for fp div/sqrt
+
+      for(genvar k = 0; k < NB_CORES; k++) begin
         assign s_apu__operands[k][2:0] = s_apu_master_operands[k][2:0];
         assign s_apu__op[k][5:0]       = s_apu_master_op[k][5:0];
-        assign s_apu__type[k][2:0]     = s_apu_master_type[k][2:0];
         assign s_apu__flags[k][14:0]   = s_apu_master_flags[k][14:0];
         assign s_apu_master_rflags[k][4:0] = s_apu__rflags[k][4:0];
+      end
+
+      // For ControlPULP, this is a binary separation: +/-/*/CASR/MAC are private
+      // per-core (APUTYPE_FP=0), while DIV/SQRT are external, and in the same unit
+      // (so APUTYPE_FP=1)
+
+      always_comb begin
+        for (int k = 0; k < NB_CORES; k++) begin
+          unique case (s_apu_master_type[k][2:0])
+            APUTYPE_FP, APUTYPE_ADDSUB, APUTYPE_MULT,
+            APUTYPE_CAST, APUTYPE_MAC: begin
+              s_apu__type[k][2:0] = FPNEWTYPE_ID;
+            end
+
+            APUTYPE_DIV, APUTYPE_SQRT: begin
+              s_apu__type[k][2:0] = APUTYPE_ID;
+            end
+
+            default:
+              s_apu__type[k][2:0] = FPNEWTYPE_ID;
+          endcase
+        end
       end
 
        shared_fpu_cluster
