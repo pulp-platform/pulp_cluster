@@ -311,10 +311,6 @@ module pulp_cluster
 
   logic [1:0]                                 s_TCDM_arb_policy;
   logic                                       tcdm_sleep;
-
-  logic               s_dma_pe_event;
-  logic               s_dma_pe_irq;
-  logic               s_pf_event;
   
   logic[NB_CORES-1:0][4:0] irq_id;
   logic[NB_CORES-1:0][4:0] irq_ack_id;
@@ -330,14 +326,6 @@ module pulp_cluster
   logic                                       s_dma_cl_irq;
   logic                                       s_dma_fc_event;
   logic                                       s_dma_fc_irq;
-   
-  
-  logic                                       s_dma_decompr_event;
-  logic                                       s_dma_decompr_irq;
-
-  logic                                       s_decompr_done_evt;
-
-  assign s_dma_fc_irq = s_decompr_done_evt;
 
 
 
@@ -700,7 +688,8 @@ module pulp_cluster
   //***************************************************
   //*********************DMAC WRAP*********************
   //*************************************************** 
-  
+
+`ifdef OLD_DMA
   dmac_wrap #(
     .NB_CTRLS           ( 10                 ),
     .NB_CORES           ( NB_CORES           ),
@@ -727,11 +716,41 @@ module pulp_cluster
     .term_event_cl_o   ( s_dma_cl_event     ),
     .term_irq_cl_o     ( s_dma_cl_irq       ),
     .term_event_pe_o   ( s_dma_fc_event     ),
-    .term_irq_pe_o     ( s_dma_pe_irq       ),
+    .term_irq_pe_o     ( s_dma_fc_irq       ),
     .term_event_o      ( s_dma_event        ),
     .term_irq_o        ( s_dma_irq          ),
     .busy_o            ( s_dmac_busy        )
   );
+`else // OLD_DMA
+
+  dmac_wrap #(
+    .NB_CORES      (NB_CORES          ),
+    .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH    ),
+    .AXI_DATA_WIDTH(AXI_DATA_C2S_WIDTH),
+    .AXI_USER_WIDTH(AXI_USER_WIDTH    ),
+    .AXI_ID_WIDTH  (AXI_ID_IN_WIDTH   ),
+    .PE_ID_WIDTH   (NB_CORES + 1      ),
+    .NB_PE_PORTS   (2                 ),
+    .DATA_WIDTH    (DATA_WIDTH        ),
+    .ADDR_WIDTH    (ADDR_WIDTH        ),
+    .BE_WIDTH      (BE_WIDTH          ),
+    .NUM_STREAMS   (4                 )
+  ) dmac_wrap_i (
+    .clk_i          (clk_cluster                     ),
+    .rst_ni         (s_rst_n                         ),
+    .test_mode_i    (test_mode_i                     ),
+    .pe_ctrl_slave  (s_periph_dma_bus[1:0]           ),
+    .ctrl_slave     (s_core_dmactrl_bus              ),
+    .tcdm_master    (s_hci_dma                       ),
+    .ext_master     (s_dma_ext_bus                   ),
+    .term_event_o   (s_dma_event                     ),
+    .term_irq_o     (s_dma_irq                       ),
+    .term_event_pe_o({s_dma_fc_event, s_dma_cl_event}),
+    .term_irq_pe_o  ({s_dma_fc_irq, s_dma_cl_irq}    ),
+    .busy_o         (s_dmac_busy                     )
+  );
+
+`endif // OLD_DMA
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************

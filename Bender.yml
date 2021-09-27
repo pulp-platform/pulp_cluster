@@ -29,6 +29,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
+  idma:                   { git: "git@iis-git.ee.ethz.ch:bslk/idma.git", rev: "pulpopen" }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
@@ -42,7 +43,7 @@ sources:
   - rtl/cluster_clock_gate.sv
   - rtl/cluster_event_map.sv
   - rtl/cluster_timer_wrap.sv
-  - rtl/dmac_wrap.sv
+  # - rtl/dmac_wrap.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
