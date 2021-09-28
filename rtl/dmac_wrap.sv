@@ -131,6 +131,7 @@ module dmac_wrap
       assign tcdm_master[i].be       = s_tcdm_bus_be[i];
       assign tcdm_master[i].boffs    = '0;
       assign tcdm_master[i].lrdy     = '1;
+      assign tcdm_master[i].user     = '0;
 
       assign s_tcdm_bus_gnt[i]       = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i]   = tcdm_master[i].r_valid;

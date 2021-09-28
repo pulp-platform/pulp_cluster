@@ -689,7 +689,7 @@ module pulp_cluster
   //*********************DMAC WRAP*********************
   //*************************************************** 
 
-`ifdef OLD_DMA
+`ifdef TARGET_MCHAN
   dmac_wrap #(
     .NB_CTRLS           ( 10                 ),
     .NB_CORES           ( NB_CORES           ),
@@ -721,7 +721,7 @@ module pulp_cluster
     .term_irq_o        ( s_dma_irq          ),
     .busy_o            ( s_dmac_busy        )
   );
-`else // OLD_DMA
+`else // TARGET_MCHAN
 
   dmac_wrap #(
     .NB_CORES      (NB_CORES          ),
@@ -750,7 +750,7 @@ module pulp_cluster
     .busy_o         (s_dmac_busy                     )
   );
 
-`endif // OLD_DMA
+`endif // TARGET_MCHAN
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************

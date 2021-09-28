@@ -43,7 +43,9 @@ sources:
   - rtl/cluster_clock_gate.sv
   - rtl/cluster_event_map.sv
   - rtl/cluster_timer_wrap.sv
-  # - rtl/dmac_wrap.sv
+  - target: mchan
+    files:
+      - rtl/dmac_wrap.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
