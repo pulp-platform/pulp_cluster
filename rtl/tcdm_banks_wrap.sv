@@ -48,10 +48,8 @@ module tcdm_banks_wrap #(
       end
     end
 
-    assign tcdm_slave[i].gnt    =  1'b1;
- 
-
     if (!EccSram) begin
+      assign tcdm_slave[i].gnt    =  1'b1;
       tc_sram #(
         .NumWords   (BankSize ), // Number of Words in data array
         .DataWidth  (DataWidth), // Data signal width

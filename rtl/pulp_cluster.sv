@@ -138,7 +138,7 @@ module pulp_cluster
 
   // Redundancy Parameters
   parameter ECC_SRAM                = 1,
-  parameter ECC_INTC                = 0,
+  parameter ECC_INTC                = 1,
   parameter TCLS                    = 1
 )
 (
@@ -351,7 +351,8 @@ module pulp_cluster
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1  )
+    .OW ( 1  ),
+    .UW ( 0  )
   ) s_hci_ext[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
@@ -363,8 +364,8 @@ module pulp_cluster
   ) s_hci_ext_ecc[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
-  for ( genvar i = 0; i < NB_DMAS; i++ ) begin
-    if ( ECC_INTC ) begin
+  for ( genvar i = 0; i < NB_DMAS; i++ ) begin : gen_hci_ext
+    if ( ECC_INTC ) begin : gen_hci_ext_ecc
       hci_core_intf_ecc_enc #(
         .DropECC   ( 1  ),
         .DW        ( DATA_WIDTH ),
@@ -375,7 +376,7 @@ module pulp_cluster
         .syndrome_o (                  ),
         .err_o      (                  )
       );
-    end else begin
+    end else begin : gen_ext
       hci_core_assign i_ext_assign (
         .tcdm_slave  ( s_hci_ext[i]     ),
         .tcdm_master ( s_hci_ext_ecc[i] )
@@ -394,7 +395,8 @@ module pulp_cluster
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1  )
+    .OW ( 1  ),
+    .UW (0)
   ) s_hci_dma[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
@@ -406,8 +408,8 @@ module pulp_cluster
   ) s_hci_dma_ecc[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
-  for ( genvar i = 0; i < NB_DMAS; i++ ) begin
-    if ( ECC_INTC ) begin
+  for ( genvar i = 0; i < NB_DMAS; i++ ) begin : gen_dma_bus
+    if ( ECC_INTC ) begin : gen_dma_ecc
       hci_core_intf_ecc_enc #(
         .DropECC   ( 1  ),
         .DW        ( 32 ),
@@ -418,7 +420,7 @@ module pulp_cluster
         .syndrome_o (                  ),
         .err_o      (                  )
       );
-    end else begin
+    end else begin : gen_dma
       hci_core_assign i_dma_assign (
         .tcdm_slave  ( s_hci_dma[i]     ),
         .tcdm_master ( s_hci_dma_ecc[i] )
@@ -481,7 +483,14 @@ module pulp_cluster
   
   /* other interfaces */
   // cores -> DMA ctrl
-  XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
+  hci_core_intf #(
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
+    .OW ( 1          ),
+    .UW ( ECC_INTC ? 7 : 0 )
+  ) s_core_dmactrl_bus[NB_CORES-1:0](
+    .clk ( clk_cluster )
+  );
   
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
@@ -796,7 +805,7 @@ module pulp_cluster
   //*************************************************** 
   
   dmac_wrap #(
-    .NB_CTRLS           ( 10                 ),
+    .NB_CTRLS           ( NB_CORES + 2       ),
     .NB_CORES           ( NB_CORES           ),
     .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
     .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
@@ -950,20 +959,21 @@ module pulp_cluster
       .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS ),
       .ECC_INTC            ( ECC_INTC            )
     ) core_assist_i (
-      .clk_i              ( clk_cluster          ),
-      .rst_ni             ( s_rst_n              ),
-      .clock_en_i         ( clk_core_en      [i] ),
-      .test_mode_i        ( test_mode_i          ),
+      .clk_i              ( clk_cluster           ),
+      .rst_ni             ( s_rst_n               ),
+      .clock_en_i         ( clk_core_en       [i] ),
+      .test_mode_i        ( test_mode_i           ),
 
-      .cluster_id_i       ( cluster_id_i         ),
-      .base_addr_i        ( base_addr_i          ),
-      .perf_counters_o    ( perf_counters    [i] ),
+      .cluster_id_i       ( cluster_id_i          ),
+      .base_addr_i        ( base_addr_i           ),
+      .perf_counters_o    ( perf_counters     [i] ),
 
-      .core_bus_slave     ( s_core_bus       [i] ),
+      .core_bus_slave     ( s_core_bus        [i] ),
 
-      .tcdm_data_master   ( s_hci_core_tcdm  [i] ),
-      .eu_ctrl_master     ( s_core_euctrl_bus[i] ),
-      .periph_data_master ( s_core_periph_bus[i] )
+      .tcdm_data_master   ( s_hci_core_tcdm   [i] ),
+      .dma_ctrl_master    ( s_core_dmactrl_bus[i] ),
+      .eu_ctrl_master     ( s_core_euctrl_bus [i] ),
+      .periph_data_master ( s_core_periph_bus [i] )
     );
   end
 

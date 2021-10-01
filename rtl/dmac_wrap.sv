@@ -37,7 +37,7 @@ module dmac_wrap
   input logic  rst_ni,
   input logic  test_mode_i,
 
-  XBAR_TCDM_BUS.Slave   ctrl_slave[NB_CORES-1:0],
+  hci_core_intf.slave   ctrl_slave[NB_CORES-1:0],
   XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
    
@@ -82,7 +82,7 @@ module dmac_wrap
 
      assign s_ctrl_bus_add[i]     = ctrl_slave[i].add;
      assign s_ctrl_bus_req[i]     = ctrl_slave[i].req;
-     assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].wdata;
+     assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].data;
      assign s_ctrl_bus_wen[i]     = ctrl_slave[i].wen;
      assign s_ctrl_bus_be[i]      = ctrl_slave[i].be;
      assign s_ctrl_bus_id[i]      = i;
@@ -91,7 +91,7 @@ module dmac_wrap
      assign ctrl_slave[i].gnt     = s_ctrl_bus_gnt[i];
      assign ctrl_slave[i].r_opc   = s_ctrl_bus_r_opc[i];
      assign ctrl_slave[i].r_valid = s_ctrl_bus_r_valid[i];
-     assign ctrl_slave[i].r_rdata = s_ctrl_bus_r_rdata[i];
+     assign ctrl_slave[i].r_data = s_ctrl_bus_r_rdata[i];
 
     end // for (genvar i=0; i<NB_CORES; i++)
   endgenerate
@@ -139,6 +139,7 @@ module dmac_wrap
   endgenerate
    
   mchan #(
+    .NB_CTRLS ( NB_CTRLS ),
 
     //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
     //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)

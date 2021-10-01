@@ -35,6 +35,7 @@ module cluster_core_assist #(
   hci_core_intf.slave                    core_bus_slave,
 
   hci_core_intf.master                   tcdm_data_master,
+  hci_core_intf.master                   dma_ctrl_master,
   XBAR_PERIPH_BUS.Master                 eu_ctrl_master,
   XBAR_PERIPH_BUS.Master                 periph_data_master
 );
@@ -43,7 +44,16 @@ module cluster_core_assist #(
 
   logic clk_int;
 
-  logic [EccDataWidth-1:0] core_bus_data, core_bus_r_data, tcdm_data, tcdm_r_data, eu_data, eu_r_data, periph_data, periph_r_data;
+  logic [EccDataWidth-1:0] core_bus_data, core_bus_r_data, tcdm_data, tcdm_r_data, eu_data, eu_r_data, periph_data, periph_r_data, demux_data, demux_r_data, dma_data, dma_r_data;
+
+  hci_core_intf #(
+    .DW(DATA_WIDTH),
+    .AW(ADDR_WIDTH),
+    .OW(1),
+    .UW(ECC_INTC ? 7 : 0)
+  ) periph_demux_bus (
+    .clk(clk_i)
+  );
 
   if ( ECC_INTC ) begin
     assign core_bus_data = {core_bus_slave.user, core_bus_slave.data};
@@ -60,6 +70,9 @@ module cluster_core_assist #(
       .in (periph_data_master.r_rdata),
       .out(periph_r_data)
     );
+
+    assign {dma_ctrl_master.user, dma_ctrl_master.data} = dma_data;
+    assign dma_r_data = {dma_ctrl_master.r_user, dma_ctrl_master.r_data};
   end else begin
     assign core_bus_data = core_bus_slave.data;
     assign core_bus_slave.r_data = core_bus_r_data;
@@ -69,6 +82,10 @@ module cluster_core_assist #(
     assign eu_r_data = eu_ctrl_master.r_rdata;
     assign periph_data_master.wdata = periph_data;
     assign periph_r_data = periph_data_master.r_rdata;
+
+    assign dma_ctrl_master.wdata = dma_data;
+    assign dma_ctrl_master.user = '0;
+    assign dma_r_data = dma_ctrl_master.r_data;
   end
 
   tc_clk_gating clock_gate_i (
@@ -80,6 +97,14 @@ module cluster_core_assist #(
 
   assign tcdm_data_master.boffs = '0;
   assign tcdm_data_master.lrdy  = '0;
+  assign dma_ctrl_master.boffs = '0;
+  assign dma_ctrl_master.lrdy = '0;
+  assign periph_demux_bus.boffs = '0;
+  assign periph_demux_bus.lrdy = '0;
+  assign periph_demux_bus.user = '0;
+  assign periph_demux_bus.data = '0; // done with demux_data
+  assign periph_demux_bus.r_user = '0;
+  assign periph_demux_bus.r_data = '0; // done with demux_r_data
 
   assign perf_counters_o[4] = tcdm_data_master.req & (~tcdm_data_master.gnt);
 
@@ -98,11 +123,11 @@ module cluster_core_assist #(
     .data_req_i         ( core_bus_slave.req         ),
     .data_add_i         ( core_bus_slave.add         ),
     .data_wen_i         ( core_bus_slave.wen         ),
-    .data_wdata_i       ( core_bus_data        ),
+    .data_wdata_i       ( core_bus_data              ),
     .data_be_i          ( core_bus_slave.be          ),
     .data_gnt_o         ( core_bus_slave.gnt         ),
     .data_r_valid_o     ( core_bus_slave.r_valid     ),
-    .data_r_rdata_o     ( core_bus_r_data      ),
+    .data_r_rdata_o     ( core_bus_r_data            ),
     .data_r_opc_o       ( core_bus_slave.r_opc       ),
 
     .data_req_o_SH      ( tcdm_data_master.req       ),
@@ -114,26 +139,26 @@ module cluster_core_assist #(
     .data_r_valid_i_SH  ( tcdm_data_master.r_valid   ),
     .data_r_rdata_i_SH  ( tcdm_r_data   ),
 
-    .data_req_o_EXT     ( eu_ctrl_master.req         ),
-    .data_add_o_EXT     ( eu_ctrl_master.add         ),
-    .data_wen_o_EXT     ( eu_ctrl_master.wen         ),
-    .data_wdata_o_EXT   ( eu_data       ),
-    .data_be_o_EXT      ( eu_ctrl_master.be          ),
-    .data_gnt_i_EXT     ( eu_ctrl_master.gnt         ),
-    .data_r_valid_i_EXT ( eu_ctrl_master.r_valid     ),
-    .data_r_rdata_i_EXT ( eu_r_data     ),
-    .data_r_opc_i_EXT   ( eu_ctrl_master.r_opc       ),
+    .data_req_o_EXT     ( periph_demux_bus.req         ),
+    .data_add_o_EXT     ( periph_demux_bus.add         ),
+    .data_wen_o_EXT     ( periph_demux_bus.wen         ),
+    .data_wdata_o_EXT   ( demux_data                   ),
+    .data_be_o_EXT      ( periph_demux_bus.be          ),
+    .data_gnt_i_EXT     ( periph_demux_bus.gnt         ),
+    .data_r_valid_i_EXT ( periph_demux_bus.r_valid     ),
+    .data_r_rdata_i_EXT ( demux_r_data                 ),
+    .data_r_opc_i_EXT   ( periph_demux_bus.r_opc       ),
     // What happens to eu_ctrl_master.id, .r_id?
 
     .data_req_o_PE      ( periph_data_master.req     ),
     .data_add_o_PE      ( periph_data_master.add     ),
     .data_wen_o_PE      ( periph_data_master.wen     ),
-    .data_wdata_o_PE    ( periph_data   ),
+    .data_wdata_o_PE    ( periph_data                ),
     .data_be_o_PE       ( periph_data_master.be      ),
     .data_gnt_i_PE      ( periph_data_master.gnt     ),
     .data_r_valid_i_PE  ( periph_data_master.r_valid ),
     .data_r_opc_i_PE    ( periph_data_master.r_opc   ),
-    .data_r_rdata_i_PE  ( periph_r_data ),
+    .data_r_rdata_i_PE  ( periph_r_data              ),
     // What happens to periph_ctrl_master.id, .r_id?
 
     .perf_l2_ld_o       ( perf_counters_o[0]         ),
@@ -141,6 +166,49 @@ module cluster_core_assist #(
     .perf_l2_ld_cyc_o   ( perf_counters_o[2]         ),
     .perf_l2_st_cyc_o   ( perf_counters_o[3]         ),
     .CLUSTER_ID         ( cluster_id_i               )
+  );
+
+
+  periph_demux #(
+    .ADDR_WIDTH(ADDR_WIDTH),
+    .DATA_WIDTH(EccDataWidth),
+    .BE_WIDTH  (BE_WIDTH)
+  ) periph_demux_i (
+    .clk               ( clk_int                  ),
+    .rst_ni            ( rst_ni                   ),
+
+    .data_req_i        ( periph_demux_bus.req     ),
+    .data_add_i        ( periph_demux_bus.add     ),
+    .data_wen_i        ( periph_demux_bus.wen     ),
+    .data_wdata_i      ( demux_data               ),
+    .data_be_i         ( periph_demux_bus.be      ),
+    .data_gnt_o        ( periph_demux_bus.gnt     ),
+
+    .data_r_valid_o    ( periph_demux_bus.r_valid ),
+    .data_r_opc_o      ( periph_demux_bus.r_opc   ),
+    .data_r_rdata_o    ( demux_r_data             ),
+
+    .data_req_o_MH     ( dma_ctrl_master.req      ),
+    .data_add_o_MH     ( dma_ctrl_master.add      ),
+    .data_wen_o_MH     ( dma_ctrl_master.wen      ),
+    .data_wdata_o_MH   ( dma_data                 ),
+    .data_be_o_MH      ( dma_ctrl_master.be       ),
+    .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
+
+    .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
+    .data_r_rdata_i_MH ( dma_r_data               ),
+    .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
+
+    .data_req_o_EU     ( eu_ctrl_master.req       ),
+    .data_add_o_EU     ( eu_ctrl_master.add       ),
+    .data_wen_o_EU     ( eu_ctrl_master.wen       ),
+    .data_wdata_o_EU   ( eu_data                  ),
+    .data_be_o_EU      ( eu_ctrl_master.be        ),
+    .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
+
+    .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
+    .data_r_rdata_i_EU ( eu_r_data                ),
+    .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
   );
 
 endmodule
