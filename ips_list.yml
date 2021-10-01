@@ -2,7 +2,15 @@
 # List of IPs and relative branch/commit-hash/tag.
 # Uses the YAML syntax.
 #
-
+common_cells:
+  commit: v1.21.0
+  domain: [cluster, soc]
+axi/axi:
+  commit: v0.29.1
+  domain: [cluster, soc]
+axi/axi_slice:
+  commit: v1.1.4
+  domain: [cluster, soc]
 axi/axi2mem:
   commit: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
   domain: [soc, cluster]
@@ -15,12 +23,8 @@ axi/per2axi:
   commit: v1.0.4
   domain: [soc, cluster]
   group:  pulp-platform
-axi/axi_size_conv:
-  commit: 5239f87fe772111ec368fb08dbb971516edce097
-  domain: [cluster]
-  group:  pulp-platform
 cluster_interconnect:
-  commit: tags/v1.1.0
+  commit: v1.1.1
   domain: [cluster]
   group:  pulp-platform
 event_unit_flex:
@@ -28,11 +32,11 @@ event_unit_flex:
   domain: [cluster]
   group:  pulp-platform
 mchan:
-  commit: space_pulp_tmp
+  commit: clusterv2
   domain: [cluster]
   group:  micprog
 hier-icache:
-  commit: v1.2.0
+  commit: axi_node_dep
   domain: [cluster]
   group:  pulp-platform
 icache-intc:
@@ -47,21 +51,27 @@ icache_private:
   commit: 1d4cdbcbec3ab454c09d378fc55631b60450fccd
   domain: [cluster]
   group:  pulp-platform
-hci:
-  commit: v1.0.7
+hwpe-ctrl:
+  commit: v1.6.1
   group: pulp-platform
-  domain: [cluster, pulp]
+  domain: [soc, cluster, pulp]
+hwpe-stream:
+  commit: v1.6.3
+  group: pulp-platform
+  domain: [soc, cluster, pulp]
+hci:
+  commit: v1.0.8
+  group: pulp-platform
+  domain: [soc, cluster, pulp]
 cluster_peripherals:
   commit: v2.1.0
   domain: [cluster]
   group:  pulp-platform
 fpu_interco:
-  commit: 7bfbea63bcc8875edc3adf266a679161833e9590
+  commit: 66b4084117546d5b748c30b5500769805f489d2f
   domain: [soc, cluster]
   group: micprog
 hwpe-datamover-example:
   commit: v1.0.1
   group: pulp-platform
   domain: [cluster, pulp]
-
-  

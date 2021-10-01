@@ -66,10 +66,10 @@
   end
 
   tc_clk_gating u_clkgate_cluster (
+    .clk_o     ( cluster_clk_o ),
     .clk_i     ( clk_i         ),
     .en_i      ( s_clockenable ),
-    .test_en_i ( test_mode_i   ),
-    .clk_o     ( cluster_clk_o )
+    .test_en_i ( test_mode_i   )
   );
 
 endmodule

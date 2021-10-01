@@ -2,22 +2,29 @@ pulp_cluster:
   vlog_opts: [
     -L fpnew_lib,
     -L hci_lib,
-    -L ibex_lib,
+    -L common_cells_lib,
+    -L axi_lib,
+    -L ibex_lib
   ]
   incdirs: [
     ../../rtl/includes,
     packages,
+    ../axi/axi/include,
+    ../axi/axi/include/axi,
   ]
   files: [
+    ../axi/axi/include/axi/typedef.svh,
     packages/pulp_cluster_package.sv,
     rtl/instr_width_converter.sv,
     rtl/cluster_core_wrap.sv,
     rtl/cluster_core_assist.sv,
     rtl/core_demux.sv,
+    rtl/periph_demux.sv,
     rtl/cluster_interconnect_wrap.sv,
     rtl/tcdm_banks_wrap.sv,
     rtl/per_demux_wrap.sv,
     rtl/periph_FIFO.sv,
+    rtl/xbar_pe_wrap.sv,
     rtl/cluster_peripherals.sv,
     rtl/cluster_clock_gate.sv,
     rtl/cluster_timer_wrap.sv,

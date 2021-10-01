@@ -16,166 +16,100 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`define XILINX_BRAM_BANK_INSTANCE \
-tcdm_bank_i \
-( \
-  .clka  ( clk_i ), \
-  .rsta  ( rsta  ), \
-  .ena   ( ena   ), \
-  .wea   ( wea   ), \
-  .addra ( add   ), \
-  .dina  ( wdata ), \
-  .douta ( rdata )  \
-)
-
-module tcdm_banks_wrap 
-#(
-  parameter BANK_SIZE = 256,   //- -> OVERRIDE
-  parameter NB_BANKS  = 1,     // --> OVERRIDE
-  parameter RM_SIZE   = 1,     // only for SRAM
-  parameter WM_SIZE   = 1,     // only for SRAM
-  parameter ECC_SRAM  = 0,
-  parameter ECC_INTC  = 0
+module tcdm_banks_wrap #(
+  parameter BankSize  = 256,         //- -> OVERRIDE
+  parameter NbBanks   = 1,           // --> OVERRIDE
+  parameter DataWidth = 32,
+  parameter AddrWidth = 32,
+  parameter BeWidth   = DataWidth/8,
+  parameter IdWidth   = 1,
+  parameter EccSram   = 0,
+  parameter EccIntc   = 0
 ) (
-  input  logic               clk_i,
-  input  logic               rst_ni,
-  input  logic               init_ni,
-  input  logic               pwdn_i,
-  input  logic               test_mode_i,
-    
-  hci_mem_intf.slave         tcdm_slave[NB_BANKS-1:0]
+  input logic        clk_i,
+  input logic        rst_ni,
+  input logic        test_mode_i,
+
+  hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
 );
+   
+  for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
-  generate
-    for(genvar i=0; i<NB_BANKS; i++) begin : banks_gen
+    // r_id is same as request id -> Don't know if this is needed, but OBI protocol requires it
+    logic [IdWidth-1:0] resp_id_d, resp_id_q;
+    assign resp_id_d = tcdm_slave[i].id;
+    assign tcdm_slave[i].r_id = resp_id_q;
 
-`ifndef PULP_FPGA_EMUL
-      if ( !ECC_SRAM ) begin
-
-        logic                         bank_req;
-        logic                         bank_we;
-        logic [$clog2(BANK_SIZE)-1:0] bank_add;
-        logic [31:0]                  bank_wdata;
-        logic [3:0]                   bank_be;
-        logic [31:0]                  bank_rdata;
-
-        assign bank_req             =  tcdm_slave[i].req;
-        assign bank_we              = ~tcdm_slave[i].wen;
-        assign bank_add             =  tcdm_slave[i].add[$clog2(BANK_SIZE)+2-1:2];
-        assign bank_wdata           =  tcdm_slave[i].data;
-        assign bank_be              =  tcdm_slave[i].be;
-
-        assign tcdm_slave[i].r_data =  bank_rdata;
-        assign tcdm_slave[i].gnt    =  1'b1;
-        assign tcdm_slave[i].r_id   =  '0;
-
-        tc_sram #(
-          .NumWords    ( BANK_SIZE ), // Number of Words in data array
-          .DataWidth   ( 32        ), // Data signal width
-          .ByteWidth   ( 8         ), // Width of a data byte
-          .NumPorts    ( 1         ), // Number of read and write ports
-          .Latency     ( 1         ), // Latency when the read data is available
-          .SimInit     ( "ones"    ), // Simulation initialization
-          .PrintSimCfg ( 0         )  // Print configuration
-        ) i_bank (
-          .clk_i   ( clk_i      ),    // Clock
-          .rst_ni  ( rst_ni     ),    // Asynchronous reset active low
-
-          .req_i   ( bank_req   ),    // request
-          .we_i    ( bank_we    ),    // write enable
-          .addr_i  ( bank_add   ),    // request address
-          .wdata_i ( bank_wdata ),    // write data
-          .be_i    ( bank_be    ),    // write byte enable
-
-          .rdata_o ( bank_rdata )     // read data
-        );
+    always_ff @(posedge clk_i or negedge rst_ni) begin : proc_resp_id
+      if(~rst_ni) begin
+        resp_id_q <= '0;
       end else begin
-        assign tcdm_slave[i].r_id = '0;
-        if ( ECC_INTC ) begin
-          ecc_sram_wrap #(
-            .BankSize         ( BANK_SIZE ),
-            .InputECC         ( ECC_INTC  ),
-            .UnprotectedWidth ( 32        ),
-            .ProtectedWidth   ( 39        )
-          ) i_ecc_bank (
-            .clk_i        ( clk_i                                        ),
-            .rst_ni       ( rst_ni                                       ),
-
-            .tcdm_wdata_i ( {tcdm_slave[i].user, tcdm_slave[i].data}     ),
-            .tcdm_add_i   ( tcdm_slave[i].add                            ),
-            .tcdm_req_i   ( tcdm_slave[i].req                            ),
-            .tcdm_wen_i   ( tcdm_slave[i].wen                            ),
-            .tcdm_be_i    ( tcdm_slave[i].be                             ),
-            .tcdm_rdata_o ( {tcdm_slave[i].r_user, tcdm_slave[i].r_data} ),
-            .tcdm_gnt_o   ( tcdm_slave[i].gnt                            )
-          );
-        end else begin
-          ecc_sram_wrap #(
-            .BankSize         ( BANK_SIZE ),
-            .InputECC         ( ECC_INTC  ),
-            .UnprotectedWidth ( 32        ),
-            .ProtectedWidth   ( 39        )
-          ) i_ecc_bank (
-            .clk_i        ( clk_i                ),
-            .rst_ni       ( rst_ni               ),
-
-            .tcdm_wdata_i ( tcdm_slave[i].data   ),
-            .tcdm_add_i   ( tcdm_slave[i].add    ),
-            .tcdm_req_i   ( tcdm_slave[i].req    ),
-            .tcdm_wen_i   ( tcdm_slave[i].wen    ),
-            .tcdm_be_i    ( tcdm_slave[i].be     ),
-            .tcdm_rdata_o ( tcdm_slave[i].r_data ),
-            .tcdm_gnt_o   ( tcdm_slave[i].gnt    )
-          );
-        end
+        resp_id_q <= resp_id_d;
       end
-
-`else // !`ifndef PULP_EMU_FPGA
-/////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////////////////
-      logic                         rsta;
-      logic                         ena;
-      logic [31:0]                  wdata;
-      logic [$clog2(BANK_SIZE)-1:0] add;
-      logic [3:0]                   wea;
-      logic [31:0]                  rdata;
-
-      assign rsta  = ~rst_ni;
-      assign ena   = 1'b1;
-      assign wdata = tcdm_slave[i].wdata;
-      assign add   = tcdm_slave[i].add[$clog2(BANK_SIZE)-1:0];
-      assign wea   = {4{tcdm_slave[i].req}} & {4{~tcdm_slave[i].wen}} & tcdm_slave[i].be;
-      assign tcdm_slave[i].rdata = rdata;
-
-      case(BANK_SIZE)
-        128:
-        begin : bank_128_gen
-          xilinx_tcdm_bank_128x32 `XILINX_BRAM_BANK_INSTANCE;
-        end
-
-        256:
-        begin : bank_256_gen
-          xilinx_tcdm_bank_256x32 `XILINX_BRAM_BANK_INSTANCE;
-        end
-
-        512:
-        begin : bank_512_gen
-          xilinx_tcdm_bank_512x32 `XILINX_BRAM_BANK_INSTANCE;
-        end
-
-        1024:
-        begin : bank_1024_gen
-          xilinx_tcdm_bank_1024x32 `XILINX_BRAM_BANK_INSTANCE;
-        end
-
-        2048:
-        begin : bank_2048_gen
-          xilinx_tcdm_bank_2048x32 `XILINX_BRAM_BANK_INSTANCE;
-        end
-      endcase // BANK_SIZE
-`endif
     end
-  endgenerate
+
+    assign tcdm_slave[i].gnt    =  1'b1;
+ 
+
+    if (!EccSram) begin
+      tc_sram #(
+        .NumWords   (BankSize ), // Number of Words in data array
+        .DataWidth  (DataWidth), // Data signal width
+        .ByteWidth  (8        ), // Width of a data byte
+        .NumPorts   (1        ), // Number of read and write ports
+        .Latency    (1        ), // Latency when the read data is available
+        .SimInit    ("ones"   ), // Simulation initialization
+        .PrintSimCfg(0        )  // Print configuration
+      ) i_bank (
+        .clk_i  (clk_i                                    ), // Clock
+        .rst_ni (rst_ni                                   ), // Asynchronous reset active low
+        
+        .req_i  (tcdm_slave[i].req                        ), // request
+        .we_i   (~tcdm_slave[i].wen                       ), // write enable
+        .addr_i (tcdm_slave[i].add[$clog2(BankSize)+2-1:2]), // request address
+        .wdata_i(tcdm_slave[i].data                       ), // write data
+        .be_i   (tcdm_slave[i].be                         ), // write byte enable
+        
+        .rdata_o(tcdm_slave[i].r_data                     )  // read data
+      );
+    end else if (!EccIntc) begin
+      ecc_sram_wrap #(
+        .BankSize         ( BankSize ),
+        .InputECC         ( EccIntc  ),
+        .UnprotectedWidth ( 32       ),
+        .ProtectedWidth   ( 39       )
+      ) i_ecc_bank (
+        .clk_i        ( clk_i                ),
+        .rst_ni       ( rst_ni               ),
+
+        .tcdm_wdata_i ( tcdm_slave[i].data   ),
+        .tcdm_add_i   ( tcdm_slave[i].add    ),
+        .tcdm_req_i   ( tcdm_slave[i].req    ),
+        .tcdm_wen_i   ( tcdm_slave[i].wen    ),
+        .tcdm_be_i    ( tcdm_slave[i].be     ),
+        .tcdm_rdata_o ( tcdm_slave[i].r_data ),
+        .tcdm_gnt_o   ( tcdm_slave[i].gnt    )
+      );
+    end else begin
+      ecc_sram_wrap #(
+        .BankSize         ( BankSize ),
+        .InputECC         ( EccIntc  ),
+        .UnprotectedWidth ( 32       ),
+        .ProtectedWidth   ( 39       )
+      ) i_ecc_bank (
+        .clk_i        ( clk_i                                        ),
+        .rst_ni       ( rst_ni                                       ),
+
+        .tcdm_wdata_i ( {tcdm_slave[i].user, tcdm_slave[i].data}     ),
+        .tcdm_add_i   ( tcdm_slave[i].add                            ),
+        .tcdm_req_i   ( tcdm_slave[i].req                            ),
+        .tcdm_wen_i   ( tcdm_slave[i].wen                            ),
+        .tcdm_be_i    ( tcdm_slave[i].be                             ),
+        .tcdm_rdata_o ( {tcdm_slave[i].r_user, tcdm_slave[i].r_data} ),
+        .tcdm_gnt_o   ( tcdm_slave[i].gnt                            )
+      );
+    end
+
+  end
 
 endmodule

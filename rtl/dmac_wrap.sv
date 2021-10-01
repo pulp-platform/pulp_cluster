@@ -33,19 +33,23 @@ module dmac_wrap
   parameter BE_WIDTH           = DATA_WIDTH/8
 )
 ( 
-  input logic                      clk_i,
-  input logic                      rst_ni,
-  input logic                      test_mode_i,
-  XBAR_PERIPH_BUS.Slave            cl_ctrl_slave,
-  XBAR_PERIPH_BUS.Slave            fc_ctrl_slave,
-  
-  hci_core_intf.master             tcdm_master[3:0],
-  AXI_BUS.Master                   ext_master,
-  output logic                     term_event_cl_o,
-  output logic                     term_irq_cl_o,
-  output logic                     term_event_pe_o,
-  output logic                     term_irq_pe_o,
-  output logic                     busy_o
+  input logic  clk_i,
+  input logic  rst_ni,
+  input logic  test_mode_i,
+
+  XBAR_TCDM_BUS.Slave   ctrl_slave[NB_CORES-1:0],
+  XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
+  XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
+   
+  hci_core_intf.master tcdm_master[3:0],
+  AXI_BUS.Master ext_master,
+  output logic term_event_cl_o,
+  output logic term_irq_cl_o,
+  output logic term_event_pe_o,
+  output logic term_irq_pe_o,
+  output logic [NB_CORES-1:0] term_event_o,
+  output logic [NB_CORES-1:0] term_irq_o,
+  output logic busy_o
 );
   
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
@@ -61,19 +65,6 @@ module dmac_wrap
   logic [NB_CTRLS-1:0]                  s_ctrl_bus_r_opc;
   logic [NB_CTRLS-1:0][PE_ID_WIDTH-1:0] s_ctrl_bus_r_id;
 
-  // CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
-/* -----\/----- EXCLUDED -----\/-----
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0] s_ctrl_bus_wdata;
-  logic [NB_CORES-1:0][ADDR_WIDTH-1:0] s_ctrl_bus_add;
-  logic [NB_CORES-1:0]                 s_ctrl_bus_req;
-  logic [NB_CORES-1:0]                 s_ctrl_bus_wen;
-  logic [NB_CORES-1:0][BE_WIDTH-1:0]   s_ctrl_bus_be;
-  logic [NB_CORES-1:0]                 s_ctrl_bus_gnt;
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0] s_ctrl_bus_r_rdata;
-  logic [NB_CORES-1:0]                 s_ctrl_bus_r_valid;
- -----/\----- EXCLUDED -----/\----- */
-
-
 
   // MCHAN TCDM INIT --> TCDM MEMORY BUS SIGNALS
   logic [3:0][DATA_WIDTH-1:0] s_tcdm_bus_wdata;
@@ -85,31 +76,51 @@ module dmac_wrap
   logic [3:0][DATA_WIDTH-1:0] s_tcdm_bus_r_rdata;
   logic [3:0]                 s_tcdm_bus_r_valid;
 
+  // CLUSTER CORE PORT BINDING
+  generate
+    for (genvar i=0; i<NB_CORES; i++) begin
+
+     assign s_ctrl_bus_add[i]     = ctrl_slave[i].add;
+     assign s_ctrl_bus_req[i]     = ctrl_slave[i].req;
+     assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].wdata;
+     assign s_ctrl_bus_wen[i]     = ctrl_slave[i].wen;
+     assign s_ctrl_bus_be[i]      = ctrl_slave[i].be;
+     assign s_ctrl_bus_id[i]      = i;
+
+       
+     assign ctrl_slave[i].gnt     = s_ctrl_bus_gnt[i];
+     assign ctrl_slave[i].r_opc   = s_ctrl_bus_r_opc[i];
+     assign ctrl_slave[i].r_valid = s_ctrl_bus_r_valid[i];
+     assign ctrl_slave[i].r_rdata = s_ctrl_bus_r_rdata[i];
+
+    end // for (genvar i=0; i<NB_CORES; i++)
+  endgenerate
+
   // // CL CTRL PORT BINDING
-  assign s_ctrl_bus_add[0]     = cl_ctrl_slave.add;
-  assign s_ctrl_bus_req[0]     = cl_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[0]   = cl_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[0]     = cl_ctrl_slave.wen;
-  assign s_ctrl_bus_be[0]      = cl_ctrl_slave.be;
-  assign s_ctrl_bus_id[0]      = cl_ctrl_slave.id;
-  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[0];
-  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[0];
-  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[0];
-  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[0];
-  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[0];
+  assign s_ctrl_bus_add[NB_CORES]     = cl_ctrl_slave.add;
+  assign s_ctrl_bus_req[NB_CORES]     = cl_ctrl_slave.req;
+  assign s_ctrl_bus_wdata[NB_CORES]   = cl_ctrl_slave.wdata;
+  assign s_ctrl_bus_wen[NB_CORES]     = cl_ctrl_slave.wen;
+  assign s_ctrl_bus_be[NB_CORES]      = cl_ctrl_slave.be;
+  assign s_ctrl_bus_id[NB_CORES]      = cl_ctrl_slave.id;
+  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES];
+  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES];
+  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES];
+  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES];
+  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES];
 
   // FC CTRL PORT BINDING
-  assign s_ctrl_bus_add[1]     = fc_ctrl_slave.add;
-  assign s_ctrl_bus_req[1]     = fc_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[1]   = fc_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[1]     = fc_ctrl_slave.wen;
-  assign s_ctrl_bus_be[1]      = fc_ctrl_slave.be;
-  assign s_ctrl_bus_id[1]      = fc_ctrl_slave.id;
-  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[1];
-  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[1];
-  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[1];
-  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[1];
-  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[1];
+  assign s_ctrl_bus_add[NB_CORES+1]     = fc_ctrl_slave.add;
+  assign s_ctrl_bus_req[NB_CORES+1]     = fc_ctrl_slave.req;
+  assign s_ctrl_bus_wdata[NB_CORES+1]   = fc_ctrl_slave.wdata;
+  assign s_ctrl_bus_wen[NB_CORES+1]     = fc_ctrl_slave.wen;
+  assign s_ctrl_bus_be[NB_CORES+1]      = fc_ctrl_slave.be;
+  assign s_ctrl_bus_id[NB_CORES+1]      = fc_ctrl_slave.id;
+  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES+1];
+  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES+1];
+  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES+1];
+  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES+1];
+  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES+1];
 
   generate
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND
@@ -128,7 +139,7 @@ module dmac_wrap
   endgenerate
    
   mchan #(
-    .NB_CTRLS                 ( NB_CTRLS                     ),    // NUMBER OF CONTROL PORTS : CL, FC, DECOMPRESSOR
+
     //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
     //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
     //.GLOBAL_TRANS_QUEUE_DEPTH ( 8                     ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
@@ -252,8 +263,8 @@ module dmac_wrap
     .axi_master_b_user_i       ( ext_master.b_user                  ),
     .axi_master_b_ready_o      ( ext_master.b_ready                 ),
 
-    .term_evt_o                ( {term_event_pe_o,term_event_cl_o}     ),
-    .term_int_o                ( {term_irq_pe_o,term_irq_cl_o    }     ),
+    .term_evt_o                ( {term_event_pe_o,term_event_cl_o,term_event_o}     ),
+    .term_int_o                ( {term_irq_pe_o,term_irq_cl_o,term_irq_o      }     ),
 
     .busy_o                    ( busy_o                             )
   );
