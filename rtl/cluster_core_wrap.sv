@@ -77,6 +77,18 @@ module cluster_core_wrap #(
   input  logic [N_EXT_PERF_COUNTERS-1:0]       perf_counters_i
 );
 
+  localparam USE_IBEX = CORE_TYPE_CL == 1 || CORE_TYPE_CL == 2;
+  localparam IBEX_RV32M = CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
+  localparam IBEX_RV32E = CORE_TYPE_CL == 2;
+
+`ifdef TARGET_SYNTHESIS
+  localparam IBEX_RegFile = ibex_pkg::RegFileLatch;
+`elsif TARGET_FPGA
+  localparam IBEX_RegFile = ibex_pkg::RegFileFPGA;
+`else
+  localparam IBEX_RegFile = ibex_pkg::RegFileFF;
+`endif
+
   logic [31:0] boot_addr;
   logic        core_bus_master_we;
   assign core_bus_master.wen = ~core_bus_master_we;
@@ -90,6 +102,8 @@ module cluster_core_wrap #(
   logic [31:0] core_instr_addr;
   logic [31:0] core_instr_r_rdata;
   logic        core_instr_r_valid;
+
+  logic        core_mem_req;
 
   // For ECC
   logic [31:0] core_wdata, core_rdata;
@@ -207,35 +221,48 @@ module cluster_core_wrap #(
           .core_r_valid_o   ( core_instr_r_valid )
         );
       end else begin
-        assign instr_req_o        = core_instr_req;
+        obi_pulp_adapter i_obi_pulp_adapter_instr (
+          .clk_i       (clk_i          ),
+          .rst_ni      (rst_ni         ),
+          .core_req_i  (core_instr_req ),
+          .mem_req_o   (instr_req_o    ),
+          .mem_gnt_i   (instr_gnt_i    ),
+          .mem_rvalid_i(instr_r_valid_i)
+        );
+
+        // assign instr_req_o        = core_instr_req;
         assign core_instr_gnt     = instr_gnt_i;
         assign instr_addr_o       = core_instr_addr;
         assign core_instr_r_rdata = instr_r_rdata_i;
         assign core_instr_r_valid = instr_r_valid_i;
       end
+
+      obi_pulp_adapter i_obi_pulp_adapter_mem (
+        .clk_i       (clk_i                  ),
+        .rst_ni      (rst_ni                 ),
+        .core_req_i  (core_mem_req           ),
+        .mem_req_o   (core_bus_master.req    ),
+        .mem_gnt_i   (core_bus_master.gnt    ),
+        .mem_rvalid_i(core_bus_master.r_valid)
+      );
       
   `ifdef VERILATOR
-      ibex_core #(
+      ibex_core
   `elsif TRACE_EXECUTION
-      ibex_core_tracing #(
+      ibex_core_tracing
   `else
-      ibex_core #(
+      ibex_core
   `endif
+      #(
         .PMPEnable        ( 1'b0                        ),
         .PMPGranularity   ( 0                           ),
         .PMPNumRegions    ( 4                           ),
         .MHPMCounterNum   ( 29                          ),
         .MHPMCounterWidth ( 40                          ),
-        .RV32E            ( CORE_TYPE_CL == 2           ),
-        .RV32M            ( CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone         ),
+        .RV32E            ( IBEX_RV32E                  ),
+        .RV32M            ( IBEX_RV32M                  ),
         .RV32B            ( ibex_pkg::RV32BNone         ),
-  `ifdef TARGET_SYNTHESIS
-        .RegFile          ( ibex_pkg::RegFileLatch      ),
-  `elsif TARGET_FPGA
-        .RegFile          ( ibex_pkg::RegFileFPGA       ),
-  `else
-        .RegFile          ( ibex_pkg::RegFileFF         ),
-  `endif
+        .RegFile          ( IBEX_RegFile                ),
         .BranchTargetALU  ( 1'b1                        ),
         .WritebackStage   ( 1'b1                        ),
         .ICache           ( 1'b0                        ),
@@ -264,7 +291,7 @@ module cluster_core_wrap #(
         .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
-        .data_req_o            ( core_bus_master.req     ),
+        .data_req_o            ( core_mem_req            ),
         .data_gnt_i            ( core_bus_master.gnt     ),
         .data_rvalid_i         ( core_bus_master.r_valid ),
         .data_we_o             ( core_bus_master_we      ),

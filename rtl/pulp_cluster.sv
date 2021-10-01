@@ -1652,7 +1652,7 @@ module pulp_cluster
     .DataWidth(DATA_WIDTH   ),
     .AddrWidth(ADDR_WIDTH   ),
     .BeWidth  (BE_WIDTH     ),
-    .IdWidth  (TCDM_ID_WIDTH)
+    .IdWidth  (TCDM_ID_WIDTH),
     .EccSram  ( ECC_SRAM    ),
     .EccIntc  ( ECC_INTC    )
   ) tcdm_banks_i (
