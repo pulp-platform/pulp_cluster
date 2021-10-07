@@ -30,7 +30,7 @@ dependencies:
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
   redundancy_cells:       { git: "https://github.com/micprog/redundancy_cells.git", rev: "master" }
-  register_interface:     { git: "https://github.com/micprog/register_interface.git", rev: "periph_bus" }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.3.1 }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
