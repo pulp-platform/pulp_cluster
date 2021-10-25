@@ -195,9 +195,10 @@ module core_region
      .scan_cg_en_i          ( test_mode_i       ),
 
      .boot_addr_i           ( boot_addr_i       ),
-     .mtvec_addr_i          (                   ),
+     .mtvec_addr_i          ( '0                ),
      .hart_id_i             ( hart_id           ),
      .dm_halt_addr_i        ( 32'h1A110800      ),
+     .dm_exception_addr_i   ( '0                ),
 
      .instr_addr_o          ( instr_addr_o             ),
      .instr_req_o           ( obi_instr_req            ),
@@ -219,6 +220,9 @@ module core_region
      .irq_ack_o             ( irq_ack_o                ),
 
      .debug_req_i           ( debug_req_i              ),
+     .debug_havereset_o     (                          ),
+     .debug_running_o       (                          ),
+     .debug_halted_o        (                          ),
 
      .fetch_enable_i        ( fetch_en_i               ),
      .core_sleep_o          ( core_sleep               ),
