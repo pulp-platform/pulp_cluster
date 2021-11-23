@@ -61,8 +61,9 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
   input logic                         dma_cl_irq_i,
+
   //input  logic                        dma_pe_irq_i,
-  //output logic                        pf_event_o,
+  output logic                        pf_event_o,
 
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
@@ -314,7 +315,7 @@ module cluster_peripherals
       .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
       .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
       );
-   
+   assign pf_event_o = 1'b0;
 `else
  `ifdef MP_ICACHE
    mp_pf_icache_ctrl_unit
@@ -331,7 +332,7 @@ module cluster_peripherals
       
       .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
       .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
-      .pf_event_o                  (                                  )
+      .pf_event_o                  (  pf_event_o                      )
       );
  `else
   `ifdef SP_ICACHE
@@ -352,6 +353,7 @@ module cluster_peripherals
       .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
       .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                )
       );
+   assign pf_event_o = 1'b0;
   `endif
  `endif
 `endif
