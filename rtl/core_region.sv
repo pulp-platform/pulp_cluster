@@ -144,6 +144,9 @@ module core_region
   logic [31:0]     core_instr_r_rdata;
   logic            core_instr_r_valid;
 
+  logic            obi_instr_req;
+  logic            pulp_instr_req;
+
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
     .clk_i     ( clk_i       ),
