@@ -196,11 +196,11 @@ module core_region
      .scan_cg_en_i          ( test_mode_i       ),
 
      .boot_addr_i           ( boot_addr_i       ),
-     .mtvec_addr_i          ( '0                ),
+     .mtvec_addr_i          ( 32'h0             ),
      .mtvt_addr_i           ( 32'h0             ),
      .hart_id_i             ( hart_id           ),
      .dm_halt_addr_i        ( 32'h1A110800      ),
-     .dm_exception_addr_i   ( '0                ),
+     .dm_exception_addr_i   ( 32'h1A11080C      ),
 
      .instr_addr_o          ( instr_addr_o             ),
      .instr_req_o           ( obi_instr_req            ),
