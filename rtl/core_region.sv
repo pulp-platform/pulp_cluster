@@ -184,7 +184,8 @@ module core_region
      .FPU                 ( FPU               ),
      .PULP_ZFINX          ( ZFINX             ),
      .NUM_MHPMCOUNTERS    ( NUM_MHPMCOUNTERS  ),
-     .NUM_INTERRUPTS      ( NUM_INTERRUPTS )
+     .NUM_INTERRUPTS      ( NUM_INTERRUPTS    ),
+     .CLIC                ( 0                 )
    )
     RISCV_CORE
    (
@@ -196,6 +197,7 @@ module core_region
 
      .boot_addr_i           ( boot_addr_i       ),
      .mtvec_addr_i          ( '0                ),
+     .mtvt_addr_i           ( 32'h0             ),
      .hart_id_i             ( hart_id           ),
      .dm_halt_addr_i        ( 32'h1A110800      ),
      .dm_exception_addr_i   ( '0                ),
@@ -218,6 +220,8 @@ module core_region
      .irq_i                 ( core_irq_x               ), // New interface with 32 physical lines (one-hot)
      .irq_id_o              ( irq_ack_id_o             ), // New interface with 32 lines
      .irq_ack_o             ( irq_ack_o                ),
+     .irq_level_i           ( '0                       ), // cluster cores are not in CLIC mode
+     .irq_shv_i             ( '0                       ),
 
      .debug_req_i           ( debug_req_i              ),
      .debug_havereset_o     (                          ),
