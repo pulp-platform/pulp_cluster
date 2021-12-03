@@ -19,6 +19,7 @@ pulp_cluster:
     rtl/core_region.sv,
     rtl/core_demux.sv,
     rtl/cluster_interconnect_wrap.sv,
+    rtl/tcdm_bank.sv,
     rtl/tcdm_banks_wrap.sv,
     rtl/periph_demux.sv,
     rtl/per_demux_wrap.sv,

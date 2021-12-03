@@ -129,7 +129,8 @@ module pulp_cluster
   parameter APU_WOP_CPU             = 6,
   parameter WAPUTYPE                = 3,
   parameter APU_NDSFLAGS_CPU        = 15,
-  parameter APU_NUSFLAGS_CPU        = 5
+  parameter APU_NUSFLAGS_CPU        = 5,
+  parameter BEHAV_MEM                = 1
 )
 (
   input logic                                       clk_i,
@@ -1050,7 +1051,8 @@ module pulp_cluster
       .AXI_DATA             ( AXI_DATA_C2S_WIDTH  ), //= 64,
 
       .USE_REDUCED_TAG      ( USE_REDUCED_TAG     ), //= "TRUE",  // TRUE | FALSE
-      .L2_SIZE              ( L2_SIZE             )  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
+      .L2_SIZE              ( L2_SIZE             ),  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
+      .BEHAV_MEM            ( BEHAV_MEM            )
    ) icache_top_i (
        .clk                       ( clk_cluster     ),
        .rst_n                     ( s_rst_n         ),
