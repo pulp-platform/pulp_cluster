@@ -35,8 +35,8 @@ module pulp_cluster
   parameter NB_HWPE_PORTS           = 4,
   parameter TWD_QUEUE_DEPTH         = 4,
   parameter NB_DMAS                 = 4,
-  parameter NB_MPERIPHS             = NB_MPERIPHS,
-  parameter NB_SPERIPHS             = NB_SPERIPHS,
+  parameter NB_MPERIPHS             = pulp_cluster_package::NB_MPERIPHS,
+  parameter NB_SPERIPHS             = pulp_cluster_package::NB_SPERIPHS,
 
   parameter CLUSTER_ALIAS_BASE      = 12'h000,
 
