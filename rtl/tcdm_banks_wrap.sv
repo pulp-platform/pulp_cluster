@@ -30,7 +30,6 @@ module tcdm_banks_wrap
    (
     input  logic               clk_i,
     input  logic               rst_ni,
-    input  logic               init_ni,
     input  logic               pwdn_i,
     input  logic               test_mode_i,
 
