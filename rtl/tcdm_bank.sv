@@ -84,7 +84,7 @@ module tcdm_bank #(
   end else begin : l1_tcdm_bank_macro  // block: l1_tcdm_bank_behav
     l1_sram_macro_wrap #(
         .NumWords (NumWords),
-        .DataWidth(DataWidth)
+        .DataWidth(32)
     ) i_bank_l1_macro (
         .clk_i,
         .rst_ni,
