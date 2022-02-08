@@ -46,12 +46,8 @@ module xbar_pe_wrap
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
+  localparam CLUSTER_ALIAS_P = `ifdef CLUSTER_ALIAS 1 `else 0 `endif;
 
-`ifdef CLUSTER_ALIAS
-   logic                               cluster_alias=1'b1;
-`else
-   logic                               cluster_alias=1'b0;
-`endif   
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;
   typedef logic [ADDR_WIDTH-1:0]              pe_addr_t;
@@ -87,7 +83,7 @@ module xbar_pe_wrap
     end else begin
       if (
         // if the access is to this cluster ..
-        (addr[31:24] == 8'h10 || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
+        (addr[31:24] == 8'h10 || (CLUSTER_ALIAS_P && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
         // .. and the peripherals
         && (addr[23:20] >= 4'h2 && addr[23:20] <= 4'h3)
       ) begin
