@@ -21,9 +21,9 @@
 
 
 // USER DEFINED MACROS to improve self-testing capabilities
-`ifndef PULP_FPGA_SIM
-  `define DEBUG_FETCH_INTERFACE
-`endif
+// `ifndef PULP_FPGA_SIM
+//   `define DEBUG_FETCH_INTERFACE
+// `endif
 //`define DATA_MISS
 //`define DUMP_INSTR_FETCH
 
