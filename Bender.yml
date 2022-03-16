@@ -29,7 +29,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.0.1}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
-  idma:                   { git: "git@iis-git.ee.ethz.ch:bslk/idma.git", rev: "pulpopen" }
+  idma:                   { git: "git@iis-git.ee.ethz.ch:bslk/idma.git", rev: "bcf605e634d6691e7ca713dbd94a5b7ada5e96b2" }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this

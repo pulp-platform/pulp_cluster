@@ -724,18 +724,20 @@ module pulp_cluster
 `else // TARGET_MCHAN
 
   dmac_wrap #(
-    .NB_CORES      (NB_CORES          ),
-    .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH    ),
-    .AXI_DATA_WIDTH(AXI_DATA_C2S_WIDTH),
-    .AXI_USER_WIDTH(AXI_USER_WIDTH    ),
-    .AXI_ID_WIDTH  (AXI_ID_IN_WIDTH   ),
-    .PE_ID_WIDTH   (NB_CORES + 1      ),
-    .NB_PE_PORTS   (2                 ),
-    .DATA_WIDTH    (DATA_WIDTH        ),
-    .ADDR_WIDTH    (ADDR_WIDTH        ),
-    .BE_WIDTH      (BE_WIDTH          ),
-    .NUM_STREAMS   (4                 )
-  ) dmac_wrap_i (
+    .NB_CORES         ( NB_CORES           ),
+    .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
+    .AXI_ID_WIDTH     ( AXI_ID_IN_WIDTH    ),
+    .PE_ID_WIDTH      ( NB_CORES + 1       ),
+    .NB_PE_PORTS      ( 2                  ),
+    .DATA_WIDTH       ( DATA_WIDTH         ),
+    .ADDR_WIDTH       ( ADDR_WIDTH         ),
+    .BE_WIDTH         ( BE_WIDTH           ),
+    .NUM_STREAMS      ( 1                  ),
+    .TCDM_SIZE        ( TCDM_SIZE          ),
+    .NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   )
+) dmac_wrap_i (
     .clk_i          (clk_cluster                     ),
     .rst_ni         (s_rst_n                         ),
     .test_mode_i    (test_mode_i                     ),
