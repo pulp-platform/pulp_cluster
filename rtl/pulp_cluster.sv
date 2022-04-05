@@ -641,38 +641,34 @@ module pulp_cluster
   //***************************************************
 
   dmac_wrap #(
-    .NB_CTRLS               ( NB_CORES + 2           ),
-    .NB_CORES               ( NB_CORES               ),
-    .NB_OUTSND_BURSTS       ( NB_OUTSND_BURSTS       ),
-    .TWD_QUEUE_DEPTH        ( TWD_QUEUE_DEPTH        ),
-    .CTRL_TRANS_QUEUE_DEPTH ( CTRL_TRANS_QUEUE_DEPTH ),
-    .MCHAN_BURST_LENGTH     ( MCHAN_BURST_LENGTH     ),
-    .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH         ),
-    .AXI_DATA_WIDTH         ( AXI_DATA_C2S_WIDTH     ),
-    .AXI_ID_WIDTH           ( AXI_ID_IN_WIDTH        ),
-    .AXI_USER_WIDTH         ( AXI_USER_WIDTH         ),
-    .PE_ID_WIDTH            ( NB_CORES + 1           ),
-    .TCDM_ADD_WIDTH         ( TCDM_ADD_WIDTH         ),
-    .DATA_WIDTH             ( DATA_WIDTH             ),
-    .ADDR_WIDTH             ( ADDR_WIDTH             ),
-    .BE_WIDTH               ( BE_WIDTH               )
-  ) dmac_wrap_i (
-    .clk_i          ( clk_cluster        ),
-    .rst_ni         ( s_rst_n            ),
-    .test_mode_i    ( test_mode_i        ),
-    .ctrl_slave     ( s_core_dmactrl_bus ),
-    .cl_ctrl_slave  ( s_periph_dma_bus[0]),
-    .fc_ctrl_slave  ( s_periph_dma_bus[1]),
-    .tcdm_master    ( s_dma_xbar_bus     ),
-    .ext_master     ( s_dma_ext_bus      ),
-    .term_event_cl_o( s_dma_cl_event     ),
-    .term_irq_cl_o  ( s_dma_cl_irq       ),
-    .term_event_pe_o( s_dma_fc_event     ),
-    .term_irq_pe_o  ( s_dma_fc_irq       ),
-    .term_event_o   ( s_dma_event        ),
-    .term_irq_o     ( s_dma_irq          ),
-    .busy_o         ( s_dmac_busy        )
+    .NB_CORES         ( NB_CORES           ),
+    .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
+    .AXI_ID_WIDTH     ( AXI_ID_IN_WIDTH    ),
+    .PE_ID_WIDTH      ( NB_CORES + 1       ),
+    .NB_PE_PORTS      ( 2                  ),
+    .DATA_WIDTH       ( DATA_WIDTH         ),
+    .ADDR_WIDTH       ( ADDR_WIDTH         ),
+    .BE_WIDTH         ( BE_WIDTH           ),
+    .NUM_STREAMS      ( 1                  ),
+    .TCDM_SIZE        ( TCDM_SIZE          ),
+    .NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   )
+) dmac_wrap_i (
+    .clk_i          (clk_cluster                     ),
+    .rst_ni         (s_rst_n                         ),
+    .test_mode_i    (test_mode_i                     ),
+    .pe_ctrl_slave  (s_periph_dma_bus[1:0]           ),
+    .ctrl_slave     (s_core_dmactrl_bus              ),
+    .tcdm_master    (s_hci_dma                       ),
+    .ext_master     (s_dma_ext_bus                   ),
+    .term_event_o   (s_dma_event                     ),
+    .term_irq_o     (s_dma_irq                       ),
+    .term_event_pe_o({s_dma_fc_event, s_dma_cl_event}),
+    .term_irq_pe_o  ({s_dma_fc_irq, s_dma_cl_irq}    ),
+    .busy_o         (s_dmac_busy                     )
   );
+
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************
@@ -715,8 +711,6 @@ module pulp_cluster
     .dma_cl_irq_i           ( s_dma_cl_irq                       ),
     .dma_event_i            ( s_dma_event                        ),
     .dma_irq_i              ( s_dma_irq                          ),
-
-    .pf_event_o             ( s_pf_event                         ),
 
     .dma_fc_event_i         ( s_dma_fc_event                     ),
     .dma_fc_irq_i           (                                    ),
@@ -1477,13 +1471,13 @@ module pulp_cluster
     .valid_o ( dma_pe_irq_valid_o )
   );
 
-  edge_propagator_tx ep_pf_evt_i (
-    .clk_i   ( clk_i          ),
-    .rstn_i  ( s_rst_n        ),
-    .valid_i ( s_pf_event     ),
-    .ack_i   ( pf_evt_ack_i   ),
-    .valid_o ( pf_evt_valid_o )
-  );
+//  edge_propagator_tx ep_pf_evt_i (
+//    .clk_i   ( clk_i          ),
+//    .rstn_i  ( s_rst_n        ),
+//    .valid_i ( s_pf_event     ),
+//    .ack_i   ( pf_evt_ack_i   ),
+//    .valid_o ( pf_evt_valid_o )
+//  );
 
   /* centralized gating */
   cluster_clock_gate #(
