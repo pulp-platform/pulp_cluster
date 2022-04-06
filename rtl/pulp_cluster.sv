@@ -660,7 +660,7 @@ module pulp_cluster
     .test_mode_i    (test_mode_i                     ),
     .pe_ctrl_slave  (s_periph_dma_bus[1:0]           ),
     .ctrl_slave     (s_core_dmactrl_bus              ),
-    .tcdm_master    (s_hci_dma                       ),
+    .tcdm_master    (s_dma_xbar_bus                  ),
     .ext_master     (s_dma_ext_bus                   ),
     .term_event_o   (s_dma_event                     ),
     .term_irq_o     (s_dma_irq                       ),
