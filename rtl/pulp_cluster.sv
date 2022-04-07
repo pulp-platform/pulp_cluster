@@ -131,7 +131,8 @@ module pulp_cluster
   parameter WAPUTYPE                = 3,
   parameter APU_NDSFLAGS_CPU        = 15,
   parameter APU_NUSFLAGS_CPU        = 5,
-  parameter BEHAV_MEM                = 1
+  parameter BEHAV_MEM               = 1,
+  parameter DMA_TYPE                = 1
 )
 (
   input logic                                       clk_i,
@@ -640,7 +641,8 @@ module pulp_cluster
   //*********************DMAC WRAP*********************
   //***************************************************
 
-  dmac_wrap #(
+if (DMA_TYPE) begin: gen_idma
+  dmac_wrap_idma #(
     .NB_CORES         ( NB_CORES           ),
     .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
@@ -654,7 +656,7 @@ module pulp_cluster
     .NUM_STREAMS      ( 1                  ),
     .TCDM_SIZE        ( TCDM_SIZE          ),
     .NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   )
-) dmac_wrap_i (
+  ) dmac_wrap_i (
     .clk_i          (clk_cluster                     ),
     .rst_ni         (s_rst_n                         ),
     .test_mode_i    (test_mode_i                     ),
@@ -668,7 +670,41 @@ module pulp_cluster
     .term_irq_pe_o  ({s_dma_fc_irq, s_dma_cl_irq}    ),
     .busy_o         (s_dmac_busy                     )
   );
-
+end else begin : gen_mchan
+  dmac_wrap_mchan #(
+    .NB_CTRLS               ( NB_CORES + 2           ),
+    .NB_CORES               ( NB_CORES               ),
+    .NB_OUTSND_BURSTS       ( NB_OUTSND_BURSTS       ),
+    .TWD_QUEUE_DEPTH        ( TWD_QUEUE_DEPTH        ),
+    .CTRL_TRANS_QUEUE_DEPTH ( CTRL_TRANS_QUEUE_DEPTH ),
+    .MCHAN_BURST_LENGTH     ( MCHAN_BURST_LENGTH     ),
+    .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH         ),
+    .AXI_DATA_WIDTH         ( AXI_DATA_C2S_WIDTH     ),
+    .AXI_ID_WIDTH           ( AXI_ID_IN_WIDTH        ),
+    .AXI_USER_WIDTH         ( AXI_USER_WIDTH         ),
+    .PE_ID_WIDTH            ( NB_CORES + 1           ),
+    .TCDM_ADD_WIDTH         ( TCDM_ADD_WIDTH         ),
+    .DATA_WIDTH             ( DATA_WIDTH             ),
+    .ADDR_WIDTH             ( ADDR_WIDTH             ),
+    .BE_WIDTH               ( BE_WIDTH               )
+  ) dmac_wrap_i (
+    .clk_i          ( clk_cluster        ),
+    .rst_ni         ( s_rst_n            ),
+    .test_mode_i    ( test_mode_i        ),
+    .ctrl_slave     ( s_core_dmactrl_bus ),
+    .cl_ctrl_slave  ( s_periph_dma_bus[0]),
+    .fc_ctrl_slave  ( s_periph_dma_bus[1]),
+    .tcdm_master    ( s_dma_xbar_bus     ),
+    .ext_master     ( s_dma_ext_bus      ),
+    .term_event_cl_o( s_dma_cl_event     ),
+    .term_irq_cl_o  ( s_dma_cl_irq       ),
+    .term_event_pe_o( s_dma_fc_event     ),
+    .term_irq_pe_o  ( s_dma_fc_irq       ),
+    .term_event_o   ( s_dma_event        ),
+    .term_irq_o     ( s_dma_irq          ),
+    .busy_o         ( s_dmac_busy        )
+  );
+end
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************

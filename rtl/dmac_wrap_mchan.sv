@@ -16,7 +16,7 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-module dmac_wrap
+module dmac_wrap_mchan
 #(
   parameter NB_CTRLS               = 2,
   parameter NB_CORES               = 8,
