@@ -488,7 +488,7 @@ module pulp_cluster
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_core_instr_bus(); 
 
@@ -1088,7 +1088,7 @@ module pulp_cluster
     .PRI_CACHE_SIZE       ( 512                 ), //= 512,     // in Byte
     .PRI_CACHE_LINE       ( 1                   ), //= 1,       // in word of [PRI_FETCH_DATA_WIDTH]
 
-    .AXI_ID               ( AXI_ID_OUT_WIDTH    ), //= 6,
+    .AXI_ID               ( AXI_ID_IN_WIDTH     ), //= 6,
     .AXI_ADDR             ( AXI_ADDR_WIDTH      ), //= 32,
     .AXI_USER             ( AXI_USER_WIDTH      ), //= 6,
     .AXI_DATA             ( AXI_DATA_C2S_WIDTH  ), //= 64,
@@ -1181,7 +1181,7 @@ module pulp_cluster
     .NB_WAYS          ( SET_ASSOCIATIVE    ),
     .CACHE_SIZE       ( CACHE_SIZE         ),
     .CACHE_LINE       ( 1                  ),
-    .AXI_ID           ( AXI_ID_OUT_WIDTH   ),
+    .AXI_ID           ( AXI_ID_IN_WIDTH    ),
     .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
     .AXI_USER         ( AXI_USER_WIDTH     ),
     .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
@@ -1279,7 +1279,7 @@ module pulp_cluster
     .USE_REDUCED_TAG       ( USE_REDUCED_TAG   ),
 
     //AXI PARAMETER
-    .AXI_ID                ( AXI_ID_OUT_WIDTH  ),
+    .AXI_ID                ( AXI_ID_IN_WIDTH   ),
     .AXI_USER              ( AXI_USER_WIDTH    ),
     .AXI_DATA              ( AXI_DATA_C2S_WIDTH    ),
     .AXI_ADDR              ( AXI_ADDR_WIDTH    )
