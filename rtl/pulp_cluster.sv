@@ -242,6 +242,9 @@ module pulp_cluster
   localparam bit          FEATURE_STAT    = 1'b0;
 `endif
 
+  // TODO: This is a parameter in HERO,
+  // use as a localparam here?
+  localparam int unsigned NB_EXT2MEM = 2;
 
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
@@ -320,17 +323,17 @@ module pulp_cluster
 
   /* logarithmic and peripheral interconnect interfaces */
   // ext -> log interconnect
-  XBAR_TCDM_BUS s_ext_xbar_bus[NB_DMAS-1:0]();
+  XBAR_TCDM_BUS s_ext_xbar_bus[NB_EXT2MEM-1:0]();
 
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
+  logic [NB_SPERIPHS-1:0][5:0] s_xbar_speriph_atop;
 
   // periph interconnect -> HWPE subsystem
   XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 
   // DMA -> log interconnect
   XBAR_TCDM_BUS s_dma_xbar_bus[NB_DMAS-1:0]();
-  XBAR_TCDM_BUS    s_dma_plugin_xbar_bus[NB_DMAS-1:0]();
 
   // ext -> xbar periphs FIXME
   XBAR_TCDM_BUS s_mperiph_xbar_bus[NB_MPERIPHS-1:0]();
@@ -344,6 +347,7 @@ module pulp_cluster
 
   // cores -> periph interconnect
   XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
+  logic [NB_CORES-1:0][5:0] s_core_periph_bus_atop, s_core_xbar_bus_atop;
 
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
@@ -515,20 +519,98 @@ module pulp_cluster
     .ext_master    ( s_data_master     )
   );
 
-  axi2mem_wrap #(
-    .NB_DMAS        ( NB_DMAS            ),
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
-  ) axi2mem_wrap_i (
-    .clk_i       ( clk_cluster    ),
-    .rst_ni      ( s_rst_n         ),
-    .test_en_i   ( test_mode_i    ),
-    .axi_slave   ( s_ext_tcdm_bus ),
-    .tcdm_master ( s_ext_xbar_bus ),
-    .busy_o      ( s_axi2mem_busy )
+
+  // Adapt axi2mem as in HERO
+
+  logic [NB_EXT2MEM-1:0]     s_ext_xbar_bus_req, s_ext_xbar_bus_gnt,
+                             s_ext_xbar_bus_wen,
+                             s_ext_xbar_bus_rvalid;
+  logic [NB_EXT2MEM-1:0][31:0]  s_ext_xbar_bus_addr,
+                             s_ext_xbar_bus_rdata,
+                             s_ext_xbar_bus_wdata;
+  logic [NB_EXT2MEM-1:0][ 3:0]  s_ext_xbar_bus_be;
+  logic [NB_EXT2MEM-1:0][ 5:0]  s_ext_xbar_bus_atop;
+  // Fall-through register on AW due to protocol violation by upstream (dependency on aw_ready for
+  // w_valid).
+  typedef logic [31:0] addr_t;
+  typedef logic [AXI_DATA_C2S_WIDTH-1:0] data_t;
+  typedef logic [AXI_ID_OUT_WIDTH-1:0] id_oup_t;
+  typedef logic [AXI_DATA_C2S_WIDTH/8-1:0] strb_t;
+  typedef logic [AXI_USER_WIDTH-1:0] user_t;
+  `AXI_TYPEDEF_AW_CHAN_T(aw_chan_t, addr_t, id_oup_t, user_t);
+  `AXI_TYPEDEF_W_CHAN_T (w_chan_t, data_t, strb_t, user_t);
+  `AXI_TYPEDEF_B_CHAN_T (b_chan_t, id_oup_t, user_t);
+  `AXI_TYPEDEF_AR_CHAN_T(ar_chan_t, addr_t, id_oup_t, user_t);
+  `AXI_TYPEDEF_R_CHAN_T (r_chan_t, data_t, id_oup_t, user_t);
+  `AXI_TYPEDEF_REQ_T    (axi_req_t, aw_chan_t, w_chan_t, ar_chan_t);
+  `AXI_TYPEDEF_RESP_T   (axi_resp_t, b_chan_t, r_chan_t);
+  axi_req_t   ext_tcdm_req,   ext_tcdm_req_buf;
+  axi_resp_t  ext_tcdm_resp,  ext_tcdm_resp_buf;
+  `AXI_ASSIGN_TO_REQ(ext_tcdm_req, s_ext_tcdm_bus);
+  `AXI_ASSIGN_FROM_RESP(s_ext_tcdm_bus, ext_tcdm_resp);
+  always_comb begin
+    `AXI_SET_W_STRUCT(ext_tcdm_req_buf.w, ext_tcdm_req.w);
+    ext_tcdm_req_buf.w_valid = ext_tcdm_req.w_valid;
+    ext_tcdm_resp.w_ready = ext_tcdm_resp_buf.w_ready;
+    `AXI_SET_AR_STRUCT(ext_tcdm_req_buf.ar, ext_tcdm_req.ar);
+    ext_tcdm_req_buf.ar_valid = ext_tcdm_req.ar_valid;
+    ext_tcdm_resp.ar_ready = ext_tcdm_resp_buf.ar_ready;
+    `AXI_SET_B_STRUCT(ext_tcdm_resp.b, ext_tcdm_resp_buf.b);
+    ext_tcdm_resp.b_valid = ext_tcdm_resp_buf.b_valid;
+    ext_tcdm_req_buf.b_ready = ext_tcdm_req.b_ready;
+    `AXI_SET_R_STRUCT(ext_tcdm_resp.r, ext_tcdm_resp_buf.r);
+    ext_tcdm_resp.r_valid = ext_tcdm_resp_buf.r_valid;
+    ext_tcdm_req_buf.r_ready = ext_tcdm_req.r_ready;
+  end
+  fall_through_register #(
+    .T  (aw_chan_t)
+  ) i_axi2mem_aw_ft_reg (
+    .clk_i  (clk_cluster),
+    .rst_ni,
+    .clr_i  (1'b0),
+    .testmode_i (1'b0),
+    .valid_i  (ext_tcdm_req.aw_valid),
+    .ready_o  (ext_tcdm_resp.aw_ready),
+    .data_i   (ext_tcdm_req.aw),
+    .valid_o  (ext_tcdm_req_buf.aw_valid),
+    .ready_i  (ext_tcdm_resp_buf.aw_ready),
+    .data_o   (ext_tcdm_req_buf.aw)
   );
+
+  axi2mem #(
+    .axi_req_t  ( axi_req_t           ),
+    .axi_resp_t ( axi_resp_t          ),
+    .AddrWidth  ( 32                  ),
+    .DataWidth  ( AXI_DATA_C2S_WIDTH  ),
+    .IdWidth    ( AXI_ID_OUT_WIDTH    ),
+    .NumBanks   ( NB_EXT2MEM          )
+  ) i_axi2mem (
+    .clk_i        ( clk_cluster           ),
+    .rst_ni       ( rst_ni                ),
+    .busy_o       ( s_axi2mem_busy        ),
+    .axi_req_i    ( ext_tcdm_req_buf      ),
+    .axi_resp_o   ( ext_tcdm_resp_buf     ),
+    .mem_req_o    ( s_ext_xbar_bus_req    ),
+    .mem_gnt_i    ( s_ext_xbar_bus_gnt    ),
+    .mem_addr_o   ( s_ext_xbar_bus_addr   ),
+    .mem_wdata_o  ( s_ext_xbar_bus_wdata  ),
+    .mem_strb_o   ( s_ext_xbar_bus_be     ),
+    .mem_atop_o   ( s_ext_xbar_bus_atop   ),
+    .mem_we_o     ( s_ext_xbar_bus_wen    ),
+    .mem_rvalid_i ( s_ext_xbar_bus_rvalid ),
+    .mem_rdata_i  ( s_ext_xbar_bus_rdata  )
+  );
+
+  for (genvar i = 0; i < NB_EXT2MEM; i++) begin : gen_ext_xbar_bus
+    assign s_ext_xbar_bus[i].req     = s_ext_xbar_bus_req[i];
+    assign s_ext_xbar_bus_gnt[i]     = s_ext_xbar_bus[i].gnt;
+    assign s_ext_xbar_bus[i].add     = s_ext_xbar_bus_addr[i];
+    assign s_ext_xbar_bus[i].wdata   = s_ext_xbar_bus_wdata[i];
+    assign s_ext_xbar_bus[i].be      = s_ext_xbar_bus_be[i];
+    assign s_ext_xbar_bus[i].wen     = ~s_ext_xbar_bus_wen[i]; // active low
+    assign s_ext_xbar_bus_rvalid[i]  = s_ext_xbar_bus[i].r_valid;
+    assign s_ext_xbar_bus_rdata[i]   = s_ext_xbar_bus[i].r_rdata;
+  end
 
   axi2per_wrap #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -591,6 +673,7 @@ module pulp_cluster
     .rst_ni         ( s_rst_n                         ),
     .test_en_i      ( test_mode_i                     ),
     .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
+    .periph_slave_atop_i  ( s_xbar_speriph_atop[SPER_EXT_ID]  ),
     .axi_master     ( s_core_ext_bus                  ),
     .busy_o         ( s_per2axi_busy                  )
   );
@@ -604,6 +687,7 @@ module pulp_cluster
     .NB_CORES           ( NB_CORES           ),
     .NB_HWPE_PORTS      ( NB_HWPE_PORTS      ),
     .NB_DMAS            ( NB_DMAS            ),
+    .NB_EXT             ( NB_EXT2MEM         ),
     .NB_MPERIPHS        ( NB_MPERIPHS        ),
     .NB_TCDM_BANKS      ( NB_TCDM_BANKS      ),
     .NB_SPERIPHS        ( NB_SPERIPHS        ),
@@ -623,17 +707,16 @@ module pulp_cluster
     .rst_ni             ( s_rst_n                             ),
 
     .core_tcdm_slave    ( s_core_xbar_bus                     ),
+    .core_tcdm_slave_atop   ( s_core_xbar_bus_atop            ),
     .core_periph_slave  ( s_core_periph_bus                   ),
-
+    .core_periph_slave_atop ( s_core_periph_bus_atop          ),
     .ext_slave          ( s_ext_xbar_bus                      ),
-
+    .ext_slave_atop     ( s_ext_xbar_bus_atop                 ),
     .dma_slave          ( s_dma_xbar_bus                      ),
     .mperiph_slave      ( s_mperiph_xbar_bus[NB_MPERIPHS-1:0] ),
-
     .tcdm_sram_master   ( tcdm_l1_bus                         ),
-
     .speriph_master     ( s_xbar_speriph_bus                  ),
-
+    .speriph_master_atop    ( s_xbar_speriph_atop             ),
     .TCDM_arb_policy_i  ( s_TCDM_arb_policy                   )
   );
 
@@ -877,11 +960,13 @@ end
         //.debug_core_halt_i   ( dbg_core_halt[i]      ),
         //.debug_core_resume_i ( dbg_core_resume[i]    ),
         .tcdm_data_master    ( s_core_xbar_bus[i]    ),
+        .tcdm_data_master_atop    ( s_core_xbar_bus_atop[i] ),
 
         //tcdm, dma ctrl unit, periph interco interfaces
         .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
         .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
         .periph_data_master  ( s_core_periph_bus[i]  ),
+        .periph_data_master_atop  ( s_core_periph_bus_atop[i] ),
 
         .fregfile_disable_i  (  s_fregfile_disable     ),
 

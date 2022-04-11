@@ -33,6 +33,7 @@ module per2axi_wrap
   input logic	          rst_ni,
   input logic           test_en_i,
   XBAR_PERIPH_BUS.Slave periph_slave,
+  input logic [5:0]     periph_slave_atop_i,
   AXI_BUS.Master        axi_master,
   output logic          busy_o
 );
@@ -53,6 +54,7 @@ module per2axi_wrap
     .per_slave_req_i        ( periph_slave.req                    ),
     .per_slave_add_i        ( periph_slave.add                    ),
     .per_slave_we_i         ( periph_slave.wen                    ),
+    .per_slave_atop_i       ( periph_slave_atop_i                 ),
     .per_slave_wdata_i      ( periph_slave.wdata                  ),
     .per_slave_be_i         ( periph_slave.be                     ),
     .per_slave_id_i         ( periph_slave.id[PER_ID_WIDTH-1:0]   ),
@@ -76,7 +78,7 @@ module per2axi_wrap
     .axi_master_aw_id_o     ( axi_master.aw_id[AXI_ID_WIDTH-1:0]  ),
     .axi_master_aw_user_o   ( axi_master.aw_user                  ),
     .axi_master_aw_ready_i  ( axi_master.aw_ready                 ),
-                                                                  
+
     .axi_master_ar_valid_o  ( axi_master.ar_valid                 ),
     .axi_master_ar_addr_o   ( axi_master.ar_addr                  ),
     .axi_master_ar_prot_o   ( axi_master.ar_prot                  ),

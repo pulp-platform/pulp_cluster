@@ -5,7 +5,7 @@
  *
  * This code is under development and not yet released to the public.
  * Until it is released, the code is under the copyright of ETH Zurich and
- * the University of Bologna, and may contain confidential and/or unpublished 
+ * the University of Bologna, and may contain confidential and/or unpublished
  * work. Any reuse/redistribution is strictly forbidden without written
  * permission from ETH Zurich.
  *
@@ -15,12 +15,12 @@
  * University of Bologna.
  */
 
-/* 
+/*
  This is the xbar_pe_wrap to connect NB_CORES+NB_MPERIPH Slave Ports to
  NB_SPERIPH Master Ports. It is obtained with NB_CORES+NB_MPERIPHS stream_demux.
  Every stream_demux has NB_SPERIPH output, each one going to one of the NB_SPERIPH rr_arb_tree.
  Each rr_arb_tree performes arbitration using an internal round robin counter.
- For each Slave Port, there is a stream_mux to  multiplex the NB_SPERIPH responses. 
+ For each Slave Port, there is a stream_mux to  multiplex the NB_SPERIPH responses.
 */
 `include "pulp_soc_defines.sv"
 
@@ -29,7 +29,7 @@ module xbar_pe_wrap
   #(
   parameter NB_CORES           = 8,
   parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 10,   
+  parameter NB_SPERIPHS        = 10,
   parameter ADDR_WIDTH         = 32,
   parameter DATA_WIDTH         = 32,
   parameter BE_WIDTH           = 0,
@@ -43,7 +43,9 @@ module xbar_pe_wrap
   input logic                          clk_i,
   input logic                          rst_ni,
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
+  input logic [NB_CORES-1:0][5:0]      core_periph_slave_atop,
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
+  output logic [NB_SPERIPHS-1:0][5:0]  speriph_master_atop,
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
   localparam CLUSTER_ALIAS_P = `ifdef CLUSTER_ALIAS 1 `else 0 `endif;
@@ -60,6 +62,7 @@ module xbar_pe_wrap
     pe_id_t               id;
     logic                 we_n; // active low on `XBAR_PERIPH_BUS` and `XBAR_TCDM_BUS`
     logic [BE_WIDTH-1:0]  be;
+    logic          [5:0]  atop;
   } pe_req_t;
   typedef struct packed {
     pe_data_t   data;
@@ -124,7 +127,8 @@ module xbar_pe_wrap
     assign pe_inp_wdata[i].data = core_periph_slave[i].wdata;
     assign pe_inp_wdata[i].id   = 1 << i;
     assign pe_inp_wdata[i].we_n = core_periph_slave[i].wen;
-    assign pe_inp_wdata[i].be   = core_periph_slave[i].be;
+    assign pe_inp_wdata[i].be = core_periph_slave[i].be;
+    assign pe_inp_wdata[i].atop = core_periph_slave_atop[i];
     assign core_periph_slave[i].gnt     = pe_inp_gnt[i];
     assign core_periph_slave[i].r_id    = pe_inp_rdata[i].id;
     assign core_periph_slave[i].r_rdata = pe_inp_rdata[i].data;
@@ -138,7 +142,8 @@ module xbar_pe_wrap
     assign pe_inp_wdata[i+NB_CORES].data  = mperiph_slave[i].wdata;
     assign pe_inp_wdata[i+NB_CORES].id    = 1 << (i + NB_CORES);
     assign pe_inp_wdata[i+NB_CORES].we_n  = mperiph_slave[i].wen;
-    assign pe_inp_wdata[i+NB_CORES].be    = mperiph_slave[i].be;
+    assign pe_inp_wdata[i+NB_CORES].be = mperiph_slave[i].be;
+    assign pe_inp_wdata[i+NB_CORES].atop  = '0;
     assign mperiph_slave[i].gnt     = pe_inp_gnt[i+NB_CORES];
     assign mperiph_slave[i].r_rdata = pe_inp_rdata[i+NB_CORES].data;
     assign mperiph_slave[i].r_opc   = pe_inp_rdata[i+NB_CORES].opc;
@@ -159,6 +164,7 @@ module xbar_pe_wrap
     assign speriph_master[i].id     = pe_oup_wdata[i].id;
     assign speriph_master[i].wen    = pe_oup_wdata[i].we_n;
     assign speriph_master[i].be     = pe_oup_wdata[i].be;
+    assign speriph_master_atop[i]   = pe_oup_wdata[i].atop;
     assign pe_oup_rdata[i].data = speriph_master[i].r_rdata;
     assign pe_oup_rdata[i].id   = speriph_master[i].r_id;
     assign pe_oup_rdata[i].opc  = speriph_master[i].r_opc;

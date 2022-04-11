@@ -31,7 +31,6 @@ pulp_cluster:
     rtl/cluster_event_map.sv,
     rtl/dmac_wrap_mchan.sv,
     rtl/cluster_bus_wrap.sv,
-    rtl/axi2mem_wrap.sv,
     rtl/axi2per_wrap.sv,
     rtl/per2axi_wrap.sv,
     rtl/pulp_cluster.sv,
