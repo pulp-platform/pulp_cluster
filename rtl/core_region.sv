@@ -27,17 +27,12 @@
 //`define DATA_MISS
 //`define DUMP_INSTR_FETCH
 
-`ifndef PULP_FPGA_EMUL
- `ifdef SYNTHESIS
-  `define ASIC_SYNTHESIS
- `endif
-`endif
-
 module core_region
 #(
   // CORE PARAMETERS
   parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
   parameter PULP_XPULP          = 1,
+  parameter N_EXT_PERF_COUNTERS = 1,
   parameter CORE_ID             = 0,
   parameter ADDR_WIDTH          = 32,
   parameter DATA_WIDTH          = 32,
@@ -157,16 +152,6 @@ module core_region
 
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
-   // Number of performance counters. As previously in RI5CY (riscv_cs_registers.sv),
-   // we distinguish between:
-   // (a) ASIC implementation: 1 performance counter active
-   // (b) RTL simulation/FPGA emulation: 16 performance counters active, one for each event
-
-   `ifdef ASIC_SYNTHESIS
-     localparam int unsigned NUM_MHPMCOUNTERS = 1;
-   `else
-     localparam int unsigned NUM_MHPMCOUNTERS = 16;
-   `endif
 
 
    //********************************************************
@@ -186,7 +171,7 @@ module core_region
      .PULP_CLUSTER        ( 1                 ),
      .FPU                 ( FPU               ),
      .PULP_ZFINX          ( ZFINX             ),
-     .NUM_MHPMCOUNTERS    ( NUM_MHPMCOUNTERS  ),
+     .NUM_MHPMCOUNTERS    ( N_EXT_PERF_COUNTERS  ),
      .NUM_INTERRUPTS      ( NUM_INTERRUPTS    ),
      .CLIC                ( 0                 )
    )
