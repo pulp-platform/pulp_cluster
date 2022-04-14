@@ -74,6 +74,7 @@ module pulp_cluster
   parameter ROM_BOOT_ADDR           = 32'h1A000000,
   parameter BOOT_ADDR               = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH       = 128,
+  parameter N_PERF_COUNTERS         = 1,
 
   parameter CLUST_FPU               = 1,
   parameter CLUST_NB_FPU            = 1,
@@ -803,6 +804,7 @@ module pulp_cluster
       core_region #(
         .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
         .PULP_XPULP          ( PULP_XPULP         ),
+        .N_PERF_COUNTERS     ( N_PERF_COUNTERS    ),
         .CORE_ID             ( i                  ),
         .ADDR_WIDTH          ( 32                 ),
         .DATA_WIDTH          ( 32                 ),

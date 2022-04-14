@@ -32,7 +32,7 @@ module core_region
   // CORE PARAMETERS
   parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
   parameter PULP_XPULP          = 1,
-  parameter N_EXT_PERF_COUNTERS = 1,
+  parameter N_PERF_COUNTERS     = 1,
   parameter CORE_ID             = 0,
   parameter ADDR_WIDTH          = 32,
   parameter DATA_WIDTH          = 32,
@@ -171,7 +171,7 @@ module core_region
      .PULP_CLUSTER        ( 1                 ),
      .FPU                 ( FPU               ),
      .PULP_ZFINX          ( ZFINX             ),
-     .NUM_MHPMCOUNTERS    ( N_EXT_PERF_COUNTERS  ),
+     .NUM_MHPMCOUNTERS    ( N_PERF_COUNTERS   ),
      .NUM_INTERRUPTS      ( NUM_INTERRUPTS    ),
      .CLIC                ( 0                 )
    )
