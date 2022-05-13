@@ -221,11 +221,7 @@ module pulp_cluster
   // WRITE RESPONSE CHANNEL
   input logic [LOG_DEPTH:0]                         async_data_master_b_wptr_i,
   input logic [2**LOG_DEPTH-1:0][C2S_B_WIDTH-1:0]   async_data_master_b_data_i,
-  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o,
-
-
-  TCDM_BANK_MEM_BUS.Master                 tcdm_l1_bus[NB_TCDM_BANKS-1:0]
-
+  output logic [LOG_DEPTH:0]                        async_data_master_b_rptr_o
 );
 
   //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
@@ -361,6 +357,7 @@ module pulp_cluster
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
+  TCDM_BANK_MEM_BUS tcdm_l1_bus[NB_TCDM_BANKS-1:0]();
 
   // apu-interconnect
   // handshake signals
@@ -1504,4 +1501,17 @@ module pulp_cluster
     .cluster_clk_o      ( clk_cluster        )
   );
 
+   // external L1
+  tcdm_banks_wrap #(
+    .BANK_SIZE ( TCDM_NUM_ROWS ),
+    .NB_BANKS  ( NB_TCDM_BANKS ),
+    .BEHAV_MEM ( BEHAV_MEM  )
+  ) tcdm_banks_i (
+    .clk_i       ( clk_cluster ),
+    .rst_ni      ( s_rst_n  ),
+    .test_mode_i ( dft_test_mode_i ),
+    .pwdn_i      ( 1'b0            ),
+    .tcdm_slave  ( tcdm_l1_bus   )
+  );
+ 
 endmodule
