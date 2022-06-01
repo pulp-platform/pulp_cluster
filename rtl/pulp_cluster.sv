@@ -139,7 +139,7 @@ module pulp_cluster
   // Redundancy Parameters
   parameter ECC_SRAM                = 1,
   parameter ECC_INTC                = 1,
-  parameter TCLS                    = 1
+  parameter ODRG                    = 0
 )
 (
   input logic                                    clk_i,
@@ -259,10 +259,10 @@ module pulp_cluster
    
     
   logic [NB_CORES-1:0]                fetch_enable_reg_int;
-  logic [NB_CORES-1:0]                fetch_en_int, fetch_en_tcls;
+  logic [NB_CORES-1:0]                fetch_en_int, fetch_en_odrg;
   logic                               s_rst_n;
   logic                               s_init_n;
-  logic [NB_CORES-1:0][31:0]          boot_addr, boot_addr_tcls;
+  logic [NB_CORES-1:0][31:0]          boot_addr, boot_addr_odrg;
   logic [NB_CORES-1:0]                dbg_core_halt;
   logic [NB_CORES-1:0]                dbg_core_resume;
   logic [NB_CORES-1:0]                dbg_core_halted;
@@ -282,7 +282,7 @@ module pulp_cluster
   logic                     s_hwpe_busy;
   hci_package::hci_interconnect_ctrl_t s_hci_ctrl;
 
-  logic [NB_CORES-1:0]               clk_core_en, clk_core_en_tcls;
+  logic [NB_CORES-1:0]               clk_core_en, clk_core_en_odrg;
   logic                              clk_cluster;
 
   // CLK reset, and other control signals
@@ -290,7 +290,7 @@ module pulp_cluster
   logic                              s_cluster_int_busy;
   logic                              s_fregfile_disable;
 
-  logic [NB_CORES-1:0]               core_busy, core_busy_tcls;
+  logic [NB_CORES-1:0]               core_busy, core_busy_odrg;
 
   logic                              s_incoming_req;
   logic                              s_isolate_cluster;
@@ -301,11 +301,11 @@ module pulp_cluster
   logic [EVNT_WIDTH-1:0]             s_events_data;
 
   // Signals Between CORE_ISLAND and INSTRUCTION CACHES
-  logic [NB_CORES-1:0]                        instr_req, instr_req_tcls;
-  logic [NB_CORES-1:0][31:0]                  instr_addr, instr_addr_tcls;
-  logic [NB_CORES-1:0]                        instr_gnt, instr_gnt_tcls;
-  logic [NB_CORES-1:0]                        instr_r_valid, instr_r_valid_tcls;
-  logic [NB_CORES-1:0][INSTR_RDATA_WIDTH-1:0] instr_r_rdata, instr_r_rdata_tcls;
+  logic [NB_CORES-1:0]                        instr_req, instr_req_odrg;
+  logic [NB_CORES-1:0][31:0]                  instr_addr, instr_addr_odrg;
+  logic [NB_CORES-1:0]                        instr_gnt, instr_gnt_odrg;
+  logic [NB_CORES-1:0]                        instr_r_valid, instr_r_valid_odrg;
+  logic [NB_CORES-1:0][INSTR_RDATA_WIDTH-1:0] instr_r_rdata, instr_r_rdata_odrg;
 
   logic [1:0]                                 s_TCDM_arb_policy;
   logic                                       tcdm_sleep;
@@ -314,13 +314,13 @@ module pulp_cluster
   logic               s_dma_pe_irq;
   logic               s_pf_event;
   
-  logic[NB_CORES-1:0][4:0] irq_id, irq_id_tcls;
-  logic[NB_CORES-1:0][4:0] irq_ack_id, irq_ack_id_tcls;
-  logic[NB_CORES-1:0]      irq_req, irq_req_tcls;
-  logic[NB_CORES-1:0]      irq_ack, irq_ack_tcls;
+  logic[NB_CORES-1:0][4:0] irq_id, irq_id_odrg;
+  logic[NB_CORES-1:0][4:0] irq_ack_id, irq_ack_id_odrg;
+  logic[NB_CORES-1:0]      irq_req, irq_req_odrg;
+  logic[NB_CORES-1:0]      irq_ack, irq_ack_odrg;
   
 
-  logic [NB_CORES-1:0]                s_core_dbg_irq, s_core_dbg_irq_tcls;
+  logic [NB_CORES-1:0]                s_core_dbg_irq, s_core_dbg_irq_odrg;
 
   
   logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] s_rw_margin_L1;
@@ -336,11 +336,11 @@ module pulp_cluster
 
   logic                                       s_decompr_done_evt;
 
-  logic [NB_CORES-1:0][N_EXT_PERF_COUNTERS-1:0] perf_counters, perf_counters_tcls;
+  logic [NB_CORES-1:0][N_EXT_PERF_COUNTERS-1:0] perf_counters, perf_counters_odrg;
 
-  logic [NB_CORES-1:0]      core_rst_tcls_n;
-  logic [NB_CORES-1:0][3:0] core_id_tcls;
-  logic [NB_CORES-1:0][5:0] cluster_id_tcls;
+  logic [NB_CORES-1:0]      core_rst_odrg_n;
+  logic [NB_CORES-1:0][3:0] core_id_odrg;
+  logic [NB_CORES-1:0][5:0] cluster_id_odrg;
 
   assign s_dma_fc_irq = s_decompr_done_evt;
 
@@ -468,7 +468,7 @@ module pulp_cluster
     .AW ( ADDR_WIDTH ),
     .OW ( 1          ),
     .UW ( ECC_INTC ? 7 : 0 )
-  ) s_core_bus_tcls [NB_CORES-1:0] (
+  ) s_core_bus_odrg [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
 
@@ -495,10 +495,10 @@ module pulp_cluster
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
-  // TCLS unit
+  // ODRG unit
   XBAR_PERIPH_BUS #(
     .ID_WIDTH(NB_CORES+1)
-  ) s_tcls_bus();
+  ) s_odrg_bus();
 
 
 // `ifdef SHARED_FPU_CLUSTER
@@ -524,7 +524,7 @@ module pulp_cluster
   assign s_apu_master_rdata = '0;
   assign s_apu_master_rflags = '0;
 `else
-  // TODO assert tcls disabled
+  // TODO assert odrg disabled
 `endif
 
    //----------------------------------------------------------------------//
@@ -854,7 +854,7 @@ module pulp_cluster
 
     .NB_L1_CUTS      ( NB_L1_CUTS       ),
     .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  ),
-    .GROUND_UNUSED_PERIPH ( !TCLS )
+    .GROUND_UNUSED_PERIPH ( !ODRG )
   
   ) cluster_peripherals_i (
 
@@ -926,7 +926,7 @@ module pulp_cluster
   `endif
 `endif
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
-  .unused_periph_bus        ( s_tcls_bus                          )
+  .unused_periph_bus        ( s_odrg_bus                          )
 );
 
 
@@ -979,78 +979,78 @@ module pulp_cluster
     );
   end
 
-  if (TCLS) begin : cTCLS_gen
+  if (ODRG) begin : ODRG_gen
     localparam REDUNDANT_CORES = NB_CORES/3;
 
-    // Peripheral communication signals for cTCLS unit
-    import ctcls_manager_reg_pkg::* ;
-    `REG_BUS_TYPEDEF_ALL(tcls, logic[31:0], logic[31:0], logic[3:0])
+    // Peripheral communication signals for ODRG unit
+    import odrg_manager_reg_pkg::* ;
+    `REG_BUS_TYPEDEF_ALL(odrg, logic[31:0], logic[31:0], logic[3:0])
 
-    tcls_req_t [REDUNDANT_CORES-1:0] tcls_request;
-    tcls_rsp_t [REDUNDANT_CORES-1:0] tcls_response;
-    tcls_req_t                       all_tcls_request;
-    tcls_rsp_t                       all_tcls_response;
+    odrg_req_t [REDUNDANT_CORES-1:0] odrg_request;
+    odrg_rsp_t [REDUNDANT_CORES-1:0] odrg_response;
+    odrg_req_t                       all_odrg_request;
+    odrg_rsp_t                       all_odrg_response;
 
     periph_to_reg #(
       .AW   ( 32           ),
       .DW   ( DATA_WIDTH   ),
       .BW   ( 8            ),
       .IW   ( NB_CORES + 1 ),
-      .req_t( tcls_req_t   ),
-      .rsp_t( tcls_rsp_t   )
+      .req_t( odrg_req_t   ),
+      .rsp_t( odrg_rsp_t   )
     ) i_periph_translate (
       .clk_i    ( clk_i              ),
       .rst_ni   ( rst_ni             ),
-      .req_i    ( s_tcls_bus.req     ),
-      .add_i    ( s_tcls_bus.add     ),
-      .wen_i    ( s_tcls_bus.wen     ),
-      .wdata_i  ( s_tcls_bus.wdata   ),
-      .be_i     ( s_tcls_bus.be      ),
-      .id_i     ( s_tcls_bus.id      ),
-      .gnt_o    ( s_tcls_bus.gnt     ),
-      .r_rdata_o( s_tcls_bus.r_rdata ),
-      .r_opc_o  ( s_tcls_bus.r_opc   ),
-      .r_id_o   ( s_tcls_bus.r_id    ),
-      .r_valid_o( s_tcls_bus.r_valid ),
-      .reg_req_o( all_tcls_request   ),
-      .reg_rsp_i( all_tcls_response  )
+      .req_i    ( s_odrg_bus.req     ),
+      .add_i    ( s_odrg_bus.add     ),
+      .wen_i    ( s_odrg_bus.wen     ),
+      .wdata_i  ( s_odrg_bus.wdata   ),
+      .be_i     ( s_odrg_bus.be      ),
+      .id_i     ( s_odrg_bus.id      ),
+      .gnt_o    ( s_odrg_bus.gnt     ),
+      .r_rdata_o( s_odrg_bus.r_rdata ),
+      .r_opc_o  ( s_odrg_bus.r_opc   ),
+      .r_id_o   ( s_odrg_bus.r_id    ),
+      .r_valid_o( s_odrg_bus.r_valid ),
+      .reg_req_o( all_odrg_request   ),
+      .reg_rsp_i( all_odrg_response  )
     );
 
-    localparam TCLS_ADD_DEMUX = $clog2(REDUNDANT_CORES)-1;
+    localparam ODRG_ADD_DEMUX = $clog2(REDUNDANT_CORES)-1;
 
     reg_demux #(
       .NoPorts     ( REDUNDANT_CORES ),
-      .req_t       ( tcls_req_t      ),
-      .rsp_t       ( tcls_rsp_t      )
-    ) i_tcls_reg_demux (
+      .req_t       ( odrg_req_t      ),
+      .rsp_t       ( odrg_rsp_t      )
+    ) i_odrg_reg_demux (
       .clk_i       ( clk_i                              ),
       .rst_ni      ( s_rst_n                            ),
-      .in_select_i ( s_tcls_bus.add[8+TCLS_ADD_DEMUX:8] ),
-      .in_req_i    ( all_tcls_request                   ),
-      .in_rsp_o    ( all_tcls_response                  ),
-      .out_req_o   ( tcls_request                       ),
-      .out_rsp_i   ( tcls_response                      )
+      .in_select_i ( s_odrg_bus.add[8+ODRG_ADD_DEMUX:8] ),
+      .in_req_i    ( all_odrg_request                   ),
+      .in_rsp_o    ( all_odrg_response                  ),
+      .out_req_o   ( odrg_request                       ),
+      .out_rsp_i   ( odrg_response                      )
     );
 
-    for (genvar j = 0; j < REDUNDANT_CORES; j++) begin : cTCLS
+    for (genvar j = 0; j < REDUNDANT_CORES; j++) begin : ODRG
       localparam CORE_A = j;
       localparam CORE_B = j + REDUNDANT_CORES;
       localparam CORE_C = j + 2*REDUNDANT_CORES;
 
-      cTCLS_unit #(
+      ODRG_unit #(
         .InstrRdataWidth  ( INSTR_RDATA_WIDTH   ),
         .NExtPerfCounters ( N_EXT_PERF_COUNTERS ),
         .DataWidth        ( DATA_WIDTH          ),
         .BEWidth          ( BE_WIDTH            ),
         .UserWidth        ( ECC_INTC ? 7 : 0    ),
-        .tcls_req_t       ( tcls_req_t          ),
-        .tcls_rsp_t       ( tcls_rsp_t          )
-      ) core_ctcls_i (
+        .odrg_req_t       ( odrg_req_t          ),
+        .odrg_rsp_t       ( odrg_rsp_t          )
+      ) core_ODRG_i (
         .clk_i                ( clk_cluster      ),
         .rst_ni               ( s_rst_n          ),
 
-        .speriph_request      ( tcls_request[j]  ),
-        .speriph_response     ( tcls_response[j] ),
+        .speriph_request      ( odrg_request[j]  ),
+        .speriph_response     ( odrg_response[j] ),
 
         .intc_core_id_i       ( { CORE_C[3:0], CORE_B[3:0], CORE_A[3:0] } ),
         .intc_cluster_id_i    ( { 3{ cluster_id_i } }                     ),
@@ -1087,73 +1087,73 @@ module pulp_cluster
 
         .intc_perf_counters_i ( {perf_counters     [CORE_C], perf_counters     [CORE_B], perf_counters     [CORE_A]} ),
 
-        .core_rst_no          ( {core_rst_tcls_n        [CORE_C], core_rst_tcls_n        [CORE_B], core_rst_tcls_n        [CORE_A]} ),
-        .core_core_id_o       ( {core_id_tcls           [CORE_C], core_id_tcls           [CORE_B], core_id_tcls           [CORE_A]} ),
-        .core_cluster_id_o    ( {cluster_id_tcls        [CORE_C], cluster_id_tcls        [CORE_B], cluster_id_tcls        [CORE_A]} ),
+        .core_rst_no          ( {core_rst_odrg_n        [CORE_C], core_rst_odrg_n        [CORE_B], core_rst_odrg_n        [CORE_A]} ),
+        .core_core_id_o       ( {core_id_odrg           [CORE_C], core_id_odrg           [CORE_B], core_id_odrg           [CORE_A]} ),
+        .core_cluster_id_o    ( {cluster_id_odrg        [CORE_C], cluster_id_odrg        [CORE_B], cluster_id_odrg        [CORE_A]} ),
 
-        .core_clock_en_o      ( {clk_core_en_tcls       [CORE_C], clk_core_en_tcls       [CORE_B], clk_core_en_tcls       [CORE_A]} ),
-        .core_fetch_en_o      ( {fetch_en_tcls          [CORE_C], fetch_en_tcls          [CORE_B], fetch_en_tcls          [CORE_A]} ),
-        .core_boot_addr_o     ( {boot_addr_tcls         [CORE_C], boot_addr_tcls         [CORE_B], boot_addr_tcls         [CORE_A]} ),
-        .core_core_busy_i     ( {core_busy_tcls         [CORE_C], core_busy_tcls         [CORE_B], core_busy_tcls         [CORE_A]} ),
+        .core_clock_en_o      ( {clk_core_en_odrg       [CORE_C], clk_core_en_odrg       [CORE_B], clk_core_en_odrg       [CORE_A]} ),
+        .core_fetch_en_o      ( {fetch_en_odrg          [CORE_C], fetch_en_odrg          [CORE_B], fetch_en_odrg          [CORE_A]} ),
+        .core_boot_addr_o     ( {boot_addr_odrg         [CORE_C], boot_addr_odrg         [CORE_B], boot_addr_odrg         [CORE_A]} ),
+        .core_core_busy_i     ( {core_busy_odrg         [CORE_C], core_busy_odrg         [CORE_B], core_busy_odrg         [CORE_A]} ),
 
-        .core_irq_req_o       ( {irq_req_tcls           [CORE_C], irq_req_tcls           [CORE_B], irq_req_tcls           [CORE_A]} ),
-        .core_irq_ack_i       ( {irq_ack_tcls           [CORE_C], irq_ack_tcls           [CORE_B], irq_ack_tcls           [CORE_A]} ),
-        .core_irq_id_o        ( {irq_id_tcls            [CORE_C], irq_id_tcls            [CORE_B], irq_id_tcls            [CORE_A]} ),
-        .core_irq_ack_id_i    ( {irq_ack_id_tcls        [CORE_C], irq_ack_id_tcls        [CORE_B], irq_ack_id_tcls        [CORE_A]} ),
+        .core_irq_req_o       ( {irq_req_odrg           [CORE_C], irq_req_odrg           [CORE_B], irq_req_odrg           [CORE_A]} ),
+        .core_irq_ack_i       ( {irq_ack_odrg           [CORE_C], irq_ack_odrg           [CORE_B], irq_ack_odrg           [CORE_A]} ),
+        .core_irq_id_o        ( {irq_id_odrg            [CORE_C], irq_id_odrg            [CORE_B], irq_id_odrg            [CORE_A]} ),
+        .core_irq_ack_id_i    ( {irq_ack_id_odrg        [CORE_C], irq_ack_id_odrg        [CORE_B], irq_ack_id_odrg        [CORE_A]} ),
 
-        .core_instr_req_i     ( {instr_req_tcls         [CORE_C], instr_req_tcls         [CORE_B], instr_req_tcls         [CORE_A]} ),
-        .core_instr_gnt_o     ( {instr_gnt_tcls         [CORE_C], instr_gnt_tcls         [CORE_B], instr_gnt_tcls         [CORE_A]} ),
-        .core_instr_addr_i    ( {instr_addr_tcls        [CORE_C], instr_addr_tcls        [CORE_B], instr_addr_tcls        [CORE_A]} ),
-        .core_instr_r_rdata_o ( {instr_r_rdata_tcls     [CORE_C], instr_r_rdata_tcls     [CORE_B], instr_r_rdata_tcls     [CORE_A]} ),
-        .core_instr_r_valid_o ( {instr_r_valid_tcls     [CORE_C], instr_r_valid_tcls     [CORE_B], instr_r_valid_tcls     [CORE_A]} ),
+        .core_instr_req_i     ( {instr_req_odrg         [CORE_C], instr_req_odrg         [CORE_B], instr_req_odrg         [CORE_A]} ),
+        .core_instr_gnt_o     ( {instr_gnt_odrg         [CORE_C], instr_gnt_odrg         [CORE_B], instr_gnt_odrg         [CORE_A]} ),
+        .core_instr_addr_i    ( {instr_addr_odrg        [CORE_C], instr_addr_odrg        [CORE_B], instr_addr_odrg        [CORE_A]} ),
+        .core_instr_r_rdata_o ( {instr_r_rdata_odrg     [CORE_C], instr_r_rdata_odrg     [CORE_B], instr_r_rdata_odrg     [CORE_A]} ),
+        .core_instr_r_valid_o ( {instr_r_valid_odrg     [CORE_C], instr_r_valid_odrg     [CORE_B], instr_r_valid_odrg     [CORE_A]} ),
 
-        .core_debug_req_o     ( {s_core_dbg_irq_tcls    [CORE_C], s_core_dbg_irq_tcls    [CORE_B], s_core_dbg_irq_tcls    [CORE_A]} ),
+        .core_debug_req_o     ( {s_core_dbg_irq_odrg    [CORE_C], s_core_dbg_irq_odrg    [CORE_B], s_core_dbg_irq_odrg    [CORE_A]} ),
 
-        .core_data_req_i      ( {s_core_bus_tcls[CORE_C].req,     s_core_bus_tcls[CORE_B].req,     s_core_bus_tcls[CORE_A].req    } ),
-        .core_data_add_i      ( {s_core_bus_tcls[CORE_C].add,     s_core_bus_tcls[CORE_B].add,     s_core_bus_tcls[CORE_A].add    } ),
-        .core_data_wen_i      ( {s_core_bus_tcls[CORE_C].wen,     s_core_bus_tcls[CORE_B].wen,     s_core_bus_tcls[CORE_A].wen    } ),
-        .core_data_wdata_i    ( {s_core_bus_tcls[CORE_C].data,    s_core_bus_tcls[CORE_B].data,    s_core_bus_tcls[CORE_A].data   } ),
-        .core_data_user_i     ( {s_core_bus_tcls[CORE_C].user,    s_core_bus_tcls[CORE_B].user,    s_core_bus_tcls[CORE_A].user   } ),
-        .core_data_be_i       ( {s_core_bus_tcls[CORE_C].be,      s_core_bus_tcls[CORE_B].be,      s_core_bus_tcls[CORE_A].be     } ),
-        .core_data_gnt_o      ( {s_core_bus_tcls[CORE_C].gnt,     s_core_bus_tcls[CORE_B].gnt,     s_core_bus_tcls[CORE_A].gnt    } ),
-        .core_data_r_opc_o    ( {s_core_bus_tcls[CORE_C].r_opc,   s_core_bus_tcls[CORE_B].r_opc,   s_core_bus_tcls[CORE_A].r_opc  } ),
-        .core_data_r_rdata_o  ( {s_core_bus_tcls[CORE_C].r_data,  s_core_bus_tcls[CORE_B].r_data,  s_core_bus_tcls[CORE_A].r_data } ),
-        .core_data_r_user_o   ( {s_core_bus_tcls[CORE_C].r_user,  s_core_bus_tcls[CORE_B].r_user,  s_core_bus_tcls[CORE_A].r_user } ),
-        .core_data_r_valid_o  ( {s_core_bus_tcls[CORE_C].r_valid, s_core_bus_tcls[CORE_B].r_valid, s_core_bus_tcls[CORE_A].r_valid} ),
+        .core_data_req_i      ( {s_core_bus_odrg[CORE_C].req,     s_core_bus_odrg[CORE_B].req,     s_core_bus_odrg[CORE_A].req    } ),
+        .core_data_add_i      ( {s_core_bus_odrg[CORE_C].add,     s_core_bus_odrg[CORE_B].add,     s_core_bus_odrg[CORE_A].add    } ),
+        .core_data_wen_i      ( {s_core_bus_odrg[CORE_C].wen,     s_core_bus_odrg[CORE_B].wen,     s_core_bus_odrg[CORE_A].wen    } ),
+        .core_data_wdata_i    ( {s_core_bus_odrg[CORE_C].data,    s_core_bus_odrg[CORE_B].data,    s_core_bus_odrg[CORE_A].data   } ),
+        .core_data_user_i     ( {s_core_bus_odrg[CORE_C].user,    s_core_bus_odrg[CORE_B].user,    s_core_bus_odrg[CORE_A].user   } ),
+        .core_data_be_i       ( {s_core_bus_odrg[CORE_C].be,      s_core_bus_odrg[CORE_B].be,      s_core_bus_odrg[CORE_A].be     } ),
+        .core_data_gnt_o      ( {s_core_bus_odrg[CORE_C].gnt,     s_core_bus_odrg[CORE_B].gnt,     s_core_bus_odrg[CORE_A].gnt    } ),
+        .core_data_r_opc_o    ( {s_core_bus_odrg[CORE_C].r_opc,   s_core_bus_odrg[CORE_B].r_opc,   s_core_bus_odrg[CORE_A].r_opc  } ),
+        .core_data_r_rdata_o  ( {s_core_bus_odrg[CORE_C].r_data,  s_core_bus_odrg[CORE_B].r_data,  s_core_bus_odrg[CORE_A].r_data } ),
+        .core_data_r_user_o   ( {s_core_bus_odrg[CORE_C].r_user,  s_core_bus_odrg[CORE_B].r_user,  s_core_bus_odrg[CORE_A].r_user } ),
+        .core_data_r_valid_o  ( {s_core_bus_odrg[CORE_C].r_valid, s_core_bus_odrg[CORE_B].r_valid, s_core_bus_odrg[CORE_A].r_valid} ),
 
-        .core_perf_counters_o ( {perf_counters_tcls     [CORE_C], perf_counters_tcls     [CORE_B], perf_counters_tcls     [CORE_A]} )
+        .core_perf_counters_o ( {perf_counters_odrg     [CORE_C], perf_counters_odrg     [CORE_B], perf_counters_odrg     [CORE_A]} )
       );
     end
-  end else begin : no_TCLS
-    for (genvar i = 0; i < NB_CORES; i++) begin: tcls_assign
-      assign core_rst_tcls_n    [i] = s_rst_n;
-      assign core_id_tcls       [i] = i[3:0];
-      assign cluster_id_tcls    [i] = cluster_id_i;
+  end else begin : no_ODRG
+    for (genvar i = 0; i < NB_CORES; i++) begin: odrg_assign
+      assign core_rst_odrg_n    [i] = s_rst_n;
+      assign core_id_odrg       [i] = i[3:0];
+      assign cluster_id_odrg    [i] = cluster_id_i;
 
-      assign clk_core_en_tcls   [i] = clk_core_en[i];
-      assign fetch_en_tcls      [i] = fetch_en_int[i];
-      assign boot_addr_tcls     [i] = boot_addr[i];
-      assign core_busy          [i] = core_busy_tcls[i];
+      assign clk_core_en_odrg   [i] = clk_core_en[i];
+      assign fetch_en_odrg      [i] = fetch_en_int[i];
+      assign boot_addr_odrg     [i] = boot_addr[i];
+      assign core_busy          [i] = core_busy_odrg[i];
 
-      assign irq_req_tcls       [i] = irq_req[i];
-      assign irq_ack            [i] = irq_ack_tcls[i];
-      assign irq_id_tcls        [i] = irq_id_tcls[i];
-      assign irq_ack_id         [i] = irq_ack_id_tcls[i];
+      assign irq_req_odrg       [i] = irq_req[i];
+      assign irq_ack            [i] = irq_ack_odrg[i];
+      assign irq_id_odrg        [i] = irq_id_odrg[i];
+      assign irq_ack_id         [i] = irq_ack_id_odrg[i];
 
-      assign instr_req          [i] = instr_req_tcls[i];
-      assign instr_gnt_tcls     [i] = instr_gnt[i];
-      assign instr_addr         [i] = instr_addr_tcls[i];
-      assign instr_r_rdata_tcls [i] = instr_r_rdata[i];
-      assign instr_r_valid_tcls [i] = instr_r_valid[i];
+      assign instr_req          [i] = instr_req_odrg[i];
+      assign instr_gnt_odrg     [i] = instr_gnt[i];
+      assign instr_addr         [i] = instr_addr_odrg[i];
+      assign instr_r_rdata_odrg [i] = instr_r_rdata[i];
+      assign instr_r_valid_odrg [i] = instr_r_valid[i];
 
-      assign s_core_dbg_irq_tcls[i] = s_core_dbg_irq[i];
+      assign s_core_dbg_irq_odrg[i] = s_core_dbg_irq[i];
 
       hci_core_assign core_bus_assign (
-        .tcdm_slave  ( s_core_bus_tcls[i] ),
+        .tcdm_slave  ( s_core_bus_odrg[i] ),
         .tcdm_master ( s_core_bus[i]      )
       );
 
-      assign perf_counters_tcls[i] = perf_counters[i];
+      assign perf_counters_odrg[i] = perf_counters[i];
     end
   end
 
@@ -1175,30 +1175,30 @@ module pulp_cluster
       .ECC_INTC            ( ECC_INTC                )
     ) core_wrap_i (
       .clk_i                 ( clk_cluster              ),
-      .rst_ni                ( core_rst_tcls_n      [i] ),
-      .core_id_i             ( core_id_tcls         [i] ),
-      .cluster_id_i          ( cluster_id_tcls      [i] ),
+      .rst_ni                ( core_rst_odrg_n      [i] ),
+      .core_id_i             ( core_id_odrg         [i] ),
+      .cluster_id_i          ( cluster_id_odrg      [i] ),
 
-      .irq_req_i             ( irq_req_tcls         [i] ),
-      .irq_ack_o             ( irq_ack_tcls         [i] ),
-      .irq_id_i              ( irq_id_tcls          [i] ),
-      .irq_ack_id_o          ( irq_ack_id_tcls      [i] ),
+      .irq_req_i             ( irq_req_odrg         [i] ),
+      .irq_ack_o             ( irq_ack_odrg         [i] ),
+      .irq_id_i              ( irq_id_odrg          [i] ),
+      .irq_ack_id_o          ( irq_ack_id_odrg      [i] ),
 
-      .clock_en_i            ( clk_core_en_tcls     [i] ),
-      .fetch_en_i            ( fetch_en_tcls        [i] ),
+      .clock_en_i            ( clk_core_en_odrg     [i] ),
+      .fetch_en_i            ( fetch_en_odrg        [i] ),
       .fregfile_disable_i    ( s_fregfile_disable       ),
-      .boot_addr_i           ( boot_addr_tcls       [i] ),
+      .boot_addr_i           ( boot_addr_odrg       [i] ),
       .test_mode_i           ( test_mode_i              ),
-      .core_busy_o           ( core_busy_tcls       [i] ),
+      .core_busy_o           ( core_busy_odrg       [i] ),
 
-      .instr_req_o           ( instr_req_tcls       [i] ),
-      .instr_gnt_i           ( instr_gnt_tcls       [i] ),
-      .instr_addr_o          ( instr_addr_tcls      [i] ),
-      .instr_r_rdata_i       ( instr_r_rdata_tcls   [i] ),
-      .instr_r_valid_i       ( instr_r_valid_tcls   [i] ),
+      .instr_req_o           ( instr_req_odrg       [i] ),
+      .instr_gnt_i           ( instr_gnt_odrg       [i] ),
+      .instr_addr_o          ( instr_addr_odrg      [i] ),
+      .instr_r_rdata_i       ( instr_r_rdata_odrg   [i] ),
+      .instr_r_valid_i       ( instr_r_valid_odrg   [i] ),
 
-      .debug_req_i           ( s_core_dbg_irq_tcls  [i] ),
-      .core_bus_master       ( s_core_bus_tcls      [i] ),
+      .debug_req_i           ( s_core_dbg_irq_odrg  [i] ),
+      .core_bus_master       ( s_core_bus_odrg      [i] ),
 
       .apu_master_req_o      ( s_apu_master_req     [i] ),
       .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
@@ -1211,7 +1211,7 @@ module pulp_cluster
       .apu_master_result_i   ( s_apu_master_rdata   [i] ),
       .apu_master_flags_i    ( s_apu_master_rflags  [i] ),
 
-      .perf_counters_i       ( perf_counters_tcls   [i] )
+      .perf_counters_i       ( perf_counters_odrg   [i] )
     );
   end
 

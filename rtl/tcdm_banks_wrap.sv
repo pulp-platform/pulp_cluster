@@ -86,7 +86,9 @@ module tcdm_banks_wrap #(
         .tcdm_wen_i   ( tcdm_slave[i].wen    ),
         .tcdm_be_i    ( tcdm_slave[i].be     ),
         .tcdm_rdata_o ( tcdm_slave[i].r_data ),
-        .tcdm_gnt_o   ( tcdm_slave[i].gnt    )
+        .tcdm_gnt_o   ( tcdm_slave[i].gnt    ),
+        .single_error_o(),
+        .multi_error_o ()
       );
     end else begin
       ecc_sram_wrap #(
@@ -104,7 +106,9 @@ module tcdm_banks_wrap #(
         .tcdm_wen_i   ( tcdm_slave[i].wen                            ),
         .tcdm_be_i    ( tcdm_slave[i].be                             ),
         .tcdm_rdata_o ( {tcdm_slave[i].r_user, tcdm_slave[i].r_data} ),
-        .tcdm_gnt_o   ( tcdm_slave[i].gnt                            )
+        .tcdm_gnt_o   ( tcdm_slave[i].gnt                            ),
+        .single_error_o(),
+        .multi_error_o ()
       );
     end
 
