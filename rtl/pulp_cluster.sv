@@ -31,8 +31,8 @@ import hci_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  parameter NB_CORES                = 8,
+  parameter CORE_TYPE_CL            = 1, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter NB_CORES                = 6,
   parameter NB_HWPE_PORTS           = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
@@ -46,7 +46,7 @@ module pulp_cluster
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter HWPE_PRESENT            = 0,                       // set to 1 if HW Processing Engines are present in the cluster
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
@@ -67,10 +67,10 @@ module pulp_cluster
   parameter BOOT_ADDR               = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH       = 32,
 
-  parameter CLUST_FPU               = 1,
-  parameter CLUST_FP_DIVSQRT        = 1,
-  parameter CLUST_SHARED_FP         = 2,
-  parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter CLUST_FPU               = 0,
+  parameter CLUST_FP_DIVSQRT        = 0,
+  parameter CLUST_SHARED_FP         = 0,
+  parameter CLUST_SHARED_FP_DIVSQRT = 0,
   
   // AXI parameters
   parameter AXI_ADDR_WIDTH          = 32,
@@ -496,7 +496,9 @@ module pulp_cluster
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
   // TCLS unit
-  XBAR_PERIPH_BUS s_tcls_bus();
+  XBAR_PERIPH_BUS #(
+    .ID_WIDTH(NB_CORES+1)
+  ) s_tcls_bus();
 
 
 // `ifdef SHARED_FPU_CLUSTER
@@ -1040,7 +1042,9 @@ module pulp_cluster
         .NExtPerfCounters ( N_EXT_PERF_COUNTERS ),
         .DataWidth        ( DATA_WIDTH          ),
         .BEWidth          ( BE_WIDTH            ),
-        .UserWidth        ( ECC_INTC ? 7 : 0    )
+        .UserWidth        ( ECC_INTC ? 7 : 0    ),
+        .tcls_req_t       ( tcls_req_t          ),
+        .tcls_rsp_t       ( tcls_rsp_t          )
       ) core_ctcls_i (
         .clk_i                ( clk_cluster      ),
         .rst_ni               ( s_rst_n          ),

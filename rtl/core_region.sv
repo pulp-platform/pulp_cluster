@@ -492,6 +492,8 @@ module core_region
   assign tcdm_data_master.boffs = '0;
   assign tcdm_data_master.lrdy  = '1;
 
+  assign periph_demux_bus.id = '0;
+
    periph_demux periph_demux_i (
      .clk               ( clk_int                  ),
      .rst_ni            ( rst_ni                   ),

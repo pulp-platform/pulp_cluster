@@ -83,7 +83,7 @@ module cluster_core_assist #(
     assign periph_data_master.wdata = periph_data;
     assign periph_r_data = periph_data_master.r_rdata;
 
-    assign dma_ctrl_master.wdata = dma_data;
+    assign dma_ctrl_master.data = dma_data;
     assign dma_ctrl_master.user = '0;
     assign dma_r_data = dma_ctrl_master.r_data;
   end
