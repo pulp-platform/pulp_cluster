@@ -642,7 +642,7 @@ module pulp_cluster
   //***************************************************
 
 if (DMA_TYPE) begin: gen_idma
-  dmac_wrap_idma #(
+  dmac_wrap_cl_idma #(
     .NB_CORES         ( NB_CORES           ),
     .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
