@@ -173,7 +173,8 @@ module core_region
      .PULP_ZFINX          ( ZFINX             ),
      .NUM_MHPMCOUNTERS    ( N_PERF_COUNTERS   ),
      .NUM_INTERRUPTS      ( NUM_INTERRUPTS    ),
-     .CLIC                ( 0                 )
+     .CLIC                ( 0                 ),
+     .SHADOW              ( 0                 )
    )
     RISCV_CORE
    (
@@ -204,6 +205,15 @@ module core_region
      .data_rdata_i          ( s_core_bus.r_rdata       ),
      .data_gnt_i            ( s_core_bus.gnt           ),
      .data_rvalid_i         ( s_core_bus.r_valid       ),
+
+     .shadow_req_o          (                          ),
+     .shadow_gnt_i          ( '0                       ),
+     .shadow_rvalid_i       ( '0                       ),
+     .shadow_we_o           (                          ),
+     .shadow_be_o           (                          ),
+     .shadow_addr_o         (                          ),
+     .shadow_wdata_o        (                          ),
+     .shadow_rdata_i        ( '0                       ),
 
      .irq_i                 ( core_irq_x               ), // New interface with 32 physical lines (one-hot)
      .irq_id_o              ( irq_ack_id_o             ), // New interface with 32 lines
