@@ -568,7 +568,7 @@ module pulp_cluster
     .clk_i  (clk_cluster),
     .rst_ni,
     .clr_i  (1'b0),
-    .testmode_i (1'b0),
+    .testmode_i (test_mode_i),
     .valid_i  (ext_tcdm_req.aw_valid),
     .ready_o  (ext_tcdm_resp.aw_ready),
     .data_i   (ext_tcdm_req.aw),
