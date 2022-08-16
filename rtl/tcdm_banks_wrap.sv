@@ -25,7 +25,8 @@ module tcdm_banks_wrap
     parameter int unsigned NB_BANKS  = 1,     // --> OVERRIDE
     parameter int unsigned RM_SIZE   = 1,     // only for SRAM
     parameter int unsigned WM_SIZE   = 1,     // only for SRAM
-    parameter int unsigned BEHAV_MEM  = 1
+    parameter int unsigned BEHAV_MEM = 1,
+    parameter int unsigned FPGA_MEM  = 0
     )
    (
     input  logic               clk_i,
@@ -36,13 +37,14 @@ module tcdm_banks_wrap
     TCDM_BANK_MEM_BUS.Slave    tcdm_slave[NB_BANKS-1:0]
     );
 
-  
+
 
    generate
       for (genvar i=0; i<NB_BANKS; i++) begin : l1_tcdm_banks_gen
-        
+
         tcdm_bank #(
           .BehavMem(BEHAV_MEM),
+          .FPGAMem(FPGA_MEM),
           .NumWords(BANK_SIZE), //1024 words
           .DataWidth(32)
         ) i_l1_tcdm_bank (

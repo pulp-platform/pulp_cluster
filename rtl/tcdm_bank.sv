@@ -11,6 +11,7 @@
 
 module tcdm_bank #(
     parameter int unsigned BehavMem  = 1,
+    parameter int unsigned FPGAMem   = 0,
     parameter int unsigned NumWords  = 0,
     parameter int unsigned DataWidth = 0
 ) (
@@ -24,7 +25,7 @@ module tcdm_bank #(
     output logic [DataWidth-1:0] rdata_o
 );
 
-  if (BehavMem) begin : l1_tcdm_bank_behav
+  if (BehavMem || FPGAMem) begin : l1_tcdm_bank_behav
     tc_sram #(
         .NumWords (NumWords),
         .DataWidth(32),

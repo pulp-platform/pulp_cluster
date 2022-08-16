@@ -132,6 +132,7 @@ module pulp_cluster
   parameter APU_NDSFLAGS_CPU        = 15,
   parameter APU_NUSFLAGS_CPU        = 5,
   parameter BEHAV_MEM               = 1,
+  parameter FPGA_MEM                = 0,
   parameter DMA_TYPE                = 1
 )
 (
@@ -1162,7 +1163,7 @@ end
 
       .USE_REDUCED_TAG      ( USE_REDUCED_TAG     ), //= "TRUE",  // TRUE | FALSE
       .L2_SIZE              ( L2_SIZE             ),  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
-      .BEHAV_MEM            ( BEHAV_MEM            )
+      .BEHAV_MEM            ( BEHAV_MEM           )
    ) icache_top_i (
        .clk                       ( clk_cluster     ),
        .rst_n                     ( s_rst_n         ),
@@ -1620,7 +1621,8 @@ end
   tcdm_banks_wrap #(
     .BANK_SIZE ( TCDM_NUM_ROWS ),
     .NB_BANKS  ( NB_TCDM_BANKS ),
-    .BEHAV_MEM ( BEHAV_MEM  )
+    .BEHAV_MEM ( BEHAV_MEM ),
+    .FPGA_MEM  ( FPGA_MEM  )
   ) tcdm_banks_i (
     .clk_i       ( clk_cluster ),
     .rst_ni      ( s_rst_n  ),
@@ -1628,5 +1630,5 @@ end
     .pwdn_i      ( 1'b0            ),
     .tcdm_slave  ( tcdm_l1_bus   )
   );
- 
+
 endmodule
