@@ -36,8 +36,11 @@ module tcdm_banks_wrap
     TCDM_BANK_MEM_BUS.Slave    tcdm_slave[NB_BANKS-1:0]
     );
 
+  
+
    generate
       for (genvar i=0; i<NB_BANKS; i++) begin : l1_tcdm_banks_gen
+        
         tcdm_bank #(
           .BehavMem(BEHAV_MEM),
           .NumWords(BANK_SIZE), //1024 words
