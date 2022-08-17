@@ -1163,7 +1163,8 @@ end
 
       .USE_REDUCED_TAG      ( USE_REDUCED_TAG     ), //= "TRUE",  // TRUE | FALSE
       .L2_SIZE              ( L2_SIZE             ),  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
-      .BEHAV_MEM            ( BEHAV_MEM           )
+      .BEHAV_MEM            ( BEHAV_MEM           ),
+      .FPGA_MEM             ( FPGA_MEM            )
    ) icache_top_i (
        .clk                       ( clk_cluster     ),
        .rst_n                     ( s_rst_n         ),
