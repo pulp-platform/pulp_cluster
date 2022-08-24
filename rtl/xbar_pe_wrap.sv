@@ -47,10 +47,12 @@ module xbar_pe_wrap
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
 
+   logic                               cluster_alias;
+   
 `ifdef CLUSTER_ALIAS
-   logic                               cluster_alias=1'b1;
+   assign                              cluster_alias=1'b1;
 `else
-   logic                               cluster_alias=1'b0;
+   assign                              cluster_alias=1'b0;
 `endif   
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;
