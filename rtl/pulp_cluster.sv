@@ -1626,10 +1626,10 @@ end
     .FPGA_MEM  ( FPGA_MEM  )
   ) tcdm_banks_i (
     .clk_i       ( clk_cluster ),
-    .rst_ni      ( s_rst_n  ),
-    .test_mode_i ( dft_test_mode_i ),
-    .pwdn_i      ( 1'b0            ),
-    .tcdm_slave  ( tcdm_l1_bus   )
+    .rst_ni      ( s_rst_n     ),
+    .test_mode_i ( test_mode_i ),
+    .pwdn_i      ( 1'b0        ),
+    .tcdm_slave  ( tcdm_l1_bus )
   );
 
 endmodule
