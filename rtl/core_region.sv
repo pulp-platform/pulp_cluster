@@ -211,121 +211,136 @@ module core_region
    //***************** PROCESSOR ****************************
    //********************************************************
 
+  if (INSTR_RDATA_WIDTH == 128) begin
+    instr_width_converter ibex_width_converter (
+      .clk_i            ( clk_i              ),
+      .rst_ni           ( rst_ni             ),
+
+      .cache_req_o      ( instr_req_o        ),
+      .cache_gnt_i      ( instr_gnt_i        ),
+      .cache_addr_o     ( instr_addr_o       ),
+      .cache_r_rdata_i  ( instr_r_rdata_i    ),
+      .cache_r_valid_i  ( instr_r_valid_i    ),
+
+      .core_req_i       ( core_instr_req     ),
+      .core_gnt_o       ( core_instr_gnt     ),
+      .core_addr_i      ( core_instr_addr    ),
+      .core_r_rdata_o   ( core_instr_r_rdata ),
+      .core_r_valid_o   ( core_instr_r_valid )
+    );
+  end else begin
+    obi_pulp_adapter i_obi_pulp_adapter_instr (
+      .clk_i       (clk_i          ),
+      .rst_ni      (rst_ni         ),
+      .core_req_i  (core_instr_req ),
+      .mem_req_o   (instr_req_o    ),
+      .mem_gnt_i   (instr_gnt_i    ),
+      .mem_rvalid_i(instr_r_valid_i)
+    );
+    assign core_instr_gnt     = instr_gnt_i;
+    assign instr_addr_o       = core_instr_addr;
+    assign core_instr_r_rdata = instr_r_rdata_i;
+    assign core_instr_r_valid = instr_r_valid_i;
+  end
+  
+  obi_pulp_adapter i_obi_pulp_adapter_mem (
+    .clk_i       (clk_i             ),
+    .rst_ni      (rst_ni            ),
+    .core_req_i  (core_mem_req      ),
+    .mem_req_o   (s_core_bus.req    ),
+    .mem_gnt_i   (s_core_bus.gnt    ),
+    .mem_rvalid_i(s_core_bus.r_valid)
+  );
+
+  // Cores only support 32 fast interrupts and reads the interrupt lines directly.
+  // Convert ID back to interrupt lines
+  always_comb begin : gen_core_irq_x
+    core_irq_x = '0;
+    if (irq_req_i) begin
+        core_irq_x[irq_id_i] = 1'b1;
+    end
+  end
+  assign core_busy_o = ~core_sleep;
+
   generate
     if ( CORE_TYPE_CL == 0 ) begin: CL_CORE
       assign boot_addr = boot_addr_i;
-      riscv_core #(
-        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
-        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL ),
-        .PULP_SECURE         ( 0                 ),
-        .FPU                 ( FPU               ),
-        .FP_DIVSQRT          ( FP_DIVSQRT        ),
-        .SHARED_FP           ( SHARED_FP         ),
-        .SHARED_DSP_MULT     ( 0                 ),
-        .SHARED_INT_DIV      ( 0                 ),
-        .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
-        .WAPUTYPE            ( WAPUTYPE          ),
-        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-
+`ifdef PULP_FPGA_EMUL
+      cv32e40p_core #(
+`elsif SYNTHESIS
+      cv32e40p_core #(
+`elsif VERILATOR
+      cv32e40p_core #(
+`else
+      cv32e40p_wrapper #(
+`endif
+        .PULP_XPULP       (1),
+        .PULP_CLUSTER     (1),
+        .FPU              (FPU),
+        .PULP_ZFINX       (1),
+        .NUM_MHPMCOUNTERS (N_EXT_PERF_COUNTERS)
       ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
         .rst_ni                ( rst_ni            ),
 
-        .clock_en_i            ( clock_en_i        ),
-        .test_en_i             ( test_mode_i       ),
-
+        .pulp_clock_en_i       ( clock_en_i        ),
+        .scan_cg_en_i          ( test_mode_i       ),
         .boot_addr_i           ( boot_addr         ),
-        .core_id_i             ( CORE_ID[3:0]      ),
-        .cluster_id_i          ( cluster_id_i      ),
+        .mtvec_addr_i          ( boot_addr & 32'hFFFFFF00 ),
+        .dm_halt_addr_i        ( DEBUG_START_ADDR + dm::HaltAddress[31:0] ),
+        .hart_id_i             ( hart_id           ),
+        .dm_exception_addr_i   ( DEBUG_START_ADDR + dm::ExceptionAddress[31:0] ),
 
-        .instr_addr_o          ( instr_addr_o             ),
-        .instr_req_o           ( instr_req_o              ),
-        .instr_rdata_i         ( instr_r_rdata_i          ),
-        .instr_gnt_i           ( instr_gnt_i              ),
-        .instr_rvalid_i        ( instr_r_valid_i          ),
+        .instr_req_o           ( core_instr_req     ),
+        .instr_gnt_i           ( core_instr_gnt     ),
+        .instr_rvalid_i        ( core_instr_r_valid ),
+        .instr_addr_o          ( core_instr_addr    ),
+        .instr_rdata_i         ( core_instr_r_rdata ),
 
-        .data_addr_o           ( s_core_bus.add           ),
-        .data_wdata_o          ( s_core_bus.wdata         ),
-        .data_we_o             ( s_core_bus.we            ),
-        .data_req_o            ( s_core_bus.req           ),
-        .data_be_o             ( s_core_bus.be            ),
-        .data_rdata_i          ( s_core_bus.r_rdata       ),
-        .data_gnt_i            ( s_core_bus.gnt           ),
-        .data_rvalid_i         ( s_core_bus.r_valid       ),
+        .data_req_o            ( core_mem_req       ),
+        .data_gnt_i            ( s_core_bus.gnt     ),
+        .data_rvalid_i         ( s_core_bus.r_valid ),
+        .data_we_o             ( s_core_bus.we      ),
+        .data_be_o             ( s_core_bus.be      ),
+        .data_addr_o           ( s_core_bus.add     ),
+        .data_wdata_o          ( s_core_bus.wdata   ),
+        .data_rdata_i          ( s_core_bus.r_rdata ),
 
-        .irq_i                 ( irq_req_i                ),
-        .irq_id_i              ( irq_id_i                 ),
-        .irq_id_o              ( irq_ack_id_o             ),
-        .irq_ack_o             ( irq_ack_o                ),
+        .irq_i                 ( core_irq_x         ),
+        // .irq_id_i              ( irq_id_i           ),
+        .irq_id_o              ( irq_ack_id_o       ),
+        .irq_ack_o             ( irq_ack_o          ),
 
-        .sec_lvl_o             (                          ),
-        .irq_sec_i             (      1'b0                ),
+        // .sec_lvl_o             (                    ),
+        // .irq_sec_i             (      1'b0          ),
 
-        .debug_req_i           ( debug_req_i              ),
+        .debug_req_i           ( debug_req_i        ),
+        .debug_havereset_o     (),
+        .debug_running_o       (),
+        .debug_halted_o        (),
 
-        .fetch_enable_i        ( fetch_en_i               ),
-        .core_busy_o           ( core_busy_o              ),
+        .fetch_enable_i        ( fetch_en_i         ),
+        .core_sleep_o          ( core_sleep         ),
 
 
          // apu-interconnect
-        .apu_master_req_o      ( apu_master_req_o      ),
-        .apu_master_gnt_i      ( apu_master_gnt_i      ),
-        .apu_master_type_o     ( apu_master_type_o     ),
-        .apu_master_operands_o ( apu_master_operands_o ),
-        .apu_master_op_o       ( apu_master_op_o       ),
-        .apu_master_flags_o    ( apu_master_flags_o    ),
+        .apu_req_o             ( apu_master_req_o      ),
+        .apu_gnt_i             ( apu_master_gnt_i      ),
+        .apu_operands_o        ( apu_master_operands_o ),
+        .apu_op_o              ( apu_master_op_o       ),
+        .apu_flags_o           ( apu_master_flags_o    ),
+        // .apu_type_o            ( apu_master_type_o     ),
 
-        .apu_master_valid_i    ( apu_master_valid_i    ),
-        .apu_master_ready_o    ( apu_master_ready_o    ),
-        .apu_master_result_i   ( apu_master_result_i   ),
-        .apu_master_flags_i    ( apu_master_flags_i    ),
+        .apu_rvalid_i          ( apu_master_valid_i    ),
+        // .apu_ready_o           ( apu_master_ready_o    ),
+        .apu_result_i          ( apu_master_result_i   ),
+        .apu_flags_i           ( apu_master_flags_i    )
 
-        .ext_perf_counters_i   ( perf_counters         ),
-        .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
+        // .ext_perf_counters_i   ( perf_counters         ),
+        // .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
     end else begin: CL_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
-      
-      if (INSTR_RDATA_WIDTH == 128) begin
-        instr_width_converter ibex_width_converter (
-          .clk_i            ( clk_i              ),
-          .rst_ni           ( rst_ni             ),
-
-          .cache_req_o      ( instr_req_o        ),
-          .cache_gnt_i      ( instr_gnt_i        ),
-          .cache_addr_o     ( instr_addr_o       ),
-          .cache_r_rdata_i  ( instr_r_rdata_i    ),
-          .cache_r_valid_i  ( instr_r_valid_i    ),
-
-          .core_req_i       ( core_instr_req     ),
-          .core_gnt_o       ( core_instr_gnt     ),
-          .core_addr_i      ( core_instr_addr    ),
-          .core_r_rdata_o   ( core_instr_r_rdata ),
-          .core_r_valid_o   ( core_instr_r_valid )
-        );
-      end else begin
-        obi_pulp_adapter i_obi_pulp_adapter_instr (
-          .clk_i       (clk_i          ),
-          .rst_ni      (rst_ni         ),
-          .core_req_i  (core_instr_req ),
-          .mem_req_o   (instr_req_o    ),
-          .mem_gnt_i   (instr_gnt_i    ),
-          .mem_rvalid_i(instr_r_valid_i)
-        );
-        assign core_instr_gnt     = instr_gnt_i;
-        assign instr_addr_o       = core_instr_addr;
-        assign core_instr_r_rdata = instr_r_rdata_i;
-        assign core_instr_r_valid = instr_r_valid_i;
-      end
-      
-      obi_pulp_adapter i_obi_pulp_adapter_mem (
-        .clk_i       (clk_i             ),
-        .rst_ni      (rst_ni            ),
-        .core_req_i  (core_mem_req      ),
-        .mem_req_o   (s_core_bus.req    ),
-        .mem_gnt_i   (s_core_bus.gnt    ),
-        .mem_rvalid_i(s_core_bus.r_valid)
-      );
 
 `ifdef VERILATOR
       ibex_core #(
@@ -400,16 +415,6 @@ module core_region
         .alert_major_o         (),
         .core_sleep_o          ( core_sleep         )
       );
-      assign core_busy_o = ~core_sleep;
-
-      // Ibex supports 32 additional fast interrupts and reads the interrupt lines directly.
-      // Convert ID back to interrupt lines
-      always_comb begin : gen_core_irq_x
-        core_irq_x = '0;
-        if (irq_req_i) begin
-            core_irq_x[irq_id_i] = 1'b1;
-        end
-      end
     end
   endgenerate
 
