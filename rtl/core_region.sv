@@ -89,7 +89,18 @@ module core_region
   input logic                            instr_r_valid_i,
 
   input logic                            debug_req_i,
-              
+
+  // Recovery Ports for RF
+  input logic                            recover_i        ,
+  // Write Port A
+  input logic [5:0]                      regfile_waddr_a_i,
+  input logic [31:0]                     regfile_wdata_a_i,
+  input logic                            regfile_we_a_i   ,
+  // Write Port B                        
+  input logic [5:0]                      regfile_waddr_b_i,
+  input logic [31:0]                     regfile_wdata_b_i,
+  input logic                            regfile_we_b_i   ,
+            
   //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
   //input logic             debug_core_halt_i,
@@ -334,8 +345,20 @@ module core_region
         .apu_rvalid_i          ( apu_master_valid_i    ),
         // .apu_ready_o           ( apu_master_ready_o    ),
         .apu_result_i          ( apu_master_result_i   ),
-        .apu_flags_i           ( apu_master_flags_i    )
-
+        .apu_flags_i           ( apu_master_flags_i    ),
+        
+        // Recovery Ports for RF
+        .recover_i         ( recover_i         ),
+        // Write Port A
+        .regfile_waddr_a_i ( regfile_waddr_a_i ),
+        .regfile_wdata_a_i ( regfile_wdata_a_i ),
+        .regfile_we_a_i    ( regfile_we_a_i    ),
+     
+        // Write Port B
+        .regfile_waddr_b_i ( regfile_waddr_b_i ),
+        .regfile_wdata_b_i ( regfile_wdata_b_i ),
+        .regfile_we_b_i    ( regfile_we_b_i    )
+      
         // .ext_perf_counters_i   ( perf_counters         ),
         // .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
