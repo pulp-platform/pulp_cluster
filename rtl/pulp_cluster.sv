@@ -819,7 +819,24 @@ module pulp_cluster
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
 );
 
+  // Recovery Ports for RF
+  // Write Port A
+  logic [5:0]  regfile_waddr_a;
+  logic [31:0] regfile_wdata_a;
+  logic        regfile_we_a   ;
+  // Write Port B        
+  logic [5:0]  regfile_waddr_b;
+  logic [31:0] regfile_wdata_b;
+  logic        regfile_we_b   ;
+  logic        recover        ;
 
+  assign regfile_waddr_a = '0;
+  assign regfile_wdata_a = '0;
+  assign regfile_we_a    = '0;
+  assign regfile_waddr_b = '0;
+  assign regfile_wdata_b = '0;
+  assign regfile_we_b    = '0;
+  assign recover         = '0;
 
   //********************************************************
   //***************** CORE ISLANDS *************************
@@ -1147,6 +1164,18 @@ module pulp_cluster
 
       //debug unit bind
       .debug_req_i         ( hmr_debug_req[i]     ),
+
+      // Recovery Ports for RF
+      .recover_i           ( recover         ),
+      // Write Port A
+      .regfile_waddr_a_i   ( regfile_waddr_a ),
+      .regfile_wdata_a_i   ( regfile_wdata_a ),
+      .regfile_we_a_i      ( regfile_we_a    ),
+   
+      // Write Port B
+      .regfile_waddr_b_i   ( regfile_waddr_b ),
+      .regfile_wdata_b_i   ( regfile_wdata_b ),
+      .regfile_we_b_i      ( regfile_we_b    ),
 
       //tcdm, dma ctrl unit, periph interco interfaces
       .core_data_bus        ( hmr_data_intf[i] ),
