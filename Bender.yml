@@ -30,7 +30,7 @@ dependencies:
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1                                  }
   hci:                    { git: "https://github.com/pulp-platform/hci.git"                   , version: 1.0.8                                  }
   idma:                   { git: "https://github.com/pulp-platform/idma.git"                  , version: 0.3.1                                  }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git"      , rev: master                                     }
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git"      , rev: yvantor/hmr                                }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
