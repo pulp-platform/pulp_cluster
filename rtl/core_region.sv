@@ -34,7 +34,7 @@ module core_region
   // parameter USE_FPU             = 1,
   // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
-  parameter CORE_ID             = 0,
+  // parameter CORE_ID             = 0,
   parameter ADDR_WIDTH          = 32,
   parameter DATA_WIDTH          = 32,
   parameter INSTR_RDATA_WIDTH   = 32,
@@ -65,6 +65,7 @@ module core_region
   input logic [3:0]                      base_addr_i, // FOR CLUSTER VIRTUALIZATION
 
   input logic [5:0]                      cluster_id_i,
+  input logic [3:0]                      core_id_i,
   
   input logic                            irq_req_i,
   output logic                           irq_ack_o,
@@ -173,7 +174,7 @@ module core_region
   logic            core_mem_req;
 
 
-  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
+  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, core_id_i[3:0]};
 
 `ifndef APU_CLUSTER
  `ifndef SHARED_FPU_CLUSTER
@@ -449,7 +450,7 @@ module core_region
 
   initial
   begin
-    FILE_ID.itoa(CORE_ID);
+    FILE_ID.itoa(core_id_i);
     FILENAME = {"FETCH_CORE_", FILE_ID, ".log" };
     FILE=$fopen(FILENAME,"w");
   end

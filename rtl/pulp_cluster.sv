@@ -876,7 +876,7 @@ module pulp_cluster
     core_region #(
       .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
       .N_EXT_PERF_COUNTERS( 5 ),
-      .CORE_ID             ( i                  ),
+      // .CORE_ID             ( i                  ),
       .ADDR_WIDTH          ( 32                 ),
       .DATA_WIDTH          ( 32                 ),
       .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
@@ -899,6 +899,7 @@ module pulp_cluster
 
       .init_ni             ( s_init_n              ),
       .cluster_id_i        ( cluster_id_i          ),
+      .core_id_i           ( i[3:0]                ),
       .clock_en_i          ( clk_core_en[i]        ),
       .fetch_en_i          ( fetch_en_int[i]       ),
      
