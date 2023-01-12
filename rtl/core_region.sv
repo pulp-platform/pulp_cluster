@@ -272,7 +272,8 @@ module core_region
         .PULP_CLUSTER     (1),
         .FPU              (FPU),
         .PULP_ZFINX       (1),
-        .NUM_MHPMCOUNTERS (N_EXT_PERF_COUNTERS)
+        .NUM_EXTERNAL_PERF(N_EXT_PERF_COUNTERS),
+        .NUM_MHPMCOUNTERS (1)
       ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
         .rst_ni                ( rst_ni            ),
@@ -328,7 +329,9 @@ module core_region
         .apu_rvalid_i          ( apu_master_valid_i    ),
         // .apu_ready_o           ( apu_master_ready_o    ),
         .apu_result_i          ( apu_master_result_i   ),
-        .apu_flags_i           ( apu_master_flags_i    )
+        .apu_flags_i           ( apu_master_flags_i    ),
+
+        .external_perf_i ( perf_counters_i )
 
         // .ext_perf_counters_i   ( perf_counters         ),
         // .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
@@ -400,7 +403,7 @@ module core_region
         .irq_x_ack_o           ( irq_ack_o          ),
         .irq_x_ack_id_o        ( irq_ack_id_o       ),
 
-        .external_perf_i       ( {{{16- N_EXT_PERF_COUNTERS_ACTUAL}{'0}}, perf_counters} ),
+        .external_perf_i       ( {{{16- N_EXT_PERF_COUNTERS}{'0}}, perf_counters_i} ),
 
         .debug_req_i           ( debug_req_i        ),
 
