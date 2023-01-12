@@ -63,6 +63,7 @@ sources:
   - rtl/cluster_peripherals.sv
   - rtl/core_demux.sv
     # Level 2
+  - rtl/core_assist_region.sv
   - target: rtl
     defines:
       TRACE_EXECUTION: ~

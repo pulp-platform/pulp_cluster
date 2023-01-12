@@ -96,10 +96,13 @@ module core_region
   //input logic             debug_core_resume_i,
               
   // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-  hci_core_intf.master tcdm_data_master,
-  XBAR_TCDM_BUS.Master dma_ctrl_master,
-  XBAR_PERIPH_BUS.Master eu_ctrl_master,
-  XBAR_PERIPH_BUS.Master periph_data_master
+  // hci_core_intf.master tcdm_data_master,
+  // hci_core_intf.master dma_ctrl_master,
+  // XBAR_PERIPH_BUS.Master eu_ctrl_master,
+  // XBAR_PERIPH_BUS.Master periph_data_master
+  hci_core_intf.master core_data_bus,
+
+  input logic [N_EXT_PERF_COUNTERS-1:0] perf_counters_i
 
  // new interface signals
  `ifdef SHARED_FPU_CLUSTER
@@ -139,7 +142,7 @@ module core_region
 
 );
 
-  localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
+  // localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
   localparam USE_IBEX   = CORE_TYPE_CL == 1 || CORE_TYPE_CL == 2;
   localparam IBEX_RV32M = CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
   localparam IBEX_RV32E = CORE_TYPE_CL == 2;
@@ -156,11 +159,6 @@ module core_region
   //***************** SIGNALS DECLARATION ******************
   //********************************************************
 
-  XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
-  XBAR_PERIPH_BUS   periph_demux_bus();   // Internal interface between CORE_DEMUX <--> PERIPHERAL DEMUX
-
-  logic [N_EXT_PERF_COUNTERS_ACTUAL-1:0]      perf_counters;
-  logic            clk_int;
   logic [31:0]     hart_id;
   logic            core_sleep;
   logic [31:0]     boot_addr;
@@ -174,13 +172,6 @@ module core_region
 
   logic            core_mem_req;
 
-  // clock gate of the core_region less the core itself
-  cluster_clock_gating clock_gate_i (
-    .clk_i     ( clk_i       ),
-    .en_i      ( clock_en_i  ),
-    .test_en_i ( test_mode_i ),
-    .clk_o     ( clk_int     )
-  );
 
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
@@ -247,10 +238,13 @@ module core_region
     .clk_i       (clk_i             ),
     .rst_ni      (rst_ni            ),
     .core_req_i  (core_mem_req      ),
-    .mem_req_o   (s_core_bus.req    ),
-    .mem_gnt_i   (s_core_bus.gnt    ),
-    .mem_rvalid_i(s_core_bus.r_valid)
+    .mem_req_o   (core_data_bus.req    ),
+    .mem_gnt_i   (core_data_bus.gnt    ),
+    .mem_rvalid_i(core_data_bus.r_valid)
   );
+
+  logic core_data_bus_we;
+  assign core_data_bus.wen = ~core_data_bus_we;
 
   // Cores only support 32 fast interrupts and reads the interrupt lines directly.
   // Convert ID back to interrupt lines
@@ -298,13 +292,13 @@ module core_region
         .instr_rdata_i         ( core_instr_r_rdata ),
 
         .data_req_o            ( core_mem_req       ),
-        .data_gnt_i            ( s_core_bus.gnt     ),
-        .data_rvalid_i         ( s_core_bus.r_valid ),
-        .data_we_o             ( s_core_bus.we      ),
-        .data_be_o             ( s_core_bus.be      ),
-        .data_addr_o           ( s_core_bus.add     ),
-        .data_wdata_o          ( s_core_bus.wdata   ),
-        .data_rdata_i          ( s_core_bus.r_rdata ),
+        .data_gnt_i            ( core_data_bus.gnt     ),
+        .data_rvalid_i         ( core_data_bus.r_valid ),
+        .data_we_o             ( core_data_bus_we      ),
+        .data_be_o             ( core_data_bus.be      ),
+        .data_addr_o           ( core_data_bus.add     ),
+        .data_wdata_o          ( core_data_bus.data   ),
+        .data_rdata_i          ( core_data_bus.r_data ),
 
         .irq_i                 ( core_irq_x         ),
         // .irq_id_i              ( irq_id_i           ),
@@ -387,13 +381,13 @@ module core_region
 
         // Data memory interface:
         .data_req_o            ( core_mem_req       ),
-        .data_gnt_i            ( s_core_bus.gnt     ),
-        .data_rvalid_i         ( s_core_bus.r_valid ),
-        .data_we_o             ( s_core_bus.we      ),
-        .data_be_o             ( s_core_bus.be      ),
-        .data_addr_o           ( s_core_bus.add     ),
-        .data_wdata_o          ( s_core_bus.wdata   ),
-        .data_rdata_i          ( s_core_bus.r_rdata ),
+        .data_gnt_i            ( core_data_bus.gnt     ),
+        .data_rvalid_i         ( core_data_bus.r_valid ),
+        .data_we_o             ( core_data_bus_we      ),
+        .data_be_o             ( core_data_bus.be      ),
+        .data_addr_o           ( core_data_bus.add     ),
+        .data_wdata_o          ( core_data_bus.data   ),
+        .data_rdata_i          ( core_data_bus.r_data ),
         .data_err_i            ( 1'b0               ),
 
         .irq_software_i        ( 1'b0               ),
@@ -417,125 +411,6 @@ module core_region
       );
     end
   endgenerate
-
-  //assign debug_bus.r_opc = 1'b0;
-
-  // Bind to 0 Unused Signals in CORE interface
-  assign s_core_bus.r_gnt       = 1'b0;
-  assign s_core_bus.barrier     = 1'b0;
-  assign s_core_bus.exec_cancel = 1'b0;
-  assign s_core_bus.exec_stall  = 1'b0;
-
-  // Performance Counters
-  assign perf_counters[4] = tcdm_data_master.req & (~tcdm_data_master.gnt);  // Cycles lost due to contention
-
-
-  //********************************************************
-  //****** DEMUX TO TCDM AND PERIPHERAL INTERCONNECT *******
-  //********************************************************
-   
-  // demuxes to TCDM & memory hierarchy
-  core_demux #(
-    .ADDR_WIDTH         ( 32                 ),
-    .DATA_WIDTH         ( 32                 ),
-    .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
-  ) core_demux_i (
-    .clk                (  clk_int                    ),
-    .rst_ni             (  rst_ni                     ),
-    .test_en_i          (  test_mode_i                ),
-  `ifdef REMAP_ADDRESS
-    .base_addr_i        (  base_addr_i                ),
-`endif
-    .data_req_i         (  s_core_bus.req             ),
-    .data_add_i         (  s_core_bus.add             ),
-    .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N
-    .data_wdata_i       (  s_core_bus.wdata           ),
-    .data_be_i          (  s_core_bus.be              ),
-    .data_gnt_o         (  s_core_bus.gnt             ),
-    .data_r_gnt_i       (  s_core_bus.r_gnt           ),
-    .data_r_valid_o     (  s_core_bus.r_valid         ),
-    .data_r_opc_o       (                             ),
-    .data_r_rdata_o     (  s_core_bus.r_rdata         ),
-
-    .data_req_o_SH      (  tcdm_data_master.req       ),
-    .data_add_o_SH      (  tcdm_data_master.add       ),
-    .data_wen_o_SH      (  tcdm_data_master.wen       ),
-    .data_wdata_o_SH    (  tcdm_data_master.data      ),
-    .data_be_o_SH       (  tcdm_data_master.be        ),
-    .data_gnt_i_SH      (  tcdm_data_master.gnt       ),
-    .data_r_valid_i_SH  (  tcdm_data_master.r_valid   ),
-    .data_r_rdata_i_SH  (  tcdm_data_master.r_data    ),
-
-    .data_req_o_EXT     (  periph_demux_bus.req         ),
-    .data_add_o_EXT     (  periph_demux_bus.add         ),
-    .data_wen_o_EXT     (  periph_demux_bus.wen         ),
-    .data_wdata_o_EXT   (  periph_demux_bus.wdata       ),
-    .data_be_o_EXT      (  periph_demux_bus.be          ),
-    .data_gnt_i_EXT     (  periph_demux_bus.gnt         ),
-    .data_r_valid_i_EXT (  periph_demux_bus.r_valid     ),
-    .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata     ),
-    .data_r_opc_i_EXT   (  periph_demux_bus.r_opc       ),
-
-    .data_req_o_PE      (  periph_data_master.req     ),
-    .data_add_o_PE      (  periph_data_master.add     ),
-    .data_wen_o_PE      (  periph_data_master.wen     ),
-    .data_wdata_o_PE    (  periph_data_master.wdata   ),
-    .data_be_o_PE       (  periph_data_master.be      ),
-    .data_gnt_i_PE      (  periph_data_master.gnt     ),
-    .data_r_valid_i_PE  (  periph_data_master.r_valid ),
-    .data_r_rdata_i_PE  (  periph_data_master.r_rdata ),
-    .data_r_opc_i_PE    (  periph_data_master.r_opc   ),
-
-    .perf_l2_ld_o       (  perf_counters[0]           ),
-    .perf_l2_st_o       (  perf_counters[1]           ),
-    .perf_l2_ld_cyc_o   (  perf_counters[2]           ),
-    .perf_l2_st_cyc_o   (  perf_counters[3]           ),
-    .CLUSTER_ID         (  cluster_id_i               )
-  );
-
-  assign tcdm_data_master.boffs = '0;
-  assign tcdm_data_master.lrdy  = '1;
-
-  assign periph_demux_bus.id = '0;
-
-   periph_demux periph_demux_i (
-     .clk               ( clk_int                  ),
-     .rst_ni            ( rst_ni                   ),
-
-     .data_req_i        ( periph_demux_bus.req     ),
-     .data_add_i        ( periph_demux_bus.add     ),
-     .data_wen_i        ( periph_demux_bus.wen     ),
-     .data_wdata_i      ( periph_demux_bus.wdata   ),
-     .data_be_i         ( periph_demux_bus.be      ),
-     .data_gnt_o        ( periph_demux_bus.gnt     ),
-
-     .data_r_valid_o    ( periph_demux_bus.r_valid ),
-     .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-     .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
-
-     .data_req_o_MH     ( dma_ctrl_master.req      ),
-     .data_add_o_MH     ( dma_ctrl_master.add      ),
-     .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-     .data_wdata_o_MH   ( dma_ctrl_master.wdata    ),
-     .data_be_o_MH      ( dma_ctrl_master.be       ),
-     .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
-
-     .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-     .data_r_rdata_i_MH ( dma_ctrl_master.r_rdata  ),
-     .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
-
-     .data_req_o_EU     ( eu_ctrl_master.req       ),
-     .data_add_o_EU     ( eu_ctrl_master.add       ),
-     .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-     .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-     .data_be_o_EU      ( eu_ctrl_master.be        ),
-     .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
-
-     .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-     .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-     .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-    );
 
   /* debug stuff */
   //synopsys translate_off
@@ -575,70 +450,6 @@ module core_region
     FILENAME = {"FETCH_CORE_", FILE_ID, ".log" };
     FILE=$fopen(FILENAME,"w");
   end
-
-  // BOOT code is loaded in this dummy ROM_MEMORY
-/* -----\/----- EXCLUDED -----\/-----
-  generate
-    case(INSTR_RDATA_WIDTH)
-      128: begin
-        ibus_lint_memory_128 #(
-          .addr_width    ( 16           ),
-          .INIT_MEM_FILE ( ROM_SLM_FILE )
-        ) ROM_MEMORY (
-          .clk            ( clk_i              ),
-          .rst_n          ( rst_ni             ),
-          .lint_req_i     ( instr_req_o        ),
-          .lint_grant_o   ( instr_gnt_ROM      ),
-          .lint_addr_i    ( instr_addr_o[19:4] ), //instr_addr_o[17:2]   --> 2^17 bytes max program
-          .lint_r_rdata_o ( instr_r_rdata_ROM  ),
-          .lint_r_valid_o ( instr_r_valid_ROM  )
-        );
-
-        // application code is loaded in this dummy L2_MEMORY
-        ibus_lint_memory_128 #(
-          .addr_width    ( 16          ),
-          .INIT_MEM_FILE ( L2_SLM_FILE )
-        ) L2_MEMORY (
-          .clk            ( clk_i              ),
-          .rst_n          ( rst_ni             ),
-          .lint_req_i     ( instr_req_o        ),
-          .lint_grant_o   ( instr_gnt_L2       ),
-          .lint_addr_i    ( instr_addr_o[19:4] ), //instr_addr_o[17:2]    --> 2^17 bytes max program
-          .lint_r_rdata_o ( instr_r_rdata_L2   ),
-          .lint_r_valid_o ( instr_r_valid_L2   )
-        );
-      end
-      32: begin
-        ibus_lint_memory #(
-          .addr_width      ( 16              ),
-          .INIT_MEM_FILE   ( ROM_SLM_FILE    )
-        ) ROM_MEMORY (
-          .clk             ( clk_i              ),
-          .rst_n           ( rst_ni             ),
-          .lint_req_i      ( instr_req_o        ),
-          .lint_grant_o    ( instr_gnt_ROM      ),
-          .lint_addr_i     ( instr_addr_o[17:2] ), //instr_addr_o[17:2]   --> 2^17 bytes max program
-          .lint_r_rdata_o  ( instr_r_rdata_ROM  ),
-          .lint_r_valid_o  ( instr_r_valid_ROM  )
-        );
-
-        // application code is loaded in this dummy L2_MEMORY
-        ibus_lint_memory #(
-          .addr_width      ( 16                 ),
-          .INIT_MEM_FILE   ( L2_SLM_FILE        )
-        ) L2_MEMORY (
-          .clk             ( clk_i              ),
-          .rst_n           ( rst_ni             ),
-          .lint_req_i      ( instr_req_o        ),
-          .lint_grant_o    ( instr_gnt_L2       ),
-          .lint_addr_i     ( instr_addr_o[17:2] ), //instr_addr_o[17:2]    --> 2^17 bytes max program
-          .lint_r_rdata_o  ( instr_r_rdata_L2   ),
-          .lint_r_valid_o  ( instr_r_valid_L2   )
-        );
-      end
-    endcase // INSTR_RDATA_WIDTH
-  endgenerate
- -----/\----- EXCLUDED -----/\----- */
 
   // SELF CHECK ROUTINES TO compare instruction fetches with slm files
   always_ff @(posedge clk_i)
