@@ -377,8 +377,7 @@ module pulp_cluster
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1 ),
-    .UW ( 0 )
+    .OW ( 1 )
   ) s_core_dmactrl_bus[NB_CORES-1:0](
     .clk ( clk_cluster )
   );
@@ -826,13 +825,11 @@ module pulp_cluster
   //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
   //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
   //------------------------------------------------------//
-  
 
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
-    .OW ( 1 ),
-    .UW ( 0 )
+    .OW ( 1 )
   ) core_data_intf[NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
@@ -869,7 +866,6 @@ module pulp_cluster
     );
 
   end
-  
 
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
 
@@ -895,9 +891,7 @@ module pulp_cluster
     ) core_region_i (
       .clk_i               ( clk_cluster           ),
       .rst_ni              ( s_rst_n               ),
-      .base_addr_i         ( base_addr_i           ),
 
-      .init_ni             ( s_init_n              ),
       .cluster_id_i        ( cluster_id_i          ),
       .core_id_i           ( i[3:0]                ),
       .clock_en_i          ( clk_core_en[i]        ),
@@ -929,9 +923,7 @@ module pulp_cluster
       // .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
       // .periph_data_master  ( s_core_periph_bus[i]  ),
     
-      .perf_counters_i ( perf_counters[i] ),
-
-      .fregfile_disable_i  (  s_fregfile_disable     )
+      .perf_counters_i ( perf_counters[i] )
 `ifdef SHARED_FPU_CLUSTER
       ,        
       .apu_master_req_o      ( s_apu_master_req     [i] ),
