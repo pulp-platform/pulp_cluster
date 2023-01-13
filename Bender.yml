@@ -19,6 +19,7 @@ dependencies:
   # icache_private:       { git: "https://github.com/pulp-platform/icache_private.git"        , rev: "1d4cdbcbec3ab454c09d378fc55631b60450fccd" }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git"   , version: 2.1.0                                  }
   fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git"           , rev: "f6e7e1fe735160ea59ae3d10087b4e9ce5d5d437" }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git"    , version: 0.3.1                                  }
   axi:                    { git: "https://github.com/pulp-platform/axi.git"                   , version: 0.29.1                                 }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git"             , version: 1.1.4                                  } # deprecated, replaced by axi_cut (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git"            , version: 1.0.2                                  }

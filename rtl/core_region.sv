@@ -31,7 +31,6 @@ module core_region #(
                                      // 1: IBEX RV32IMC
                                      // 2: IBEX RV32EC
   parameter NUM_EXT_PERF_CNTRS = 1,
-  parameter CORE_ID            = 0,
   parameter ADDR_WIDTH         = 32,
   parameter DATA_WIDTH         = 32,
   parameter INSTR_RDATA_WIDTH  = 32,
@@ -49,6 +48,7 @@ module core_region #(
   input  logic                          clk_i            ,
   input  logic                          rst_ni           ,
   input  logic                          init_ni          ,
+  input  logic [3:0]                    core_id_i        ,
   input  logic                          clock_en_i       ,
   input  logic                          fetch_en_i       ,
   input  logic [3:0]                    base_addr_i      , // FOR CLUSTER VIRTUALIZATION
@@ -135,7 +135,7 @@ logic                  core_mem_req,
                        core_instr_r_valid,
                        core_bus_master_we;
 
-assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
+assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, core_id_i[3:0]};
 
 `ifndef APU_CLUSTER
   `ifndef SHARED_FPU_CLUSTER // Disable if CORE_TYPE_CL != 0
@@ -400,7 +400,7 @@ end
 
   initial
   begin
-    FILE_ID.itoa(CORE_ID);
+    FILE_ID.itoa(core_id_i);
     FILENAME = {"FETCH_CORE_", FILE_ID, ".log" };
     FILE=$fopen(FILENAME,"w");
   end

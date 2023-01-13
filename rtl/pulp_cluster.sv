@@ -20,11 +20,12 @@
 import pulp_cluster_package::*;
 import hci_package::*;
 
+`include "register_interface/typedef.svh"
+`include "register_interface/assign.svh"
 `include "pulp_soc_defines.sv"
 `include "cluster_bus_defines.sv"
 `include "axi/typedef.svh"
 `include "axi/assign.svh"
-
 
 module pulp_cluster
 #(
@@ -854,6 +855,15 @@ module pulp_cluster
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
 );
 
+  /******************** HMR-related signals, BUSes definition ********************/
+  // REG_BUS types
+  `REG_BUS_TYPEDEF_ALL(reg                      , // name 
+                       logic[ADDR_WIDTH-1:0]    , // addr_t
+                       logic[DATA_WIDTH-1:0]    , // data_t
+                       logic[(DATA_WIDTH/8)-1:0]) // strb_t
+  reg_req_t hmr_req;
+  reg_rsp_t hmr_rsp;
+
   // Recovery Ports for RF
   // Address ports
   logic [NB_CORES-1:0][5:0] regfile_waddr_a,
@@ -862,11 +872,11 @@ module pulp_cluster
                             regfile_raddr_b,
                             regfile_raddr_c;
   // Data ports
-  logic [NB_CORES-1:0][31:0] regfile_wdata_a,
-                             regfile_wdata_b,
-                             regfile_rdata_a,
-                             regfile_rdata_b,
-                             regfile_rdata_c;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] regfile_wdata_a,
+                                       regfile_wdata_b,
+                                       regfile_rdata_a,
+                                       regfile_rdata_b,
+                                       regfile_rdata_c;
   // Write enables
   logic [NB_CORES-1:0] regfile_we_a,        
                        regfile_we_b;
@@ -915,22 +925,22 @@ module pulp_cluster
     for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_region
 
       core_region #(
-        .CORE_TYPE_CL        ( CORE_TYPE_CL          ),
-        .NUM_EXT_PERF_CNTRS  ( NUM_EXT_PERF_CNTRS   ),
-        .CORE_ID             ( i                     ),
-        .ADDR_WIDTH          ( ADDR_WIDTH            ),
-        .DATA_WIDTH          ( DATA_WIDTH            ),
-        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH     ),
-        .APU_NARGS_CPU       ( APU_NARGS_CPU         ), //= 2,
-        .APU_WOP_CPU         ( APU_WOP_CPU           ), //= 1,
-        .WAPUTYPE            ( WAPUTYPE              ), //= 3,
-        .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU      ), //= 3,
-        .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU      ), //= 5,
-        .FPU                 ( CLUST_FPU             )
+        .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
+        .NUM_EXT_PERF_CNTRS  ( NUM_EXT_PERF_CNTRS ),
+        .ADDR_WIDTH          ( ADDR_WIDTH         ),
+        .DATA_WIDTH          ( DATA_WIDTH         ),
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
+        .APU_NARGS_CPU       ( APU_NARGS_CPU      ), //= 2,
+        .APU_WOP_CPU         ( APU_WOP_CPU        ), //= 1,
+        .WAPUTYPE            ( WAPUTYPE           ), //= 3,
+        .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU   ), //= 3,
+        .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
+        .FPU                 ( CLUST_FPU          )
       ) core_region_i        (
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
         .init_ni             ( s_init_n              ),
+        .core_id_i           ( i[3:0]                ),
         .clock_en_i          ( clk_core_en  [i]      ),
         .fetch_en_i          ( fetch_en_int [i]      ),
         .base_addr_i         ( base_addr_i           ),
@@ -1034,9 +1044,101 @@ module pulp_cluster
     .DataWidth      ( DATA_WIDTH         ),
     .BeWidth        ( BE_WIDTH           ),
     .NumExtPerf     ( NUM_EXT_PERF_CNTRS ),
-    .reg_req_t      (  ),
-    .reg_resp_t     (  )
+    .reg_req_t      ( reg_req_t          ),
+    .reg_resp_t     ( reg_rsp_t          )
   ) HMR_wrap_i (
+    .clk_i          ( clk_cluster ),
+    .rst_ni         ( s_rst_n     ),
+    // Port to configuration unit
+    .reg_request_i  ( hmr_req ),
+    .reg_response_o ( hmr_rsp ),
+    // TMR Signals
+    .tmr_failure_o     (),
+    .tmr_error_o       (),
+    .tmr_resynch_req_o (),
+    .tmr_cores_synch_i (),
+    // DMR signals
+    .dmr_failure_o     (),
+    .dmr_error_o       (),
+    .dmr_resynch_req_o (),
+    .dmr_cores_synch_i ( '0 ),
+    // Porst connencting to System
+    .sys_core_id_i       (),
+    .sys_cluster_id_i    (),
+                         
+    .sys_clock_en_i      (),
+    .sys_fetch_en_i      (),
+    .sys_boot_addr_i     (),
+    .sys_core_busy_o     (),
+                         
+    .sys_irq_req_i       (),
+    .sys_irq_ack_o       (),
+    .sys_irq_id_i        (),
+    .sys_irq_ack_id_o    (),
+                         
+    .sys_instr_req_o     (),
+    .sys_instr_gnt_i     (),
+    .sys_instr_addr_o    (),
+    .sys_instr_r_rdata_i (),
+    .sys_instr_r_valid_i (),
+    .sys_instr_err_i     (),
+                         
+    .sys_debug_req_i     (),
+                         
+    .sys_data_req_o      (),
+    .sys_data_add_o      (),
+    .sys_data_wen_o      (),
+    .sys_data_wdata_o    (),
+    .sys_data_user_o     (),
+    .sys_data_be_o       (),
+    .sys_data_gnt_i      (),
+    .sys_data_r_opc_i    (),
+    .sys_data_r_rdata_i  (),
+    .sys_data_r_user_i   (),
+    .sys_data_r_valid_i  (),
+    .sys_data_err_i      (),
+                         
+    .sys_perf_counters_i (),
+
+    // Ports connecting to the cores
+    .core_setback_o       (),
+
+    .core_core_id_o       (),
+    .core_cluster_id_o    (),
+
+    .core_clock_en_o      (),
+    .core_fetch_en_o      (),
+    .core_boot_addr_o     (),
+    .core_core_busy_i     (),
+
+    .core_irq_req_o       (),
+    .core_irq_ack_i       (),
+    .core_irq_id_o        (),
+    .core_irq_ack_id_i    (),
+
+    .core_instr_req_i     (),
+    .core_instr_gnt_o     (),
+    .core_instr_addr_i    (),
+    .core_instr_r_rdata_o (),
+    .core_instr_r_valid_o (),
+    .core_instr_err_o     (),
+
+    .core_debug_req_o     (),
+
+    .core_data_req_i      (),
+    .core_data_add_i      (),
+    .core_data_wen_i      (),
+    .core_data_wdata_i    (),
+    .core_data_user_i     (),
+    .core_data_be_i       (),
+    .core_data_gnt_o      (),
+    .core_data_r_opc_o    (),
+    .core_data_r_rdata_o  (),
+    .core_data_r_user_o   (),
+    .core_data_r_valid_o  (),
+    .core_data_err_o      (),
+
+    .core_perf_counters_o ()
   );
 
 //**********************************************
