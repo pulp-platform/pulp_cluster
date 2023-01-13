@@ -902,15 +902,15 @@ module pulp_cluster
   for (genvar i = 0; i < NB_CORES; i++) begin
     assign sys_core_id[i]           = i[3:0];
 
-    // assign core_data_intf[i].req    = core_data_req  [i];
-    // assign core_data_intf[i].add    = core_data_add  [i];
-    // assign core_data_intf[i].wen    = core_data_wen  [i];
-    // assign core_data_intf[i].data   = core_data_wdata[i];
-    // assign core_data_intf[i].be     = core_data_be   [i];
-    // assign core_data_intf[i].user   = '0;
-    // assign core_data_intf[i].boffs  = '0;
-    // assign core_data_intf[i].lrdy   = '0;
-    // assign core_data_intf[i].r_user = '0;
+    assign core_data_intf[i].req    = core_data_req  [i];
+    assign core_data_intf[i].add    = core_data_add  [i];
+    assign core_data_intf[i].wen    = core_data_wen  [i];
+    assign core_data_intf[i].data   = core_data_wdata[i];
+    assign core_data_intf[i].be     = core_data_be   [i];
+    assign core_data_intf[i].user   = '0;
+    assign core_data_intf[i].boffs  = '0;
+    assign core_data_intf[i].lrdy   = '0;
+    assign core_data_intf[i].r_user = '0;
     assign core_data_gnt        [i] = core_data_intf[i].gnt;
     assign core_data_r_data     [i] = core_data_intf[i].r_data;
     assign core_data_r_valid    [i] = core_data_intf[i].r_valid;
@@ -988,28 +988,28 @@ module pulp_cluster
     .sys_clock_en_i      ( clk_core_en                          ),
     .sys_fetch_en_i      ( fetch_en_int                         ),
     .sys_boot_addr_i     ( boot_addr                            ),
-    .sys_core_busy_o     (),
+    .sys_core_busy_o     ( core_busy    ),
 
     .sys_irq_req_i       ( irq_req                              ),
-    .sys_irq_ack_o       (),
+    .sys_irq_ack_o       ( irq_ack ),
     .sys_irq_id_i        ( irq_id                               ),
-    .sys_irq_ack_id_o    (),
+    .sys_irq_ack_id_o    ( irq_ack_id ),
 
-    .sys_instr_req_o     (),
+    .sys_instr_req_o     ( instr_req ),
     .sys_instr_gnt_i     ( instr_gnt                            ),
-    .sys_instr_addr_o    (),
+    .sys_instr_addr_o    ( instr_addr ),
     .sys_instr_r_rdata_i ( instr_r_rdata                        ),
     .sys_instr_r_valid_i ( instr_r_valid                        ),
     .sys_instr_err_i     ('0),
 
     .sys_debug_req_i     ( s_core_dbg_irq                       ),
 
-    .sys_data_req_o      (),
-    .sys_data_add_o      (),
-    .sys_data_wen_o      (),
-    .sys_data_wdata_o    (),
+    .sys_data_req_o      ( core_data_req ),
+    .sys_data_add_o      ( core_data_add ),
+    .sys_data_wen_o      ( core_data_wen ),
+    .sys_data_wdata_o    ( core_data_wdata ),
     .sys_data_user_o     (),
-    .sys_data_be_o       (),
+    .sys_data_be_o       ( core_data_be ),
     .sys_data_gnt_i      ( core_data_gnt     ),
     .sys_data_r_opc_i    ( core_data_r_opc   ),
     .sys_data_r_rdata_i  ( core_data_r_data  ),
@@ -1034,21 +1034,21 @@ module pulp_cluster
     .core_irq_id_o        ( hmr_irq_id  ),
     .core_irq_ack_id_i    ( hmr_irq_ack_id ),
 
-    .core_instr_req_i     ('0),
-    .core_instr_gnt_o     (),
-    .core_instr_addr_i    ('0),
+    .core_instr_req_i     ( hmr_instr_req ),
+    .core_instr_gnt_o     ( hmr_instr_gnt ),
+    .core_instr_addr_i    ( hmr_instr_addr ),
     .core_instr_r_rdata_o ( hmr_instr_r_rdata ),
     .core_instr_r_valid_o ( hmr_instr_r_valid ),
     .core_instr_err_o     (),
 
     .core_debug_req_o     ( hmr_debug_req ),
 
-    .core_data_req_i      ('0),
-    .core_data_add_i      ('0),
-    .core_data_wen_i      ('0),
-    .core_data_wdata_i    ('0),
+    .core_data_req_i      ( hmr_data_req ),
+    .core_data_add_i      ( hmr_data_add ),
+    .core_data_wen_i      ( hmr_data_wen ),
+    .core_data_wdata_i    ( hmr_data_wdata ),
     .core_data_user_i     ('0),
-    .core_data_be_i       ('0),
+    .core_data_be_i       ( hmr_data_be ),
     .core_data_gnt_o      ( hmr_data_gnt ),
     .core_data_r_opc_o    ( hmr_data_r_opc ),
     .core_data_r_rdata_o  ( hmr_data_r_rdata ),
@@ -1083,39 +1083,39 @@ module pulp_cluster
     ) core_region_i (
       .clk_i               ( clk_cluster           ),
       .rst_ni              ( s_rst_n               ),
-
-      .cluster_id_i        ( cluster_id_i          ),
-      .core_id_i           ( i[3:0]                ),
-      .clock_en_i          ( clk_core_en[i]        ),
-      .fetch_en_i          ( fetch_en_int[i]       ),
-     
-      .boot_addr_i         ( boot_addr[i]          ),
-      .irq_id_i            ( irq_id[i]             ),
-      .irq_ack_id_o        ( irq_ack_id[i]         ),
-      .irq_req_i           ( irq_req[i]            ),
-      .irq_ack_o           ( irq_ack[i]            ),
-
       .test_mode_i         ( test_mode_i           ),
-      .core_busy_o         ( core_busy[i]          ),
+
+      .cluster_id_i        ( hmr_cluster_id[i]          ),
+      .core_id_i           ( hmr_core_id[i]                ),
+      .clock_en_i          ( hmr_clock_en[i]        ),
+      .fetch_en_i          ( hmr_fetch_en[i]       ),
+     
+      .boot_addr_i         ( hmr_boot_addr[i]          ),
+      .irq_id_i            ( hmr_irq_id[i]             ),
+      .irq_ack_id_o        ( hmr_irq_ack_id[i]         ),
+      .irq_req_i           ( hmr_irq_req[i]            ),
+      .irq_ack_o           ( hmr_irq_ack[i]            ),
+
+      .core_busy_o         ( hmr_core_busy[i]          ),
 
       //instruction cache bind 
-      .instr_req_o         ( instr_req[i]          ),
-      .instr_gnt_i         ( instr_gnt[i]          ),
-      .instr_addr_o        ( instr_addr[i]         ),
-      .instr_r_rdata_i     ( instr_r_rdata[i]      ),
-      .instr_r_valid_i     ( instr_r_valid[i]      ),
+      .instr_req_o         ( hmr_instr_req[i]          ),
+      .instr_gnt_i         ( hmr_instr_gnt[i]          ),
+      .instr_addr_o        ( hmr_instr_addr[i]         ),
+      .instr_r_rdata_i     ( hmr_instr_r_rdata[i]      ),
+      .instr_r_valid_i     ( hmr_instr_r_valid[i]      ),
 
       //debug unit bind
-      .debug_req_i         ( s_core_dbg_irq[i]     ),
+      .debug_req_i         ( hmr_debug_req[i]     ),
 
       //tcdm, dma ctrl unit, periph interco interfaces
-      .core_data_bus        ( core_data_intf[i] ),
+      .core_data_bus        ( hmr_data_intf[i] ),
       // .tcdm_data_master    ( s_hci_core[i]         ),
       // .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
       // .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
       // .periph_data_master  ( s_core_periph_bus[i]  ),
     
-      .perf_counters_i ( perf_counters[i] )
+      .perf_counters_i ( hmr_perf_counters[i] )
 `ifdef SHARED_FPU_CLUSTER
       ,        
       .apu_master_req_o      ( s_apu_master_req     [i] ),
