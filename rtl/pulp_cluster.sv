@@ -128,7 +128,6 @@ module pulp_cluster
   parameter NB_OUTSND_BURSTS        = 8,
   parameter MCHAN_BURST_LENGTH      = 256,
 
-
   // peripheral and periph interconnect parameters
   parameter LOG_CLUSTER             = 5,  // unused
   parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
@@ -142,7 +141,16 @@ module pulp_cluster
   parameter APU_WOP_CPU             = 6,
   parameter WAPUTYPE                = 3,
   parameter APU_NDSFLAGS_CPU        = 15,
-  parameter APU_NUSFLAGS_CPU        = 5
+  parameter APU_NUSFLAGS_CPU        = 5,
+  parameter N_EXT_PERF_COUNTERS     = 5,
+  // Modular redundancy parameters
+  parameter bit DMRSupported   = 1'b1,
+  parameter bit DMRFixed       = 1'b0,
+  parameter bit TMRSupported   = 1'b1,
+  parameter bit TMRFixed       = 1'b0,
+  parameter bit SeparateData   = 1'b1,
+  parameter bit BackupRegfile  = 1'b0,
+  parameter bit InterleaveGrps = 1'b1 // alternative is sequential grouping
 )
 (
   input logic                                    clk_i,
@@ -847,23 +855,49 @@ module pulp_cluster
 );
 
   // Recovery Ports for RF
-  // Write Port A
-  logic [5:0]  regfile_waddr_a;
-  logic [31:0] regfile_wdata_a;
-  logic        regfile_we_a   ;
-  // Write Port B        
-  logic [5:0]  regfile_waddr_b;
-  logic [31:0] regfile_wdata_b;
-  logic        regfile_we_b   ;
-  logic        recover        ;
+  // Address ports
+  logic [NB_CORES-1:0][5:0] regfile_waddr_a,
+                            regfile_waddr_b,
+                            regfile_raddr_a,
+                            regfile_raddr_b,
+                            regfile_raddr_c;
+  // Data ports
+  logic [NB_CORES-1:0][31:0] regfile_wdata_a,
+                             regfile_wdata_b,
+                             regfile_rdata_a,
+                             regfile_rdata_b,
+                             regfile_rdata_c;
+  // Write enables
+  logic [NB_CORES-1:0] regfile_we_a,        
+                       regfile_we_b;
+  // Others
+  logic [NB_CORES-1:0] regfile_recover,
+                       regfile_backup ;
 
+  logic [NB_CORES-1:0][N_EXT_PERF_COUNTERS-1:0] perf_counters;
+
+  // BUSes from Core Regions to Core Assists
+  hci_core_intf #(
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
+    .OW ( 1          ),
+    .UW ( 0          )
+  ) s_core_assist_bus [NB_CORES-1:0] (
+    .clk ( clk_cluster )
+  );
+
+  // Assigns
   assign regfile_waddr_a = '0;
-  assign regfile_wdata_a = '0;
-  assign regfile_we_a    = '0;
   assign regfile_waddr_b = '0;
+  assign regfile_raddr_a = '0;
+  assign regfile_raddr_b = '0;
+  assign regfile_raddr_c = '0;
+  assign regfile_wdata_a = '0;
   assign regfile_wdata_b = '0;
+  assign regfile_we_a    = '0;
   assign regfile_we_b    = '0;
-  assign recover         = '0;
+  assign regfile_recover = '0;
+  assign regfile_backup  = '0;
 
   //********************************************************
   //***************** CORE ISLANDS *************************
@@ -876,106 +910,134 @@ module pulp_cluster
   //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
   //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
   //------------------------------------------------------//
-  
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate
-    for (genvar i=0; i<NB_CORES; i++) begin : CORE
-
-      pulp_sync dbg_irq_sync (
-        .clk_i(clk_cluster),
-        .rstn_i(s_rst_n),
-        .serial_i(dbg_irq_valid_i[i]),
-        .serial_o(s_dbg_irq[i])
-      );
-
+    for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_region
 
       core_region #(
-        .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
-        .CORE_ID             ( i                  ),
-        .ADDR_WIDTH          ( 32                 ),
-        .DATA_WIDTH          ( 32                 ),
-        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
-        .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE ),
-        .REMAP_ADDRESS       ( REMAP_ADDRESS      ),
-        .APU_NARGS_CPU       ( APU_NARGS_CPU      ), //= 2,
-        .APU_WOP_CPU         ( APU_WOP_CPU        ), //= 1,
-        .WAPUTYPE            ( WAPUTYPE           ), //= 3,
-        .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU   ), //= 3,
-        .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
-
-        .FPU                 ( CLUST_FPU               ),
-        .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
-        .SHARED_FP           ( CLUST_SHARED_FP         ),
-        .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
-      ) core_region_i (
+        .CORE_TYPE_CL        ( CORE_TYPE_CL          ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS   ),
+        .CORE_ID             ( i                     ),
+        .ADDR_WIDTH          ( ADDR_WIDTH            ),
+        .DATA_WIDTH          ( DATA_WIDTH            ),
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH     ),
+        .APU_NARGS_CPU       ( APU_NARGS_CPU         ), //= 2,
+        .APU_WOP_CPU         ( APU_WOP_CPU           ), //= 1,
+        .WAPUTYPE            ( WAPUTYPE              ), //= 3,
+        .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU      ), //= 3,
+        .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU      ), //= 5,
+        .FPU                 ( CLUST_FPU             )
+      ) core_region_i        (
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
-        .base_addr_i         ( base_addr_i           ),
-
         .init_ni             ( s_init_n              ),
+        .clock_en_i          ( clk_core_en  [i]      ),
+        .fetch_en_i          ( fetch_en_int [i]      ),
+        .base_addr_i         ( base_addr_i           ),
         .cluster_id_i        ( cluster_id_i          ),
-        .clock_en_i          ( clk_core_en[i]        ),
-        .fetch_en_i          ( fetch_en_int[i]       ),
-       
-        .boot_addr_i         ( boot_addr[i]          ),
-        .irq_id_i            ( irq_id[i]             ),
-        .irq_ack_id_o        ( irq_ack_id[i]         ),
-        .irq_req_i           ( irq_req[i]            ),
-        .irq_ack_o           ( irq_ack[i]            ),
-  
+        .boot_addr_i         ( boot_addr    [i]      ),
         .test_mode_i         ( test_mode_i           ),
-        .core_busy_o         ( core_busy[i]          ),
-
-        //instruction cache bind 
-        .instr_req_o         ( instr_req[i]          ),
-        .instr_gnt_i         ( instr_gnt[i]          ),
-        .instr_addr_o        ( instr_addr[i]         ),
-        .instr_r_rdata_i     ( instr_r_rdata[i]      ),
-        .instr_r_valid_i     ( instr_r_valid[i]      ),
-
-        //debug unit bind
+        .core_busy_o         ( core_busy    [i]      ),
+        // IRQs
+        .irq_req_i           ( irq_req    [i]        ),
+        .irq_id_i            ( irq_id     [i]        ),
+        .irq_ack_o           ( irq_ack    [i]        ),
+        .irq_ack_id_o        ( irq_ack_id [i]        ),      
+        // iCache BUS
+        .instr_req_o         ( instr_req     [i]     ),
+        .instr_gnt_i         ( instr_gnt     [i]     ),
+        .instr_addr_o        ( instr_addr    [i]     ),
+        .instr_r_rdata_i     ( instr_r_rdata [i]     ),
+        .instr_r_valid_i     ( instr_r_valid [i]     ),
+        // Debug Unit
         .debug_req_i         ( s_core_dbg_irq[i]     ),
-      
+        // External Performance Counters
+        .perf_counters_i     ( perf_counters [i]     ),
         // Recovery Ports for RF
-        .recover_i         ( recover         ),
+        .recover_i           ( regfile_recover [i]   ),
         // Write Port A
-        .regfile_waddr_a_i ( regfile_waddr_a ),
-        .regfile_wdata_a_i ( regfile_wdata_a ),
-        .regfile_we_a_i    ( regfile_we_a    ),
-     
+        .regfile_we_a_i      ( regfile_we_a    [i]   ),
+        .regfile_waddr_a_i   ( regfile_waddr_a [i]   ),
+        .regfile_wdata_a_i   ( regfile_wdata_a [i]   ),
         // Write Port B
-        .regfile_waddr_b_i ( regfile_waddr_b ),
-        .regfile_wdata_b_i ( regfile_wdata_b ),
-        .regfile_we_b_i    ( regfile_we_b    ),
-        //.debug_bus           ( s_debug_bus[i]        ),
-        //.debug_core_halted_o ( dbg_core_halted[i]    ),
-        //.debug_core_halt_i   ( dbg_core_halt[i]      ),
-        //.debug_core_resume_i ( dbg_core_resume[i]    ),
-        .tcdm_data_master    ( s_hci_core[i]         ),
-
-        //tcdm, dma ctrl unit, periph interco interfaces
-        .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
-        .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
-        .periph_data_master  ( s_core_periph_bus[i]  ),
-      
-        .fregfile_disable_i  (  s_fregfile_disable     )
-`ifdef SHARED_FPU_CLUSTER
-        ,        
-        .apu_master_req_o      ( s_apu_master_req     [i] ),
-        .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
-        .apu_master_type_o     ( s_apu_master_type    [i] ),
-        .apu_master_operands_o ( s_apu_master_operands[i] ),
-        .apu_master_op_o       ( s_apu_master_op      [i] ),
-        .apu_master_flags_o    ( s_apu_master_flags   [i] ),
-        .apu_master_valid_i    ( s_apu_master_rvalid  [i] ),
-        .apu_master_ready_o    ( s_apu_master_rready  [i] ),
-        .apu_master_result_i   ( s_apu_master_rdata   [i] ),
-        .apu_master_flags_i    ( s_apu_master_rflags  [i] )
-`endif
+        .regfile_we_b_i      ( regfile_we_b    [i]   ),
+        .regfile_waddr_b_i   ( regfile_waddr_b [i]   ),
+        .regfile_wdata_b_i   ( regfile_wdata_b [i]   ),
+        // Backup ports to the RF
+        .regfile_backup_i    ( regfile_backup  [i]   ),
+        .regfile_raddr_ra_i  ( regfile_raddr_a [i]   ),
+        .regfile_raddr_rb_i  ( regfile_raddr_b [i]   ),
+        .regfile_raddr_rc_i  ( regfile_raddr_c [i]   ),
+        .regfile_rdata_ra_o  ( regfile_rdata_a [i]   ),
+        .regfile_rdata_rb_o  ( regfile_rdata_b [i]   ),
+        .regfile_rdata_rc_o  ( regfile_rdata_c [i]   ),
+        // FPU 
+      `ifdef SHARED_FPU_CLUSTER       
+        .apu_master_req_o      ( s_apu_master_req      [i] ),
+        .apu_master_gnt_i      ( s_apu_master_gnt      [i] ),
+        // REQ Chan
+        .apu_master_type_o     ( s_apu_master_type     [i] ),
+        .apu_master_operands_o ( s_apu_master_operands [i] ),
+        .apu_master_op_o       ( s_apu_master_op       [i] ),
+        .apu_master_flags_o    ( s_apu_master_flags    [i] ),
+        // RSP Chan
+        .apu_master_valid_i    ( s_apu_master_rvalid   [i] ),
+        .apu_master_ready_o    ( s_apu_master_rready   [i] ),
+        .apu_master_result_i   ( s_apu_master_rdata    [i] ),
+        .apu_master_flags_i    ( s_apu_master_rflags   [i] ),
+      `endif //  `ifdef SHARED_FPU_CLUSTER
+        .core_bus_master       ( s_core_assist_bus     [i] ) // Slave BUS to Core Assist
       );
     end
   endgenerate
 
+  generate
+    for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_assist
+      core_assist           #(
+        .ADDR_WIDTH          ( ADDR_WIDTH          ),
+        .DATA_WIDTH          ( DATA_WIDTH          ),
+        .BYTE_ENABLE_BIT     ( DATA_WIDTH/8        ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS ),
+        .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE  )
+      ) core_assist_i       (
+        .clk_i              ( clk_cluster            ),
+        .rst_ni             ( s_rst_n                ),
+        .test_mode_i        ( test_mode_i            ),
+        .base_addr_i        ( base_addr_i            ),
+        .perf_counters_o    ( perf_counters [i]      ),
+        .core_bus_slave     ( s_core_assist_bus [i]  ), // Slave BUS from the Core Region
+        .tcdm_data_master   ( s_hci_core [i]         ), // Master BUS to TCDM Interconnect
+        .dma_ctrl_master    ( s_core_dmactrl_bus [i] ), // Master BUS to DMA Controller
+        .eu_ctrl_master     ( s_core_euctrl_bus [i]  ), // Master BUS to Event Unit
+        .periph_data_master ( s_core_periph_bus [i]  )  // Master BUS to XBAR PE
+      );
+
+      pulp_sync dbg_irq_sync (
+        .clk_i    ( clk_cluster        ),
+        .rstn_i   ( s_rst_n            ),
+        .serial_i ( dbg_irq_valid_i[i] ),
+        .serial_o ( s_dbg_irq [i]      )
+      );
+    end
+  endgenerate
+
+  HMR_wrap #(
+    .NumCores       ( NB_CORES            ),
+    .DMRSupported   ( DMRSupported        ),
+    .DMRFixed       ( DMRFixed            ),
+    .TMRSupported   ( TMRSupported        ),
+    .TMRFixed       ( TMRFixed            ),
+    .SeparateData   ( SeparateData        ),
+    .BackupRegfile  ( BackupRegfile       ),
+    .InterleaveGrps ( InterleaveGrps      ), // alternative is sequential grouping
+    .InstrDataWidth ( INSTR_RDATA_WIDTH   ),
+    .DataWidth      ( DATA_WIDTH          ),
+    .BeWidth        ( BE_WIDTH            ),
+    .NumExtPerf     ( N_EXT_PERF_COUNTERS ),
+    .reg_req_t      (  ),
+    .reg_resp_t     (  )
+  ) HMR_wrap_i (
+  );
 
 //**********************************************
 //**** APU cluster - Shared execution units ****
@@ -1003,7 +1065,6 @@ module pulp_cluster
 
 `endif
 
-
   //****************************************************
   //**** Shared FPU cluster - Shared execution units ***
   //****************************************************
@@ -1028,52 +1089,52 @@ module pulp_cluster
     assign s_apu_master_rflags[k][4:0] = s_apu__rflags[k][4:0];
   end
 
-  shared_fpu_cluster #(
-    .NB_CORES         ( NB_CORES          ),
-    .NB_APUS          ( 1                 ),
-    .NB_FPNEW         ( 4                 ),
-    .FP_TYPE_WIDTH    ( 3                 ),
+  shared_fpu_cluster     #(
+    .NB_CORES             ( NB_CORES          ),
+    .NB_APUS              ( 1                 ),
+    .NB_FPNEW             ( 4                 ),
+    .FP_TYPE_WIDTH        ( 3                 ),
 
-    .NB_CORE_ARGS      ( 3                ),
-    .CORE_DATA_WIDTH   ( 32               ),
-    .CORE_OPCODE_WIDTH ( 6                ),
-    .CORE_DSFLAGS_CPU  ( 15               ),
-    .CORE_USFLAGS_CPU  ( 5                ),
+    .NB_CORE_ARGS         ( 3                 ),
+    .CORE_DATA_WIDTH      ( 32                ),
+    .CORE_OPCODE_WIDTH    ( 6                 ),
+    .CORE_DSFLAGS_CPU     ( 15                ),
+    .CORE_USFLAGS_CPU     ( 5                 ),
+                          
+    .NB_APU_ARGS          ( 2                 ),
+    .APU_OPCODE_WIDTH     ( 6                 ),
+    .APU_DSFLAGS_CPU      ( 15                ),
+    .APU_USFLAGS_CPU      ( 5                 ),
 
-    .NB_APU_ARGS      ( 2                 ),
-    .APU_OPCODE_WIDTH ( 6                 ),
-    .APU_DSFLAGS_CPU  ( 15                ),
-    .APU_USFLAGS_CPU  ( 5                 ),
+    .NB_FPNEW_ARGS        ( 3                 ), //= 3,
+    .FPNEW_OPCODE_WIDTH   ( 6                 ), //= 6,
+    .FPNEW_DSFLAGS_CPU    ( 15                ), //= 15,
+    .FPNEW_USFLAGS_CPU    ( 5                 ), //= 5,
 
-    .NB_FPNEW_ARGS        ( 3             ), //= 3,
-    .FPNEW_OPCODE_WIDTH   ( 6             ), //= 6,
-    .FPNEW_DSFLAGS_CPU    ( 15            ), //= 15,
-    .FPNEW_USFLAGS_CPU    ( 5             ), //= 5,
+    .APUTYPE_ID           ( 1                 ),
+    .FPNEWTYPE_ID         ( 0                 ),
 
-    .APUTYPE_ID       ( 1                 ),
-    .FPNEWTYPE_ID     ( 0                 ),
-
-    .C_FPNEW_FMTBITS     (fpnew_pkg::FP_FORMAT_BITS  ),
-    .C_FPNEW_IFMTBITS    (fpnew_pkg::INT_FORMAT_BITS ),
-    .C_ROUND_BITS        (3                          ),
-    .C_FPNEW_OPBITS      (fpnew_pkg::OP_BITS         ),
-    .USE_FPU_OPT_ALLOC   ("FALSE"),
-    .USE_FPNEW_OPT_ALLOC ("TRUE"),
-    .FPNEW_INTECO_TYPE   ("SINGLE_INTERCO")
-  ) i_shared_fpu_cluster (
-    .clk                   ( clk_cluster                               ),
-    .rst_n                 ( s_rst_n                                   ),
-    .test_mode_i           ( test_mode_i                               ),
-    .core_slave_req_i      ( s_apu_master_req                          ),
-    .core_slave_gnt_o      ( s_apu_master_gnt                          ),
-    .core_slave_type_i     ( s_apu__type                               ),
-    .core_slave_operands_i ( s_apu__operands                           ),
-    .core_slave_op_i       ( s_apu__op                                 ),
-    .core_slave_flags_i    ( s_apu__flags                              ),
-    .core_slave_rready_i   ( s_apu_master_rready                       ),
-    .core_slave_rvalid_o   ( s_apu_master_rvalid                       ),
-    .core_slave_rdata_o    ( s_apu_master_rdata                        ),
-    .core_slave_rflags_o   ( s_apu__rflags                             )
+    .C_FPNEW_FMTBITS      (fpnew_pkg::FP_FORMAT_BITS  ),
+    .C_FPNEW_IFMTBITS     (fpnew_pkg::INT_FORMAT_BITS ),
+    .C_ROUND_BITS         (3                          ),
+    .C_FPNEW_OPBITS       (fpnew_pkg::OP_BITS         ),
+    .USE_FPU_OPT_ALLOC    ("FALSE"                    ),
+    .USE_FPNEW_OPT_ALLOC  ("TRUE"                     ),
+    .FPNEW_INTECO_TYPE    ("SINGLE_INTERCO"           )
+  ) i_shared_fpu_cluster  (
+    .clk                   ( clk_cluster         ),
+    .rst_n                 ( s_rst_n             ),
+    .test_mode_i           ( test_mode_i         ),
+    .core_slave_req_i      ( s_apu_master_req    ),
+    .core_slave_gnt_o      ( s_apu_master_gnt    ),
+    .core_slave_type_i     ( s_apu__type         ),
+    .core_slave_operands_i ( s_apu__operands     ),
+    .core_slave_op_i       ( s_apu__op           ),
+    .core_slave_flags_i    ( s_apu__flags        ),
+    .core_slave_rready_i   ( s_apu_master_rready ),
+    .core_slave_rvalid_o   ( s_apu_master_rvalid ),
+    .core_slave_rdata_o    ( s_apu_master_rdata  ),
+    .core_slave_rflags_o   ( s_apu__rflags       )
   );
 `endif
 
