@@ -374,7 +374,14 @@ module pulp_cluster
   
   /* other interfaces */
   // cores -> DMA ctrl
-  XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
+  hci_core_intf #(
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
+    .OW ( 1 ),
+    .UW ( 0 )
+  ) s_core_dmactrl_bus[NB_CORES-1:0](
+    .clk ( clk_cluster )
+  );
   
   // cores -> event unit ctrl
   XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();

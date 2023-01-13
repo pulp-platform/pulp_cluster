@@ -30,6 +30,7 @@ dependencies:
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
   idma:                   { git: "https://github.com/pulp-platform/idma.git", version: 0.3.1 }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.3.1 }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
@@ -45,7 +46,10 @@ sources:
   - rtl/cluster_timer_wrap.sv
   - target: mchan
     files:
-      - rtl/dmac_wrap.sv
+      - rtl/dmac_wrap_mchan.sv
+  - target: not(mchan)
+    files:
+      - rtl/dmac_wrap_idma.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
