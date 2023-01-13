@@ -369,6 +369,9 @@ module pulp_cluster
   
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
+
+  // Extra bus
+  XBAR_PERIPH_BUS s_extra_periph_bus();
   
   // debug
   XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
@@ -809,7 +812,8 @@ module pulp_cluster
     .hci_ctrl_o             ( s_hci_ctrl                         ),
     .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
     .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
-    .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
+    .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
+    .extra_periph_bus       ( s_extra_periph_bus                  )
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
 );
 
@@ -869,6 +873,34 @@ module pulp_cluster
   end
 
   `REG_BUS_TYPEDEF_ALL(reg, logic[31:0], logic[31:0], logic[3:0])
+
+  reg_req_t hmr_req;
+  reg_rsp_t hmr_rsp;
+
+  periph_to_reg #(
+    .AW   (ADDR_WIDTH),
+    .DW   (DATA_WIDTH),
+    .BW   (8),
+    .IW   ( NB_CORES+1 ),
+    .req_t(reg_req_t),
+    .rsp_t(reg_rsp_t)
+  ) i_periph_to_hmr (
+    .clk_i    ( clk_cluster ),
+    .rst_ni   ( s_rst_n ),
+    .req_i    ( s_extra_periph_bus.req     ),
+    .add_i    ( s_extra_periph_bus.add     ),
+    .wen_i    ( s_extra_periph_bus.wen     ),
+    .wdata_i  ( s_extra_periph_bus.wdata   ),
+    .be_i     ( s_extra_periph_bus.be      ),
+    .id_i     ( s_extra_periph_bus.id      ),
+    .gnt_o    ( s_extra_periph_bus.gnt     ),
+    .r_rdata_o( s_extra_periph_bus.r_rdata ),
+    .r_opc_o  ( s_extra_periph_bus.r_opc   ),
+    .r_id_o   ( s_extra_periph_bus.r_id    ),
+    .r_valid_o( s_extra_periph_bus.r_valid ),
+    .reg_req_o( hmr_req ),
+    .reg_rsp_i( hmr_rsp )
+  );
 
   logic [NB_CORES-1:0][3:0]            sys_core_id;
   logic [NB_CORES-1:0]                 core_data_req;
@@ -974,8 +1006,8 @@ module pulp_cluster
     .clk_i               ( clk_cluster                          ),
     .rst_ni              ( s_rst_n                              ),
     
-    .reg_request_i       ('0),
-    .reg_response_o      (),
+    .reg_request_i       (hmr_req),
+    .reg_response_o      (hmr_rsp),
 
     .tmr_failure_o       (),
     .tmr_error_o         (),

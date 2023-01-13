@@ -100,8 +100,9 @@ module cluster_peripherals
   // Control ports
   SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
   PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
-  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o 
- 
+  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o ,
+
+  XBAR_PERIPH_BUS.Master              extra_periph_bus
   );
    
   logic                      s_timer_out_lo_event;
@@ -342,11 +343,18 @@ module cluster_peripherals
   assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
   assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
 
-  assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].gnt     = extra_periph_bus.gnt;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_rdata = extra_periph_bus.r_rdata;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_opc   = extra_periph_bus.r_opc;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_id    = extra_periph_bus.r_id;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_valid = extra_periph_bus.r_valid;
+
+  assign extra_periph_bus.req = speriph_slave[SPER_EXTRA_BUS_ID].req;
+  assign extra_periph_bus.add = speriph_slave[SPER_EXTRA_BUS_ID].add;
+  assign extra_periph_bus.wen = speriph_slave[SPER_EXTRA_BUS_ID].wen;
+  assign extra_periph_bus.wdata = speriph_slave[SPER_EXTRA_BUS_ID].wdata;
+  assign extra_periph_bus.be = speriph_slave[SPER_EXTRA_BUS_ID].be;
+  assign extra_periph_bus.id = speriph_slave[SPER_EXTRA_BUS_ID].id;
 
 
   generate
