@@ -16,22 +16,22 @@
  */
 
 module core_assist #(
-  parameter ADDR_WIDTH          = 32          ,
-  parameter DATA_WIDTH          = 32          ,
-  parameter BYTE_ENABLE_BIT     = DATA_WIDTH/8,
-  parameter N_EXT_PERF_COUNTERS = 5           ,
-  parameter CLUSTER_ALIAS_BASE  = 12'h000
+  parameter ADDR_WIDTH         = 32          ,
+  parameter DATA_WIDTH         = 32          ,
+  parameter BYTE_ENABLE_BIT    = DATA_WIDTH/8,
+  parameter NUM_EXT_PERF_CNTRS = 5           ,
+  parameter CLUSTER_ALIAS_BASE = 12'h000
 )(
-  input  logic                           clk_i             ,
-  input  logic                           rst_ni            ,
-  input  logic                           test_mode_i       ,
-  input  logic [3:0]                     base_addr_i       ,
-  output logic [N_EXT_PERF_COUNTERS-1:0] perf_counters_o   ,
-  hci_core_intf.slave                    core_bus_slave    , // Slave BUS from Core Region
-  hci_core_intf.master                   tcdm_data_master  , // Master BUS to TCDM Interconnect
-  XBAR_TCDM_BUS.Master                   dma_ctrl_master   , // Master BUS to DMA Controller
-  XBAR_PERIPH_BUS.Master                 eu_ctrl_master    , // Master BUS to Event Unit
-  XBAR_PERIPH_BUS.Master                 periph_data_master  // Master BUS to XBAR PE
+  input  logic                          clk_i             ,
+  input  logic                          rst_ni            ,
+  input  logic                          test_mode_i       ,
+  input  logic [3:0]                    base_addr_i       ,
+  output logic [NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs_o  ,
+  hci_core_intf.slave                   core_bus_slave    , // Slave BUS from Core Region
+  hci_core_intf.master                  tcdm_data_master  , // Master BUS to TCDM Interconnect
+  XBAR_TCDM_BUS.Master                  dma_ctrl_master   , // Master BUS to DMA Controller
+  XBAR_PERIPH_BUS.Master                eu_ctrl_master    , // Master BUS to Event Unit
+  XBAR_PERIPH_BUS.Master                periph_data_master  // Master BUS to XBAR PE
 );
 
 /******************** Signals and BUSes ********************/
@@ -108,16 +108,16 @@ core_demux           #(
   .data_r_rdata_i_PE  (  periph_data_master.r_rdata ),
   .data_r_opc_i_PE    (  periph_data_master.r_opc   ),
   // Performance Counters
-  .perf_l2_ld_o       (  perf_counters_o [0] ),
-  .perf_l2_st_o       (  perf_counters_o [1] ),
-  .perf_l2_ld_cyc_o   (  perf_counters_o [2] ),
-  .perf_l2_st_cyc_o   (  perf_counters_o [3] ),
-  .CLUSTER_ID         (  cluster_id_i        )
+  .perf_l2_ld_o       (  ext_perf_cntrs_o [0] ),
+  .perf_l2_st_o       (  ext_perf_cntrs_o [1] ),
+  .perf_l2_ld_cyc_o   (  ext_perf_cntrs_o [2] ),
+  .perf_l2_st_cyc_o   (  ext_perf_cntrs_o [3] ),
+  .CLUSTER_ID         (  cluster_id_i         )
 );
 assign tcdm_data_master.boffs = '0;
 assign tcdm_data_master.lrdy  = '1;
 // One preformance counter keeps cycles lost due to contention
-assign perf_counters_o [4] = tcdm_data_master.req & (~tcdm_data_master.gnt);
+assign ext_perf_cntrs_o [4] = tcdm_data_master.req & (~tcdm_data_master.gnt);
 
 /******************** Periph Demux to DMAC and Event Unit and  ********************/
 periph_demux periph_demux_i (

@@ -142,7 +142,7 @@ module pulp_cluster
   parameter WAPUTYPE                = 3,
   parameter APU_NDSFLAGS_CPU        = 15,
   parameter APU_NUSFLAGS_CPU        = 5,
-  parameter N_EXT_PERF_COUNTERS     = 5,
+  parameter NUM_EXT_PERF_CNTRS      = 5,
   // Modular redundancy parameters
   parameter bit DMRSupported   = 1'b1,
   parameter bit DMRFixed       = 1'b0,
@@ -874,7 +874,7 @@ module pulp_cluster
   logic [NB_CORES-1:0] regfile_recover,
                        regfile_backup ;
 
-  logic [NB_CORES-1:0][N_EXT_PERF_COUNTERS-1:0] perf_counters;
+  logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs;
 
   // BUSes from Core Regions to Core Assists
   hci_core_intf #(
@@ -916,7 +916,7 @@ module pulp_cluster
 
       core_region #(
         .CORE_TYPE_CL        ( CORE_TYPE_CL          ),
-        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS   ),
+        .NUM_EXT_PERF_CNTRS  ( NUM_EXT_PERF_CNTRS   ),
         .CORE_ID             ( i                     ),
         .ADDR_WIDTH          ( ADDR_WIDTH            ),
         .DATA_WIDTH          ( DATA_WIDTH            ),
@@ -952,7 +952,7 @@ module pulp_cluster
         // Debug Unit
         .debug_req_i         ( s_core_dbg_irq[i]     ),
         // External Performance Counters
-        .perf_counters_i     ( perf_counters [i]     ),
+        .ext_perf_cntrs_i    ( ext_perf_cntrs [i]    ),
         // Recovery Ports for RF
         .recover_i           ( regfile_recover [i]   ),
         // Write Port A
@@ -994,17 +994,17 @@ module pulp_cluster
   generate
     for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_assist
       core_assist           #(
-        .ADDR_WIDTH          ( ADDR_WIDTH          ),
-        .DATA_WIDTH          ( DATA_WIDTH          ),
-        .BYTE_ENABLE_BIT     ( DATA_WIDTH/8        ),
-        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS ),
-        .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE  )
+        .ADDR_WIDTH         ( ADDR_WIDTH         ),
+        .DATA_WIDTH         ( DATA_WIDTH         ),
+        .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
+        .NUM_EXT_PERF_CNTRS ( NUM_EXT_PERF_CNTRS ),
+        .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
       ) core_assist_i       (
         .clk_i              ( clk_cluster            ),
         .rst_ni             ( s_rst_n                ),
         .test_mode_i        ( test_mode_i            ),
         .base_addr_i        ( base_addr_i            ),
-        .perf_counters_o    ( perf_counters [i]      ),
+        .ext_perf_cntrs_o   ( ext_perf_cntrs [i]     ),
         .core_bus_slave     ( s_core_assist_bus [i]  ), // Slave BUS from the Core Region
         .tcdm_data_master   ( s_hci_core [i]         ), // Master BUS to TCDM Interconnect
         .dma_ctrl_master    ( s_core_dmactrl_bus [i] ), // Master BUS to DMA Controller
@@ -1022,18 +1022,18 @@ module pulp_cluster
   endgenerate
 
   HMR_wrap #(
-    .NumCores       ( NB_CORES            ),
-    .DMRSupported   ( DMRSupported        ),
-    .DMRFixed       ( DMRFixed            ),
-    .TMRSupported   ( TMRSupported        ),
-    .TMRFixed       ( TMRFixed            ),
-    .SeparateData   ( SeparateData        ),
-    .BackupRegfile  ( BackupRegfile       ),
-    .InterleaveGrps ( InterleaveGrps      ), // alternative is sequential grouping
-    .InstrDataWidth ( INSTR_RDATA_WIDTH   ),
-    .DataWidth      ( DATA_WIDTH          ),
-    .BeWidth        ( BE_WIDTH            ),
-    .NumExtPerf     ( N_EXT_PERF_COUNTERS ),
+    .NumCores       ( NB_CORES           ),
+    .DMRSupported   ( DMRSupported       ),
+    .DMRFixed       ( DMRFixed           ),
+    .TMRSupported   ( TMRSupported       ),
+    .TMRFixed       ( TMRFixed           ),
+    .SeparateData   ( SeparateData       ),
+    .BackupRegfile  ( BackupRegfile      ),
+    .InterleaveGrps ( InterleaveGrps     ), // alternative is sequential grouping
+    .InstrDataWidth ( INSTR_RDATA_WIDTH  ),
+    .DataWidth      ( DATA_WIDTH         ),
+    .BeWidth        ( BE_WIDTH           ),
+    .NumExtPerf     ( NUM_EXT_PERF_CNTRS ),
     .reg_req_t      (  ),
     .reg_resp_t     (  )
   ) HMR_wrap_i (

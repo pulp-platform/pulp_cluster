@@ -30,20 +30,20 @@ module core_region #(
   parameter CORE_TYPE_CL        = 0, // 0: RISCY
                                      // 1: IBEX RV32IMC
                                      // 2: IBEX RV32EC
-  parameter N_EXT_PERF_COUNTERS = 1,
-  parameter CORE_ID             = 0,
-  parameter ADDR_WIDTH          = 32,
-  parameter DATA_WIDTH          = 32,
-  parameter INSTR_RDATA_WIDTH   = 32,
-  parameter APU_NARGS_CPU       = 2,
-  parameter APU_WOP_CPU         = 1,
-  parameter WAPUTYPE            = 3,
-  parameter APU_NDSFLAGS_CPU    = 3,
-  parameter APU_NUSFLAGS_CPU    = 5,  
-  parameter FPU                 = 0,
-  parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
-  parameter L2_SLM_FILE         = "./slm_files/l2_stim.slm",
-  parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"
+  parameter NUM_EXT_PERF_CNTRS = 1,
+  parameter CORE_ID            = 0,
+  parameter ADDR_WIDTH         = 32,
+  parameter DATA_WIDTH         = 32,
+  parameter INSTR_RDATA_WIDTH  = 32,
+  parameter APU_NARGS_CPU      = 2,
+  parameter APU_WOP_CPU        = 1,
+  parameter WAPUTYPE           = 3,
+  parameter APU_NDSFLAGS_CPU   = 3,
+  parameter APU_NUSFLAGS_CPU   = 5,  
+  parameter FPU                = 0,
+  parameter DEBUG_START_ADDR   = `DEBUG_START_ADDR,
+  parameter L2_SLM_FILE        = "./slm_files/l2_stim.slm",
+  parameter ROM_SLM_FILE       = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
   input  logic                          clk_i            ,
@@ -70,7 +70,7 @@ module core_region #(
   // Debug Unit
   input logic                           debug_req_i      ,
   // External Performance Counters
-  input logic [N_EXT_PERF_COUNTERS-1:0] perf_counters_i  ,
+  input logic [NUM_EXT_PERF_CNTRS-1:0]  ext_perf_cntrs_i ,
   // Recovery Ports for RF
   input logic                           recover_i        ,
   // Write Port A
@@ -106,7 +106,6 @@ module core_region #(
   hci_core_intf.master                   core_bus_master // Slave BUS to Core Assist
 );
 
-localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
 localparam USE_IBEX   = (CORE_TYPE_CL == 1) || (CORE_TYPE_CL == 2);
 localparam IBEX_RV32M = (CORE_TYPE_CL == 1) ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
 localparam IBEX_RV32E = CORE_TYPE_CL == 2;
@@ -123,7 +122,6 @@ localparam IBEX_RV32E = CORE_TYPE_CL == 2;
 //****************** Signals and BUSEs *******************
 //********************************************************
 
-logic [N_EXT_PERF_COUNTERS_ACTUAL-1:0] perf_counters;
 logic        clk_int;
 logic [31:0] hart_id;
 logic        core_sleep;
@@ -228,11 +226,12 @@ generate
     `else // Core + tracer for simulations
       cv32e40p_wrapper #(
     `endif
-        .PULP_XPULP       ( 1                   ),
-        .PULP_CLUSTER     ( 1                   ),
-        .FPU              ( FPU                 ),
-        .PULP_ZFINX       ( 1                   ),
-        .NUM_MHPMCOUNTERS ( N_EXT_PERF_COUNTERS )
+        .PULP_XPULP          ( 1                   ),
+        .PULP_CLUSTER        ( 1                   ),
+        .FPU                 ( FPU                 ),
+        .PULP_ZFINX          ( 1                   ),
+        .NUM_MHPMCOUNTERS    ( 1                   ),
+        .NUM_EXT_PERF_CNTRS  ( NUM_EXT_PERF_CNTRS  )
       ) cv32e40p_core     (
         .clk_i               ( clk_i                    ),
         .rst_ni              ( rst_ni                   ),
@@ -260,6 +259,8 @@ generate
         .debug_halted_o      (                    ),
         .dm_halt_addr_i      ( DEBUG_START_ADDR + dm::HaltAddress[31:0]      ),
         .dm_exception_addr_i ( DEBUG_START_ADDR + dm::ExceptionAddress[31:0] ),
+        // External Performece Counters
+        .ext_perf_cntrs_i    ( ext_perf_cntrs_i   ),
         // Recovery Ports for RF
         .recover_i           ( recover_i          ),
         // Write Port A
@@ -356,7 +357,7 @@ generate
         .irq_x_i          ( core_irq_x              ),
         .irq_x_ack_o      ( irq_ack_o               ),
         .irq_x_ack_id_o   ( irq_ack_id_o            ),
-        .external_perf_i  ( {{{16- N_EXT_PERF_COUNTERS_ACTUAL}{'0}}, perf_counters} ),
+        .external_perf_i  ( {{{16 - NUM_EXT_PERF_CNTRS}{'0}}, ext_perf_cntrs_i} ),
         .debug_req_i      ( debug_req_i             ),
         .fetch_enable_i   ( fetch_en_i              ),
         .alert_minor_o    (                         ),
