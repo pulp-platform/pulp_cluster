@@ -49,9 +49,7 @@ module core_region #(
   input  logic                          rst_ni           ,
   input  logic                          init_ni          ,
   input  logic [3:0]                    core_id_i        ,
-  input  logic                          clock_en_i       ,
   input  logic                          fetch_en_i       ,
-  input  logic [3:0]                    base_addr_i      , // FOR CLUSTER VIRTUALIZATION
   input  logic [5:0]                    cluster_id_i     ,
   input  logic [ADDR_WIDTH-1:0]         boot_addr_i      ,
   input  logic                          test_mode_i      ,

@@ -31,17 +31,17 @@ package pulp_cluster_package;
   parameter NB_SPERIPHS          = 10;
 
   // position of peripherals on slave port of periph interconnect
-  parameter SPER_EOC_ID      = 0;
-  parameter SPER_TIMER_ID    = 1;
-  parameter SPER_EVENT_U_ID  = 2;
+  parameter SPER_EOC_ID       = 0;
+  parameter SPER_TIMER_ID     = 1;
+  parameter SPER_EVENT_U_ID   = 2;
                             // 3 also used for Event Unit
-  parameter SPER_HWPE_ID     = 4;
-  parameter SPER_ICACHE_CTRL = 5;
-  parameter SPER_DMA_CL_ID   = 6;
-  parameter SPER_DMA_FC_ID   = 7;
-  parameter SPER_DECOMP_ID   = 8; // Currently unused / grounded, available for specific designs
-  parameter SPER_EXT_ID      = 9; 
-  parameter SPER_ERROR_ID    = 10;
+  parameter SPER_HWPE_ID      = 4;
+  parameter SPER_ICACHE_CTRL  = 5;
+  parameter SPER_DMA_CL_ID    = 6;
+  parameter SPER_DMA_FC_ID    = 7;
+  parameter SPER_EXTRA_BUS_ID = 8; // Currently unused / grounded, available for specific designs
+  parameter SPER_EXT_ID       = 9; 
+  parameter SPER_ERROR_ID     = 10;
    
   // if set to 1, then instantiate APU in the cluster
  // parameter APU_CLUSTER = 0;

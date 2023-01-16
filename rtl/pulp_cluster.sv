@@ -26,11 +26,12 @@ import hci_package::*;
 `include "cluster_bus_defines.sv"
 `include "axi/typedef.svh"
 `include "axi/assign.svh"
+`include "register_interface/typedef.svh"
 
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL       = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
   parameter NB_CORES           = 8,
   parameter NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
@@ -146,11 +147,11 @@ module pulp_cluster
   parameter NUM_EXT_PERF_CNTRS      = 5,
   // Modular redundancy parameters
   parameter bit DMRSupported   = 1'b1,
-  parameter bit DMRFixed       = 1'b0,
-  parameter bit TMRSupported   = 1'b1,
+  parameter bit DMRFixed       = 1'b1,
+  parameter bit TMRSupported   = 1'b0,
   parameter bit TMRFixed       = 1'b0,
   parameter bit SeparateData   = 1'b1,
-  parameter bit BackupRegfile  = 1'b0,
+  parameter bit BackupRegfile  = 1'b1,
   parameter bit InterleaveGrps = 1'b1 // alternative is sequential grouping
 )
 (
@@ -392,6 +393,9 @@ module pulp_cluster
   
   // periph interconnect -> DMA
   XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
+
+  // Extra bus
+  XBAR_PERIPH_BUS s_extra_periph_bus();
   
   // debug
   XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
@@ -832,6 +836,7 @@ module pulp_cluster
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
     
     .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
+    .extra_periph_bus       ( s_extra_periph_bus                 ),
     .hwpe_events_i          ( s_hwpe_remap_evt                   ),
     .hwpe_en_o              ( s_hwpe_en                          ),
     .hci_ctrl_o             ( s_hci_ctrl                         )
@@ -855,7 +860,19 @@ module pulp_cluster
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
 );
 
-  /******************** HMR-related signals, BUSes definition ********************/
+  //********************************************************
+  //***************** CORE ISLANDS *************************
+  //********************************************************
+  //------------------------------------------------------//
+  //          ██████╗ ██████╗ ██████╗ ███████╗            //
+  //         ██╔════╝██╔═══██╗██╔══██╗██╔════╝            //
+  //         ██║     ██║   ██║██████╔╝█████╗              //
+  //         ██║     ██║   ██║██╔══██╗██╔══╝              //
+  //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
+  //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
+  //------------------------------------------------------//
+
+/******************** HMR-related signals, BUSes definition ********************/
   // REG_BUS types
   `REG_BUS_TYPEDEF_ALL(reg                      , // name 
                        logic[ADDR_WIDTH-1:0]    , // addr_t
@@ -892,7 +909,15 @@ module pulp_cluster
     .AW ( ADDR_WIDTH ),
     .OW ( 1          ),
     .UW ( 0          )
-  ) s_core_assist_bus [NB_CORES-1:0] (
+  ) core_data_intf [NB_CORES-1:0] (
+    .clk ( clk_cluster )
+  );
+
+   hci_core_intf #(
+    .DW ( DATA_WIDTH ),
+    .AW ( ADDR_WIDTH ),
+    .OW ( 1 )
+  ) hmr_data_intf [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
 
@@ -909,17 +934,27 @@ module pulp_cluster
   assign regfile_recover = '0;
   assign regfile_backup  = '0;
 
-  //********************************************************
-  //***************** CORE ISLANDS *************************
-  //********************************************************
-  //------------------------------------------------------//
-  //          ██████╗ ██████╗ ██████╗ ███████╗            //
-  //         ██╔════╝██╔═══██╗██╔══██╗██╔════╝            //
-  //         ██║     ██║   ██║██████╔╝█████╗              //
-  //         ██║     ██║   ██║██╔══██╗██╔══╝              //
-  //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
-  //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
-  //------------------------------------------------------//
+  logic [NB_CORES-1:0] hmr_setback;
+  logic [NB_CORES-1:0][3:0] hmr_core_id;
+  logic [NB_CORES-1:0][5:0] hmr_cluster_id;
+  logic [NB_CORES-1:0] hmr_clock_en;
+  logic [NB_CORES-1:0] hmr_fetch_en;
+  logic [NB_CORES-1:0][ADDR_WIDTH-1:0] hmr_boot_addr;
+  logic [NB_CORES-1:0] hmr_core_busy;
+  logic [NB_CORES-1:0] hmr_irq_req;
+  logic [NB_CORES-1:0] hmr_irq_ack;
+  logic [NB_CORES-1:0][4:0] hmr_irq_id;
+  logic [NB_CORES-1:0][4:0] hmr_irq_ack_id;
+
+  logic [NB_CORES-1:0] hmr_instr_req;
+  logic [NB_CORES-1:0] hmr_instr_gnt;
+  logic [NB_CORES-1:0][ADDR_WIDTH-1:0] hmr_instr_addr;
+  logic [NB_CORES-1:0][INSTR_RDATA_WIDTH-1:0] hmr_instr_r_rdata;
+  logic [NB_CORES-1:0] hmr_instr_r_valid;
+
+  logic [NB_CORES-1:0] hmr_debug_req;
+
+  logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] hmr_perf_cntrs;
   /* cluster cores + core-coupled accelerators / shared execution units */
   generate
     for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_region
@@ -940,29 +975,27 @@ module pulp_cluster
         .clk_i               ( clk_cluster           ),
         .rst_ni              ( s_rst_n               ),
         .init_ni             ( s_init_n              ),
-        .core_id_i           ( i[3:0]                ),
-        .clock_en_i          ( clk_core_en  [i]      ),
-        .fetch_en_i          ( fetch_en_int [i]      ),
-        .base_addr_i         ( base_addr_i           ),
-        .cluster_id_i        ( cluster_id_i          ),
-        .boot_addr_i         ( boot_addr    [i]      ),
+        .core_id_i           ( hmr_core_id  [i]      ),
+        .fetch_en_i          ( hmr_fetch_en [i]      ),
+        .cluster_id_i        ( hmr_cluster_id [i]    ),
+        .boot_addr_i         ( hmr_boot_addr [i]     ),
         .test_mode_i         ( test_mode_i           ),
-        .core_busy_o         ( core_busy    [i]      ),
+        .core_busy_o         ( hmr_core_busy [i]     ),
         // IRQs
-        .irq_req_i           ( irq_req    [i]        ),
-        .irq_id_i            ( irq_id     [i]        ),
-        .irq_ack_o           ( irq_ack    [i]        ),
-        .irq_ack_id_o        ( irq_ack_id [i]        ),      
+        .irq_req_i           ( hmr_irq_req    [i]    ),
+        .irq_id_i            ( hmr_irq_id     [i]    ),
+        .irq_ack_o           ( hmr_irq_ack    [i]    ),
+        .irq_ack_id_o        ( hmr_irq_ack_id [i]    ),      
         // iCache BUS
-        .instr_req_o         ( instr_req     [i]     ),
-        .instr_gnt_i         ( instr_gnt     [i]     ),
-        .instr_addr_o        ( instr_addr    [i]     ),
-        .instr_r_rdata_i     ( instr_r_rdata [i]     ),
-        .instr_r_valid_i     ( instr_r_valid [i]     ),
+        .instr_req_o         ( hmr_instr_req     [i] ),
+        .instr_gnt_i         ( hmr_instr_gnt     [i] ),
+        .instr_addr_o        ( hmr_instr_addr    [i] ),
+        .instr_r_rdata_i     ( hmr_instr_r_rdata [i] ),
+        .instr_r_valid_i     ( hmr_instr_r_valid [i] ),
         // Debug Unit
-        .debug_req_i         ( s_core_dbg_irq[i]     ),
+        .debug_req_i         ( hmr_debug_req [i]     ),
         // External Performance Counters
-        .ext_perf_cntrs_i    ( ext_perf_cntrs [i]    ),
+        .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
         // Recovery Ports for RF
         .recover_i           ( regfile_recover [i]   ),
         // Write Port A
@@ -996,7 +1029,7 @@ module pulp_cluster
         .apu_master_result_i   ( s_apu_master_rdata    [i] ),
         .apu_master_flags_i    ( s_apu_master_rflags   [i] ),
       `endif //  `ifdef SHARED_FPU_CLUSTER
-        .core_bus_master       ( s_core_assist_bus     [i] ) // Slave BUS to Core Assist
+        .core_bus_master       ( hmr_data_intf         [i] ) // Slave BUS to Core Assist
       );
     end
   endgenerate
@@ -1012,10 +1045,11 @@ module pulp_cluster
       ) core_assist_i       (
         .clk_i              ( clk_cluster            ),
         .rst_ni             ( s_rst_n                ),
+        .clock_en_i         ( hmr_clock_en [i]       ),
         .test_mode_i        ( test_mode_i            ),
         .base_addr_i        ( base_addr_i            ),
         .ext_perf_cntrs_o   ( ext_perf_cntrs [i]     ),
-        .core_bus_slave     ( s_core_assist_bus [i]  ), // Slave BUS from the Core Region
+        .core_bus_slave     ( core_data_intf [i]     ), // Slave BUS from the Core Region
         .tcdm_data_master   ( s_hci_core [i]         ), // Master BUS to TCDM Interconnect
         .dma_ctrl_master    ( s_core_dmactrl_bus [i] ), // Master BUS to DMA Controller
         .eu_ctrl_master     ( s_core_euctrl_bus [i]  ), // Master BUS to Event Unit
@@ -1030,6 +1064,83 @@ module pulp_cluster
       );
     end
   endgenerate
+
+  periph_to_reg #(
+    .AW   (ADDR_WIDTH),
+    .DW   (DATA_WIDTH),
+    .BW   (8),
+    .IW   ( NB_CORES+1 ),
+    .req_t(reg_req_t),
+    .rsp_t(reg_rsp_t)
+  ) i_periph_to_hmr (
+    .clk_i    ( clk_cluster ),
+    .rst_ni   ( s_rst_n ),
+    .req_i    ( s_extra_periph_bus.req     ),
+    .add_i    ( s_extra_periph_bus.add     ),
+    .wen_i    ( s_extra_periph_bus.wen     ),
+    .wdata_i  ( s_extra_periph_bus.wdata   ),
+    .be_i     ( s_extra_periph_bus.be      ),
+    .id_i     ( s_extra_periph_bus.id      ),
+    .gnt_o    ( s_extra_periph_bus.gnt     ),
+    .r_rdata_o( s_extra_periph_bus.r_rdata ),
+    .r_opc_o  ( s_extra_periph_bus.r_opc   ),
+    .r_id_o   ( s_extra_periph_bus.r_id    ),
+    .r_valid_o( s_extra_periph_bus.r_valid ),
+    .reg_req_o( hmr_req ),
+    .reg_rsp_i( hmr_rsp )
+  );
+
+  logic [NB_CORES-1:0][3:0]            sys_core_id;
+  logic [NB_CORES-1:0]                 core_data_req;
+  logic [NB_CORES-1:0][ADDR_WIDTH-1:0] core_data_add;
+  logic [NB_CORES-1:0]                 core_data_wen;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] core_data_wdata;
+  logic [NB_CORES-1:0][  BE_WIDTH-1:0] core_data_be;
+  logic [NB_CORES-1:0]                 core_data_gnt;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] core_data_r_data;
+  logic [NB_CORES-1:0]                 core_data_r_valid;
+  logic [NB_CORES-1:0]                 core_data_r_opc;
+
+  logic [NB_CORES-1:0]                 hmr_data_req;
+  logic [NB_CORES-1:0][ADDR_WIDTH-1:0] hmr_data_add;
+  logic [NB_CORES-1:0]                 hmr_data_wen;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] hmr_data_wdata;
+  logic [NB_CORES-1:0][  BE_WIDTH-1:0] hmr_data_be;
+  logic [NB_CORES-1:0]                 hmr_data_gnt;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] hmr_data_r_rdata;
+  logic [NB_CORES-1:0]                 hmr_data_r_valid;
+  logic [NB_CORES-1:0]                 hmr_data_r_opc;
+
+  for (genvar i = 0; i < NB_CORES; i++) begin
+    assign sys_core_id[i]           = i[3:0];
+
+    assign core_data_intf[i].req    = core_data_req  [i];
+    assign core_data_intf[i].add    = core_data_add  [i];
+    assign core_data_intf[i].wen    = core_data_wen  [i];
+    assign core_data_intf[i].data   = core_data_wdata[i];
+    assign core_data_intf[i].be     = core_data_be   [i];
+    assign core_data_intf[i].user   = '0;
+    assign core_data_intf[i].boffs  = '0;
+    assign core_data_intf[i].lrdy   = '0;
+    assign core_data_intf[i].r_user = '0;
+    assign core_data_gnt        [i] = core_data_intf[i].gnt;
+    assign core_data_r_data     [i] = core_data_intf[i].r_data;
+    assign core_data_r_valid    [i] = core_data_intf[i].r_valid;
+    assign core_data_r_opc      [i] = core_data_intf[i].r_opc;
+
+    assign hmr_data_req         [i] = hmr_data_intf[i].req;
+    assign hmr_data_add         [i] = hmr_data_intf[i].add;
+    assign hmr_data_wen         [i] = hmr_data_intf[i].wen;
+    assign hmr_data_wdata       [i] = hmr_data_intf[i].data;
+    assign hmr_data_be          [i] = hmr_data_intf[i].be;
+    assign hmr_data_intf[i].user    = '0;
+    assign hmr_data_intf[i].boffs   = '0;
+    assign hmr_data_intf[i].lrdy    = '0;
+    assign hmr_data_intf[i].r_user  = '0;
+    assign hmr_data_intf[i].gnt     = hmr_data_gnt[i];
+    assign hmr_data_intf[i].r_data  = hmr_data_r_rdata[i];
+    assign hmr_data_intf[i].r_valid = hmr_data_r_valid[i];
+  end
 
   HMR_wrap #(
     .NumCores       ( NB_CORES           ),
@@ -1053,92 +1164,94 @@ module pulp_cluster
     .reg_request_i  ( hmr_req ),
     .reg_response_o ( hmr_rsp ),
     // TMR Signals
-    .tmr_failure_o     (),
-    .tmr_error_o       (),
-    .tmr_resynch_req_o (),
-    .tmr_cores_synch_i (),
+    .tmr_failure_o     (    ),
+    .tmr_error_o       (    ),
+    .tmr_resynch_req_o (    ),
+    .tmr_cores_synch_i ( '0 ),
     // DMR signals
-    .dmr_failure_o     (),
-    .dmr_error_o       (),
-    .dmr_resynch_req_o (),
+    .dmr_failure_o     (    ),
+    .dmr_error_o       (    ),
+    .dmr_resynch_req_o (    ),
     .dmr_cores_synch_i ( '0 ),
+    // Recovery Register File interface
+    
     // Porst connencting to System
-    .sys_core_id_i       (),
-    .sys_cluster_id_i    (),
-                         
-    .sys_clock_en_i      (),
-    .sys_fetch_en_i      (),
-    .sys_boot_addr_i     (),
-    .sys_core_busy_o     (),
-                         
-    .sys_irq_req_i       (),
-    .sys_irq_ack_o       (),
-    .sys_irq_id_i        (),
-    .sys_irq_ack_id_o    (),
-                         
-    .sys_instr_req_o     (),
-    .sys_instr_gnt_i     (),
-    .sys_instr_addr_o    (),
-    .sys_instr_r_rdata_i (),
-    .sys_instr_r_valid_i (),
-    .sys_instr_err_i     (),
-                         
-    .sys_debug_req_i     (),
-                         
-    .sys_data_req_o      (),
-    .sys_data_add_o      (),
-    .sys_data_wen_o      (),
-    .sys_data_wdata_o    (),
-    .sys_data_user_o     (),
-    .sys_data_be_o       (),
-    .sys_data_gnt_i      (),
-    .sys_data_r_opc_i    (),
-    .sys_data_r_rdata_i  (),
-    .sys_data_r_user_i   (),
-    .sys_data_r_valid_i  (),
-    .sys_data_err_i      (),
-                         
-    .sys_perf_counters_i (),
+    .sys_core_id_i       ( sys_core_id              ),
+    .sys_cluster_id_i    ( {NB_CORES{cluster_id_i}} ),
 
-    // Ports connecting to the cores
-    .core_setback_o       (),
+    .sys_clock_en_i      ( clk_core_en  ),
+    .sys_fetch_en_i      ( fetch_en_int ),
+    .sys_boot_addr_i     ( boot_addr    ),
+    .sys_core_busy_o     ( core_busy    ),
 
-    .core_core_id_o       (),
-    .core_cluster_id_o    (),
+    .sys_irq_req_i       ( irq_req    ),
+    .sys_irq_ack_o       ( irq_ack    ),
+    .sys_irq_id_i        ( irq_id     ),
+    .sys_irq_ack_id_o    ( irq_ack_id ),
 
-    .core_clock_en_o      (),
-    .core_fetch_en_o      (),
-    .core_boot_addr_o     (),
-    .core_core_busy_i     (),
+    .sys_instr_req_o     ( instr_req     ),
+    .sys_instr_gnt_i     ( instr_gnt     ),
+    .sys_instr_addr_o    ( instr_addr    ),
+    .sys_instr_r_rdata_i ( instr_r_rdata ),
+    .sys_instr_r_valid_i ( instr_r_valid ),
+    .sys_instr_err_i     ( '0            ),
 
-    .core_irq_req_o       (),
-    .core_irq_ack_i       (),
-    .core_irq_id_o        (),
-    .core_irq_ack_id_i    (),
+    .sys_debug_req_i     ( s_core_dbg_irq ),
 
-    .core_instr_req_i     (),
-    .core_instr_gnt_o     (),
-    .core_instr_addr_i    (),
-    .core_instr_r_rdata_o (),
-    .core_instr_r_valid_o (),
-    .core_instr_err_o     (),
+    .sys_data_req_o      ( core_data_req   ),
+    .sys_data_add_o      ( core_data_add   ),
+    .sys_data_wen_o      ( core_data_wen   ),
+    .sys_data_wdata_o    ( core_data_wdata ),
+    .sys_data_user_o     (                 ),
+    .sys_data_be_o       ( core_data_be    ),
 
-    .core_debug_req_o     (),
+    .sys_data_gnt_i      ( core_data_gnt     ),
+    .sys_data_r_opc_i    ( core_data_r_opc   ),
+    .sys_data_r_rdata_i  ( core_data_r_data  ),
+    .sys_data_r_user_i   ( '0                ),
+    .sys_data_r_valid_i  ( core_data_r_valid ),
+    .sys_data_err_i      ( '0                ),
 
-    .core_data_req_i      (),
-    .core_data_add_i      (),
-    .core_data_wen_i      (),
-    .core_data_wdata_i    (),
-    .core_data_user_i     (),
-    .core_data_be_i       (),
-    .core_data_gnt_o      (),
-    .core_data_r_opc_o    (),
-    .core_data_r_rdata_o  (),
-    .core_data_r_user_o   (),
-    .core_data_r_valid_o  (),
-    .core_data_err_o      (),
+    .sys_perf_counters_i ( ext_perf_cntrs    ),
 
-    .core_perf_counters_o ()
+    .core_setback_o       ( hmr_setback      ),
+
+    .core_core_id_o       ( hmr_core_id      ),
+    .core_cluster_id_o    ( hmr_cluster_id   ),
+
+    .core_clock_en_o      ( hmr_clock_en  ),
+    .core_fetch_en_o      ( hmr_fetch_en  ),
+    .core_boot_addr_o     ( hmr_boot_addr ),
+    .core_core_busy_i     ( hmr_core_busy ),
+
+    .core_irq_req_o       ( hmr_irq_req    ),
+    .core_irq_ack_i       ( hmr_irq_ack    ),
+    .core_irq_id_o        ( hmr_irq_id     ),
+    .core_irq_ack_id_i    ( hmr_irq_ack_id ),
+
+    .core_instr_req_i     ( hmr_instr_req     ),
+    .core_instr_gnt_o     ( hmr_instr_gnt     ),
+    .core_instr_addr_i    ( hmr_instr_addr    ),
+    .core_instr_r_rdata_o ( hmr_instr_r_rdata ),
+    .core_instr_r_valid_o ( hmr_instr_r_valid ),
+    .core_instr_err_o     (                   ),
+
+    .core_debug_req_o     ( hmr_debug_req ),
+
+    .core_data_req_i      ( hmr_data_req     ),
+    .core_data_add_i      ( hmr_data_add     ),
+    .core_data_wen_i      ( hmr_data_wen     ),
+    .core_data_wdata_i    ( hmr_data_wdata   ),
+    .core_data_user_i     ( '0               ),
+    .core_data_be_i       ( hmr_data_be      ),
+    .core_data_gnt_o      ( hmr_data_gnt     ),
+    .core_data_r_opc_o    ( hmr_data_r_opc   ),
+    .core_data_r_rdata_o  ( hmr_data_r_rdata ),
+    .core_data_r_user_o   (                  ),
+    .core_data_r_valid_o  ( hmr_data_r_valid ),
+    .core_data_err_o      (                  ),
+
+    .core_perf_counters_o ( hmr_perf_cntrs   )
   );
 
 //**********************************************

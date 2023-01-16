@@ -91,6 +91,7 @@ module cluster_peripherals
   output logic [1:0]                  TCDM_arb_policy_o,
                                     
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
+  XBAR_PERIPH_BUS.Master              extra_periph_bus,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o   
@@ -396,11 +397,19 @@ module cluster_peripherals
   assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
   assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
 
-  assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  /********************** Extra periph bus binding **********************/
+  assign speriph_slave[SPER_EXTRA_BUS_ID].gnt     = extra_periph_bus.gnt;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_rdata = extra_periph_bus.r_rdata;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_opc   = extra_periph_bus.r_opc;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_id    = extra_periph_bus.r_id;
+  assign speriph_slave[SPER_EXTRA_BUS_ID].r_valid = extra_periph_bus.r_valid;
+
+  assign extra_periph_bus.req   = speriph_slave[SPER_EXTRA_BUS_ID].req;
+  assign extra_periph_bus.add   = speriph_slave[SPER_EXTRA_BUS_ID].add;
+  assign extra_periph_bus.wen   = speriph_slave[SPER_EXTRA_BUS_ID].wen;
+  assign extra_periph_bus.wdata = speriph_slave[SPER_EXTRA_BUS_ID].wdata;
+  assign extra_periph_bus.be    = speriph_slave[SPER_EXTRA_BUS_ID].be;
+  assign extra_periph_bus.id    = speriph_slave[SPER_EXTRA_BUS_ID].id;
 
 
   generate

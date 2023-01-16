@@ -24,6 +24,7 @@ module core_assist #(
 )(
   input  logic                          clk_i             ,
   input  logic                          rst_ni            ,
+  input  logic                          clock_en_i        ,
   input  logic                          test_mode_i       ,
   input  logic [3:0]                    base_addr_i       ,
   output logic [NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs_o  ,
