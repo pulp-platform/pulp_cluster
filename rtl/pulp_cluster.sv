@@ -959,6 +959,7 @@ module pulp_cluster
   logic [NB_CORES-1:0] hmr_instr_r_valid;
 
   logic [NB_CORES-1:0] hmr_debug_req;
+  logic [NB_CORES-1:0] hmr_debug_rsp;
 
   logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] hmr_perf_cntrs;
   /* cluster cores + core-coupled accelerators / shared execution units */
@@ -982,6 +983,7 @@ module pulp_cluster
         .rst_ni              ( s_rst_n               ),
         .init_ni             ( s_init_n              ),
         .core_id_i           ( hmr_core_id  [i]      ),
+        .clock_en_i          ( hmr_clock_en [i]      ),
         .fetch_en_i          ( hmr_fetch_en [i]      ),
         .cluster_id_i        ( hmr_cluster_id [i]    ),
         .boot_addr_i         ( hmr_boot_addr [i]     ),
@@ -1000,7 +1002,7 @@ module pulp_cluster
         .instr_r_valid_i     ( hmr_instr_r_valid [i] ),
         // Debug Unit
         .debug_req_i         ( hmr_debug_req [i]     ),
-        .core_halted_o       ( /* to be connected */ ),
+        .core_halted_o       ( hmr_debug_rsp [i]     ),
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
         // Recovery Ports for RF
@@ -1189,7 +1191,16 @@ module pulp_cluster
     .dmr_error_o       (    ),
     .dmr_resynch_req_o (    ),
     .dmr_cores_synch_i ( '0 ),
-    // Recovery Register File interface
+
+    // Backup ports from cores' RFs
+    // Port A
+    .backup_regfile_we_a_i    ( regfile_we_a_out    ),
+    .backup_regfile_waddr_a_i ( regfile_waddr_a_out ),
+    .backup_regfile_wdata_a_i ( regfile_wdata_a_out ),
+    // Port B
+    .backup_regfile_we_b_i    ( regfile_we_b_out    ),
+    .backup_regfile_waddr_b_i ( regfile_waddr_b_out ),
+    .backup_regfile_wdata_b_i ( regfile_wdata_b_out ),
     
     // Porst connencting to System
     .sys_core_id_i       ( sys_core_id              ),
@@ -1253,6 +1264,7 @@ module pulp_cluster
     .core_instr_err_o     (                   ),
 
     .core_debug_req_o     ( hmr_debug_req ),
+    .core_debug_rsp_i     ( hmr_debug_rsp ),
 
     .core_data_req_i      ( hmr_data_req     ),
     .core_data_add_i      ( hmr_data_add     ),
