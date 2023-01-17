@@ -883,20 +883,26 @@ module pulp_cluster
 
   // Recovery Ports for RF
   // Address ports
-  logic [NB_CORES-1:0][5:0] regfile_waddr_a,
-                            regfile_waddr_b,
-                            regfile_raddr_a,
-                            regfile_raddr_b,
-                            regfile_raddr_c;
+  logic [NB_CORES-1:0][5:0] regfile_waddr_a    ,
+                            regfile_waddr_a_out,
+                            regfile_waddr_b    ,
+                            regfile_waddr_b_out,
+                            regfile_raddr_a    ,
+                            regfile_raddr_b    ,
+                            regfile_raddr_c    ;
   // Data ports
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0] regfile_wdata_a,
-                                       regfile_wdata_b,
-                                       regfile_rdata_a,
-                                       regfile_rdata_b,
-                                       regfile_rdata_c;
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] regfile_wdata_a    ,
+                                       regfile_wdata_a_out,
+                                       regfile_wdata_b    ,
+                                       regfile_wdata_b_out,
+                                       regfile_rdata_a    ,
+                                       regfile_rdata_b    ,
+                                       regfile_rdata_c    ;
   // Write enables
-  logic [NB_CORES-1:0] regfile_we_a,        
-                       regfile_we_b;
+  logic [NB_CORES-1:0] regfile_we_a    ,
+                       regfile_we_a_out,
+                       regfile_we_b    ,
+                       regfile_we_b_out;
   // Others
   logic [NB_CORES-1:0] regfile_recover,
                        regfile_backup ;
@@ -994,6 +1000,7 @@ module pulp_cluster
         .instr_r_valid_i     ( hmr_instr_r_valid [i] ),
         // Debug Unit
         .debug_req_i         ( hmr_debug_req [i]     ),
+        .core_halted_o       ( /* to be connected */ ),
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
         // Recovery Ports for RF
@@ -1006,6 +1013,15 @@ module pulp_cluster
         .regfile_we_b_i      ( regfile_we_b    [i]   ),
         .regfile_waddr_b_i   ( regfile_waddr_b [i]   ),
         .regfile_wdata_b_i   ( regfile_wdata_b [i]   ),
+        // Outputs from RF
+        // Port A
+        .regfile_we_a_o      ( regfile_we_a_out [i]    ),
+        .regfile_waddr_a_o   ( regfile_waddr_a_out [i] ),
+        .regfile_wdata_a_o   ( regfile_wdata_a_out [i] ),
+        // Port B
+        .regfile_we_b_o      ( regfile_we_b_out [i]    ),
+        .regfile_waddr_b_o   ( regfile_waddr_b_out [i] ),
+        .regfile_wdata_b_o   ( regfile_wdata_b_out [i] ),
         // Backup ports to the RF
         .regfile_backup_i    ( regfile_backup  [i]   ),
         .regfile_raddr_ra_i  ( regfile_raddr_a [i]   ),

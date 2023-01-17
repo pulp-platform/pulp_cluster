@@ -66,7 +66,8 @@ module core_region #(
   input  logic [INSTR_RDATA_WIDTH-1:0]  instr_r_rdata_i  ,
   input  logic                          instr_r_valid_i  ,
   // Debug Unit
-  input logic                           debug_req_i      ,
+  input  logic                          debug_req_i      ,
+  output logic                          core_halted_o    ,
   // External Performance Counters
   input logic [NUM_EXT_PERF_CNTRS-1:0]  ext_perf_cntrs_i ,
   // Recovery Ports for RF
@@ -79,6 +80,15 @@ module core_region #(
   input logic                           regfile_we_b_i   ,
   input logic [5:0]                     regfile_waddr_b_i,
   input logic [DATA_WIDTH-1:0]          regfile_wdata_b_i,
+  // Outputs from RF
+  // Port A
+  output logic                          regfile_we_a_o   ,
+  output logic [ 5:0]                   regfile_waddr_a_o,
+  output logic [DATA_WIDTH-1:0]         regfile_wdata_a_o,
+  // Port B
+  output logic                          regfile_we_b_o   ,
+  output logic [ 5:0]                   regfile_waddr_b_o,
+  output logic [DATA_WIDTH-1:0]         regfile_wdata_b_o,
   // Backup ports to the RF
   input  logic                          regfile_backup_i  ,
   input  logic [ 5:0]                   regfile_raddr_ra_i,
@@ -116,9 +126,9 @@ localparam IBEX_RV32E = CORE_TYPE_CL == 2;
   localparam IBEX_RegFile = ibex_pkg::RegFileFF;
 `endif
 
-//********************************************************
-//****************** Signals and BUSEs *******************
-//********************************************************
+/********************************************************
+ ****************** Signals and BUSEs *******************
+ ********************************************************/
 
 logic        clk_int;
 logic [31:0] hart_id;
@@ -157,9 +167,9 @@ assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, core_id_i[3:0]};
   `endif
 `endif
 
-//********************************************************
-//***************** iCache Converter *********************
-//********************************************************
+/********************************************************
+ ***************** iCache Converter *********************
+ ********************************************************/
 
 if (INSTR_RDATA_WIDTH == 128) begin
   instr_width_converter ibex_width_converter (
@@ -254,7 +264,7 @@ generate
         .debug_req_i         ( debug_req_i        ),
         .debug_havereset_o   (                    ),
         .debug_running_o     (                    ),
-        .debug_halted_o      (                    ),
+        .debug_halted_o      ( core_halted_o      ),
         .dm_halt_addr_i      ( DEBUG_START_ADDR + dm::HaltAddress[31:0]      ),
         .dm_exception_addr_i ( DEBUG_START_ADDR + dm::ExceptionAddress[31:0] ),
         // External Performece Counters
@@ -269,6 +279,15 @@ generate
         .regfile_we_b_i      ( regfile_we_b_i     ),
         .regfile_waddr_b_i   ( regfile_waddr_b_i  ),
         .regfile_wdata_b_i   ( regfile_wdata_b_i  ),
+        // Outputs from RF
+        // Port A
+        .regfile_we_a_o      ( regfile_we_a_o     ),
+        .regfile_waddr_a_o   ( regfile_waddr_a_o  ),
+        .regfile_wdata_a_o   ( regfile_wdata_a_o  ),
+        // Port B
+        .regfile_we_b_o      ( regfile_we_b_o     ),
+        .regfile_waddr_b_o   ( regfile_waddr_b_o  ),
+        .regfile_wdata_b_o   ( regfile_wdata_b_o  ),
         // Backup ports to the RF
         .regfile_backup_i    ( regfile_backup_i   ),
         .regfile_raddr_ra_i  ( regfile_raddr_ra_i ),
