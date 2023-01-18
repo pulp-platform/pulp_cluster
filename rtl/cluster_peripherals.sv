@@ -32,7 +32,8 @@ module cluster_peripherals
   parameter EVNT_WIDTH     = 8,
   parameter FEATURE_DEMUX_MAPPED = 1,
   parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4
+  parameter int unsigned  RW_MARGIN_WIDTH = 4,
+  parameter int unsigned NB_BARRIERS = NB_CORES
 )
 (
   input  logic                        clk_i,
@@ -102,7 +103,9 @@ module cluster_peripherals
   PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
   output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o ,
 
-  XBAR_PERIPH_BUS.Master              extra_periph_bus
+  XBAR_PERIPH_BUS.Master              extra_periph_bus,
+
+  output logic [NB_BARRIERS-1:0]      barrier_matched_o
   );
    
   logic                      s_timer_out_lo_event;
@@ -237,7 +240,7 @@ module cluster_peripherals
 
   event_unit_top #(
     .NB_CORES     ( NB_CORES   ),
-    .NB_BARR      ( NB_CORES   ),
+    .NB_BARR      ( NB_BARRIERS   ),
     .PER_ID_WIDTH ( NB_CORES+1 ),
     .EVNT_WIDTH   ( EVNT_WIDTH )
   ) event_unit_flex_i (
@@ -261,6 +264,8 @@ module cluster_peripherals
 
     .core_busy_i            ( core_busy_i            ),
     .core_clock_en_o        ( core_clk_en_o          ),
+
+    .barrier_matched_o      ( barrier_matched_o      ),
     
     .speriph_slave          ( speriph_slave[SPER_EVENT_U_ID]  ),
     .eu_direct_link         ( core_eu_direct_link    ),

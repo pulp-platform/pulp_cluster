@@ -39,7 +39,7 @@ package pulp_cluster_package;
   parameter SPER_ICACHE_CTRL = 5;
   parameter SPER_DMA_CL_ID   = 6;
   parameter SPER_DMA_FC_ID   = 7;
-  parameter SPER_EXTRA_BUS_ID = 8; // Currently unused / grounded, available for specific designs
+  parameter SPER_EXTRA_BUS_ID = 8; // Used for HMR
   parameter SPER_EXT_ID      = 9; 
   parameter SPER_ERROR_ID    = 10;
    
