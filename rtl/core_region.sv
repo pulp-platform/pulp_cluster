@@ -66,6 +66,7 @@ module core_region #(
   output logic [ADDR_WIDTH-1:0]         instr_addr_o     ,
   input  logic [INSTR_RDATA_WIDTH-1:0]  instr_r_rdata_i  ,
   input  logic                          instr_r_valid_i  ,
+  input  logic                          instr_lock_i     ,
   // Debug Unit
   input  logic                          debug_req_i      ,
   output logic                          core_halted_o    ,
@@ -191,12 +192,12 @@ if (INSTR_RDATA_WIDTH == 128) begin
   );
 end else begin
   obi_pulp_adapter i_obi_pulp_adapter_instr (
-    .clk_i       (clk_i          ),
-    .rst_ni      (rst_ni         ),
-    .core_req_i  (core_instr_req ),
-    .mem_req_o   (instr_req_o    ),
-    .mem_gnt_i   (instr_gnt_i    ),
-    .mem_rvalid_i(instr_r_valid_i)
+    .clk_i       (clk_i                        ),
+    .rst_ni      (rst_ni                       ),
+    .core_req_i  (core_instr_req & instr_lock_i),
+    .mem_req_o   (instr_req_o                  ),
+    .mem_gnt_i   (instr_gnt_i                  ),
+    .mem_rvalid_i(instr_r_valid_i              )
   );
   assign core_instr_gnt     = instr_gnt_i;
   assign instr_addr_o       = core_instr_addr;
@@ -432,7 +433,7 @@ end
           /* ... */
         end
         1'b0: begin
-          if(instr_r_rdata_i !== instr_r_rdata_ROM) begin
+          if((instr_r_rdata_i !== instr_r_rdata_ROM) && ~instr_lock_i) begin
             $warning("Error DURING ROM Fetch: %x != %x", instr_r_rdata_i, instr_r_rdata_ROM);
             $stop();
           end
