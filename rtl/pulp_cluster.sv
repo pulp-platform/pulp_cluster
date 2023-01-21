@@ -908,7 +908,8 @@ module pulp_cluster
   logic [NB_CORES-1:0] regfile_recover,
                        core_rf_readback;
 
-  regfile_write_t [NB_CORES-1:0] backup_regfile_wport;
+  regfile_write_t [NB_CORES-1:0] backup_regfile_wport,
+                                 core_recovery_regfile_wport;
   regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
   regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
@@ -1021,13 +1022,13 @@ module pulp_cluster
         // Recovery Ports for RF
         .recover_i           ( hmr_setback [i]       ),
         // Write Port A
-        .regfile_we_a_i      ( regfile_we_a    [i]   ),
-        .regfile_waddr_a_i   ( regfile_waddr_a [i]   ),
-        .regfile_wdata_a_i   ( regfile_wdata_a [i]   ),
+        .regfile_we_a_i      ( core_recovery_regfile_wport[i].we_a     ),
+        .regfile_waddr_a_i   ( core_recovery_regfile_wport[i].waddr_a  ),
+        .regfile_wdata_a_i   ( core_recovery_regfile_wport[i].wdata_a  ),
         // Write Port B
-        .regfile_we_b_i      ( regfile_we_b    [i]   ),
-        .regfile_waddr_b_i   ( regfile_waddr_b [i]   ),
-        .regfile_wdata_b_i   ( regfile_wdata_b [i]   ),
+        .regfile_we_b_i      ( core_recovery_regfile_wport[i].we_b     ),
+        .regfile_waddr_b_i   ( core_recovery_regfile_wport[i].waddr_b  ),
+        .regfile_wdata_b_i   ( core_recovery_regfile_wport[i].wdata_b  ),
         // Outputs from RF
         // Port A
         .regfile_we_a_o      ( backup_regfile_wport[i].we_a    ),
@@ -1211,6 +1212,7 @@ module pulp_cluster
     // Backup ports from cores' RFs
     .backup_regfile_wport_i ( backup_regfile_wport ),
     .core_regfile_raddr_o   ( core_regfile_raddr   ),
+    .core_recovery_regfile_wport_o ( core_recovery_regfile_wport ),
     
     // Porst connencting to System
     .sys_core_id_i       ( sys_core_id              ),
