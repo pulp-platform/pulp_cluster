@@ -27,6 +27,7 @@ module core_assist #(
   input  logic                          clock_en_i        ,
   input  logic                          test_mode_i       ,
   input  logic [3:0]                    base_addr_i       ,
+  input  logic [5:0]                    cluster_id_i      ,
   output logic [NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs_o  ,
   hci_core_intf.slave                   core_bus_slave    , // Slave BUS from Core Region
   hci_core_intf.master                  tcdm_data_master  , // Master BUS to TCDM Interconnect
