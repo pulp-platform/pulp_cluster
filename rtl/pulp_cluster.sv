@@ -19,6 +19,7 @@
 
 import pulp_cluster_package::*;
 import hci_package::*;
+import recovery_pkg::*;
 
 `include "register_interface/typedef.svh"
 `include "register_interface/assign.svh"
@@ -905,9 +906,19 @@ module pulp_cluster
                        regfile_we_b_out;
   // Others
   logic [NB_CORES-1:0] regfile_recover,
-                       regfile_backup ;
+                       core_rf_readback;
+
+  regfile_write_t [NB_CORES-1:0] backup_regfile_wport;
+  regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
+  regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
   logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs;
+  logic [NB_CORES-1:0] core_rstn, dmr_core_rstn;
+
+  generate
+    for (genvar i = 0; i< NB_CORES; i++)
+      assign core_rstn [i] = s_rst_n & dmr_core_rstn [i];
+  endgenerate
 
   // BUSes from Core Regions to Core Assists
   hci_core_intf #(
@@ -938,7 +949,7 @@ module pulp_cluster
   assign regfile_we_a    = '0;
   assign regfile_we_b    = '0;
   assign regfile_recover = '0;
-  assign regfile_backup  = '0;
+  // assign regfile_backup  = '0;
 
   logic [NB_CORES-1:0] hmr_setback;
   logic [NB_CORES-1:0][3:0] hmr_core_id;
@@ -957,6 +968,7 @@ module pulp_cluster
   logic [NB_CORES-1:0][ADDR_WIDTH-1:0] hmr_instr_addr;
   logic [NB_CORES-1:0][INSTR_RDATA_WIDTH-1:0] hmr_instr_r_rdata;
   logic [NB_CORES-1:0] hmr_instr_r_valid;
+  logic [NB_CORES-1:0] hmr_instr_lock;
 
   logic [NB_CORES-1:0] hmr_debug_req;
   logic [NB_CORES-1:0] hmr_debug_rsp;
@@ -980,7 +992,7 @@ module pulp_cluster
         .FPU                 ( CLUST_FPU          )
       ) core_region_i        (
         .clk_i               ( clk_cluster           ),
-        .rst_ni              ( s_rst_n               ),
+        .rst_ni              ( core_rstn [i]         ),
         .init_ni             ( s_init_n              ),
         .core_id_i           ( hmr_core_id  [i]      ),
         .clock_en_i          ( hmr_clock_en [i]      ),
@@ -993,20 +1005,21 @@ module pulp_cluster
         .irq_req_i           ( hmr_irq_req    [i]    ),
         .irq_id_i            ( hmr_irq_id     [i]    ),
         .irq_ack_o           ( hmr_irq_ack    [i]    ),
-        .irq_ack_id_o        ( hmr_irq_ack_id [i]    ),      
+        .irq_ack_id_o        ( hmr_irq_ack_id [i]    ),
         // iCache BUS
         .instr_req_o         ( hmr_instr_req     [i] ),
         .instr_gnt_i         ( hmr_instr_gnt     [i] ),
         .instr_addr_o        ( hmr_instr_addr    [i] ),
         .instr_r_rdata_i     ( hmr_instr_r_rdata [i] ),
         .instr_r_valid_i     ( hmr_instr_r_valid [i] ),
+        .instr_lock_i        ( hmr_instr_lock [i]    ),
         // Debug Unit
         .debug_req_i         ( hmr_debug_req [i]     ),
         .core_halted_o       ( hmr_debug_rsp [i]     ),
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
         // Recovery Ports for RF
-        .recover_i           ( regfile_recover [i]   ),
+        .recover_i           ( hmr_setback [i]       ),
         // Write Port A
         .regfile_we_a_i      ( regfile_we_a    [i]   ),
         .regfile_waddr_a_i   ( regfile_waddr_a [i]   ),
@@ -1017,21 +1030,21 @@ module pulp_cluster
         .regfile_wdata_b_i   ( regfile_wdata_b [i]   ),
         // Outputs from RF
         // Port A
-        .regfile_we_a_o      ( regfile_we_a_out [i]    ),
-        .regfile_waddr_a_o   ( regfile_waddr_a_out [i] ),
-        .regfile_wdata_a_o   ( regfile_wdata_a_out [i] ),
+        .regfile_we_a_o      ( backup_regfile_wport[i].we_a    ),
+        .regfile_waddr_a_o   ( backup_regfile_wport[i].waddr_a ),
+        .regfile_wdata_a_o   ( backup_regfile_wport[i].wdata_a ),
         // Port B
-        .regfile_we_b_o      ( regfile_we_b_out [i]    ),
-        .regfile_waddr_b_o   ( regfile_waddr_b_out [i] ),
-        .regfile_wdata_b_o   ( regfile_wdata_b_out [i] ),
+        .regfile_we_b_o      ( backup_regfile_wport[i].we_b    ),
+        .regfile_waddr_b_o   ( backup_regfile_wport[i].waddr_b ),
+        .regfile_wdata_b_o   ( backup_regfile_wport[i].wdata_b ),
         // Backup ports to the RF
-        .regfile_backup_i    ( regfile_backup  [i]   ),
-        .regfile_raddr_ra_i  ( regfile_raddr_a [i]   ),
-        .regfile_raddr_rb_i  ( regfile_raddr_b [i]   ),
-        .regfile_raddr_rc_i  ( regfile_raddr_c [i]   ),
-        .regfile_rdata_ra_o  ( regfile_rdata_a [i]   ),
-        .regfile_rdata_rb_o  ( regfile_rdata_b [i]   ),
-        .regfile_rdata_rc_o  ( regfile_rdata_c [i]   ),
+        .regfile_backup_i    ( core_rf_readback  [i]         ),
+        .regfile_raddr_ra_i  ( core_regfile_raddr[i].raddr_a ),
+        .regfile_raddr_rb_i  ( core_regfile_raddr[i].raddr_b ),
+        .regfile_raddr_rc_i  ( '0   ),
+        .regfile_rdata_ra_o  ( core_regfile_rdata[i].rdata_a ),
+        .regfile_rdata_rb_o  ( core_regfile_rdata[i].rdata_b ),
+        .regfile_rdata_rc_o  (    ),
         // FPU 
       `ifdef SHARED_FPU_CLUSTER       
         .apu_master_req_o      ( s_apu_master_req      [i] ),
@@ -1054,7 +1067,7 @@ module pulp_cluster
 
   generate
     for (genvar i = 0; i < NB_CORES; i++) begin : generate_core_assist
-      core_assist           #(
+      core_assist          #(
         .ADDR_WIDTH         ( ADDR_WIDTH         ),
         .DATA_WIDTH         ( DATA_WIDTH         ),
         .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
@@ -1066,6 +1079,7 @@ module pulp_cluster
         .clock_en_i         ( hmr_clock_en [i]       ),
         .test_mode_i        ( test_mode_i            ),
         .base_addr_i        ( base_addr_i            ),
+        .cluster_id_i       ( cluster_id_i           ),
         .ext_perf_cntrs_o   ( ext_perf_cntrs [i]     ),
         .core_bus_slave     ( core_data_intf [i]     ), // Slave BUS from the Core Region
         .tcdm_data_master   ( s_hci_core [i]         ), // Master BUS to TCDM Interconnect
@@ -1190,17 +1204,13 @@ module pulp_cluster
     .dmr_failure_o     (    ),
     .dmr_error_o       (    ),
     .dmr_resynch_req_o (    ),
+    .dmr_rf_readback_o ( core_rf_readback ),
     .dmr_cores_synch_i ( '0 ),
+    .dmr_core_rstn_o (dmr_core_rstn),
 
     // Backup ports from cores' RFs
-    // Port A
-    .backup_regfile_we_a_i    ( regfile_we_a_out    ),
-    .backup_regfile_waddr_a_i ( regfile_waddr_a_out ),
-    .backup_regfile_wdata_a_i ( regfile_wdata_a_out ),
-    // Port B
-    .backup_regfile_we_b_i    ( regfile_we_b_out    ),
-    .backup_regfile_waddr_b_i ( regfile_waddr_b_out ),
-    .backup_regfile_wdata_b_i ( regfile_wdata_b_out ),
+    .backup_regfile_wport_i ( backup_regfile_wport ),
+    .core_regfile_raddr_o   ( core_regfile_raddr   ),
     
     // Porst connencting to System
     .sys_core_id_i       ( sys_core_id              ),
@@ -1261,6 +1271,7 @@ module pulp_cluster
     .core_instr_addr_i    ( hmr_instr_addr    ),
     .core_instr_r_rdata_o ( hmr_instr_r_rdata ),
     .core_instr_r_valid_o ( hmr_instr_r_valid ),
+    .core_instr_lock_o    ( hmr_instr_lock    ),
     .core_instr_err_o     (                   ),
 
     .core_debug_req_o     ( hmr_debug_req ),
