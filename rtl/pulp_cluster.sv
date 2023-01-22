@@ -973,6 +973,7 @@ module pulp_cluster
 
   logic [NB_CORES-1:0] hmr_debug_req;
   logic [NB_CORES-1:0] hmr_debug_rsp;
+  logic [NB_CORES-1:0] hmr_debug_resume;
 
   logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] hmr_perf_cntrs;
   /* cluster cores + core-coupled accelerators / shared execution units */
@@ -1016,6 +1017,7 @@ module pulp_cluster
         .instr_lock_i        ( hmr_instr_lock [i]    ),
         // Debug Unit
         .debug_req_i         ( hmr_debug_req [i]     ),
+        .debug_resume_i      ( hmr_debug_resume [i]  ),
         .core_halted_o       ( hmr_debug_rsp [i]     ),
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
@@ -1277,6 +1279,7 @@ module pulp_cluster
     .core_instr_err_o     (                   ),
 
     .core_debug_req_o     ( hmr_debug_req ),
+    .core_debug_resume_o  ( hmr_debug_resume ),
     .core_debug_rsp_i     ( hmr_debug_rsp ),
 
     .core_data_req_i      ( hmr_data_req     ),

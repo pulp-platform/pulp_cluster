@@ -69,6 +69,7 @@ module core_region #(
   input  logic                          instr_lock_i     ,
   // Debug Unit
   input  logic                          debug_req_i      ,
+  input  logic                          debug_resume_i   ,
   output logic                          core_halted_o    ,
   // External Performance Counters
   input logic [NUM_EXT_PERF_CNTRS-1:0]  ext_perf_cntrs_i ,
@@ -264,6 +265,7 @@ generate
         .instr_rvalid_i      ( core_instr_r_valid ),
         // Debug Unit
         .debug_req_i         ( debug_req_i        ),
+        .debug_resume_i      ( debug_resume_i     ),
         .debug_havereset_o   (                    ),
         .debug_running_o     (                    ),
         .debug_halted_o      ( core_halted_o      ),
