@@ -914,12 +914,6 @@ module pulp_cluster
   regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
   logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs;
-  logic [NB_CORES-1:0] core_rstn, dmr_core_rstn;
-
-  generate
-    for (genvar i = 0; i< NB_CORES; i++)
-      assign core_rstn [i] = s_rst_n & dmr_core_rstn [i];
-  endgenerate
 
   // BUSes from Core Regions to Core Assists
   hci_core_intf #(
@@ -953,6 +947,7 @@ module pulp_cluster
   // assign regfile_backup  = '0;
 
   logic [NB_CORES-1:0] hmr_setback;
+  logic [NB_CORES-1:0] hmr_recover;
   logic [NB_CORES-1:0][3:0] hmr_core_id;
   logic [NB_CORES-1:0][5:0] hmr_cluster_id;
   logic [NB_CORES-1:0] hmr_clock_en;
@@ -994,7 +989,8 @@ module pulp_cluster
         .FPU                 ( CLUST_FPU          )
       ) core_region_i        (
         .clk_i               ( clk_cluster           ),
-        .rst_ni              ( core_rstn [i]         ),
+        .rst_ni              ( s_rst_n               ),
+        .setback_i           ( hmr_setback [i]       ),
         .init_ni             ( s_init_n              ),
         .core_id_i           ( hmr_core_id  [i]      ),
         .clock_en_i          ( hmr_clock_en [i]      ),
@@ -1022,7 +1018,7 @@ module pulp_cluster
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
         // Recovery Ports for RF
-        .recover_i           ( hmr_setback [i]       ),
+        .recover_i           ( hmr_recover [i]       ),
         // Write Port A
         .regfile_we_a_i      ( core_recovery_regfile_wport[i].we_a     ),
         .regfile_waddr_a_i   ( core_recovery_regfile_wport[i].waddr_a  ),
@@ -1209,7 +1205,6 @@ module pulp_cluster
     .dmr_resynch_req_o (    ),
     .dmr_rf_readback_o ( core_rf_readback ),
     .dmr_cores_synch_i ( '0 ),
-    .dmr_core_rstn_o (dmr_core_rstn),
 
     // Backup ports from cores' RFs
     .backup_regfile_wport_i ( backup_regfile_wport ),
@@ -1256,6 +1251,7 @@ module pulp_cluster
     .sys_perf_counters_i ( ext_perf_cntrs    ),
 
     .core_setback_o       ( hmr_setback      ),
+    .core_recover_o       ( hmr_recover      ),
 
     .core_core_id_o       ( hmr_core_id      ),
     .core_cluster_id_o    ( hmr_cluster_id   ),

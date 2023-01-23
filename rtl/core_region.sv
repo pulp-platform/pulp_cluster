@@ -47,6 +47,7 @@ module core_region #(
 (
   input  logic                          clk_i            ,
   input  logic                          rst_ni           ,
+  input  logic                          setback_i        ,
   input  logic                          init_ni          ,
   input  logic [3:0]                    core_id_i        ,
   input  logic                          clock_en_i       ,
@@ -246,6 +247,7 @@ generate
       ) cv32e40p_core     (
         .clk_i               ( clk_i                    ),
         .rst_ni              ( rst_ni                   ),
+        .setback_i           ( setback_i                ),
         .pulp_clock_en_i     ( clock_en_i               ),
         .fetch_enable_i      ( fetch_en_i               ),
         .boot_addr_i         ( boot_addr                ),
