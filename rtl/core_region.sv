@@ -274,6 +274,7 @@ module core_region
       ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
         .rst_ni                ( rst_ni            ),
+        .setback_i             ( '0 ),
 
         .pulp_clock_en_i       ( clock_en_i        ),
         .scan_cg_en_i          ( test_mode_i       ),

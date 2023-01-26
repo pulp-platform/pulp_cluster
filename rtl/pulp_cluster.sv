@@ -992,6 +992,7 @@ module pulp_cluster
     .DMRSupported   ( 1'b0              ),
     .DMRFixed       ( 1'b0              ),
     .TMRSupported   ( 1'b1              ),
+    .TMRFixed       ( 1'b0              ),
     .SeparateData   ( 1'b1              ),
     .BackupRegfile  ( 1'b0              ),
     .InterleaveGrps ( 1'b1              ),
@@ -1015,6 +1016,11 @@ module pulp_cluster
     .tmr_error_o         (),
     .tmr_resynch_req_o   (),
     .tmr_cores_synch_i   ('0),
+
+    .dmr_failure_o       (),
+    .dmr_error_o         (),
+    .dmr_resynch_req_o   (),
+    .dmr_cores_synch_i   ('0),
 
     .sys_core_id_i       ( sys_core_id              ),
     .sys_cluster_id_i    ( {NB_CORES{cluster_id_i}} ),
