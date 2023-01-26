@@ -74,6 +74,15 @@ module core_region #(
   output logic                          core_halted_o    ,
   // External Performance Counters
   input logic [NUM_EXT_PERF_CNTRS-1:0]  ext_perf_cntrs_i ,
+  // Program Counter Bakcup
+  output logic [DATA_WIDTH-1:0]         backup_program_counter_o,
+  output logic                          backup_branch_o,
+  output logic [DATA_WIDTH-1:0]         backup_branch_addr_o,
+  // Program Counter Recovery
+  input  logic                          pc_recover_i,
+  input  logic [DATA_WIDTH-1:0]         recovery_program_counter_i,
+  input  logic                          recovery_branch_i,
+  input  logic [DATA_WIDTH-1:0]         recovery_branch_addr_i,
   // Recovery Ports for RF
   input logic                           recover_i        ,
   // Write Port A
@@ -244,7 +253,7 @@ generate
         .PULP_ZFINX          ( 1                   ),
         .NUM_MHPMCOUNTERS    ( 1                   ),
         .NUM_EXT_PERF_CNTRS  ( NUM_EXT_PERF_CNTRS  )
-      ) cv32e40p_core     (
+      ) cv32e40p_core        (
         .clk_i               ( clk_i                    ),
         .rst_ni              ( rst_ni                   ),
         .setback_i           ( setback_i                ),
@@ -275,6 +284,15 @@ generate
         .dm_exception_addr_i ( DEBUG_START_ADDR + dm::ExceptionAddress[31:0] ),
         // External Performece Counters
         .ext_perf_cntrs_i    ( ext_perf_cntrs_i   ),
+        // Program Counter Backup
+        .backup_program_counter_o   ( backup_program_counter_o   ),
+        .backup_branch_o            ( backup_branch_o            ),
+        .backup_branch_addr_o       ( backup_branch_addr_o       ),
+        // Program Counter Recovery
+        .pc_recover_i               ( pc_recover_i               ),
+        .recovery_program_counter_i ( recovery_program_counter_i ),
+        .recovery_branch_i          ( recovery_branch_i          ),
+        .recovery_branch_addr_i     ( recovery_branch_addr_i     ),
         // Recovery Ports for RF
         .recover_i           ( recover_i          ),
         // Write Port A

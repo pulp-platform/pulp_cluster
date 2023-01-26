@@ -882,6 +882,16 @@ module pulp_cluster
   reg_req_t hmr_req;
   reg_rsp_t hmr_rsp;
 
+  // Program Counter Ports
+  logic [NB_CORES-1:0] pc_recover,
+                       backup_branch,
+                       recovery_branch;
+
+  logic [NB_CORES-1:0][DATA_WIDTH-1:0] backup_program_counter,
+                                       recovery_program_counter,
+                                       backup_branch_addr,
+                                       recovery_branch_addr;
+
   // Recovery Ports for RF
   // Address ports
   logic [NB_CORES-1:0][5:0] regfile_waddr_a    ,
@@ -1017,8 +1027,17 @@ module pulp_cluster
         .core_halted_o       ( hmr_debug_rsp [i]     ),
         // External Performance Counters
         .ext_perf_cntrs_i    ( hmr_perf_cntrs [i]    ),
+        // Program Counter Backup
+        .backup_program_counter_o   ( backup_program_counter [i] ),
+        .backup_branch_o            ( backup_branch [i]          ),
+        .backup_branch_addr_o       ( backup_branch_addr [i]     ),
+        // Program Counter Recovery
+        .pc_recover_i               ( pc_recover [i]               ),
+        .recovery_program_counter_i ( recovery_program_counter [i] ),
+        .recovery_branch_i          ( recovery_branch [i]          ),
+        .recovery_branch_addr_i     ( recovery_branch_addr [i]     ),
         // Recovery Ports for RF
-        .recover_i           ( hmr_recover [i]       ),
+        .recover_i           ( hmr_recover [i]                         ),
         // Write Port A
         .regfile_we_a_i      ( core_recovery_regfile_wport[i].we_a     ),
         .regfile_waddr_a_i   ( core_recovery_regfile_wport[i].waddr_a  ),
@@ -1205,6 +1224,16 @@ module pulp_cluster
     .dmr_resynch_req_o (    ),
     .dmr_rf_readback_o ( core_rf_readback ),
     .dmr_cores_synch_i ( '0 ),
+
+    // Program Counter Backup
+    .backup_program_counter_i   ( backup_program_counter   ),
+    .backup_branch_i            ( backup_branch            ),
+    .backup_branch_addr_i       ( backup_branch_addr       ),
+    // Program Counter Recovery
+    .pc_recover_o               ( pc_recover               ),
+    .recovery_program_counter_o ( recovery_program_counter ),
+    .recovery_branch_o          ( recovery_branch          ),
+    .recovery_branch_addr_o     ( recovery_branch_addr     ),
 
     // Backup ports from cores' RFs
     .backup_regfile_wport_i ( backup_regfile_wport ),
