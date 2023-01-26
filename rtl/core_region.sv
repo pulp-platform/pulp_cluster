@@ -86,6 +86,20 @@ module core_region
   input logic                            instr_r_valid_i,
 
   input logic                            debug_req_i,
+  output logic                           debug_halted_o,
+  input logic                            debug_resume_i,
+
+
+  // Program Counter Backup
+  output logic [31:0]                    backup_program_counter_o,
+  output logic                           backup_branch_o,
+  output logic [31:0]                    backup_branch_addr_o,
+  // Program Counter Recovery
+  input  logic                           pc_recover_i,
+  input  logic [31:0]                    recovery_program_counter_i,
+  input  logic                           recovery_branch_i,
+  input  logic [31:0]                    recovery_branch_addr_i,
+
 
   // Recovery Ports for RF
   input logic                            recover_i        ,
@@ -97,7 +111,24 @@ module core_region
   input logic [5:0]                      regfile_waddr_b_i,
   input logic [31:0]                     regfile_wdata_b_i,
   input logic                            regfile_we_b_i   ,
-            
+  // Outputs from RF
+  // Port A
+  output logic                           regfile_we_a_o   ,
+  output logic [ 5:0]                    regfile_waddr_a_o,
+  output logic [31:0]                    regfile_wdata_a_o,
+  // Port B
+  output logic                           regfile_we_b_o   ,
+  output logic [ 5:0]                    regfile_waddr_b_o,
+  output logic [31:0]                    regfile_wdata_b_o,
+  // Backup ports to the RF
+  input  logic                           regfile_backup_i  ,
+  input  logic [ 5:0]                    regfile_raddr_ra_i,
+  input  logic [ 5:0]                    regfile_raddr_rb_i,
+  input  logic [ 5:0]                    regfile_raddr_rc_i, 
+  output logic [31:0]                    regfile_rdata_ra_o,
+  output logic [31:0]                    regfile_rdata_rb_o,
+  output logic [31:0]                    regfile_rdata_rc_o,
+
   //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
   //input logic             debug_core_halt_i,
@@ -319,9 +350,10 @@ module core_region
         // .irq_sec_i             (      1'b0          ),
 
         .debug_req_i           ( debug_req_i        ),
+        .debug_resume_i        ( debug_resume_i     ),
         .debug_havereset_o     (),
         .debug_running_o       (),
-        .debug_halted_o        (),
+        .debug_halted_o        ( debug_halted_o     ),
 
         .fetch_enable_i        ( fetch_en_i         ),
         .core_sleep_o          ( core_sleep         ),
@@ -340,9 +372,18 @@ module core_region
         .apu_result_i          ( apu_master_result_i   ),
         .apu_flags_i           ( apu_master_flags_i    ),
 
-        .external_perf_i ( perf_counters_i ),
+        .external_perf_i       ( perf_counters_i       ),
 
-        
+        // Program Counter Backup
+        .backup_program_counter_o   ( backup_program_counter_o),
+        .backup_branch_o            ( backup_branch_o),
+        .backup_branch_addr_o       ( backup_branch_addr_o),
+        // Program Counter Recovery
+        .pc_recover_i               ( pc_recover_i),
+        .recovery_program_counter_i ( recovery_program_counter_i),
+        .recovery_branch_i          ( recovery_branch_i),
+        .recovery_branch_addr_i     ( recovery_branch_addr_i),
+
         // Recovery Ports for RF
         .recover_i         ( recover_i         ),
         // Write Port A
@@ -353,8 +394,25 @@ module core_region
         // Write Port B
         .regfile_waddr_b_i ( regfile_waddr_b_i ),
         .regfile_wdata_b_i ( regfile_wdata_b_i ),
-        .regfile_we_b_i    ( regfile_we_b_i    )
-      
+        .regfile_we_b_i    ( regfile_we_b_i    ),
+        // Outputs from RF
+        // Port A
+        .regfile_we_a_o    ( regfile_we_a_o    ),
+        .regfile_waddr_a_o ( regfile_waddr_a_o ),
+        .regfile_wdata_a_o ( regfile_wdata_a_o ),
+        // Port B
+        .regfile_we_b_o    ( regfile_we_b_o    ),
+        .regfile_waddr_b_o ( regfile_waddr_b_o ),
+        .regfile_wdata_b_o ( regfile_wdata_b_o ),
+        // Backup ports to the RF
+        .regfile_backup_i   ( regfile_backup_i   ),
+        .regfile_raddr_ra_i ( regfile_raddr_ra_i ),
+        .regfile_raddr_rb_i ( regfile_raddr_rb_i ),
+        .regfile_raddr_rc_i ( regfile_raddr_rc_i ), 
+        .regfile_rdata_ra_o ( regfile_rdata_ra_o ),
+        .regfile_rdata_rb_o ( regfile_rdata_rb_o ),
+        .regfile_rdata_rc_o ( regfile_rdata_rc_o )
+
         // .ext_perf_counters_i   ( perf_counters         ),
         // .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
       ); 
