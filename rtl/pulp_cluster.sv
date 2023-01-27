@@ -936,42 +936,13 @@ module pulp_cluster
                                        recovery_branch_addr;
   
   // Recovery Ports for RF
-  // Address Ports
-  logic [NB_CORES-1:0][ 5:0] regfile_waddr_a,
-                             regfile_waddr_a_out,
-                             regfile_waddr_b,
-                             regfile_waddr_b_out,
-                             regfile_raddr_a,
-                             regfile_raddr_b,
-                             regfile_raddr_c;
-  // Data Ports
-  logic [NB_CORES-1:0][DATA_WIDTH-1:0] regfile_wdata_a,
-                                       regfile_wdata_a_out,
-                                       regfile_wdata_b,
-                                       regfile_wdata_b_out,
-                                       regfile_rdata_a,
-                                       regfile_rdata_b,
-                                       regfile_rdata_c;
-  // Write enables
-  logic [NB_CORES-1:0] regfile_we_a    , regfile_we_b    ,
-                       regfile_we_a_out, regfile_we_b_out;
+  recovery_pkg::regfile_write_t [NB_CORES-1:0] backup_regfile_wport,
+                                               core_recovery_regfile_wport;
+  recovery_pkg::regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
+  recovery_pkg::regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
   // Others
-  logic [NB_CORES-1:0] regfile_recover, core_rf_readback;
-
-  assign pc_recover = '0;
-  assign recovery_branch = '0;
-  assign recovery_program_counter = '0;
-  assign recovery_branch_addr = '0;
-  assign regfile_waddr_a = '0;
-  assign regfile_wdata_a = '0;
-  assign regfile_we_a    = '0;
-  assign regfile_waddr_b = '0;
-  assign regfile_wdata_b = '0;
-  assign regfile_we_b    = '0;
-  assign regfile_recover = '0;
-  assign core_rf_readback = '0;
-
+  logic [NB_CORES-1:0] core_rf_readback;
 
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
@@ -1034,7 +1005,8 @@ module pulp_cluster
   logic [NB_CORES-1:0] hmr_debug_halted;
   logic [NB_CORES-1:0] hmr_debug_resume;
 
-  assign hmr_debug_resume = '0;
+  logic [NB_CORES-1:0] hmr_instr_lock;
+  logic [NB_CORES-1:0] hmr_recover;
 
   logic [NB_CORES-1:0][4:0] hmr_perf_counters;
 
@@ -1045,8 +1017,8 @@ module pulp_cluster
     .DMRFixed       ( 1'b0              ),
     .TMRSupported   ( 1'b1              ),
     .TMRFixed       ( 1'b0              ),
+    .RapidRecovery  ( 1'b0              ),
     .SeparateData   ( 1'b1              ),
-    .BackupRegfile  ( 1'b0              ),
     .InterleaveGrps ( 1'b1              ),
 
     .InstrDataWidth ( INSTR_RDATA_WIDTH ),
@@ -1073,6 +1045,18 @@ module pulp_cluster
     .dmr_error_o         (),
     .dmr_resynch_req_o   (),
     .dmr_cores_synch_i   ('0),
+
+    .backup_program_counter_i   ( backup_program_counter ),
+    .pc_recover_o               ( pc_recover ),
+    .recovery_program_counter_o ( recovery_program_counter ),
+    .backup_branch_i            ( backup_branch ),
+    .backup_branch_addr_i       ( backup_branch_addr ),
+    .recovery_branch_o          ( recovery_branch ),
+    .recovery_branch_addr_o     ( recovery_branch_addr ),
+
+    .backup_regfile_wport_i        ( backup_regfile_wport ),
+    .core_regfile_raddr_o          ( core_regfile_raddr ),
+    .core_recovery_regfile_wport_o ( core_recovery_regfile_wport ),
 
     .sys_core_id_i       ( sys_core_id              ),
     .sys_cluster_id_i    ( {NB_CORES{cluster_id_i}} ),
@@ -1134,6 +1118,8 @@ module pulp_cluster
     .core_instr_err_o     (),
 
     .core_debug_req_o     ( hmr_debug_req     ),
+    .core_debug_halted_i  ( hmr_debug_halted  ),
+    .core_debug_resume_o  ( hmr_debug_resume  ),
 
     .core_data_req_i      ( hmr_data_req      ),
     .core_data_add_i      ( hmr_data_add      ),
@@ -1148,7 +1134,11 @@ module pulp_cluster
     .core_data_r_valid_o  ( hmr_data_r_valid  ),
     .core_data_err_o      (),
 
-    .core_perf_counters_o ( hmr_perf_counters )
+    .core_perf_counters_o ( hmr_perf_counters ),
+
+    .core_instr_lock_o    ( hmr_instr_lock    ),
+    .core_recover_o       ( hmr_recover       ),
+    .dmr_rf_readback_o    ( core_rf_readback  )
   );
 
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -1212,32 +1202,33 @@ module pulp_cluster
       .recovery_branch_i          ( recovery_branch [i]          ),
       .recovery_branch_addr_i     ( recovery_branch_addr [i]     ),
       // Recovery Ports for RF
-      .recover_i           ( regfile_recover[i]         ),
+      .recover_i           ( hmr_recover[i]         ),
+      .instr_lock_i        ( hmr_instr_lock[i]      ),
       // Write Port A
-      .regfile_waddr_a_i   ( regfile_waddr_a[i] ),
-      .regfile_wdata_a_i   ( regfile_wdata_a[i] ),
-      .regfile_we_a_i      ( regfile_we_a   [i] ),
+      .regfile_waddr_a_i   ( core_recovery_regfile_wport[i].waddr_a ),
+      .regfile_wdata_a_i   ( core_recovery_regfile_wport[i].wdata_a ),
+      .regfile_we_a_i      ( core_recovery_regfile_wport[i].we_a ),
    
       // Write Port B
-      .regfile_waddr_b_i   ( regfile_waddr_b[i] ),
-      .regfile_wdata_b_i   ( regfile_wdata_b[i] ),
-      .regfile_we_b_i      ( regfile_we_b   [i] ),
+      .regfile_waddr_b_i   ( core_recovery_regfile_wport[i].waddr_b ),
+      .regfile_wdata_b_i   ( core_recovery_regfile_wport[i].wdata_b ),
+      .regfile_we_b_i      ( core_recovery_regfile_wport[i].we_b ),
       // Outputs from RF
       // Port A
-      .regfile_we_a_o      ( regfile_we_a_out   [i] ),
-      .regfile_waddr_a_o   ( regfile_waddr_a_out[i] ),
-      .regfile_wdata_a_o   ( regfile_wdata_a_out[i] ),
+      .regfile_we_a_o      ( backup_regfile_wport[i].we_a ),
+      .regfile_waddr_a_o   ( backup_regfile_wport[i].waddr_a ),
+      .regfile_wdata_a_o   ( backup_regfile_wport[i].wdata_a ),
       // Port B
-      .regfile_we_b_o      ( regfile_we_b_out   [i] ),
-      .regfile_waddr_b_o   ( regfile_waddr_b_out[i] ),
-      .regfile_wdata_b_o   ( regfile_wdata_b_out[i] ),
+      .regfile_we_b_o      ( backup_regfile_wport[i].we_b ),
+      .regfile_waddr_b_o   ( backup_regfile_wport[i].waddr_b ),
+      .regfile_wdata_b_o   ( backup_regfile_wport[i].wdata_b ),
       // Backup ports to the RF
       .regfile_backup_i    ( core_rf_readback       [i] ),
-      .regfile_raddr_ra_i  ( regfile_raddr_a[i] ),
-      .regfile_raddr_rb_i  ( regfile_raddr_b[i] ),
+      .regfile_raddr_ra_i  ( core_regfile_raddr[i].raddr_a ),
+      .regfile_raddr_rb_i  ( core_regfile_raddr[i].raddr_b ),
       .regfile_raddr_rc_i  ( '0   ),
-      .regfile_rdata_ra_o  ( regfile_rdata_a[i] ),
-      .regfile_rdata_rb_o  ( regfile_rdata_b[i] ),
+      .regfile_rdata_ra_o  ( core_regfile_rdata[i].rdata_a ),
+      .regfile_rdata_rb_o  ( core_regfile_rdata[i].rdata_b ),
       .regfile_rdata_rc_o  (    ),
 
       //tcdm, dma ctrl unit, periph interco interfaces
