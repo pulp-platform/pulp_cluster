@@ -12,7 +12,7 @@ dependencies:
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git"               , version: 1.0.1                                  }
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git"               , version: 1.0.4                                  }
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git"  , version: 1.1.1                                  }
-  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git"       , rev: "1.4.1"                                    }
+  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git"       , rev: "28e0499374117c7b0ef4c6ad81b60d7526af886f" }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git"                 , version: 1.2.3                                  }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git"           , rev: "c82025995fbb18e045bb14ad2e94b35734994956" }
   # icache_mp_128_pf:       { git: "https://github.com/pulp-platform/icache_mp_128_pf.git"      , rev: "6f2e54102001230db9c82432bf9e011842419a48" }
@@ -31,7 +31,7 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git"                   , version: 1.0.8                                  }
   idma:                   { git: "https://github.com/pulp-platform/idma.git"                  , version: 0.3.1                                  }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git"    , version: 0.3.1                                  }
-  redundancy_cells: { path: "/home/michaero/git/redundancy_cells/" } # TMP local path for development
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git"      , rev: "518afdd7b77de276f7859cf595841809991b4e8a" }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
