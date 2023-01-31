@@ -941,9 +941,6 @@ module pulp_cluster
   recovery_pkg::regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
   recovery_pkg::regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
-  // Others
-  logic [NB_CORES-1:0] core_rf_readback;
-
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
     .AW ( ADDR_WIDTH ),
@@ -1013,7 +1010,7 @@ module pulp_cluster
 
   HMR_wrap #(
     .NumCores       ( NB_CORES          ),
-    .DMRSupported   ( 1'b0              ),
+    .DMRSupported   ( 1'b1              ),
     .DMRFixed       ( 1'b0              ),
     .TMRSupported   ( 1'b1              ),
     .TMRFixed       ( 1'b0              ),
@@ -1137,8 +1134,7 @@ module pulp_cluster
     .core_perf_counters_o ( hmr_perf_counters ),
 
     .core_instr_lock_o    ( hmr_instr_lock    ),
-    .core_recover_o       ( hmr_recover       ),
-    .dmr_rf_readback_o    ( core_rf_readback  )
+    .core_recover_o       ( hmr_recover       )
   );
 
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -1223,7 +1219,7 @@ module pulp_cluster
       .regfile_waddr_b_o   ( backup_regfile_wport[i].waddr_b ),
       .regfile_wdata_b_o   ( backup_regfile_wport[i].wdata_b ),
       // Backup ports to the RF
-      .regfile_backup_i    ( core_rf_readback       [i] ),
+      .regfile_backup_i    ( '0 ),
       .regfile_raddr_ra_i  ( core_regfile_raddr[i].raddr_a ),
       .regfile_raddr_rb_i  ( core_regfile_raddr[i].raddr_b ),
       .regfile_raddr_rc_i  ( '0   ),
