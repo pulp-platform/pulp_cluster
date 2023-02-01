@@ -875,12 +875,14 @@ module pulp_cluster
 
 /******************** HMR-related signals, BUSes definition ********************/
   // REG_BUS types
-  `REG_BUS_TYPEDEF_ALL(reg                      , // name 
-                       logic[ADDR_WIDTH-1:0]    , // addr_t
-                       logic[DATA_WIDTH-1:0]    , // data_t
-                       logic[(DATA_WIDTH/8)-1:0]) // strb_t
-  reg_req_t hmr_req;
-  reg_rsp_t hmr_rsp;
+  // `REG_BUS_TYPEDEF_ALL(register                 , /*  name */ 
+  //                      logic[ADDR_WIDTH-1:0]    , /* addr_t */
+  //                      logic[DATA_WIDTH-1:0]    , /* data_t */
+  //                      logic[(DATA_WIDTH/8)-1:0]) /* strb_t */
+  `REG_BUS_TYPEDEF_REQ(register_req_t, logic[ADDR_WIDTH-1:0], logic[DATA_WIDTH-1:0], logic[(DATA_WIDTH/8)-1:0])
+  `REG_BUS_TYPEDEF_RSP(register_rsp_t, logic[DATA_WIDTH-1:0])
+  register_req_t hmr_req;
+  register_rsp_t hmr_rsp;
 
   // Program Counter Ports
   logic [NB_CORES-1:0] pc_recover,
@@ -922,6 +924,7 @@ module pulp_cluster
                                  core_recovery_regfile_wport;
   regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
   regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
+  csrs_intf_t [NB_CORES-1:0] backup_csr, recovery_csr;
 
   logic [NB_CORES-1:0][NUM_EXT_PERF_CNTRS-1:0] ext_perf_cntrs;
 
@@ -1055,6 +1058,22 @@ module pulp_cluster
         .regfile_we_b_o      ( backup_regfile_wport[i].we_b    ),
         .regfile_waddr_b_o   ( backup_regfile_wport[i].waddr_b ),
         .regfile_wdata_b_o   ( backup_regfile_wport[i].wdata_b ),
+        // CSRs Backup
+        .backup_mstatus_o  ( backup_csr[i].csr_mstatus  ),
+        .backup_mie_o      ( backup_csr[i].csr_mie      ),
+        .backup_mtvec_o    ( backup_csr[i].csr_mtvec    ),
+        .backup_mscratch_o ( backup_csr[i].csr_mscratch ),
+        .backup_mip_o      ( backup_csr[i].csr_mip      ),
+        .backup_mepc_o     ( backup_csr[i].csr_mepc     ),
+        .backup_mcause_o   ( backup_csr[i].csr_mcause   ),
+        // CSRs Recovery
+        .recovery_mstatus_i  ( recovery_csr[i].csr_mstatus  ),
+        .recovery_mie_i      ( recovery_csr[i].csr_mie      ),
+        .recovery_mtvec_i    ( recovery_csr[i].csr_mtvec    ),
+        .recovery_mscratch_i ( recovery_csr[i].csr_mscratch ),
+        .recovery_mip_i      ( recovery_csr[i].csr_mip      ),
+        .recovery_mepc_i     ( recovery_csr[i].csr_mepc     ),
+        .recovery_mcause_i   ( recovery_csr[i].csr_mcause   ),
         // Backup ports to the RF
         .regfile_backup_i    ( core_rf_readback  [i]         ),
         .regfile_raddr_ra_i  ( core_regfile_raddr[i].raddr_a ),
@@ -1120,11 +1139,11 @@ module pulp_cluster
     .DW   (DATA_WIDTH),
     .BW   (8),
     .IW   ( NB_CORES+1 ),
-    .req_t(reg_req_t),
-    .rsp_t(reg_rsp_t)
+    .req_t(register_req_t),
+    .rsp_t(register_rsp_t)
   ) i_periph_to_hmr (
-    .clk_i    ( clk_cluster ),
-    .rst_ni   ( s_rst_n ),
+    .clk_i    ( clk_cluster                ),
+    .rst_ni   ( s_rst_n                    ),
     .req_i    ( s_extra_periph_bus.req     ),
     .add_i    ( s_extra_periph_bus.add     ),
     .wen_i    ( s_extra_periph_bus.wen     ),
@@ -1205,8 +1224,8 @@ module pulp_cluster
     .DataWidth      ( DATA_WIDTH         ),
     .BeWidth        ( BE_WIDTH           ),
     .NumExtPerf     ( NUM_EXT_PERF_CNTRS ),
-    .reg_req_t      ( reg_req_t          ),
-    .reg_resp_t     ( reg_rsp_t          )
+    .reg_req_t      ( register_req_t     ),
+    .reg_resp_t     ( register_rsp_t     )
   ) HMR_wrap_i (
     .clk_i          ( clk_cluster ),
     .rst_ni         ( s_rst_n     ),
@@ -1225,6 +1244,10 @@ module pulp_cluster
     .dmr_rf_readback_o ( core_rf_readback ),
     .dmr_cores_synch_i ( '0 ),
 
+    // Backup Port from CSRs
+    .backup_csr_i ( backup_csr ),
+    // Recovery Port to CSRs
+    .recovery_csr_o ( recovery_csr ),
     // Program Counter Backup
     .backup_program_counter_i   ( backup_program_counter   ),
     .backup_branch_i            ( backup_branch            ),
