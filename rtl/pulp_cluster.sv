@@ -938,7 +938,6 @@ module pulp_cluster
   // Recovery Ports for RF
   recovery_pkg::regfile_write_t [NB_CORES-1:0] backup_regfile_wport,
                                                core_recovery_regfile_wport;
-  recovery_pkg::regfile_raddr_t [NB_CORES-1:0] core_regfile_raddr;
   recovery_pkg::regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
 
   hci_core_intf #(
@@ -1052,7 +1051,6 @@ module pulp_cluster
     .recovery_branch_addr_o     ( recovery_branch_addr ),
 
     .backup_regfile_wport_i        ( backup_regfile_wport ),
-    .core_regfile_raddr_o          ( core_regfile_raddr ),
     .core_recovery_regfile_wport_o ( core_recovery_regfile_wport ),
 
     .sys_core_id_i       ( sys_core_id              ),
@@ -1220,8 +1218,8 @@ module pulp_cluster
       .regfile_wdata_b_o   ( backup_regfile_wport[i].wdata_b ),
       // Backup ports to the RF
       .regfile_backup_i    ( '0 ),
-      .regfile_raddr_ra_i  ( core_regfile_raddr[i].raddr_a ),
-      .regfile_raddr_rb_i  ( core_regfile_raddr[i].raddr_b ),
+      .regfile_raddr_ra_i  ( '0 ),
+      .regfile_raddr_rb_i  ( '0 ),
       .regfile_raddr_rc_i  ( '0   ),
       .regfile_rdata_ra_o  ( core_regfile_rdata[i].rdata_a ),
       .regfile_rdata_rb_o  ( core_regfile_rdata[i].rdata_b ),
