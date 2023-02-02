@@ -1013,7 +1013,7 @@ module pulp_cluster
     .DMRFixed       ( 1'b0              ),
     .TMRSupported   ( 1'b1              ),
     .TMRFixed       ( 1'b0              ),
-    .RapidRecovery  ( 1'b0              ),
+    .RapidRecovery  ( 1'b1              ),
     .SeparateData   ( 1'b1              ),
     .InterleaveGrps ( 1'b1              ),
 
