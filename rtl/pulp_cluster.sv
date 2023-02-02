@@ -1159,6 +1159,7 @@ module pulp_cluster
     ) core_region_i (
       .clk_i               ( clk_cluster           ),
       .rst_ni              ( s_rst_n               ),
+      .setback_i           ( hmr_setback [i]       ),
       .test_mode_i         ( test_mode_i           ),
 
       .cluster_id_i        ( hmr_cluster_id[i]     ),

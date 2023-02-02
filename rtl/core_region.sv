@@ -60,6 +60,7 @@ module core_region
 (
   input logic                            clk_i,
   input logic                            rst_ni,
+  input logic                            setback_i,
 
   input logic [5:0]                      cluster_id_i,
   input logic [3:0]                      core_id_i,
@@ -317,7 +318,7 @@ module core_region
       ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
         .rst_ni                ( rst_ni            ),
-        .setback_i             ( '0 ),
+        .setback_i             ( setback_i         ),
 
         .pulp_clock_en_i       ( clock_en_i        ),
         .scan_cg_en_i          ( test_mode_i       ),
