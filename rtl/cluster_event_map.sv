@@ -41,8 +41,8 @@ module cluster_event_map
       assign events_mapped_o[I][31:28] = '0;
       assign events_mapped_o[I][27]    = periph_fifo_event_i;
       assign events_mapped_o[I][26:25] = '0;
-      assign events_mapped_o[I][24]    = '0;
-      assign events_mapped_o[I][23:22] = cluster_events_i[I][1:0];
+      // assign events_mapped_o[I][24]    = '0;
+      assign events_mapped_o[I][24:22] = cluster_events_i[I][2:0];
       assign events_mapped_o[I][21:19] = '0;
 
       assign events_mapped_o[I][18]    = dispatch_events_i[I];

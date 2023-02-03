@@ -105,6 +105,7 @@ module cluster_peripherals
 
   XBAR_PERIPH_BUS.Master              extra_periph_bus,
 
+  input  logic [NB_CORES-1:0]         hmr_sw_resynch_req_i,
   output logic [NB_BARRIERS-1:0]      barrier_matched_o
   );
    
@@ -144,7 +145,9 @@ module cluster_peripherals
   // decide between common or core-specific event sources
   generate
     for (genvar I=0; I<NB_CORES; I++) begin
-      assign s_cluster_events[I] = 32'd0;
+      assign s_cluster_events[I][31:3] = '0;
+      assign s_cluster_events[I][2] = hmr_sw_resynch_req_i[I];
+      assign s_cluster_events[I][1:0] = '0;
       assign s_acc_events[I]     = hwpe_events_i[I];
       assign s_timer_events[I]   = {s_timer_out_hi_event,s_timer_out_lo_event};
       assign s_dma_events[I][0] = dma_event_i[I];
