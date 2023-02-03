@@ -939,6 +939,9 @@ module pulp_cluster
   recovery_pkg::regfile_write_t [NB_CORES-1:0] backup_regfile_wport,
                                                core_recovery_regfile_wport;
   recovery_pkg::regfile_rdata_t [NB_CORES-1:0] core_regfile_rdata;
+  // CSRs ports
+  recovery_pkg::csrs_intf_t [NB_CORES-1:0] core_backup_csr,
+                                           core_recovery_csr;
 
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
@@ -1042,6 +1045,10 @@ module pulp_cluster
     .dmr_resynch_req_o   (),
     .dmr_cores_synch_i   ('0),
 
+    // Backup Port from CSRs
+    .backup_csr_i ( core_backup_csr ),
+    // Recovery Port to CSRs
+    .recovery_csr_o ( core_recovery_csr ),
     .backup_program_counter_i   ( backup_program_counter ),
     .pc_recover_o               ( pc_recover ),
     .recovery_program_counter_o ( recovery_program_counter ),
@@ -1225,6 +1232,22 @@ module pulp_cluster
       .regfile_rdata_ra_o  ( core_regfile_rdata[i].rdata_a ),
       .regfile_rdata_rb_o  ( core_regfile_rdata[i].rdata_b ),
       .regfile_rdata_rc_o  (    ),
+      // CSRs Backup
+      .backup_mstatus_o  ( core_backup_csr[i].csr_mstatus  ),
+      .backup_mie_o      ( core_backup_csr[i].csr_mie      ),
+      .backup_mtvec_o    ( core_backup_csr[i].csr_mtvec    ),
+      .backup_mscratch_o ( core_backup_csr[i].csr_mscratch ),
+      .backup_mip_o      ( core_backup_csr[i].csr_mip      ),
+      .backup_mepc_o     ( core_backup_csr[i].csr_mepc     ),
+      .backup_mcause_o   ( core_backup_csr[i].csr_mcause   ),
+      // CSRs Recovery
+      .recovery_mstatus_i  ( core_recovery_csr[i].csr_mstatus  ),
+      .recovery_mie_i      ( core_recovery_csr[i].csr_mie      ),
+      .recovery_mtvec_i    ( core_recovery_csr[i].csr_mtvec    ),
+      .recovery_mscratch_i ( core_recovery_csr[i].csr_mscratch ),
+      .recovery_mip_i      ( core_recovery_csr[i].csr_mip      ),
+      .recovery_mepc_i     ( core_recovery_csr[i].csr_mepc     ),
+      .recovery_mcause_i   ( core_recovery_csr[i].csr_mcause   ),
 
       //tcdm, dma ctrl unit, periph interco interfaces
       .core_data_bus        ( hmr_data_intf[i] ),

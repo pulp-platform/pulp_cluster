@@ -131,6 +131,22 @@ module core_region
   output logic [31:0]                    regfile_rdata_rb_o,
   output logic [31:0]                    regfile_rdata_rc_o,
 
+  // CSRs Backup
+  output logic [6:0]                    backup_mstatus_o ,
+  output logic [DATA_WIDTH-1:0]         backup_mie_o     ,
+  output logic [23:0]                   backup_mtvec_o   ,
+  output logic [DATA_WIDTH-1:0]         backup_mscratch_o,
+  output logic [DATA_WIDTH-1:0]         backup_mip_o     ,
+  output logic [DATA_WIDTH-1:0]         backup_mepc_o    ,
+  output logic [ 5:0]                   backup_mcause_o  ,
+  // CSRs Recovery
+  input  logic [6:0]                    recovery_mstatus_i ,
+  input  logic [DATA_WIDTH-1:0]         recovery_mie_i     ,
+  input  logic [23:0]                   recovery_mtvec_i   ,
+  input  logic [DATA_WIDTH-1:0]         recovery_mscratch_i,
+  input  logic [DATA_WIDTH-1:0]         recovery_mip_i     ,
+  input  logic [DATA_WIDTH-1:0]         recovery_mepc_i    ,
+  input  logic [ 5:0]                   recovery_mcause_i  ,
   //XBAR_TCDM_BUS.Slave     debug_bus,
   //output logic            debug_core_halted_o,
   //input logic             debug_core_halt_i,
@@ -413,7 +429,23 @@ module core_region
         .regfile_raddr_rc_i ( regfile_raddr_rc_i ), 
         .regfile_rdata_ra_o ( regfile_rdata_ra_o ),
         .regfile_rdata_rb_o ( regfile_rdata_rb_o ),
-        .regfile_rdata_rc_o ( regfile_rdata_rc_o )
+        .regfile_rdata_rc_o ( regfile_rdata_rc_o ),
+        // CSRs Backup
+        .backup_mstatus_o  ( backup_mstatus_o  ),
+        .backup_mie_o      ( backup_mie_o      ),
+        .backup_mtvec_o    ( backup_mtvec_o    ),
+        .backup_mscratch_o ( backup_mscratch_o ),
+        .backup_mip_o      ( backup_mip_o      ),
+        .backup_mepc_o     ( backup_mepc_o     ),
+        .backup_mcause_o   ( backup_mcause_o   ),
+        // CSRs Recovery
+        .recovery_mstatus_i  ( recovery_mstatus_i  ),
+        .recovery_mie_i      ( recovery_mie_i      ),
+        .recovery_mtvec_i    ( recovery_mtvec_i    ),
+        .recovery_mscratch_i ( recovery_mscratch_i ),
+        .recovery_mip_i      ( recovery_mip_i      ),
+        .recovery_mepc_i     ( recovery_mepc_i     ),
+        .recovery_mcause_i   ( recovery_mcause_i   )
 
         // .ext_perf_counters_i   ( perf_counters         ),
         // .fregfile_disable_i    ( 1'b1                  )   //disable FP regfile
