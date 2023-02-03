@@ -314,6 +314,7 @@ module pulp_cluster
   logic                                       s_dma_fc_irq;
 
 
+  logic [NB_CORES-1:0] hmr_barrier_matched;
 
   /* logarithmic and peripheral interconnect interfaces */
   // ext -> log interconnect
@@ -815,7 +816,7 @@ module pulp_cluster
     .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
     .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
     .extra_periph_bus       ( s_extra_periph_bus                  ),
-    .barrier_matched_o       ()
+    .barrier_matched_o      ( hmr_barrier_matched                 )
     //.rw_margin_L1_o         ( s_rw_margin_L1                      )
 );
 
@@ -1006,6 +1007,14 @@ module pulp_cluster
 
   logic [NB_CORES-1:0][4:0] hmr_perf_counters;
 
+  logic [NB_CORES/3-1:0] hmr_tmr_synch;
+  for (genvar i = 0; i < NB_CORES/3; i++) begin
+    if (1'b1) begin // InterleaveGrps
+      assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
+    end else begin
+      assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
+    end
+  end
 
   HMR_wrap #(
     .NumCores       ( NB_CORES          ),
@@ -1035,12 +1044,12 @@ module pulp_cluster
     .tmr_failure_o       (),
     .tmr_error_o         (),
     .tmr_resynch_req_o   (),
-    .tmr_cores_synch_i   ('0),
+    .tmr_cores_synch_i   (hmr_tmr_synch),
 
     .dmr_failure_o       (),
     .dmr_error_o         (),
     .dmr_resynch_req_o   (),
-    .dmr_cores_synch_i   ('0),
+    .dmr_cores_synch_i   (hmr_barrier_matched[NB_CORES/2:1]),
 
     .backup_program_counter_i   ( backup_program_counter ),
     .pc_recover_o               ( pc_recover ),
