@@ -280,6 +280,7 @@ module core_region
     obi_pulp_adapter i_obi_pulp_adapter_instr (
       .clk_i       (clk_i                         ),
       .rst_ni      (rst_ni                        ),
+      .setback_i   (setback_i                     ),
       .core_req_i  (core_instr_req & ~instr_lock_i),
       .mem_req_o   (instr_req_o                   ),
       .mem_gnt_i   (instr_gnt_i                   ),
@@ -294,6 +295,7 @@ module core_region
   obi_pulp_adapter i_obi_pulp_adapter_mem (
     .clk_i       (clk_i             ),
     .rst_ni      (rst_ni            ),
+    .setback_i   (setback_i         ),
     .core_req_i  (core_mem_req      ),
     .mem_req_o   (core_data_bus.req    ),
     .mem_gnt_i   (core_data_bus.gnt    ),
