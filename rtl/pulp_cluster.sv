@@ -45,7 +45,7 @@ module pulp_cluster
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter HWPE_PRESENT            = 0,                       // set to 1 if HW Processing Engines are present in the cluster
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
