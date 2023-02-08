@@ -50,7 +50,7 @@ module pulp_cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
-  parameter NB_CACHE_BANKS          = 2,
+  parameter NB_CACHE_BANKS          = 8,
   parameter CACHE_LINE              = 1,
   parameter CACHE_SIZE              = 4096,
   parameter ICACHE_DATA_WIDTH       = 128,
