@@ -158,7 +158,7 @@ module dmac_wrap
      
     //.PE_ID_WIDTH              ( PE_ID_WIDTH           )
     //.NB_CORES                 ( NB_CORES              ),    // NUMBER OF CORES
-    .NB_TRANSFERS             ( 2*NB_CORES            ),
+    .NB_TRANSFERS             ( 16                      ),
     //.CORE_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
     .GLOBAL_TRANS_QUEUE_DEPTH ( 2*NB_CORES            ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
     .TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS

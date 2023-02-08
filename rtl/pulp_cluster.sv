@@ -678,7 +678,7 @@ module pulp_cluster
 
 `ifdef TARGET_MCHAN
   dmac_wrap #(
-    .NB_CTRLS           ( 10                 ),
+    .NB_CTRLS           ( NB_CORES+2         ),
     .NB_CORES           ( NB_CORES           ),
     .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
     .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
