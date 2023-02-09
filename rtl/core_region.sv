@@ -338,7 +338,7 @@ module core_region
         .rst_ni                ( rst_ni            ),
         .setback_i             ( setback_i         ),
 
-        .pulp_clock_en_i       ( clock_en_i        ),
+        .pulp_clock_en_i       ( clock_en_i | setback_i        ),
         .scan_cg_en_i          ( test_mode_i       ),
         .boot_addr_i           ( boot_addr         ),
         .mtvec_addr_i          ( boot_addr & 32'hFFFFFF00 ),
