@@ -115,4 +115,6 @@ module per2axi_wrap
     .busy_o                 ( busy_o                              )
   );
 
+  assign axi_master.aw_atop = '0; 
+
 endmodule

@@ -270,4 +270,6 @@ module dmac_wrap
     .busy_o                    ( busy_o                             )
   );
 
+  assign ext_master.aw_atop = '0; 
+
 endmodule
