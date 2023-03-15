@@ -50,7 +50,7 @@ module pulp_cluster_tb;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
   localparam NMst   = 2;
-  localparam NSlv   = 2;
+  localparam NSlv   = 3;
   localparam AxiIwMst = AxiIw + $clog2(NMst);
   localparam AxiWideBeWidth = AxiDw/8;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
@@ -162,7 +162,7 @@ module pulp_cluster_tb;
   );
    
   // XBAR
-  localparam int unsigned NumRules = 2;
+  localparam int unsigned NumRules = NSlv;
   typedef axi_pkg::xbar_rule_32_t rule_t;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
@@ -174,6 +174,11 @@ module pulp_cluster_tb;
     idx:        1,
     start_addr: 32'h1C00_0000,
     end_addr:   32'h1C01_0000
+  };
+  assign addr_map[2] = '{ // Pulp Cluster
+    idx:        2,
+    start_addr: 32'h1000_0000,
+    end_addr:   32'h1004_0000
   };
   // Crossbar Configuration and Instantiation
   localparam axi_pkg::xbar_cfg_t XbarCfg = '{
@@ -205,39 +210,20 @@ module pulp_cluster_tb;
     .default_mst_port_i     ( '0         )
   );
 
-//  assign soc_to_cluster_axi_bus.aw_id = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_addr = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_len = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_size = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_burst = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_lock = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_cache = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_prot = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_qos = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_region = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_atop = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_user = 'h0;
-//  assign soc_to_cluster_axi_bus.aw_valid = 'h0;
-//  assign soc_to_cluster_axi_bus.w_data = 'h0;
-//  assign soc_to_cluster_axi_bus.w_strb = 'h0;
-//  assign soc_to_cluster_axi_bus.w_last = 'h0;
-//  assign soc_to_cluster_axi_bus.w_user = 'h0;
-//  assign soc_to_cluster_axi_bus.w_valid = 'h0;
-//  assign soc_to_cluster_axi_bus.b_ready = 1'b1;
-//  assign soc_to_cluster_axi_bus.ar_id = 'h0; 
-//  assign soc_to_cluster_axi_bus.ar_addr = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_len = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_size = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_burst = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_lock = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_cache = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_prot = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_qos = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_region = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_user = 'h0;
-//  assign soc_to_cluster_axi_bus.ar_valid = 'h0;
-//  assign soc_to_cluster_axi_bus.r_ready = 1'b1;
-
+  axi_serializer_intf #(
+    .AXI_ID_WIDTH   ( AxiIwMst ),
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( AxiDw    ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .MAX_READ_TXNS  ( 8        ),
+    .MAX_WRITE_TXNS ( 8        )
+    ) i_s2c_serializer (
+      .clk_i  ( s_clk                  ),
+      .rst_ni ( s_rstn                 ),
+      .slv    ( axi_master[2]          ),
+      .mst    ( soc_to_cluster_axi_bus )
+    );
+   
   axi_cdc_src_intf   #(
     .AXI_ADDR_WIDTH ( AxiAw   ),
     .AXI_DATA_WIDTH ( AxiDw   ),
@@ -281,7 +267,7 @@ module pulp_cluster_tb;
     .DIRECT_MAPPED_FEATURE        ( "DISABLED"               ),
     .L2_SIZE                      ( 32'h10000                ),
     .ROM_BOOT_ADDR                ( 32'h1A000000             ),
-    .BOOT_ADDR                    ( 32'h1C000000             ),
+    .BOOT_ADDR                    ( 32'h1c008080             ),
     .INSTR_RDATA_WIDTH            ( 32                       ),
     .CLUST_FPU                    ( `CLUST_FPU               ),
     .CLUST_FP_DIVSQRT             ( `CLUST_FP_DIVSQRT        ),
@@ -409,24 +395,6 @@ module pulp_cluster_tb;
   typedef axi_test::axi_driver #(.AW(AxiAw ), .DW(AxiDw ), .IW(AxiIw ), .UW(AxiUw), .TA(SYS_TA), .TT(SYS_TT)) axi_drv_t;
   axi_drv_t axi_master_drv = new(axi_dv);
 
-  AXI_BUS_DV #(
-      .AXI_ADDR_WIDTH(AxiAw  ),
-      .AXI_DATA_WIDTH(AxiDw  ),
-      .AXI_ID_WIDTH  (AxiIw-2),
-      .AXI_USER_WIDTH(AxiUw  )
-  ) s2c_axi_dv(s_clk);
-
-  axi_test::axi_ax_beat #(.AW(AxiAw   ), .IW(AxiIw-2 ), .UW(AxiUw)) s2c_ar_beat = new();
-  axi_test::axi_r_beat  #(.DW(AxiDw   ), .IW(AxiIw-2 ), .UW(AxiUw)) s2c_r_beat  = new();
-  axi_test::axi_ax_beat #(.AW(AxiAw   ), .IW(AxiIw-2 ), .UW(AxiUw)) s2c_aw_beat = new();
-  axi_test::axi_w_beat  #(.DW(AxiDw   ), .UW(AxiUw   ))             s2c_w_beat  = new();
-  axi_test::axi_b_beat  #(.IW(AxiIw-2 ), .UW(AxiUw   ))             s2c_b_beat  = new();
-
-  `AXI_ASSIGN(soc_to_cluster_axi_bus,s2c_axi_dv)
-
-  typedef axi_test::axi_driver #(.AW(AxiAw ), .DW(AxiDw ), .IW(AxiIw-2 ), .UW(AxiUw), .TA(SYS_TA), .TT(SYS_TT)) s2c_axi_drv_t;
-  s2c_axi_drv_t s2c_axi_master_drv = new(s2c_axi_dv);
-   
   // Start writing to SRAM
   logic [32:0] addr;
 
@@ -434,9 +402,7 @@ module pulp_cluster_tb;
 
    axi_master_drv.reset_master();
    axi_master_drv.reset_slave();
-   s2c_axi_master_drv.reset_master();
-   s2c_axi_master_drv.reset_slave();
-
+     
    @(posedge s_rstn);
    @(posedge s_clk);
 
@@ -449,7 +415,7 @@ module pulp_cluster_tb;
       $display("Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
       for (int i = 0; i < sections[addr]; i++) begin
         // $info(" Loading words to SRAM ");
-        $display(" -- Word %0d/%0d @%x", i, sections[addr], addr << 3);
+        // $display(" -- Word %0d/%0d @%x", i, sections[addr], addr << 3);
          
         aw_beat.ax_addr  = ( addr << 3 ) + ( i * 8 );
         aw_beat.ax_len   = '0;
@@ -464,27 +430,11 @@ module pulp_cluster_tb;
         axi_master_drv.send_w(w_beat);
         @(posedge s_clk);
         axi_master_drv.recv_b(b_beat);
-     end
+      end // for (int i = 0; i < sections[addr]; i++)
+      $display("Completed\n");      
    end 
-     
-   $display("Initializing the CDC FIFOs");
-     
-   for (int i = 0; i < 8; i++) begin
-      
-      s2c_aw_beat.ax_addr  = 32'h1000_0000 + ( i * 8 );
-      s2c_aw_beat.ax_len   = '0;
-      s2c_aw_beat.ax_burst = axi_pkg::BURST_INCR;
-      s2c_aw_beat.ax_size  = 4'h3;
-      
-      s2c_w_beat.w_data = '0;
-      s2c_w_beat.w_strb = '1;
-      s2c_w_beat.w_last = '1;
- 
-      s2c_axi_master_drv.send_aw(s2c_aw_beat);
-      s2c_axi_master_drv.send_w(s2c_w_beat);
-      @(posedge s_clk);
-      s2c_axi_master_drv.recv_b(s2c_b_beat);
-   end 
+
+   $display("Launch cluster\n");
      
    @(negedge s_clk);
    assign s_cluster_en_sa_boot = 1'b1;
