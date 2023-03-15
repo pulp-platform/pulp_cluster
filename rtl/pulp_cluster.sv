@@ -485,8 +485,6 @@ module pulp_cluster
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_data_master(); 
 
-  //assign s_data_master.aw_atop = 6'b0;
-
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
@@ -1370,7 +1368,7 @@ module pulp_cluster
  `endif // Closes `ifdef MP_ICACHE
 `endif // Closes `ifdef PRI_ICACHE
 
-
+  assign s_core_instr_bus.aw_atop = '0; 
    
   /* TCDM banks */
   tcdm_banks_wrap #(
