@@ -88,6 +88,7 @@ module pulp_cluster_tb;
   logic s_cluster_en_sa_boot ;
   logic s_cluster_fetch_en   ;
   logic s_cluster_eoc        ;
+  logic s_cluster_busy       ;
    
   AXI_BUS #(
       .AXI_ADDR_WIDTH( AxiAw    ),
@@ -162,7 +163,7 @@ module pulp_cluster_tb;
   );
    
   // XBAR
-  localparam int unsigned NumRules = NSlv;
+  localparam int unsigned NumRules = NSlv+1;
   typedef axi_pkg::xbar_rule_32_t rule_t;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
@@ -179,6 +180,11 @@ module pulp_cluster_tb;
     idx:        2,
     start_addr: 32'h1000_0000,
     end_addr:   32'h1004_0000
+  };
+  assign addr_map[3] = '{ // Return address
+    idx:        1, // Just put it in axi_sim_mem
+    start_addr: 32'h1A10_4000,
+    end_addr:   32'h1A10_40F0
   };
   // Crossbar Configuration and Instantiation
   localparam axi_pkg::xbar_cfg_t XbarCfg = '{
@@ -313,7 +319,7 @@ module pulp_cluster_tb;
       .test_mode_i                 ( 1'b0                                 ),
       .fetch_en_i                  ( s_cluster_fetch_en                   ),
       .eoc_o                       ( s_cluster_eoc                        ),
-      .busy_o                      (                                      ),
+      .busy_o                      ( s_cluster_busy                       ),
       .cluster_id_i                ( 6'b000000                            ),
 
       .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
@@ -357,11 +363,11 @@ module pulp_cluster_tb;
 
     // Read ELF
     void'(read_elf(binary));
-    $display("Reading %s", binary);
+    $display("[TB] Reading %s", binary);
     while (get_section(section_addr, section_len)) begin
       // Read Sections
       automatic int num_words = (section_len + AxiWideBeWidth - 1)/AxiWideBeWidth;
-      $display("Reading section %x with %0d words", section_addr, num_words);
+      $display("[TB] Reading section %x with %0d words", section_addr, num_words);
 
       sections[section_addr >> AxiWideByteOffset] = num_words;
       buffer                                      = new[num_words * AxiWideBeWidth];
@@ -397,9 +403,12 @@ module pulp_cluster_tb;
 
   // Start writing to SRAM
   logic [32:0] addr;
+  logic [AxiDw-1:0] ret_val;
 
   initial begin
 
+   assign s_cluster_en_sa_boot = 1'b0;
+   assign s_cluster_fetch_en = 1'b0;  
    axi_master_drv.reset_master();
    axi_master_drv.reset_slave();
      
@@ -407,15 +416,13 @@ module pulp_cluster_tb;
    @(posedge s_clk);
 
    if ( $value$plusargs ("APP=%s", binary));
-     $display("Testing %s", binary);
+     $display("[TB] Testing %s", binary);
 
    load_binary(binary);
      
    foreach (sections[addr]) begin
-      $display("Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
+      $display("[TB] Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
       for (int i = 0; i < sections[addr]; i++) begin
-        // $info(" Loading words to SRAM ");
-        // $display(" -- Word %0d/%0d @%x", i, sections[addr], addr << 3);
          
         aw_beat.ax_addr  = ( addr << 3 ) + ( i * 8 );
         aw_beat.ax_len   = '0;
@@ -430,19 +437,59 @@ module pulp_cluster_tb;
         axi_master_drv.send_w(w_beat);
         @(posedge s_clk);
         axi_master_drv.recv_b(b_beat);
+
       end // for (int i = 0; i < sections[addr]; i++)
-      $display("Completed\n");      
+      $display("[TB] Completed\n");      
    end 
 
-   $display("Launch cluster\n");
+   $display("[TB] Initialize ret_val\n");
+     
+   aw_beat.ax_addr  = 32'h1A10_40A0;
+   aw_beat.ax_len   = '0;
+   aw_beat.ax_burst = axi_pkg::BURST_INCR;
+   aw_beat.ax_size  = 4'h3;
+   
+   w_beat.w_data = '0;
+   w_beat.w_strb = '1;
+   w_beat.w_last = '1;
+ 
+   axi_master_drv.send_aw(aw_beat);
+   axi_master_drv.send_w(w_beat);
+   @(posedge s_clk);
+   axi_master_drv.recv_b(b_beat);
+
+   $display("[TB] Launch cluster\n");
      
    @(negedge s_clk);
    assign s_cluster_en_sa_boot = 1'b1;
    @(negedge s_clk);
    assign s_cluster_fetch_en = 1'b1;  
 
-   @(posedge s_cluster_eoc);
-   $finish(1);
+   ret_val = '0;
+   while(~ret_val[31]) begin
+      
+      ar_beat.ax_addr  = 32'h1A10_40A0;
+      ar_beat.ax_len   = '0;
+      ar_beat.ax_burst = axi_pkg::BURST_INCR;
+      ar_beat.ax_size  = 4'h2;
+
+      axi_master_drv.send_ar(ar_beat);
+      @(posedge s_clk);
+      axi_master_drv.recv_r(r_beat);
+      ret_val = r_beat.r_data;      
+      repeat(1000)
+        @(posedge s_clk);
+      
+   end
+     
+   $display("[TB] Received ret_val: %d\n", ret_val[30:0]);
+     
+   if(ret_val[30:0]==0) begin
+     $display("[TB] Test passed\n");
+     $finish;
+   end else begin
+     $fatal(1,"[TB] Test not passed: ret_val!=0\n");
+   end
   
   end // initial begin
    
