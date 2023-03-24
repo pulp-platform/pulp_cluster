@@ -171,10 +171,10 @@ module pulp_cluster_tb;
     start_addr: 32'h4000_0000,
     end_addr:   32'h4000_ffff
   };
-  assign addr_map[1] = '{ // L2SPM
+  assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
     start_addr: 32'h1C00_0000,
-    end_addr:   32'h1C01_0000
+    end_addr:   32'h1C08_0000
   };
   assign addr_map[2] = '{ // Pulp Cluster
     idx:        2,
