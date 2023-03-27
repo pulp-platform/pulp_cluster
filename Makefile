@@ -34,7 +34,7 @@ sim_clean:
 	rm -rf work
 
 scripts/compile.tcl: Bender.yml
-	$(call generate_vsim, $@, -t rtl -t test,..)
+	$(call generate_vsim, $@, -t rtl -t test -t cluster_standalone,..)
 
 # compile the elfloader.cpp
 $(dpi-library)/%.o: tb/dpi/%.cc $(dpi_hdr)

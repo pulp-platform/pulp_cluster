@@ -30,16 +30,12 @@ dependencies:
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
 
-export_include_dirs:
-  - include/
-
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
     # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
     # levels 1 and 0, etc. Files within a level are ordered alphabetically.
     # Level 0
   - packages/pulp_cluster_package.sv
-  - include/pulp_interfaces.sv
   - rtl/axi2mem_wrap.sv
   - rtl/axi2per_wrap.sv
   - rtl/cluster_bus_wrap.sv
@@ -78,4 +74,7 @@ sources:
       - tb/mock_uart_axi.sv
       - tb/pulp_cluster_tb.sv
 
+  - target: cluster_standalone
+    files:
+      - include/pulp_interfaces.sv
   
