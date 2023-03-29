@@ -139,8 +139,8 @@ module pulp_cluster_tb;
     .DataWidth ( AxiDw        ),
     .IdWidth   ( AxiIwMst     ),
     .UserWidth ( AxiUw        ),
-    .req_t     ( axi_m_req_t  ),
-    .rsp_t     ( axi_m_resp_t ),
+    .axi_req_t ( axi_m_req_t  ),
+    .axi_rsp_t ( axi_m_resp_t ),
     .ApplDelay ( SYS_TA       ),
     .AcqDelay  ( SYS_TT       )    
   ) sim_mem (
@@ -194,6 +194,7 @@ module pulp_cluster_tb;
     MaxSlvTrans:        8,
     FallThrough:        1'b1,
     LatencyMode:        axi_pkg::NO_LATENCY,
+    PipelineStages:     0,
     AxiIdWidthSlvPorts: AxiIw,
     AxiIdUsedSlvPorts:  AxiIw,
     UniqueIds:          1'b1,
