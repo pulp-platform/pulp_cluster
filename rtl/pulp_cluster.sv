@@ -92,17 +92,17 @@ module pulp_cluster
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
   // CLUSTER TO SOC CDC AXI PARAMETER
-  parameter C2S_AW_WIDTH             = 80, 
-  parameter C2S_W_WIDTH              = 79,
-  parameter C2S_B_WIDTH              = 15,
-  parameter C2S_AR_WIDTH             = 74,
-  parameter C2S_R_WIDTH              = 80,
+  localparam S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
+  localparam S2C_R_WIDTH            = axi_pkg::r_width(AXI_DATA_S2C_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam S2C_B_WIDTH            = axi_pkg::b_width(AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam S2C_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
   // CLUSTER TO SOC CDC AXI PARAMETERS
-  parameter S2C_AW_WIDTH             = 78, 
-  parameter S2C_W_WIDTH              = 43,
-  parameter S2C_B_WIDTH              = 13,
-  parameter S2C_AR_WIDTH             = 72,
-  parameter S2C_R_WIDTH              = 46,
+  localparam C2S_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam C2S_W_WIDTH            = axi_pkg::w_width(AXI_DATA_C2S_WIDTH,AXI_USER_WIDTH),
+  localparam C2S_R_WIDTH            = axi_pkg::r_width(AXI_DATA_C2S_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam C2S_B_WIDTH            = axi_pkg::b_width(AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam C2S_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
 
   localparam ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
   localparam ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
@@ -482,8 +482,6 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_data_master(); 
-
-  //assign s_data_master.aw_atop = 6'b0;
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -1368,7 +1366,7 @@ module pulp_cluster
  `endif // Closes `ifdef MP_ICACHE
 `endif // Closes `ifdef PRI_ICACHE
 
-
+  assign s_core_instr_bus.aw_atop = '0; 
    
   /* TCDM banks */
   tcdm_banks_wrap #(
