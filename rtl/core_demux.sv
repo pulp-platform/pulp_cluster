@@ -13,24 +13,21 @@
  * (http://www.pulp-platform.org), under the copyright of ETH Zurich and the
  * University of Bologna.
  */
- 
-`include "pulp_soc_defines.sv"
-//`define  PERF_CNT
+
 
 module core_demux
 #(
     parameter ADDR_WIDTH = 32,
     parameter DATA_WIDTH = 32,
     parameter BYTE_ENABLE_BIT = DATA_WIDTH/8,
+    parameter REMAP_ADDRESS = 0,
     parameter CLUSTER_ALIAS_BASE = 12'h000
 )
 (
     input logic                          clk,
     input logic                          rst_ni,
     input logic                          test_en_i,
-`ifdef REMAP_ADDRESS
     input logic [3:0]                    base_addr_i,
-`endif
 
     // CORE SIDE
     input logic                          data_req_i,
@@ -153,7 +150,7 @@ module core_demux
 
    assign data_add_int[27:0] = data_add_i[27:0];
 
-`ifdef REMAP_ADDRESS
+if (REMAP_ADDRESS) begin
    always_comb
    begin
     if(data_add_i[31:28] == base_addr_i)
@@ -169,9 +166,9 @@ module core_demux
             data_add_int[31:28] = data_add_i[31:28];
          end
    end
-`else
+end else begin
    assign data_add_int[31:28] = data_add_i[31:28]; 
-`endif
+end
 
    //********************************************************
    //************** LEVEL 1 REQUEST ARBITER *****************

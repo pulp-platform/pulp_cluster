@@ -18,7 +18,6 @@
 
 import pulp_cluster_package::*;
 
-`include "pulp_soc_defines.sv"
 
 module cluster_peripherals
 #(

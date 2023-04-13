@@ -16,10 +16,6 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`include "pulp_soc_defines.sv"
-`include "periph_bus_defines.sv"
-
-
 // USER DEFINED MACROS to improve self-testing capabilities
 `ifndef PULP_FPGA_SIM
   `define DEBUG_FETCH_INTERFACE
@@ -52,7 +48,7 @@ module core_region
   parameter SHARED_FP           =  0,
   parameter SHARED_FP_DIVSQRT   =  0,
 
-  parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
+  parameter DEBUG_START_ADDR    = 32'h1A110000,
 
   parameter L2_SLM_FILE         = "./slm_files/l2_stim.slm",
   parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"
@@ -434,14 +430,13 @@ module core_region
     .ADDR_WIDTH         ( 32                 ),
     .DATA_WIDTH         ( 32                 ),
     .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
+    .REMAP_ADDRESS      ( REMAP_ADDRESS      ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
   ) core_demux_i (
     .clk                (  clk_int                    ),
     .rst_ni             (  rst_ni                     ),
     .test_en_i          (  test_mode_i                ),
-  `ifdef REMAP_ADDRESS
     .base_addr_i        (  base_addr_i                ),
-`endif
     .data_req_i         (  s_core_bus.req             ),
     .data_add_i         (  s_core_bus.add             ),
     .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N

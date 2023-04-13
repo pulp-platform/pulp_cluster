@@ -22,7 +22,6 @@
  Each rr_arb_tree performes arbitration using an internal round robin counter.
  For each Slave Port, there is a stream_mux to  multiplex the NB_SPERIPH responses. 
 */
-`include "pulp_soc_defines.sv"
 
 module xbar_pe_wrap
   import pulp_cluster_package::*;
@@ -36,6 +35,7 @@ module xbar_pe_wrap
   parameter PE_ROUTING_LSB     = 10,
   parameter PE_ROUTING_MSB     = 13,
   parameter bit HWPE_PRESENT   = 1'b1,
+  parameter CLUSTER_ALIAS      = 1,
   parameter CLUSTER_ALIAS_BASE =  12'h000,
   parameter ADDREXT         = 1'b0
 )
@@ -47,13 +47,10 @@ module xbar_pe_wrap
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
 
-   logic                               cluster_alias;
+  logic                               cluster_alias;
    
-`ifdef CLUSTER_ALIAS
-   assign                              cluster_alias=1'b1;
-`else
-   assign                              cluster_alias=1'b0;
-`endif   
+  assign cluster_alias = (CLUSTER_ALIAS) ? 1'b1 : 1'b0;
+
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;
   typedef logic [ADDR_WIDTH-1:0]              pe_addr_t;

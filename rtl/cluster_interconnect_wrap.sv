@@ -13,8 +13,7 @@
  * (http://www.pulp-platform.org), under the copyright of ETH Zurich and the
  * University of Bologna.
  */
- 
-`include "pulp_soc_defines.sv"
+
 
 import hci_package::*;
 
@@ -38,6 +37,7 @@ module cluster_interconnect_wrap
   parameter LOG_CLUSTER     = 5,
   parameter PE_ROUTING_LSB  = 16,
   parameter PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
+  parameter CLUSTER_ALIAS   = 1,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
 
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1
@@ -173,6 +173,7 @@ module cluster_interconnect_wrap
     .BE_WIDTH           ( BE_WIDTH             ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
     .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
+    .CLUSTER_ALIAS      ( CLUSTER_ALIAS        ),
     .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
    ) 
    xbar_pe_inst

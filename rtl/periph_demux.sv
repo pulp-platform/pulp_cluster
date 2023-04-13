@@ -16,7 +16,6 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-`include "pulp_soc_defines.sv"
 
 module periph_demux
 #(

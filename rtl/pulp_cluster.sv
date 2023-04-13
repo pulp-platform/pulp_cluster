@@ -17,16 +17,13 @@
  * Angelo Garofalo <angelo.garofalo@unibo.it>
  */
 
-import pulp_cluster_package::*;
-import hci_package::*;
-
-`include "pulp_soc_defines.sv"
-`include "cluster_bus_defines.sv"
 `include "axi/typedef.svh"
 `include "axi/assign.svh"
-
+`include "cluster_bus_defines.sv"
 
 module pulp_cluster
+  import pulp_cluster_package::*;
+  import hci_package::*;
 #(
   // cluster parameters
   parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
@@ -35,10 +32,11 @@ module pulp_cluster
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
   parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
-  
-  parameter CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter NB_MPERIPHS        = 1,
+  parameter NB_SPERIPHS        = 10,
+
+  parameter CLUSTER_ALIAS      = 1,
+  parameter CLUSTER_ALIAS_BASE = 12'h000,
   
   parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
@@ -71,6 +69,7 @@ module pulp_cluster
   parameter USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
+  parameter DEBUG_START_ADDR        = 32'h1A110000,
   parameter ROM_BOOT_ADDR           = 32'h1A000000,
   parameter BOOT_ADDR               = 32'h1C000000,
   parameter INSTR_RDATA_WIDTH       = 32,
@@ -81,6 +80,8 @@ module pulp_cluster
   parameter CLUST_SHARED_FP_DIVSQRT = 2,
   
   // AXI parameters
+  parameter int unsigned NumAxiMst  = 3 ,
+  parameter int unsigned NumAxiSlv  = 4 ,
   parameter AXI_ADDR_WIDTH          = 32,
   parameter AXI_DATA_C2S_WIDTH      = 64,
   parameter AXI_DATA_S2C_WIDTH      = 32,
@@ -134,7 +135,7 @@ module pulp_cluster
   parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
   // parameter PE_ROUTING_MSB          = 13, // MSB used as routing BIT in periph interco
   parameter EVNT_WIDTH              = 8,  // size of the event bus
-  parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
+  parameter REMAP_ADDRESS           = 0,  // for cluster virtualization
 
   localparam ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
   // FPU PARAMETERS
@@ -549,6 +550,8 @@ module pulp_cluster
 
   /* cluster bus and attached peripherals */
   cluster_bus_wrap #(
+    .NumAxiMst            ( NumAxiMst          ),
+    .NumAxiSlv            ( NumAxiSlv          ),
     .NB_CORES             ( NB_CORES           ),
     .DMA_NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
     .TCDM_SIZE            ( TCDM_SIZE          ),
@@ -610,30 +613,8 @@ module pulp_cluster
     .masters ( s_mperiph_demux_bus )
   );
 
-  `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
-    
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wen   = s_mperiph_demux_bus[0].wen;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].wdata = s_mperiph_demux_bus[0].wdata;
-  // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].be    = s_mperiph_demux_bus[0].be;
-                                        
-  // assign s_mperiph_demux_bus[0].gnt       = s_mperiph_xbar_bus[NB_MPERIPHS-1].gnt;
-  // assign s_mperiph_demux_bus[0].r_valid   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_valid;
-  // assign s_mperiph_demux_bus[0].r_opc     = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_opc;
-  // assign s_mperiph_demux_bus[0].r_rdata   = s_mperiph_xbar_bus[NB_MPERIPHS-1].r_rdata;
- 
-/* not used in vega   
-  per_demux_wrap #(
-    .NB_MASTERS  ( NB_CORES ),
-    .ADDR_OFFSET ( 15       )
-  ) debug_interconect_i (
-    .clk_i   ( clk_cluster            ),
-    .rst_ni  ( rst_ni                 ),
-    .slave   ( s_mperiph_demux_bus[1] ),
-    .masters ( s_debug_bus            )
-  );
-    */
+  `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[NB_MPERIPHS-1], s_mperiph_demux_bus[0])
+
   per2axi_wrap #(
     .NB_CORES       ( NB_CORES             ),
     .PER_ADDR_WIDTH ( 32                   ),
@@ -674,6 +655,7 @@ module pulp_cluster
 
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
+    .CLUSTER_ALIAS      ( CLUSTER_ALIAS      ),
     .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
 
   ) cluster_interconnect_wrap_i (
@@ -862,7 +844,7 @@ module pulp_cluster
         .WAPUTYPE            ( WAPUTYPE           ), //= 3,
         .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU   ), //= 3,
         .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
-
+        .DEBUG_START_ADDR    ( DEBUG_START_ADDR   ),
         .FPU                 ( CLUST_FPU               ),
         .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
         .SHARED_FP           ( CLUST_SHARED_FP         ),

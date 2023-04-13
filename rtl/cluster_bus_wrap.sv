@@ -17,7 +17,6 @@
  */
 
 
-`include "cluster_bus_defines.sv"
 `include "axi/assign.svh"
 `include "axi/typedef.svh"
 
@@ -26,17 +25,17 @@ module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
     import pulp_cluster_package::addr_map_rule_t;
 #(
-  parameter NB_CORES              = 4 ,
-  parameter AXI_ADDR_WIDTH        = 32,
-  parameter AXI_DATA_WIDTH        = 64,
-  parameter AXI_ID_IN_WIDTH       = 4 ,
-  parameter AXI_ID_OUT_WIDTH      = 6 ,
-  parameter AXI_USER_WIDTH        = 6 ,
-  parameter DMA_NB_OUTSND_BURSTS  = 8 ,
-  parameter TCDM_SIZE             = 0
-
-)
-(
+  parameter int unsigned NB_MASTER             = 3 ,
+  parameter int unsigned NB_SLAVE              = 4 ,
+  parameter int unsigned NB_CORES              = 4 ,
+  parameter int unsigned AXI_ADDR_WIDTH        = 32,
+  parameter int unsigned AXI_DATA_WIDTH        = 64,
+  parameter int unsigned AXI_ID_IN_WIDTH       = 4 ,
+  parameter int unsigned AXI_ID_OUT_WIDTH      = 6 ,
+  parameter int unsigned AXI_USER_WIDTH        = 6 ,
+  parameter int unsigned DMA_NB_OUTSND_BURSTS  = 8 ,
+  parameter int unsigned TCDM_SIZE             = 0
+)(
   input logic       clk_i,
   input logic       rst_ni,
   input logic       test_en_i,
@@ -50,10 +49,6 @@ module cluster_bus_wrap
   AXI_BUS.Master    periph_master,
   AXI_BUS.Master    ext_master
 );
-
-
-  localparam NB_MASTER      = `NB_MASTER;
-  localparam NB_SLAVE       = `NB_SLAVE;
 
 
   //Ensure that AXI_ID out width has the correct size with an elaboration system task
