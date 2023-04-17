@@ -95,12 +95,8 @@ module core_region
   hci_core_intf.master tcdm_data_master,
   XBAR_TCDM_BUS.Master dma_ctrl_master,
   XBAR_PERIPH_BUS.Master eu_ctrl_master,
-  XBAR_PERIPH_BUS.Master periph_data_master
+  XBAR_PERIPH_BUS.Master periph_data_master,
 
- // new interface signals
-`ifdef SHARED_FPU_CLUSTER
-// TODO: Ensure disable if CORE_TYPE_CL != 0
-  ,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
   // request channel
@@ -113,24 +109,6 @@ module core_region
   input logic                            apu_master_valid_i,
   input logic [31:0]                     apu_master_result_i,
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
-`endif
-
-`ifdef APU_CLUSTER
- // TODO: Ensure disable if CORE_TYPE_CL != 0
-  ,
-  output logic                           apu_master_req_o,
-  input logic                            apu_master_gnt_i,
-  // request channel
-  output logic [WAPUTYPE-1:0]            apu_master_type_o,
-  output logic [APU_NARGS_CPU-1:0][31:0] apu_master_operands_o,
-  output logic [APU_WOP_CPU-1:0]         apu_master_op_o,
-  output logic [APU_NDSFLAGS_CPU-1:0]    apu_master_flags_o,
-  // response channel
-  output logic                           apu_master_ready_o,
-  input logic                            apu_master_valid_i,
-  input logic [31:0]                     apu_master_result_i,
-  input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
-`endif
 );
 
   localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
@@ -177,29 +155,6 @@ module core_region
   );
 
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
-
-`ifndef APU_CLUSTER
- `ifndef SHARED_FPU_CLUSTER
-  // TODO: Disable if CORE_TYPE_CL != 0
-  logic                     apu_master_req_o;
-  logic                     apu_master_gnt_i;
-  // request channel
-  logic [WAPUTYPE-1:0]             apu_master_type_o;
-  logic [APU_NARGS_CPU-1:0][31:0]  apu_master_operands_o;
-  logic [APU_WOP_CPU-1:0]          apu_master_op_o;
-  logic [APU_NDSFLAGS_CPU-1:0]     apu_master_flags_o;
-  // response channel
-  logic                        apu_master_ready_o;
-  logic                        apu_master_valid_i;
-  logic [31:0]                 apu_master_result_i;
-  logic [APU_NUSFLAGS_CPU-1:0] apu_master_flags_i;
-
-  assign apu_master_gnt_i      = '1;
-  assign apu_master_valid_i    = '0;
-  assign apu_master_result_i   = '0;
-  assign apu_master_flags_i    = '0;
- `endif
-`endif
 
    //********************************************************
    //***************** PROCESSOR ****************************
