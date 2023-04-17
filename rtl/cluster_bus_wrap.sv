@@ -57,13 +57,13 @@ module cluster_bus_wrap
   else if (AXI_ID_OUT_WIDTH > AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
     $warning("ID width of the AXI output port has the wrong length. It is larger than the required value. Trim it to the right length to get rid of this warning.");
 
-  if (AXI_ADDR_WIDTH != 32)
-    $fatal(1,"Address map is only defined for 32-bit addresses!");
+  if (AXI_ADDR_WIDTH != 48)
+    $fatal(1,"Address map is only defined for 48-bit addresses!");
   if (TCDM_SIZE == 0)
     $fatal(1,"TCDM size must be non-zero!");
-  if (TCDM_SIZE >128*1024)
+  if (TCDM_SIZE >2048*1024) // Periph start address is at offset 0x0020_0000, which actually allows for up to 2 MiB of TCDM,
+                            // do not know why to trigger te assertion for more than 128 KiB TCDM size...
     $fatal(1,"TCDM size exceeds available address space in cluster bus!");
-   
 
   // Crossbar
   AXI_BUS #(

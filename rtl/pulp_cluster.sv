@@ -20,6 +20,7 @@
 `include "axi/typedef.svh"
 `include "axi/assign.svh"
 `include "cluster_bus_defines.sv"
+`include "pulp_interfaces.sv"
 
 module pulp_cluster
   import pulp_cluster_package::*;
@@ -550,8 +551,8 @@ module pulp_cluster
 
   /* cluster bus and attached peripherals */
   cluster_bus_wrap #(
-    .NumAxiMst            ( NumAxiMst          ),
-    .NumAxiSlv            ( NumAxiSlv          ),
+    .NB_MASTER            ( NumAxiMst          ),
+    .NB_SLAVE             ( NumAxiSlv          ),
     .NB_CORES             ( NB_CORES           ),
     .DMA_NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
     .TCDM_SIZE            ( TCDM_SIZE          ),
@@ -876,12 +877,10 @@ module pulp_cluster
         .instr_r_valid_i     ( instr_r_valid[i]      ),
 
         //debug unit bind
-        .debug_req_i         ( s_core_dbg_irq[i]     ),
-        //.debug_bus           ( s_debug_bus[i]        ),
-        //.debug_core_halted_o ( dbg_core_halted[i]    ),
-        //.debug_core_halt_i   ( dbg_core_halt[i]      ),
-        //.debug_core_resume_i ( dbg_core_resume[i]    ),
-        .tcdm_data_master    ( s_hci_core[i]         ),
+        .debug_req_i      ( s_core_dbg_irq[i]     ),
+        .debug_halted_o   ( dbg_core_halted[i]    ),
+        // .debug_resume_i   ( dbg_core_resume[i]    ), // Useful for HMR, consider keeping
+        .tcdm_data_master ( s_hci_core[i]         ),
 
         //tcdm, dma ctrl unit, periph interco interfaces
         .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
