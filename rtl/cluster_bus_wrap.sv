@@ -25,16 +25,17 @@ module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
     import pulp_cluster_package::addr_map_rule_t;
 #(
-  parameter int unsigned NB_MASTER             = 3 ,
-  parameter int unsigned NB_SLAVE              = 4 ,
-  parameter int unsigned NB_CORES              = 4 ,
-  parameter int unsigned AXI_ADDR_WIDTH        = 32,
-  parameter int unsigned AXI_DATA_WIDTH        = 64,
-  parameter int unsigned AXI_ID_IN_WIDTH       = 4 ,
-  parameter int unsigned AXI_ID_OUT_WIDTH      = 6 ,
-  parameter int unsigned AXI_USER_WIDTH        = 6 ,
-  parameter int unsigned DMA_NB_OUTSND_BURSTS  = 8 ,
-  parameter int unsigned TCDM_SIZE             = 0
+  parameter int unsigned NB_MASTER              = 3 ,
+  parameter int unsigned NB_SLAVE               = 4 ,
+  parameter int unsigned NB_CORES               = 4 ,
+  parameter int unsigned AXI_ADDR_WIDTH         = 32,
+  parameter int unsigned AXI_DATA_WIDTH         = 64,
+  parameter int unsigned AXI_ID_IN_WIDTH        = 4 ,
+  parameter int unsigned AXI_ID_OUT_WIDTH       = 6 ,
+  parameter int unsigned AXI_USER_WIDTH         = 6 ,
+  parameter int unsigned DMA_NB_OUTSND_BURSTS   = 8 ,
+  parameter int unsigned TCDM_SIZE              = 0 ,
+  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000
 )(
   input logic       clk_i,
   input logic       rst_ni,
@@ -93,7 +94,7 @@ module cluster_bus_wrap
   
   // address map
   logic [31:0] cluster_base_addr;
-  assign cluster_base_addr = 32'h1000_0000 + ( cluster_id_i << 22);
+  assign cluster_base_addr = BaseAddr + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 3;
   pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map; 
 

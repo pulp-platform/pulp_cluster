@@ -93,6 +93,7 @@ module pulp_cluster
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
+  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000,
   // CLUSTER TO SOC CDC AXI PARAMETER
   localparam S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
   localparam S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
@@ -554,7 +555,8 @@ cluster_bus_wrap #(
   .AXI_DATA_WIDTH       ( AXI_DATA_C2S_WIDTH ),
   .AXI_USER_WIDTH       ( AXI_USER_WIDTH     ),
   .AXI_ID_IN_WIDTH      ( AXI_ID_IN_WIDTH    ),
-  .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   )
+  .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   ),
+  .BaseAddr             ( BaseAddr           )
 ) cluster_bus_wrap_i (
   .clk_i         ( clk_cluster       ),
   .rst_ni        ( s_rst_n           ),
