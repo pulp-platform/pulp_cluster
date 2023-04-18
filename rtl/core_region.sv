@@ -184,20 +184,20 @@ module core_region
         .hart_id_i             ( hart_id                     ),
         .dm_exception_addr_i   ( DEBUG_START_ADDR + 16'h080C ), // From Control PULP, to be checked
         // Instruction Interface
-        .instr_addr_o          ( instr_addr_o                ),
         .instr_req_o           ( instr_req_o                 ),
-        .instr_rdata_i         ( instr_r_rdata_i             ),
         .instr_gnt_i           ( instr_gnt_i                 ),
         .instr_rvalid_i        ( instr_r_valid_i             ),
+        .instr_addr_o          ( instr_addr_o                ),
+        .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_addr_o           ( s_core_bus.add              ),
-        .data_wdata_o          ( s_core_bus.wdata            ),
-        .data_we_o             ( s_core_bus.we               ),
         .data_req_o            ( s_core_bus.req              ),
-        .data_be_o             ( s_core_bus.be               ),
-        .data_rdata_i          ( s_core_bus.r_rdata          ),
         .data_gnt_i            ( s_core_bus.gnt              ),
         .data_rvalid_i         ( s_core_bus.r_valid          ),
+        .data_we_o             ( s_core_bus.we               ),
+        .data_be_o             ( s_core_bus.be               ),
+        .data_addr_o           ( s_core_bus.add              ),
+        .data_wdata_o          ( s_core_bus.wdata            ),
+        .data_rdata_i          ( s_core_bus.r_rdata          ),
         // apu-interconnect
         // Handshake
         .apu_req_o             ( apu_master_req_o            ),

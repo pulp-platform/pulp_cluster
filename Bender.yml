@@ -18,15 +18,15 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.1 }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.3 }
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "fc231dfc9559c6715c3577049eae3d1887282cb0" }
+  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "9e53e957f7e0fd88616a5f3fbcc2617fbc3c9d0d" } # branch: yt/carfield
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
-  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "66b4084117546d5b748c30b5500769805f489d2f" }
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "c05d793cb0638b43fdaa067aef48cbcc4ea40e81" }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.0-beta.4  }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git"          , rev: "9b7d500" } # michaero/safety-island
+  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git"          , rev: "b26d1d6c5043bc6c535e23bf61b51313c802e44a" } # branch: michaero/safety-island-clic
   ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
