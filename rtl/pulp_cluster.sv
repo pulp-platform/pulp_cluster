@@ -248,7 +248,6 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
 logic [NB_CORES-1:0]                fetch_enable_reg_int;
 logic [NB_CORES-1:0]                fetch_en_int;
-logic                               s_rst_n;
 logic                               s_init_n;
 logic [NB_CORES-1:0][31:0]          boot_addr;
 logic [NB_CORES-1:0]                dbg_core_halt;
@@ -271,7 +270,6 @@ logic                     s_hwpe_busy;
 hci_package::hci_interconnect_ctrl_t s_hci_ctrl;
 
 logic [NB_CORES-1:0]               clk_core_en;
-logic                              clk_cluster;
 
 // CLK reset, and other control signals
 
@@ -325,8 +323,6 @@ logic                                       s_decompr_done_evt;
 
 assign s_dma_fc_irq = s_decompr_done_evt;
 
-
-
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
 hci_core_intf #(
@@ -334,7 +330,7 @@ hci_core_intf #(
   .AW ( ADDR_WIDTH ),
   .OW ( 1  )
 ) s_hci_ext[NB_DMAS-1:0] (
-  .clk ( clk_cluster )
+  .clk ( clk_i )
 );
 
 // periph interconnect -> slave peripherals
@@ -349,9 +345,9 @@ hci_core_intf #(
   .AW ( ADDR_WIDTH ),
   .OW ( 1  )
 ) s_hci_dma[NB_DMAS-1:0] (
-  .clk ( clk_cluster )
+  .clk ( clk_i )
 );
-XBAR_TCDM_BUS    s_dma_plugin_xbar_bus[NB_DMAS-1:0]();
+XBAR_TCDM_BUS s_dma_plugin_xbar_bus[NB_DMAS-1:0]();
 
 // ext -> xbar periphs FIXME
 XBAR_TCDM_BUS s_mperiph_xbar_bus[NB_MPERIPHS-1:0]();
@@ -366,14 +362,14 @@ hci_core_intf #(
   .AW ( ADDR_WIDTH               ),
   .OW ( 1                )
 ) s_hci_hwpe [0:0] (
-  .clk ( clk_cluster )
+  .clk ( clk_i )
 );
 hci_core_intf #(
   .DW ( DATA_WIDTH ),
   .AW ( ADDR_WIDTH ),
   .OW ( 1  )
 ) s_hci_core [NB_CORES-1:0] (
-  .clk ( clk_cluster )
+  .clk ( clk_i )
 );
 
 // cores -> periph interconnect
@@ -391,7 +387,6 @@ XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
 
 // cores -> event unit ctrl
 XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
-
 
 // apu-interconnect
 // handshake signals
@@ -426,7 +421,7 @@ hci_mem_intf #(
   .BW ( 8      ),
   .IW ( TCDM_ID_WIDTH )
 ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0] (
-  .clk ( clk_cluster )
+  .clk ( clk_i )
 );
 
 //***************************************************
@@ -459,7 +454,6 @@ AXI_BUS #(
   .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_core_instr_bus(); 
-
 
 // ***********************************************************************************************+
 // ***********************************************************************************************+
@@ -503,15 +497,6 @@ AXI_BUS #(
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_ext_mperiph_bus();
 
-/* reset generator */
-rstgen rstgen_i (
-  .clk_i      ( clk_i       ),
-  .rst_ni     ( rst_ni      ),
-  .test_mode_i( test_mode_i ),
-  .rst_no     ( s_rst_n     ),
-  .init_no    ( s_init_n    )
-);
-
 /* fetch & busy genertion */
 assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
 assign busy_o = s_cluster_int_busy | (|core_busy);
@@ -531,8 +516,8 @@ cluster_bus_wrap #(
   .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   ),
   .BaseAddr             ( BaseAddr           )
 ) cluster_bus_wrap_i (
-  .clk_i         ( clk_cluster       ),
-  .rst_ni        ( s_rst_n           ),
+  .clk_i         ( clk_i             ),
+  .rst_ni        ( rst_ni            ),
   .test_en_i     ( test_mode_i       ),
   .cluster_id_i  ( cluster_id_i      ),
   .instr_slave   ( s_core_instr_bus  ),
@@ -551,8 +536,8 @@ axi2mem_wrap #(
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
   .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
 ) axi2mem_wrap_i (
-  .clk_i       ( clk_cluster    ),
-  .rst_ni      ( s_rst_n        ),
+  .clk_i       ( clk_i          ),
+  .rst_ni      ( rst_ni         ),
   .test_en_i   ( test_mode_i    ),
   .axi_slave   ( s_ext_tcdm_bus ),
   .tcdm_master ( s_hci_ext      ),
@@ -565,8 +550,8 @@ axi2per_wrap #(
   .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) axi2per_wrap_i (
-  .clk_i         ( clk_cluster       ),
-  .rst_ni        ( s_rst_n           ),
+  .clk_i         ( clk_i             ),
+  .rst_ni        ( rst_ni            ),
   .test_en_i     ( test_mode_i       ),
   .axi_slave     ( s_ext_mperiph_bus ),
   .periph_master ( s_mperiph_bus     ),
@@ -577,8 +562,8 @@ per_demux_wrap #(
   .NB_MASTERS  (  2 ),
   .ADDR_OFFSET ( 20 )
 ) per_demux_wrap_i (
-  .clk_i   ( clk_cluster         ),
-  .rst_ni  ( s_rst_n             ),
+  .clk_i   ( clk_i               ),
+  .rst_ni  ( rst_ni              ),
   .slave   ( s_mperiph_bus       ),
   .masters ( s_mperiph_demux_bus )
 );
@@ -594,14 +579,13 @@ per2axi_wrap #(
   .AXI_USER_WIDTH ( AXI_USER_WIDTH       ),
   .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
 ) per2axi_wrap_i (
-  .clk_i          ( clk_cluster                     ),
-  .rst_ni         ( s_rst_n                         ),
+  .clk_i          ( clk_i                           ),
+  .rst_ni         ( rst_ni                          ),
   .test_en_i      ( test_mode_i                     ),
   .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
   .axi_master     ( s_core_ext_bus                  ),
   .busy_o         ( s_per2axi_busy                  )
 );
-    
 
 //***************************************************
 /* cluster (log + periph) interconnect and attached peripherals */
@@ -629,8 +613,8 @@ cluster_interconnect_wrap #(
   .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
 
 ) cluster_interconnect_wrap_i (
-  .clk_i              ( clk_cluster                         ),
-  .rst_ni             ( s_rst_n                             ),
+  .clk_i              ( clk_i                               ),
+  .rst_ni             ( rst_ni                              ),
 
   .core_tcdm_slave    ( s_hci_core                          ),
   .hwpe_tcdm_slave    ( s_hci_hwpe                          ),
@@ -666,8 +650,8 @@ dmac_wrap #(
   .ADDR_WIDTH         ( ADDR_WIDTH         ),
   .BE_WIDTH           ( BE_WIDTH           )
 ) dmac_wrap_i (
-  .clk_i             ( clk_cluster        ),
-  .rst_ni            ( s_rst_n            ),
+  .clk_i             ( clk_i              ),
+  .rst_ni            ( rst_ni             ),
   .test_mode_i       ( test_mode_i        ),
   .ctrl_slave        ( s_core_dmactrl_bus ),
   .cl_ctrl_slave     ( s_periph_dma_bus[0]),
@@ -702,8 +686,8 @@ cluster_peripherals #(
 
 ) cluster_peripherals_i (
 
-  .clk_i                  ( clk_cluster                        ),
-  .rst_ni                 ( s_rst_n                            ),
+  .clk_i                  ( clk_i                              ),
+  .rst_ni                 ( rst_ni                             ),
   .ref_clk_i              ( ref_clk_i                          ),
   .test_mode_i            ( test_mode_i                        ),
   .busy_o                 ( s_cluster_periphs_busy             ),
@@ -777,8 +761,8 @@ generate
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
 
     pulp_sync dbg_irq_sync (
-      .clk_i(clk_cluster),
-      .rstn_i(s_rst_n),
+      .clk_i(clk_i),
+      .rstn_i(rst_ni),
       .serial_i(dbg_irq_valid_i[i]),
       .serial_o(s_dbg_irq[i])
     );
@@ -802,8 +786,8 @@ generate
       .SHARED_FP           ( CLUST_SHARED_FP         ),
       .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
     ) core_region_i (
-      .clk_i               ( clk_cluster           ),
-      .rst_ni              ( s_rst_n               ),
+      .clk_i               ( clk_i                 ),
+      .rst_ni              ( rst_ni                ),
       .base_addr_i         ( base_addr_i           ),
 
       .init_ni             ( s_init_n              ),
@@ -909,8 +893,8 @@ generate
       .USE_FPNEW_OPT_ALLOC ("TRUE"),
       .FPNEW_INTECO_TYPE   ("SINGLE_INTERCO")
     ) i_shared_fpu_cluster (
-      .clk                   ( clk_cluster             ),
-      .rst_n                 ( s_rst_n                 ),
+      .clk                   ( clk_i                   ),
+      .rst_n                 ( rst_ni                  ),
       .test_mode_i           ( test_mode_i             ),
       .core_slave_req_i      ( s_apu_master_req        ),
       .core_slave_gnt_o      ( s_apu_master_gnt        ),
@@ -941,8 +925,8 @@ generate
       .N_MASTER_PORT ( NB_HWPE_PORTS        ),
       .ID_WIDTH      ( NB_CORES+NB_MPERIPHS )
     ) hwpe_subsystem_i (
-      .clk               ( clk_cluster    ),
-      .rst_n             ( s_rst_n        ),
+      .clk               ( clk_i          ),
+      .rst_n             ( rst_ni         ),
       .test_mode         ( test_mode_i    ),
       .hwpe_xbar_master  ( s_hci_hwpe [0] ),
       .hwpe_cfg_slave    ( s_hwpe_cfg_bus ),
@@ -998,8 +982,8 @@ icache_hier_top #(
   .USE_REDUCED_TAG      ( USE_REDUCED_TAG     ), //= "TRUE",  // TRUE | FALSE
   .L2_SIZE              ( L2_SIZE             )  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
 ) icache_top_i (
-  .clk                       ( clk_cluster     ),
-  .rst_n                     ( s_rst_n         ),
+  .clk                       ( clk_i           ),
+  .rst_n                     ( rst_ni          ),
   .test_en_i                 ( test_mode_i     ),
 
   .fetch_req_i               ( instr_req       ),
@@ -1083,8 +1067,8 @@ tcdm_banks_wrap #(
   .BeWidth  (BE_WIDTH     ),
   .IdWidth  (TCDM_ID_WIDTH)
 ) tcdm_banks_i (
-  .clk_i      (clk_cluster    ),
-  .rst_ni     (s_rst_n        ),
+  .clk_i      (clk_i          ),
+  .rst_ni     (rst_ni         ),
   .test_mode_i(test_mode_i    ),
   .tcdm_slave (s_tcdm_bus_sram)  //PMU ??
 );
@@ -1119,8 +1103,8 @@ axi_cdc_src #(
  .axi_resp_t ( c2s_resp_t    ),
  .LogDepth   ( LOG_DEPTH     )
 ) axi_master_cdc_i (
- .src_rst_ni                       ( s_rst_n                     ),
- .src_clk_i                        ( clk_cluster                 ),
+ .src_rst_ni                       ( rst_ni                      ),
+ .src_clk_i                        ( clk_i                       ),
  .src_req_i                        ( src_req                     ),
  .src_resp_o                       ( src_resp                    ),
  .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
@@ -1166,7 +1150,7 @@ axi_cdc_dst #(
   .axi_resp_t(s2c_resp_t   ),
   .LogDepth        ( LOG_DEPTH              )
 ) axi_slave_cdc_i (
-  .dst_rst_ni                       ( s_rst_n                    ),
+  .dst_rst_ni                       ( rst_ni                     ),
   .dst_clk_i                        ( clk_i                      ),
   .dst_req_o                        ( dst_req                    ),
   .dst_resp_i                       ( dst_resp                   ),
@@ -1196,7 +1180,7 @@ axi_dw_converter_intf #(
   .AXI_MAX_READS           ( 1                  )
 ) axi_dw_UPSIZE_32_64_wrap_i (
   .clk_i  ( clk_i           ),
-  .rst_ni ( s_rst_n         ),
+  .rst_ni ( rst_ni          ),
   .slv    ( s_data_slave_32 ),
   .mst    ( s_data_slave_64 )
 );
@@ -1208,7 +1192,7 @@ cdc_fifo_gray_dst #(
   .SYNC_STAGES(2)
 ) u_event_dc (
   .dst_clk_i                ( clk_i                       ),
-  .dst_rst_ni               ( s_rst_n                     ),
+  .dst_rst_ni               ( rst_ni                      ),
   .dst_data_o               ( s_events_data               ),
   .dst_valid_o              ( s_events_valid              ),
   .dst_ready_i              ( s_events_ready              ),
@@ -1220,7 +1204,7 @@ assign s_events_async = s_events_valid;
   
 edge_propagator_tx ep_dma_pe_evt_i (
   .clk_i   ( clk_i              ),
-  .rstn_i  ( s_rst_n            ),
+  .rstn_i  ( rst_ni             ),
   .valid_i ( s_dma_fc_event     ),
   .ack_i   ( dma_pe_evt_ack_i   ),
   .valid_o ( dma_pe_evt_valid_o )
@@ -1228,26 +1212,10 @@ edge_propagator_tx ep_dma_pe_evt_i (
  
 edge_propagator_tx ep_dma_pe_irq_i (
   .clk_i   ( clk_i              ),
-  .rstn_i  ( s_rst_n            ),
+  .rstn_i  ( rst_ni             ),
   .valid_i ( s_dma_fc_irq       ),
   .ack_i   ( dma_pe_irq_ack_i   ),
   .valid_o ( dma_pe_irq_valid_o )
-);
-   
-/* centralized gating */
-cluster_clock_gate #(
-  .NB_CORES ( NB_CORES )
-) u_clustercg (
-  .clk_i              ( clk_i              ),
-  .rstn_i             ( s_rst_n            ),
-  .test_mode_i        ( test_mode_i        ),
-  .cluster_cg_en_i    ( s_cluster_cg_en    ),
-  .cluster_int_busy_i ( s_cluster_int_busy ),
-  .cores_busy_i       ( core_busy          ),
-  .events_i           ( s_events_async     ),
-  .incoming_req_i     ( s_incoming_req     ),
-  .isolate_cluster_o  ( s_isolate_cluster  ),
-  .cluster_clk_o      ( clk_cluster        )
 );
 
 endmodule
