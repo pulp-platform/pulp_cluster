@@ -49,17 +49,7 @@ module pulp_cluster
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
-`ifdef PRIVATE_ICACHE
   parameter NB_CACHE_BANKS          = 2,
-`else
-  `ifdef MP_ICACHE
-  parameter NB_CACHE_BANKS          = 8,
-  `else
-    `ifdef SP_ICACHE
-  parameter NB_CACHE_BANKS          = 8,
-    `endif
-  `endif
-`endif
   parameter CACHE_LINE              = 1,
   parameter CACHE_SIZE              = 4096,
   parameter ICACHE_DATA_WIDTH       = 128,
@@ -237,17 +227,12 @@ module pulp_cluster
    
 );
 
-  //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
-  `ifdef PRIVATE_ICACHE
-  if (AXI_ID_IN_WIDTH < 1 + $clog2(NB_CACHE_BANKS))
-           $error("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
-  `else
-  if (AXI_ID_IN_WIDTH < $clog2(NB_CORES+1))
-           $error("AXI input ID width must be larger than $clog2(NB_CORES+1) which is %d but was %d", $clog2(NB_CORES+1), AXI_ID_IN_WIDTH);
-  `endif
+//Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
+if (AXI_ID_IN_WIDTH < 1 + $clog2(NB_CACHE_BANKS))
+         $error("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
 
-  localparam int unsigned NB_L1_CUTS      = 16;
-  localparam int unsigned RW_MARGIN_WIDTH = 4;
+localparam int unsigned NB_L1_CUTS      = 16;
+localparam int unsigned RW_MARGIN_WIDTH = 4;
 `ifdef FEATURE_ICACHE_STAT
   localparam bit          FEATURE_STAT    = 1'b1;
 `else
@@ -424,26 +409,14 @@ module pulp_cluster
       logic [NB_CORES-1:0][APU_NUSFLAGS_CPU-1:0]     s_apu_master_rflags;
 `endif
 
-   //----------------------------------------------------------------------//
-   // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
-   //                                                                      //
-  `ifdef PRIVATE_ICACHE
-      SP_ICACHE_CTRL_UNIT_BUS      IC_ctrl_unit_bus_main[NB_CACHE_BANKS]();
-      PRI_ICACHE_CTRL_UNIT_BUS     IC_ctrl_unit_bus_pri[NB_CORES]();
-      logic                        s_special_core_icache_cfg;
-      logic[NB_CORES-1:0]          s_enable_l1_l15_prefetch;
-
-  `else
-      `ifdef SP_ICACHE
-             SP_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus[NB_CACHE_BANKS]();
-             L0_CTRL_UNIT_BUS         L0_ctrl_unit_bus[NB_CORES]();
-      `else
-          `ifdef MP_ICACHE
-               MP_PF_ICACHE_CTRL_UNIT_BUS  IC_ctrl_unit_bus();
-          `endif
-      `endif
-  `endif
-   //----------------------------------------------------------------------//
+  //----------------------------------------------------------------------//
+  // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
+  //                                                                      //
+  SP_ICACHE_CTRL_UNIT_BUS      IC_ctrl_unit_bus_main[NB_CACHE_BANKS]();
+  PRI_ICACHE_CTRL_UNIT_BUS     IC_ctrl_unit_bus_pri[NB_CORES]();
+  logic                        s_special_core_icache_cfg;
+  logic[NB_CORES-1:0]          s_enable_l1_l15_prefetch;
+  //----------------------------------------------------------------------//
 
   localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
 
@@ -799,29 +772,14 @@ module pulp_cluster
     
     .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
     
-    .hwpe_cfg_master        ( s_hwpe_cfg_bus                     ),
-    .hwpe_events_i          ( s_hwpe_remap_evt                   ),
-    .hwpe_en_o              ( s_hwpe_en                          ),
-    .hci_ctrl_o             ( s_hci_ctrl                         )
-`ifdef PRIVATE_ICACHE
-    ,
-    .IC_ctrl_unit_bus_main  (  IC_ctrl_unit_bus_main              ),
-    .IC_ctrl_unit_bus_pri   (  IC_ctrl_unit_bus_pri               ),
+    .hwpe_cfg_master          ( s_hwpe_cfg_bus                    ),
+    .hwpe_events_i            ( s_hwpe_remap_evt                  ),
+    .hwpe_en_o                ( s_hwpe_en                         ),
+    .hci_ctrl_o               ( s_hci_ctrl                        ),
+    .IC_ctrl_unit_bus_main    (  IC_ctrl_unit_bus_main            ),
+    .IC_ctrl_unit_bus_pri     (  IC_ctrl_unit_bus_pri             ),
     .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
-`else
-  `ifdef SP_ICACHE
-    ,
-    .L0_ctrl_unit_bus       (  L0_ctrl_unit_bus                   ),
-    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
-  `else
-    `ifdef MP_ICACHE
-    ,
-    .IC_ctrl_unit_bus       (  IC_ctrl_unit_bus                   )
-    `endif
-  `endif
-`endif
-    //.rw_margin_L1_o         ( s_rw_margin_L1                      )
-);
+  );
 
 
 
@@ -1068,8 +1026,6 @@ module pulp_cluster
     end
   endgenerate
 
-`ifdef PRIVATE_ICACHE
-
   icache_hier_top #(
     .FETCH_ADDR_WIDTH     ( 32                  ), //= 32,
     .PRI_FETCH_DATA_WIDTH ( INSTR_RDATA_WIDTH   ), //= 128,   // Tested for 32 and 128
@@ -1166,208 +1122,8 @@ module pulp_cluster
 
     .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
     .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
-);
-
-`else
- `ifdef MP_ICACHE
-  /* instruction cache */
-  icache_top_mp_128_PF #(
-    .FETCH_ADDR_WIDTH ( 32                 ),
-    .FETCH_DATA_WIDTH ( 128                ),
-    .NB_CORES         ( NB_CORES           ),
-    .NB_BANKS         ( NB_CACHE_BANKS     ),
-    .NB_WAYS          ( SET_ASSOCIATIVE    ),
-    .CACHE_SIZE       ( CACHE_SIZE         ),
-    .CACHE_LINE       ( 1                  ),
-    .AXI_ID           ( AXI_ID_IN_WIDTH    ),
-    .AXI_ADDR         ( AXI_ADDR_WIDTH     ),
-    .AXI_USER         ( AXI_USER_WIDTH     ),
-    .AXI_DATA         ( AXI_DATA_C2S_WIDTH ),
-    .USE_REDUCED_TAG  ( USE_REDUCED_TAG    ),
-    .L2_SIZE          ( L2_SIZE            ) 
-  ) icache_top_i (
-    .clk                    ( clk_cluster                ),
-    .rst_n                  ( s_rst_n                    ),
-    .test_en_i              ( test_mode_i                ),
-    .fetch_req_i            ( instr_req                  ),
-    .fetch_addr_i           ( instr_addr                 ),
-    .fetch_gnt_o            ( instr_gnt                  ),
-    .fetch_rvalid_o         ( instr_r_valid              ),
-    .fetch_rdata_o          ( instr_r_rdata              ), 
-    .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
-    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ), 
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ), 
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ), 
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ), 
-    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
-    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
-    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ),
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ), 
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ), 
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ), 
-    .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),
-    .axi_master_rid_i       ( s_core_instr_bus.r_id      ),
-    .axi_master_rdata_i     ( s_core_instr_bus.r_data    ),
-    .axi_master_rresp_i     ( s_core_instr_bus.r_resp    ),
-    .axi_master_rlast_i     ( s_core_instr_bus.r_last    ),
-    .axi_master_ruser_i     ( s_core_instr_bus.r_user    ),
-    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid   ),
-    .axi_master_rready_o    ( s_core_instr_bus.r_ready   ),
-    .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
-    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
-    .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
-    .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
-    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
-    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
-    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
-    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
-    .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
-    .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
-    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
-    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
-    .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
-    .axi_master_wdata_o     ( s_core_instr_bus.w_data    ),
-    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb    ),
-    .axi_master_wlast_o     ( s_core_instr_bus.w_last    ),
-    .axi_master_wuser_o     ( s_core_instr_bus.w_user    ),
-    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid   ),
-    .axi_master_wready_i    ( s_core_instr_bus.w_ready   ),
-    .axi_master_bid_i       ( s_core_instr_bus.b_id      ),
-    .axi_master_bresp_i     ( s_core_instr_bus.b_resp    ),
-    .axi_master_buser_i     ( s_core_instr_bus.b_user    ),
-    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid   ),
-    .axi_master_bready_o    ( s_core_instr_bus.b_ready   ),
-    .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus           )
   );
 
- `else
-  `ifdef SP_ICACHE
-  localparam NB_BANKS_SP   = NB_CORES;
-  localparam CACHE_LINE_SP = 1;
-  icache_top #(
-    // Parameter for MULTIBANK CACHE
-    .NB_CORES              ( NB_CORES          ),  // Number of  Processor
-    .NB_REFILL_PORT        ( 1                 ),  // 1 refill port
-    .NB_CACHE_BANKS        ( NB_BANKS_SP       ),  // Number of  CACHE BANKS
-
-    //ICACHE CFG
-    .SET_ASSOCIATIVE       ( SET_ASSOCIATIVE   ),
-    .CACHE_LINE            ( CACHE_LINE_SP     ),  // WORDS in each cache line allowed value are 1 - 2 - 4 - 8
-    .CACHE_SIZE            ( CACHE_SIZE        ),  // In Byte
-    .FIFO_DEPTH            ( 2                 ),  // 2--> Minimum SIZE
-
-    //ICACHE BUS PARAMETERS
-    .ICACHE_DATA_WIDTH     ( ICACHE_DATA_WIDTH ),
-    .ICACHE_ID_WIDTH       ( NB_CORES          ),
-    .ICACHE_ADDR_WIDTH     ( 32                ),
-
-    .L0_BUFFER_FEATURE     ( L0_BUFFER_FEATURE ),
-    .L0_SIZE               ( ICACHE_DATA_WIDTH ),
-
-    .INSTR_RDATA_WIDTH     ( INSTR_RDATA_WIDTH ),
-
-    .SUPPORT_BOTH_PRI_SH   ( "FALSE"           ),
-    .SHARED_ICACHE         ( SHARED_ICACHE     ),
-    .MULTICAST_FEATURE     ( MULTICAST_FEATURE ),
-    .MULTICAST_GRANULARITY ( 1                 ),
-    .DIRECT_MAPPED_FEATURE ( DIRECT_MAPPED_FEATURE),
-
-    .L2_SIZE               ( L2_SIZE           ),
-    .USE_REDUCED_TAG       ( USE_REDUCED_TAG   ),
-
-    //AXI PARAMETER
-    .AXI_ID                ( AXI_ID_IN_WIDTH   ),
-    .AXI_USER              ( AXI_USER_WIDTH    ),
-    .AXI_DATA              ( AXI_DATA_C2S_WIDTH    ),
-    .AXI_ADDR              ( AXI_ADDR_WIDTH    )
-  ) icache_top_i (
-    // ---------------------------------------------------------------
-    // CORES I$ PLUG -----------------------------------------
-    // ---------------------------------------------------------------
-    .clk                 ( clk_cluster                ),
-    .rst_n               ( s_rst_n                    ),
-    .test_en_i           ( test_mode_i                ),
-
-    .instr_req_i         ( instr_req                  ),
-    .instr_add_i         ( instr_addr                 ),
-    .instr_gnt_o         ( instr_gnt                  ) ,
-
-    .instr_r_valid_o     ( instr_r_valid              ),
-    .instr_r_rdata_o     ( instr_r_rdata              ),
-
-
-    // ---------------------------------------------------------------
-    // Refill BUS I$ -----------------------------------------
-    // ---------------------------------------------------------------
-    .init_awid_o         ( s_core_instr_bus.aw_id     ),
-    .init_awaddr_o       ( s_core_instr_bus.aw_addr   ),
-    .init_awlen_o        ( s_core_instr_bus.aw_len    ),
-    .init_awsize_o       ( s_core_instr_bus.aw_size   ),
-    .init_awburst_o      ( s_core_instr_bus.aw_burst  ),
-    .init_awlock_o       ( s_core_instr_bus.aw_lock   ),
-    .init_awcache_o      ( s_core_instr_bus.aw_cache  ),
-    .init_awprot_o       ( s_core_instr_bus.aw_prot   ),
-    .init_awregion_o     ( s_core_instr_bus.aw_region ),
-    .init_awuser_o       ( s_core_instr_bus.aw_user   ),
-    .init_awqos_o        ( s_core_instr_bus.aw_qos    ),
-    .init_awvalid_o      ( s_core_instr_bus.aw_valid  ),
-    .init_awready_i      ( s_core_instr_bus.aw_ready  ),
-
-
-    //AXI write data bus -------------- // // --------------
-    .init_wdata_o        ( s_core_instr_bus.w_data    ),
-    .init_wstrb_o        ( s_core_instr_bus.w_strb    ),
-    .init_wlast_o        ( s_core_instr_bus.w_last    ),
-    .init_wuser_o        ( s_core_instr_bus.w_user    ),
-    .init_wvalid_o       ( s_core_instr_bus.w_valid   ),
-    .init_wready_i       ( s_core_instr_bus.w_ready   ),
-    // ---------------------------------------------------------------
-
-    //AXI BACKWARD write response bus -------------- // // --------------
-    .init_bid_i          ( s_core_instr_bus.b_id      ),
-    .init_bresp_i        ( s_core_instr_bus.b_resp    ),
-    .init_buser_i        ( s_core_instr_bus.b_user    ),
-    .init_bvalid_i       ( s_core_instr_bus.b_valid   ),
-    .init_bready_o       ( s_core_instr_bus.b_ready   ),
-    // ---------------------------------------------------------------
-
-    //AXI read address bus -------------------------------------------
-    .init_arid_o         ( s_core_instr_bus.ar_id     ),
-    .init_araddr_o       ( s_core_instr_bus.ar_addr   ),
-    .init_arlen_o        ( s_core_instr_bus.ar_len    ),
-    .init_arsize_o       ( s_core_instr_bus.ar_size   ),
-    .init_arburst_o      ( s_core_instr_bus.ar_burst  ),
-    .init_arlock_o       ( s_core_instr_bus.ar_lock   ),
-    .init_arcache_o      ( s_core_instr_bus.ar_cache  ),
-    .init_arprot_o       ( s_core_instr_bus.ar_prot   ),
-    .init_arregion_o     ( s_core_instr_bus.ar_region ),
-    .init_aruser_o       ( s_core_instr_bus.ar_user   ),
-    .init_arqos_o        ( s_core_instr_bus.ar_qos    ),
-    .init_arvalid_o      ( s_core_instr_bus.ar_valid  ),
-    .init_arready_i      ( s_core_instr_bus.ar_ready  ),
-    // ---------------------------------------------------------------
-
-
-    //AXI BACKWARD read data bus ----------------------------------------------
-    .init_rid_i          ( s_core_instr_bus.r_id      ),
-    .init_rdata_i        ( s_core_instr_bus.r_data    ),
-    .init_rresp_i        ( s_core_instr_bus.r_resp    ),
-    .init_rlast_i        ( s_core_instr_bus.r_last    ),
-    .init_ruser_i        ( s_core_instr_bus.r_user    ),
-    .init_rvalid_i       ( s_core_instr_bus.r_valid   ),
-    .init_rready_o       ( s_core_instr_bus.r_ready   ),
-
-    // Control ports
-    .IC_ctrl_unit_slave_if  ( IC_ctrl_unit_bus        ),
-    .L0_ctrl_unit_slave_if  ( L0_ctrl_unit_bus        )
-  );
-  `endif // Closes `ifdef SP_ICACHE
- `endif // Closes `ifdef MP_ICACHE
-`endif // Closes `ifdef PRI_ICACHE
-
-  assign s_core_instr_bus.aw_atop = '0; 
-   
   /* TCDM banks */
   tcdm_banks_wrap #(
     .BankSize (TCDM_NUM_ROWS),
@@ -1380,7 +1136,6 @@ module pulp_cluster
     .clk_i      (clk_cluster    ),
     .rst_ni     (s_rst_n        ),
     .test_mode_i(test_mode_i    ),
-    
     .tcdm_slave (s_tcdm_bus_sram)  //PMU ??
   );
   
