@@ -20,10 +20,8 @@
 `include "axi/assign.svh"
 `include "axi/typedef.svh"
 
-
 module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
-    import pulp_cluster_package::addr_map_rule_t;
 #(
   parameter int unsigned NB_MASTER              = 3 ,
   parameter int unsigned NB_SLAVE               = 4 ,
@@ -92,11 +90,18 @@ module cluster_bus_wrap
   `AXI_ASSIGN(periph_master, axi_masters[1])
   `AXI_ASSIGN(ext_master   , axi_masters[2])
   
+  // Address Map Rule
+  typedef struct packed {
+      logic [31:0]               idx       ;
+      logic [AXI_ADDR_WIDTH-1:0] start_addr;
+      logic [AXI_ADDR_WIDTH-1:0] end_addr  ;
+  } addr_map_rule_t;
+
   // address map
   logic [31:0] cluster_base_addr;
   assign cluster_base_addr = BaseAddr + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 3;
-  pulp_cluster_package::addr_map_rule_t [N_RULES-1:0] addr_map; 
+  addr_map_rule_t [N_RULES-1:0] addr_map;
 
 
   assign addr_map[0] = '{ // TCDM
