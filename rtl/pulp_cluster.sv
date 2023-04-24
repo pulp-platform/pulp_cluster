@@ -253,6 +253,8 @@ logic [NB_CORES-1:0][31:0]          boot_addr;
 logic [NB_CORES-1:0]                dbg_core_halt;
 logic [NB_CORES-1:0]                dbg_core_resume;
 logic [NB_CORES-1:0]                dbg_core_halted;
+logic [NB_CORES-1:0]                dbg_core_havereset;
+logic [NB_CORES-1:0]                dbg_core_running;
 logic [NB_CORES-1:0]                s_dbg_irq;
 logic                               s_hwpe_en;
 
@@ -812,8 +814,10 @@ generate
       .instr_r_valid_i     ( instr_r_valid[i]      ),
 
       //debug unit bind
-      .debug_req_i      ( s_core_dbg_irq[i]     ),
-      .debug_halted_o   ( dbg_core_halted[i]    ),
+      .debug_req_i       ( s_core_dbg_irq[i]     ),
+      .debug_halted_o    ( dbg_core_halted[i]    ),
+      .debug_havereset_o ( dbg_core_havereset[i] ),
+      .debug_running_o   ( dbg_core_running[i]   ),
       // .debug_resume_i   ( dbg_core_resume[i]    ), // Useful for HMR, consider keeping
       .tcdm_data_master ( s_hci_core[i]         ),
 

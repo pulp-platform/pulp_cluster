@@ -146,6 +146,14 @@ module core_region
 
   logic            core_mem_req;
 
+  // Shadow registers
+  logic        core_shadow_req  ;
+  logic        core_shadow_we   ;
+  logic [3:0]  core_shadow_be   ;
+  logic [31:0] core_shadow_addr ;
+  logic [31:0] core_shadow_wdata;
+  logic [5:0]  core_data_atop   ;
+
   // clock gate of the core_region less the core itself
   cluster_clock_gating clock_gate_i (
     .clk_i     ( clk_i       ),
@@ -198,6 +206,16 @@ module core_region
         .data_addr_o           ( s_core_bus.add              ),
         .data_wdata_o          ( s_core_bus.wdata            ),
         .data_rdata_i          ( s_core_bus.r_rdata          ),
+        .shadow_req_o          ( sadow_req                   ),
+        .shadow_gnt_i          ( '0                          ),
+        .shadow_rvalid_i       ( '0                          ),
+        .shadow_we_o           ( core_shadow_we              ),
+        .shadow_be_o           ( core_shadow_be              ),
+        .shadow_addr_o         ( core_shadow_addr            ),
+        .shadow_wdata_o        ( core_shadow_wdata           ),
+        .shadow_rdata_i        ( '0                          ),
+        // Atomic operation
+        .data_atop_o           ( core_data_atop              ),
         // apu-interconnect
         // Handshake
         .apu_req_o             ( apu_master_req_o            ),
@@ -205,6 +223,7 @@ module core_region
         // Request Bus
         .apu_operands_o        ( apu_master_operands_o       ),
         .apu_op_o              ( apu_master_op_o             ),
+        .apu_type_o            ( apu_master_type_o           ),
         .apu_flags_o           ( apu_master_flags_o          ),
         // Response Bus
         .apu_rvalid_i          ( apu_master_valid_i          ),
