@@ -157,7 +157,9 @@ module pulp_cluster
   output logic                                   eoc_o,
   
   output logic                                   busy_o,
- 
+
+  input  logic                                   axi_isolate_i,
+  output logic                                   axi_isolated_o,
  
   input logic                                    dma_pe_evt_ack_i,
   output logic                                   dma_pe_evt_valid_o,
@@ -1091,11 +1093,36 @@ tcdm_banks_wrap #(
 `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
 
-c2s_req_t   src_req ;
-c2s_resp_t  src_resp;   
+logic [1:0] axi_isolated;
+
+assign axi_isolated_o = |axi_isolated;
+
+c2s_req_t   src_req, isolate_src_req ;
+c2s_resp_t  src_resp, isolate_src_rsp;
  
-`AXI_ASSIGN_TO_REQ(src_req,s_data_master)
-`AXI_ASSIGN_FROM_RESP(s_data_master,src_resp)
+`AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
+`AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_rsp)
+
+axi_isolate            #(
+  .NumPending           ( 8                  ),
+  .TerminateTransaction ( 1                  ),
+  .AtopSupport          ( 1                  ),
+  .AxiAddrWidth         ( AXI_ADDR_WIDTH     ),
+  .AxiDataWidth         ( AXI_DATA_C2S_WIDTH ),
+  .AxiIdWidth           ( AXI_ID_Out_WIDTH   ),
+  .AxiUserWidth         ( AXI_USER_WIDTH     ),
+  .axi_req_t            ( c2s_req_t          ),
+  .axi_resp_t           ( c2s_resp_t         )
+) i_axi_master_isolate  (
+  .clk_i                ( clk_i            ),
+  .rst_ni               ( rst_ni           ),
+  .slv_req_i            ( isolate_src_req  ),
+  .slv_resp_o           ( isolate_src_resp ),
+  .mst_req_o            ( src_req          ),
+  .mst_resp_i           ( src_rsp          ),
+  .isolate_i            ( axi_isolate_i    ),
+  .isolated_o           ( axi_isolated[1]  )
+);
 
 axi_cdc_src #(
  .aw_chan_t  ( c2s_aw_chan_t ),
@@ -1138,12 +1165,12 @@ axi_cdc_src #(
 `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
- s2c_req_t      dst_req;
- s2c_resp_t     dst_resp;
+ s2c_req_t  dst_req , isolate_dst_req;
+ s2c_resp_t dst_resp, isolate_dst_rsp;
  
-`AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
-`AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
- 
+`AXI_ASSIGN_FROM_REQ(s_data_slave_32,isolate_dst_req)
+`AXI_ASSIGN_TO_RESP(isolate_dst_rsp,s_data_slave_32)
+
 axi_cdc_dst #(
   .aw_chan_t (s2c_aw_chan_t),
   .w_chan_t  (s2c_w_chan_t ),
@@ -1173,7 +1200,28 @@ axi_cdc_dst #(
   .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
   .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
   .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
-);                
+);
+
+axi_isolate            #(
+  .NumPending           ( 8                  ),
+  .TerminateTransaction ( 1                  ),
+  .AtopSupport          ( 1                  ),
+  .AxiAddrWidth         ( AXI_ADDR_WIDTH     ),
+  .AxiDataWidth         ( AXI_DATA_C2S_WIDTH ),
+  .AxiIdWidth           ( AXI_ID_IN_WIDTH    ),
+  .AxiUserWidth         ( AXI_USER_WIDTH     ),
+  .axi_req_t            ( s2c_req_t          ),
+  .axi_resp_t           ( s2c_resp_t         )
+) i_axi_slave_isolate   (
+  .clk_i                ( clk_i           ),
+  .rst_ni               ( rst_ni          ),
+  .slv_req_i            ( dst_req         ),
+  .slv_resp_o           ( dst_resp        ),
+  .mst_req_o            ( isolate_dst_req ),
+  .mst_resp_i           ( isolate_dst_rsp ),
+  .isolate_i            ( axi_isolate_i   ),
+  .isolated_o           ( axi_isolated[0] )
+);
 
 axi_dw_converter_intf #(
   .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
