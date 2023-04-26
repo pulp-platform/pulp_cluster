@@ -117,4 +117,4 @@ test-rt-mchan: pulp-runtime regression-tests
 	source env/env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
-		-o runtime-mchan.xml mchan-tests.yaml
+		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml
