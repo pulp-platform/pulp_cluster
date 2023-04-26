@@ -1098,10 +1098,10 @@ logic [1:0] axi_isolated;
 assign axi_isolated_o = |axi_isolated;
 
 c2s_req_t   src_req, isolate_src_req ;
-c2s_resp_t  src_resp, isolate_src_rsp;
+c2s_resp_t  src_resp, isolate_src_resp;
  
 `AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
-`AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_rsp)
+`AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_resp)
 
 axi_isolate            #(
   .NumPending           ( 8                  ),
@@ -1119,7 +1119,7 @@ axi_isolate            #(
   .slv_req_i            ( isolate_src_req  ),
   .slv_resp_o           ( isolate_src_resp ),
   .mst_req_o            ( src_req          ),
-  .mst_resp_i           ( src_rsp          ),
+  .mst_resp_i           ( src_resp         ),
   .isolate_i            ( axi_isolate_i    ),
   .isolated_o           ( axi_isolated[1]  )
 );
@@ -1166,10 +1166,10 @@ axi_cdc_src #(
 `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
  s2c_req_t  dst_req , isolate_dst_req;
- s2c_resp_t dst_resp, isolate_dst_rsp;
+ s2c_resp_t dst_resp, isolate_dst_resp;
  
 `AXI_ASSIGN_FROM_REQ(s_data_slave_32,isolate_dst_req)
-`AXI_ASSIGN_TO_RESP(isolate_dst_rsp,s_data_slave_32)
+`AXI_ASSIGN_TO_RESP(isolate_dst_resp,s_data_slave_32)
 
 axi_cdc_dst #(
   .aw_chan_t (s2c_aw_chan_t),
@@ -1213,14 +1213,14 @@ axi_isolate            #(
   .axi_req_t            ( s2c_req_t          ),
   .axi_resp_t           ( s2c_resp_t         )
 ) i_axi_slave_isolate   (
-  .clk_i                ( clk_i           ),
-  .rst_ni               ( rst_ni          ),
-  .slv_req_i            ( dst_req         ),
-  .slv_resp_o           ( dst_resp        ),
-  .mst_req_o            ( isolate_dst_req ),
-  .mst_resp_i           ( isolate_dst_rsp ),
-  .isolate_i            ( axi_isolate_i   ),
-  .isolated_o           ( axi_isolated[0] )
+  .clk_i                ( clk_i            ),
+  .rst_ni               ( rst_ni           ),
+  .slv_req_i            ( dst_req          ),
+  .slv_resp_o           ( dst_resp         ),
+  .mst_req_o            ( isolate_dst_req  ),
+  .mst_resp_i           ( isolate_dst_resp ),
+  .isolate_i            ( axi_isolate_i    ),
+  .isolated_o           ( axi_isolated[0]  )
 );
 
 axi_dw_converter_intf #(
