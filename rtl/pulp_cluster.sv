@@ -1109,7 +1109,7 @@ axi_isolate            #(
   .AtopSupport          ( 1                  ),
   .AxiAddrWidth         ( AXI_ADDR_WIDTH     ),
   .AxiDataWidth         ( AXI_DATA_C2S_WIDTH ),
-  .AxiIdWidth           ( AXI_ID_Out_WIDTH   ),
+  .AxiIdWidth           ( AXI_ID_OUT_WIDTH   ),
   .AxiUserWidth         ( AXI_USER_WIDTH     ),
   .axi_req_t            ( c2s_req_t          ),
   .axi_resp_t           ( c2s_resp_t         )
