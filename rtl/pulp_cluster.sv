@@ -1093,10 +1093,6 @@ tcdm_banks_wrap #(
 `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
 
-logic [1:0] axi_isolated;
-
-assign axi_isolated_o = |axi_isolated;
-
 c2s_req_t   src_req, isolate_src_req ;
 c2s_resp_t  src_resp, isolate_src_resp;
  
@@ -1121,7 +1117,7 @@ axi_isolate            #(
   .mst_req_o            ( src_req          ),
   .mst_resp_i           ( src_resp         ),
   .isolate_i            ( axi_isolate_i    ),
-  .isolated_o           ( axi_isolated[1]  )
+  .isolated_o           ( axi_isolated_o   )
 );
 
 axi_cdc_src #(
@@ -1168,8 +1164,8 @@ axi_cdc_src #(
  s2c_req_t  dst_req , isolate_dst_req;
  s2c_resp_t dst_resp, isolate_dst_resp;
  
-`AXI_ASSIGN_FROM_REQ(s_data_slave_32,isolate_dst_req)
-`AXI_ASSIGN_TO_RESP(isolate_dst_resp,s_data_slave_32)
+`AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
+`AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
 
 axi_cdc_dst #(
   .aw_chan_t (s2c_aw_chan_t),
@@ -1179,7 +1175,7 @@ axi_cdc_dst #(
   .ar_chan_t (s2c_ar_chan_t),
   .axi_req_t (s2c_req_t    ),
   .axi_resp_t(s2c_resp_t   ),
-  .LogDepth        ( LOG_DEPTH              )
+  .LogDepth       ( LOG_DEPTH              )
 ) axi_slave_cdc_i (
   .dst_rst_ni                       ( rst_ni                     ),
   .dst_clk_i                        ( clk_i                      ),
@@ -1200,27 +1196,6 @@ axi_cdc_dst #(
   .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
   .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
   .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
-);
-
-axi_isolate            #(
-  .NumPending           ( 8                  ),
-  .TerminateTransaction ( 1                  ),
-  .AtopSupport          ( 1                  ),
-  .AxiAddrWidth         ( AXI_ADDR_WIDTH     ),
-  .AxiDataWidth         ( AXI_DATA_C2S_WIDTH ),
-  .AxiIdWidth           ( AXI_ID_IN_WIDTH    ),
-  .AxiUserWidth         ( AXI_USER_WIDTH     ),
-  .axi_req_t            ( s2c_req_t          ),
-  .axi_resp_t           ( s2c_resp_t         )
-) i_axi_slave_isolate   (
-  .clk_i                ( clk_i            ),
-  .rst_ni               ( rst_ni           ),
-  .slv_req_i            ( dst_req          ),
-  .slv_resp_o           ( dst_resp         ),
-  .mst_req_o            ( isolate_dst_req  ),
-  .mst_resp_i           ( isolate_dst_resp ),
-  .isolate_i            ( axi_isolate_i    ),
-  .isolated_o           ( axi_isolated[0]  )
 );
 
 axi_dw_converter_intf #(
