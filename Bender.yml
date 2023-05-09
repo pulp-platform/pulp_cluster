@@ -20,7 +20,7 @@ dependencies:
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.3 }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "9e53e957f7e0fd88616a5f3fbcc2617fbc3c9d0d" } # branch: yt/carfield
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
-  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "250b376bb68bd3b4b13c5b8f5ac2155e32152733" } # branch: yt/carfield
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "e8195bb7b3f9fc2f7e968b4fcabf4a456afbe9d0" } # branch: yt/carfield
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.0-beta.4  }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
