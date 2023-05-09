@@ -26,7 +26,7 @@ dependencies:
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git"          , rev: "b26d1d6c5043bc6c535e23bf61b51313c802e44a" } # branch: michaero/safety-island-clic
+  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git"          , rev: "f67ee07376845b8b8975f86c831c5d17cffcc5cb" } # branch: safety-island-clic
   ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
