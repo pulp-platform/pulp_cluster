@@ -15,10 +15,11 @@ dependencies:
   axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git", rev: "6973e0434d26ba578cdb4aa69c26c1facd1a3f15" } # deprecated, replace with axi_to_mem in axi repo
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", version: 1.0.1 }
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", version: 1.0.4 }
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.1 }
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
-  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.3 }
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "9e53e957f7e0fd88616a5f3fbcc2617fbc3c9d0d" } # branch: yt/carfield
+  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
+  idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
+  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "a7e3f4e4c7fe607bcd6b9d94db77f612fd6ef6be" } # branch: yt/carfield
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
   fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "7a7899bfee33fcfe9d6166bd3d305cd1fb7118fc" } # branch: yt/carfield
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.0-beta.4  }
@@ -27,10 +28,11 @@ dependencies:
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git"          , rev: "f67ee07376845b8b8975f86c831c5d17cffcc5cb" } # branch: safety-island-clic
-  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
-  scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
+  # ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
+  scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: f7b51416f3c407e4c31e9c016616d57aae2687bd } # branch: yt/bump-clkgating
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 50270f7f5b0ac512f8c35cfca15b7c70f74b4b0e   } # branch: master
 
 export_include_dirs:
   - include
@@ -47,7 +49,12 @@ sources:
   - rtl/cluster_clock_gate.sv
   - rtl/cluster_event_map.sv
   - rtl/cluster_timer_wrap.sv
-  - rtl/dmac_wrap.sv
+  - target: mchan
+    files:
+      - rtl/mchan_wrap.sv
+  - target: not(mchan)
+    files:
+      - rtl/idma_wrap.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv

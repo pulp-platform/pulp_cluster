@@ -43,7 +43,7 @@ module pulp_cluster
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter HWPE_PRESENT            = 0,                       // set to 1 if HW Processing Engines are present in the cluster
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
@@ -300,9 +300,10 @@ logic [NB_CORES-1:0][INSTR_RDATA_WIDTH-1:0] instr_r_rdata;
 logic [1:0]                                 s_TCDM_arb_policy;
 logic                                       tcdm_sleep;
 
-logic               s_dma_pe_event;
-logic               s_dma_pe_irq;
-logic               s_pf_event;
+// FIXME: iDMA
+// logic               s_dma_pe_event;
+// logic               s_dma_pe_irq;
+// logic               s_pf_event;
 
 logic[NB_CORES-1:0][4:0] irq_id;
 logic[NB_CORES-1:0][4:0] irq_ack_id;
@@ -319,13 +320,13 @@ logic                                       s_dma_cl_irq;
 logic                                       s_dma_fc_event;
 logic                                       s_dma_fc_irq;
  
+// FIXME: iDMA
+// logic                                       s_dma_decompr_event;
+// logic                                       s_dma_decompr_irq;
 
-logic                                       s_dma_decompr_event;
-logic                                       s_dma_decompr_irq;
+// logic                                       s_decompr_done_evt;
 
-logic                                       s_decompr_done_evt;
-
-assign s_dma_fc_irq = s_decompr_done_evt;
+// assign s_dma_fc_irq = s_decompr_done_evt;
 
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
@@ -387,7 +388,16 @@ XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
 
 /* other interfaces */
 // cores -> DMA ctrl
-XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
+// FIXME: iDMA
+// XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
+hci_core_intf #(
+  .DW ( DATA_WIDTH ),
+  .AW ( ADDR_WIDTH ),
+  .OW ( 1          ),
+  .UW ( 0          )
+) s_core_dmactrl_bus [NB_CORES-1:0] (
+  .clk ( clk_i )
+);
 
 // cores -> event unit ctrl
 XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
@@ -638,38 +648,69 @@ cluster_interconnect_wrap #(
 //***************************************************
 //*********************DMAC WRAP*********************
 //*************************************************** 
-  
-dmac_wrap #(
-  .NB_CTRLS           ( 10                 ),
-  .NB_CORES           ( NB_CORES           ),
-  .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
-  .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
-  .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
-  .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
-  .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
-  .PE_ID_WIDTH        ( NB_CORES + 1       ),
-  .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
-  .DATA_WIDTH         ( DATA_WIDTH         ),
-  .ADDR_WIDTH         ( ADDR_WIDTH         ),
-  .BE_WIDTH           ( BE_WIDTH           )
-) dmac_wrap_i (
-  .clk_i             ( clk_i              ),
-  .rst_ni            ( rst_ni             ),
-  .test_mode_i       ( test_mode_i        ),
-  .ctrl_slave        ( s_core_dmactrl_bus ),
-  .cl_ctrl_slave     ( s_periph_dma_bus[0]),
-  .fc_ctrl_slave     ( s_periph_dma_bus[1]),
-  .tcdm_master       ( s_hci_dma          ),
-  .ext_master        ( s_dma_ext_bus      ),
-  .term_event_cl_o   ( s_dma_cl_event     ),
-  .term_irq_cl_o     ( s_dma_cl_irq       ),
-  .term_event_pe_o   ( s_dma_fc_event     ),
-  .term_irq_pe_o     ( s_dma_pe_irq       ),
-  .term_event_o      ( s_dma_event        ),
-  .term_irq_o        ( s_dma_irq          ),
-  .busy_o            ( s_dmac_busy        )
-);
+`ifdef TARGET_MCHAN
+  dmac_wrap #(
+    .NB_CTRLS           ( NB_CORES+2         ),
+    .NB_CORES           ( NB_CORES           ),
+    .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
+    .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
+    .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
+    .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
+    .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
+    .PE_ID_WIDTH        ( NB_CORES + 1       ),
+    .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
+    .DATA_WIDTH         ( DATA_WIDTH         ),
+    .ADDR_WIDTH         ( ADDR_WIDTH         ),
+    .BE_WIDTH           ( BE_WIDTH           )
+  ) dmac_wrap_i        (
+    .clk_i             ( clk_i              ),
+    .rst_ni            ( rst_ni             ),
+    .test_mode_i       ( test_mode_i        ),
+    .ctrl_slave        ( s_core_dmactrl_bus ),
+    .cl_ctrl_slave     ( s_periph_dma_bus[0]),
+    .fc_ctrl_slave     ( s_periph_dma_bus[1]),
+    .tcdm_master       ( s_hci_dma          ),
+    .ext_master        ( s_dma_ext_bus      ),
+    .term_event_cl_o   ( s_dma_cl_event     ),
+    .term_irq_cl_o     ( s_dma_cl_irq       ),
+    .term_event_pe_o   ( s_dma_fc_event     ),
+    .term_irq_pe_o     ( s_dma_fc_irq       ),
+    .term_event_o      ( s_dma_event        ),
+    .term_irq_o        ( s_dma_irq          ),
+    .busy_o            ( s_dmac_busy        )
+  );
+`else
+  dmac_wrap #(
+    .NB_CORES         ( NB_CORES           ),
+    .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
+    .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
+    .AXI_ID_WIDTH     ( AXI_ID_IN_WIDTH    ),
+    .PE_ID_WIDTH      ( NB_CORES + 1       ),
+    .NB_PE_PORTS      ( 2                  ),
+    .DATA_WIDTH       ( DATA_WIDTH         ),
+    .ADDR_WIDTH       ( ADDR_WIDTH         ),
+    .BE_WIDTH         ( BE_WIDTH           ),
+    .NUM_STREAMS      ( 4                  ),
+    .TCDM_SIZE        ( TCDM_SIZE          ),
+    .NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
+    .ClusterBaseAddr  ( BaseAddr           )
+  ) dmac_wrap_i     (
+    .clk_i          ( clk_i                            ),
+    .rst_ni         ( rst_ni                           ),
+    .test_mode_i    ( test_mode_i                      ),
+    .pe_ctrl_slave  ( s_periph_dma_bus[1:0]            ),
+    .ctrl_slave     ( s_core_dmactrl_bus               ),
+    .tcdm_master    ( s_hci_dma                        ),
+    .ext_master     ( s_dma_ext_bus                    ),
+    .term_event_o   ( s_dma_event                      ),
+    .term_irq_o     ( s_dma_irq                        ),
+    .term_event_pe_o( {s_dma_fc_event, s_dma_cl_event} ),
+    .term_irq_pe_o  ( {s_dma_fc_irq, s_dma_cl_irq}     ),
+    .busy_o         ( s_dmac_busy                      )
+  );
+`endif
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************

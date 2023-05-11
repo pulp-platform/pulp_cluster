@@ -53,11 +53,13 @@ module tcdm_banks_wrap #(
     tc_sram #(
       .NumWords   (BankSize ), // Number of Words in data array
       .DataWidth  (DataWidth), // Data signal width
-      .ByteWidth  (8        ), // Width of a data byte
       .NumPorts   (1        ), // Number of read and write ports
       .Latency    (1        ), // Latency when the read data is available
+    `ifndef SYNTHESIS
+      .ByteWidth  (8        ), // Width of a data byte
       .SimInit    ("ones"   ), // Simulation initialization
       .PrintSimCfg(0        )  // Print configuration
+    `endif
     ) i_bank (
       .clk_i  (clk_i                                    ), // Clock
       .rst_ni (rst_ni                                   ), // Asynchronous reset active low
