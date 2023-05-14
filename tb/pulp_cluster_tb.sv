@@ -296,6 +296,8 @@ module pulp_cluster_tb;
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
       .ref_clk_i                   ( s_clk                                ),
+      .axi_isolate_i               ( '0                                   ),
+      .axi_isolated_o              (                                      ),
                                        
       .pmu_mem_pwdn_i              ( 1'b0                                 ),
                                        
