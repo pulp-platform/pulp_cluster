@@ -53,7 +53,7 @@ nonfree-init:
 # Dependencies #
 ################
 
-.PHONY: checkout
+.PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
 checkout:
 	bender checkout
