@@ -295,6 +295,7 @@ module pulp_cluster_tb;
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
+      .pwr_on_rst_ni               ( s_rstn                               ),
       .ref_clk_i                   ( s_clk                                ),
       .axi_isolate_i               ( '0                                   ),
       .axi_isolated_o              (                                      ),
@@ -310,6 +311,7 @@ module pulp_cluster_tb;
       .dma_pe_irq_valid_o          (                                      ),
                                        
       .dbg_irq_valid_i             ( '0                                   ),
+      .mbox_irq_i                  ( '0                                   ),
                                        
       .pf_evt_ack_i                ( 1'b1                                 ),
       .pf_evt_valid_o              (                                      ),
