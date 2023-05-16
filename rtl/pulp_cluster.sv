@@ -175,6 +175,8 @@ module pulp_cluster
 
   input logic [NB_CORES-1:0]                     dbg_irq_valid_i,
 
+  input logic                                    mbox_irq_i,
+
   input logic [LOG_DEPTH:0]                      async_cluster_events_wptr_i,
   output logic [LOG_DEPTH:0]                     async_cluster_events_rptr_o,
   input logic [ASYNC_EVENT_DATA_WIDTH-1:0]       async_cluster_events_data_i,
@@ -263,7 +265,10 @@ logic [NB_CORES-1:0]                dbg_core_running;
 logic [NB_CORES-1:0]                s_dbg_irq;
 logic                               s_hwpe_en;
 
+logic                     fetch_en_synch;
+logic                     en_sa_boot_synch;
 logic                     axi_isolate_synch;
+logic                     eoc_synch;
 
 logic                     s_cluster_periphs_busy;
 logic                     s_axi2mem_busy;
@@ -742,8 +747,8 @@ cluster_peripherals #(
   .test_mode_i            ( test_mode_i                        ),
   .busy_o                 ( s_cluster_periphs_busy             ),
 
-  .en_sa_boot_i           ( en_sa_boot_i                       ),
-  .fetch_en_i             ( fetch_en_i                         ),
+  .en_sa_boot_i           ( en_sa_boot_synch                   ),
+  .fetch_en_i             ( fetch_en_synch                     ),
   .boot_addr_o            ( boot_addr                          ),
   .core_busy_i            ( core_busy                          ),
   .core_clk_en_o          ( clk_core_en                        ),
@@ -757,6 +762,7 @@ cluster_peripherals #(
   .dma_cl_irq_i           ( s_dma_cl_irq                       ),
   .dma_event_i            ( s_dma_event                        ),
   .dma_irq_i              ( s_dma_irq                          ),
+  .mbox_irq_i             ( mbox_irq_synch                     ),
 
   // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
@@ -771,7 +777,7 @@ cluster_peripherals #(
   .dbg_core_halted_i      ( dbg_core_halted                    ),
   .dbg_core_resume_o      ( dbg_core_resume                    ),
 
-  .eoc_o                  ( eoc_o                              ), 
+  .eoc_o                  ( eoc_synch                          ),
   .cluster_cg_en_o        ( s_cluster_cg_en                    ),
   .fetch_enable_reg_o     ( fetch_enable_reg_int               ),
   .irq_id_o               ( irq_id                             ),
@@ -1145,14 +1151,54 @@ c2s_resp_t  src_resp, isolate_src_resp;
 `AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
 `AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_resp)
 
-sync         #(
-  .STAGES     ( SynchStages ),
-  .ResetValue ( 1'b0        )
+sync             #(
+  .STAGES         ( SynchStages ),
+  .ResetValue     ( 1'b1        )
 ) i_isolate_synch (
   .clk_i          ( clk_i             ),
   .rst_ni         ( pwr_on_rst_ni     ),
   .serial_i       ( axi_isolate_i     ),
   .serial_o       ( axi_isolate_synch )
+);
+
+sync              #(
+  .STAGES          ( SynchStages ),
+  .ResetValue      ( 1'b0        )
+) i_fetch_en_synch (
+  .clk_i           ( clk_i          ),
+  .rst_ni          ( pwr_on_rst_ni  ),
+  .serial_i        ( fetch_en_i     ),
+  .serial_o        ( fetch_en_synch )
+);
+
+sync             #(
+  .STAGES         ( SynchStages ),
+  .ResetValue     ( 1'b0        )
+) i_sa_boot_synch (
+  .clk_i          ( clk_i            ),
+  .rst_ni         ( pwr_on_rst_ni    ),
+  .serial_i       ( en_sa_boot_i     ),
+  .serial_o       ( en_sa_boot_synch )
+);
+
+sync         #(
+  .STAGES     ( SynchStages ),
+  .ResetValue ( 1'b0        )
+) i_eoc_synch (
+  .clk_i      ( clk_i         ),
+  .rst_ni     ( pwr_on_rst_ni ),
+  .serial_i   ( eoc_synch     ),
+  .serial_o   ( eoc_o         )
+);
+
+sync              #(
+  .STAGES          ( SynchStages    ),
+  .ResetValue      ( 1'b0           )
+) i_mbox_irq_synch (
+  .clk_i           ( clk_i          ),
+  .rst_ni          ( pwr_on_rst_ni  ),
+  .serial_i        ( mbox_irq_i     ),
+  .serial_o        ( mbox_irq_synch )
 );
 
 axi_isolate            #(

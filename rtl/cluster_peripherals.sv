@@ -56,6 +56,7 @@ module cluster_peripherals
 
   input  logic [NB_CORES-1:0]         dma_event_i,
   input  logic [NB_CORES-1:0]         dma_irq_i,
+  input  logic                        mbox_irq_i,
 
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
@@ -134,7 +135,7 @@ module cluster_peripherals
   // decide between common or core-specific event sources
   generate
     for (genvar I=0; I<NB_CORES; I++) begin
-      assign s_cluster_events[I] = 32'd0;
+      assign s_cluster_events[I] = {31'd0, mbox_irq_i};
       assign s_acc_events[I]     = hwpe_events_i[I];
       assign s_timer_events[I]   = {s_timer_out_hi_event,s_timer_out_lo_event};
       assign s_dma_events[I][0] = dma_event_i[I];
