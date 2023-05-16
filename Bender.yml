@@ -33,6 +33,7 @@ dependencies:
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 50270f7f5b0ac512f8c35cfca15b7c70f74b4b0e   } # branch: master
+  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
 
 export_include_dirs:
   - include

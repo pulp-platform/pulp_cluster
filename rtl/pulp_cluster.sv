@@ -38,6 +38,8 @@ module pulp_cluster
 
   parameter CLUSTER_ALIAS      = 1,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
+
+  parameter int unsigned SynchStages = 2,
   
   parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
@@ -141,6 +143,7 @@ module pulp_cluster
   input logic                                    clk_i,
   input logic                                    rst_ni,
   input logic                                    ref_clk_i,
+  input logic                                    pwr_on_rst_ni,
   input logic                                    pmu_mem_pwdn_i,
 
   
@@ -259,6 +262,8 @@ logic [NB_CORES-1:0]                dbg_core_havereset;
 logic [NB_CORES-1:0]                dbg_core_running;
 logic [NB_CORES-1:0]                s_dbg_irq;
 logic                               s_hwpe_en;
+
+logic                     axi_isolate_synch;
 
 logic                     s_cluster_periphs_busy;
 logic                     s_axi2mem_busy;
@@ -1140,6 +1145,16 @@ c2s_resp_t  src_resp, isolate_src_resp;
 `AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
 `AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_resp)
 
+sync         #(
+  .STAGES     ( SynchStages ),
+  .ResetValue ( 1'b0        )
+) i_isolate_synch (
+  .clk_i          ( clk_i             ),
+  .rst_ni         ( pwr_on_rst_ni     ),
+  .serial_i       ( axi_isolate_i     ),
+  .serial_o       ( axi_isolate_synch )
+);
+
 axi_isolate            #(
   .NumPending           ( 8                  ),
   .TerminateTransaction ( 1                  ),
@@ -1151,14 +1166,14 @@ axi_isolate            #(
   .axi_req_t            ( c2s_req_t          ),
   .axi_resp_t           ( c2s_resp_t         )
 ) i_axi_master_isolate  (
-  .clk_i                ( clk_i            ),
-  .rst_ni               ( rst_ni           ),
-  .slv_req_i            ( isolate_src_req  ),
-  .slv_resp_o           ( isolate_src_resp ),
-  .mst_req_o            ( src_req          ),
-  .mst_resp_i           ( src_resp         ),
-  .isolate_i            ( axi_isolate_i    ),
-  .isolated_o           ( axi_isolated_o   )
+  .clk_i                ( clk_i             ),
+  .rst_ni               ( rst_ni            ),
+  .slv_req_i            ( isolate_src_req   ),
+  .slv_resp_o           ( isolate_src_resp  ),
+  .mst_req_o            ( src_req           ),
+  .mst_resp_i           ( src_resp          ),
+  .isolate_i            ( axi_isolate_synch ),
+  .isolated_o           ( axi_isolated_o    )
 );
 
 axi_cdc_src #(
@@ -1171,7 +1186,7 @@ axi_cdc_src #(
  .axi_resp_t ( c2s_resp_t    ),
  .LogDepth   ( LOG_DEPTH     )
 ) axi_master_cdc_i (
- .src_rst_ni                       ( rst_ni                      ),
+ .src_rst_ni                       ( pwr_on_rst_ni               ),
  .src_clk_i                        ( clk_i                       ),
  .src_req_i                        ( src_req                     ),
  .src_resp_o                       ( src_resp                    ),
@@ -1218,7 +1233,7 @@ axi_cdc_dst #(
   .axi_resp_t(s2c_resp_t   ),
   .LogDepth       ( LOG_DEPTH              )
 ) axi_slave_cdc_i (
-  .dst_rst_ni                       ( rst_ni                     ),
+  .dst_rst_ni                       ( pwr_on_rst_ni              ),
   .dst_clk_i                        ( clk_i                      ),
   .dst_req_o                        ( dst_req                    ),
   .dst_resp_i                       ( dst_resp                   ),
