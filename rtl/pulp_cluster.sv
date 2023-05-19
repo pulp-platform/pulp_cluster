@@ -144,6 +144,7 @@ module pulp_cluster
   input logic                                    rst_ni,
   input logic                                    ref_clk_i,
   input logic                                    pwr_on_rst_ni,
+  input logic                                    core_init_ni,
   input logic                                    pmu_mem_pwdn_i,
 
   
@@ -255,7 +256,6 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
 logic [NB_CORES-1:0]                fetch_enable_reg_int;
 logic [NB_CORES-1:0]                fetch_en_int;
-logic                               s_init_n;
 logic [NB_CORES-1:0][31:0]          boot_addr;
 logic [NB_CORES-1:0]                dbg_core_halt;
 logic [NB_CORES-1:0]                dbg_core_resume;
@@ -824,19 +824,20 @@ generate
     );
 
     core_region #(
-      .CORE_TYPE_CL        ( CORE_TYPE_CL       ),
-      .CORE_ID             ( i                  ),
-      .ADDR_WIDTH          ( 32                 ),
-      .DATA_WIDTH          ( 32                 ),
-      .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH  ),
-      .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE ),
-      .REMAP_ADDRESS       ( REMAP_ADDRESS      ),
-      .APU_NARGS_CPU       ( APU_NARGS_CPU      ), //= 2,
-      .APU_WOP_CPU         ( APU_WOP_CPU        ), //= 1,
-      .WAPUTYPE            ( WAPUTYPE           ), //= 3,
-      .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU   ), //= 3,
-      .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU   ), //= 5,
-      .DEBUG_START_ADDR    ( DEBUG_START_ADDR   ),
+      .CORE_TYPE_CL        ( CORE_TYPE_CL            ),
+      .CORE_ID             ( i                       ),
+      .ADDR_WIDTH          ( 32                      ),
+      .DATA_WIDTH          ( 32                      ),
+      .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH       ),
+      .CLUSTER_ALIAS       ( CLUSTER_ALIAS           ),
+      .CLUSTER_ALIAS_BASE  ( CLUSTER_ALIAS_BASE      ),
+      .REMAP_ADDRESS       ( REMAP_ADDRESS           ),
+      .APU_NARGS_CPU       ( APU_NARGS_CPU           ), //= 2,
+      .APU_WOP_CPU         ( APU_WOP_CPU             ), //= 1,
+      .WAPUTYPE            ( WAPUTYPE                ), //= 3,
+      .APU_NDSFLAGS_CPU    ( APU_NDSFLAGS_CPU        ), //= 3,
+      .APU_NUSFLAGS_CPU    ( APU_NUSFLAGS_CPU        ), //= 5,
+      .DEBUG_START_ADDR    ( DEBUG_START_ADDR        ),
       .FPU                 ( CLUST_FPU               ),
       .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
       .SHARED_FP           ( CLUST_SHARED_FP         ),
@@ -846,7 +847,7 @@ generate
       .rst_ni              ( rst_ni                ),
       .base_addr_i         ( base_addr_i           ),
 
-      .init_ni             ( s_init_n              ),
+      .init_ni             ( core_init_ni          ),
       .cluster_id_i        ( cluster_id_i          ),
       .clock_en_i          ( clk_core_en[i]        ),
       .fetch_en_i          ( fetch_en_int[i]       ),
@@ -1115,7 +1116,7 @@ icache_hier_top #(
 );
 
 assign s_core_instr_bus.aw_atop = '0; 
- 
+
 /* TCDM banks */
 tcdm_banks_wrap #(
   .BankSize (TCDM_NUM_ROWS),

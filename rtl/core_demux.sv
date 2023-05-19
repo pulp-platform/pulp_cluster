@@ -21,6 +21,7 @@ module core_demux
     parameter DATA_WIDTH = 32,
     parameter BYTE_ENABLE_BIT = DATA_WIDTH/8,
     parameter REMAP_ADDRESS = 0,
+    parameter CLUSTER_ALIAS = 1,
     parameter CLUSTER_ALIAS_BASE = 12'h000
 )
 (
@@ -150,7 +151,7 @@ module core_demux
 
    assign data_add_int[27:0] = data_add_i[27:0];
 
-if (REMAP_ADDRESS) begin
+if (REMAP_ADDRESS == 1) begin
    always_comb
    begin
     if(data_add_i[31:28] == base_addr_i)

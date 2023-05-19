@@ -26,9 +26,13 @@ XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
 bender_defs += -D FEATURE_ICACHE_STAT
 bender_defs += -D PRIVATE_ICACHE
 bender_defs += -D HIERARCHY_ICACHE_32BIT
+bender_defs += -D NO_FPU
+bender_defs += -D TRACE_EXECUTION
+bender_defs += -D CLUSTER_ALIAS
 
 bender_targs += -t rtl
 bender_targs += -t test
+bender_targs += -t mchan
 bender_targs += -t cluster_standalone
 bender_targs += -t cv32e40p_use_ff_regfile
 

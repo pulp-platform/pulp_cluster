@@ -49,7 +49,7 @@ module xbar_pe_wrap
 
   logic                               cluster_alias;
    
-  assign cluster_alias = (CLUSTER_ALIAS) ? 1'b1 : 1'b0;
+  assign cluster_alias = (CLUSTER_ALIAS == 1) ? 1'b1 : 1'b0;
 
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;
