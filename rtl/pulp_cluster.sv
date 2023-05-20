@@ -813,6 +813,17 @@ cluster_peripherals #(
 //------------------------------------------------------//
 
 /* cluster cores + core-coupled accelerators / shared execution units */
+logic [NB_CORES-1:0] clk_core;
+logic [NB_CORES-1:0][4:0] ext_perf;
+
+hci_core_intf #(
+  .DW ( DATA_WIDTH ),
+  .AW ( ADDR_WIDTH ),
+  .OW ( 1          )
+) core_bus_mst [NB_CORES-1:0] (
+  .clk ( clk_i )
+);
+
 generate
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
 
@@ -823,8 +834,16 @@ generate
       .serial_o(s_dbg_irq[i])
     );
 
+    tc_clk_gating clock_gate_i    (
+      .clk_i     ( clk_i          ),
+      .en_i      ( clk_core_en[i] ),
+      .test_en_i ( test_mode_i    ),
+      .clk_o     ( clk_core[i]    )
+    );
+
     core_region #(
       .CORE_TYPE_CL        ( CORE_TYPE_CL            ),
+      .N_EXT_PERF_COUNTERS ( 5                       ),
       .CORE_ID             ( i                       ),
       .ADDR_WIDTH          ( 32                      ),
       .DATA_WIDTH          ( 32                      ),
@@ -843,45 +862,34 @@ generate
       .SHARED_FP           ( CLUST_SHARED_FP         ),
       .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
     ) core_region_i (
-      .clk_i               ( clk_i                 ),
+      .clk_i               ( clk_core[i]           ),
       .rst_ni              ( rst_ni                ),
-      .base_addr_i         ( base_addr_i           ),
-
       .init_ni             ( core_init_ni          ),
       .cluster_id_i        ( cluster_id_i          ),
       .clock_en_i          ( clk_core_en[i]        ),
       .fetch_en_i          ( fetch_en_int[i]       ),
-     
       .boot_addr_i         ( boot_addr[i]          ),
       .irq_id_i            ( irq_id[i]             ),
       .irq_ack_id_o        ( irq_ack_id[i]         ),
       .irq_req_i           ( irq_req[i]            ),
       .irq_ack_o           ( irq_ack[i]            ),
-
       .test_mode_i         ( test_mode_i           ),
       .core_busy_o         ( core_busy[i]          ),
-
       //instruction cache bind 
       .instr_req_o         ( instr_req[i]          ),
       .instr_gnt_i         ( instr_gnt[i]          ),
       .instr_addr_o        ( instr_addr[i]         ),
       .instr_r_rdata_i     ( instr_r_rdata[i]      ),
       .instr_r_valid_i     ( instr_r_valid[i]      ),
-
       //debug unit bind
-      .debug_req_i       ( s_core_dbg_irq[i]     ),
-      .debug_halted_o    ( dbg_core_halted[i]    ),
-      .debug_havereset_o ( dbg_core_havereset[i] ),
-      .debug_running_o   ( dbg_core_running[i]   ),
+      .debug_req_i         ( s_core_dbg_irq[i]     ),
+      .debug_halted_o      ( dbg_core_halted[i]    ),
+      .debug_havereset_o   ( dbg_core_havereset[i] ),
+      .debug_running_o     ( dbg_core_running[i]   ),
+      .ext_perf_i          ( ext_perf[i]           ),
+      .core_bus_mst_o      ( core_bus_mst[i]       ),
       // .debug_resume_i   ( dbg_core_resume[i]    ), // Useful for HMR, consider keeping
-      .tcdm_data_master ( s_hci_core[i]         ),
-
-      //tcdm, dma ctrl unit, periph interco interfaces
-      .dma_ctrl_master     ( s_core_dmactrl_bus[i] ),
-      .eu_ctrl_master      ( s_core_euctrl_bus[i]  ),
-      .periph_data_master  ( s_core_periph_bus[i]  ),
-    
-      .fregfile_disable_i    ( s_fregfile_disable       ),
+      //apu interface
       .apu_master_req_o      ( s_apu_master_req     [i] ),
       .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
       .apu_master_type_o     ( s_apu_master_type    [i] ),
@@ -892,6 +900,28 @@ generate
       .apu_master_ready_o    ( s_apu_master_rready  [i] ),
       .apu_master_result_i   ( s_apu_master_rdata   [i] ),
       .apu_master_flags_i    ( s_apu_master_rflags  [i] )
+    );
+
+    core_demux_wrap       #(
+      .AddrWidth           ( ADDR_WIDTH         ),
+      .DataWidth           ( DATA_WIDTH         ),
+      .RemapAddress        ( REMAP_ADDRESS      ),
+      .ClustAlias          ( CLUSTER_ALIAS      ),
+      .ClustAliasBase      ( CLUSTER_ALIAS_BASE ),
+      .NumExtPerf          ( 5                  )
+    ) i_core_demux         (
+      .clk_i               ( clk_core[i]           ),
+      .rst_ni              ( rst_ni                ),
+      .test_en_i           ( test_mode_i           ),
+      .clk_en_i            ( clk_core_en[i]        ),
+      .base_addr_i         ( base_addr_i           ),
+      .cluster_id_i        ( cluster_id_i          ),
+      .ext_perf_o          ( ext_perf[i]           ),
+      .core_bus_slv_i      ( core_bus_mst[i]       ),
+      .tcdm_bus_mst_o      ( s_hci_core[i]         ),
+      .dma_ctrl_mst_o      ( s_core_dmactrl_bus[i] ),
+      .eventunit_bus_mst_o ( s_core_euctrl_bus[i]  ),
+      .peripheral_bus_mst_o( s_core_periph_bus[i]  )
     );
   end
 endgenerate

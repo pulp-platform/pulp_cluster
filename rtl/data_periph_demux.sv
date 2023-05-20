@@ -15,7 +15,7 @@
  */
 
 
-module core_demux
+module data_periph_demux
 #(
     parameter ADDR_WIDTH = 32,
     parameter DATA_WIDTH = 32,
@@ -38,7 +38,6 @@ module core_demux
     input logic [BYTE_ENABLE_BIT - 1:0]  data_be_i,
     output logic                         data_gnt_o,
 
-    input logic                          data_r_gnt_i,    // Data Response Grant (For LOAD/STORE commands)
     output logic                         data_r_valid_o,  // Data Response Valid (For LOAD/STORE commands)
     output logic [DATA_WIDTH - 1:0]      data_r_rdata_o,  // Data Response DATA (For LOAD commands)
     output logic                         data_r_opc_o,    // Data Response Error
@@ -635,4 +634,4 @@ logic clear_regs, enable_regs;
   end
 `endif
 
-endmodule
+endmodule: data_periph_demux

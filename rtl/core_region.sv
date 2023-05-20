@@ -60,8 +60,6 @@ module core_region
   input logic                            rst_ni,
   input logic                            init_ni,
 
-  input logic [3:0]                      base_addr_i, // FOR CLUSTER VIRTUALIZATION
-
   input logic [5:0]                      cluster_id_i,
   
   input logic                            irq_req_i,
@@ -71,7 +69,6 @@ module core_region
   
   input logic                            clock_en_i,
   input logic                            fetch_en_i,
-  input logic                            fregfile_disable_i,
 
   input logic [31:0]                     boot_addr_i,
 
@@ -90,14 +87,10 @@ module core_region
   output logic                           debug_havereset_o,
   output logic                           debug_running_o,
   output logic                           debug_halted_o,
-  // input logic                         debug_core_resume_i, // Useful for HMR, consider keeping
-              
-  // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-  hci_core_intf.master tcdm_data_master,
-  // XBAR_TCDM_BUS.Master dma_ctrl_master, // FIXME: iDMA
-  hci_core_intf.master dma_ctrl_master,
-  XBAR_PERIPH_BUS.Master eu_ctrl_master,
-  XBAR_PERIPH_BUS.Master periph_data_master,
+
+  input logic [N_EXT_PERF_COUNTERS-1:0]  ext_perf_i,
+
+  hci_core_intf.master                   core_bus_mst_o,
 
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
@@ -129,12 +122,6 @@ module core_region
   //********************************************************
   //***************** SIGNALS DECLARATION ******************
   //********************************************************
-
-  XBAR_DEMUX_BUS    s_core_bus();         // Internal interface between CORE       <--> DEMUX
-  XBAR_PERIPH_BUS   periph_demux_bus();   // Internal interface between CORE_DEMUX <--> PERIPHERAL DEMUX
-
-  logic [N_EXT_PERF_COUNTERS_ACTUAL-1:0]      perf_counters;
-  logic                      clk_int;
   logic [31:0]               hart_id;
   logic                      core_sleep;
   logic [31:0]               boot_addr;
@@ -155,15 +142,11 @@ module core_region
   logic [31:0] core_shadow_addr ;
   logic [31:0] core_shadow_wdata;
   logic [5:0]  core_data_atop   ;
+  logic        core_bus_must_we;
 
-  // clock gate of the core_region less the core itself
-  cluster_clock_gating clock_gate_i (
-    .clk_i     ( clk_i       ),
-    .en_i      ( clock_en_i  ),
-    .test_en_i ( test_mode_i ),
-    .clk_o     ( clk_int     )
-  );
-
+  assign core_bus_mst_o.wen = ~core_bus_must_we;
+  assign core_bus_mst_o.lrdy = '1;
+  assign core_bus_mst_o.user = '0;
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
    //********************************************************
@@ -178,7 +161,7 @@ module core_region
         .PULP_XPULP          ( 1                           ), // For now this is a no
         .PULP_CLUSTER        ( 1                           ),
         .FPU                 ( FPU                         ),
-        .NUM_EXTERNAL_PERF   ( N_EXT_PERF_COUNTERS_ACTUAL ),
+        .NUM_EXTERNAL_PERF   ( N_EXT_PERF_COUNTERS         ),
         // .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL  ),
         .NUM_INTERRUPTS      ( NUM_INTERRUPTS             ),
         // .PULP_OBI_INTF       ( 1                          ),
@@ -188,7 +171,7 @@ module core_region
         // .WAPUTYPE            ( WAPUTYPE                    ),
         // .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
       ) RISCV_CORE (
-        .clk_i                 ( clk_int                     ),
+        .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
         // .clock_en_i            ( clock_en_i                  ),
         // .test_en_i             ( test_mode_i                 ),
@@ -212,14 +195,14 @@ module core_region
         .instr_addr_o          ( instr_addr_o                ),
         .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_req_o            ( s_core_bus.req              ),
-        .data_gnt_i            ( s_core_bus.gnt              ),
-        .data_rvalid_i         ( s_core_bus.r_valid          ),
-        .data_we_o             ( s_core_bus.we               ),
-        .data_be_o             ( s_core_bus.be               ),
-        .data_addr_o           ( s_core_bus.add              ),
-        .data_wdata_o          ( s_core_bus.wdata            ),
-        .data_rdata_i          ( s_core_bus.r_rdata          ),
+        .data_req_o            ( core_bus_mst_o.req          ),
+        .data_gnt_i            ( core_bus_mst_o.gnt          ),
+        .data_rvalid_i         ( core_bus_mst_o.r_valid      ),
+        .data_we_o             ( core_bus_must_we            ),
+        .data_be_o             ( core_bus_mst_o.be           ),
+        .data_addr_o           ( core_bus_mst_o.add          ),
+        .data_wdata_o          ( core_bus_mst_o.data         ),
+        .data_rdata_i          ( core_bus_mst_o.r_data       ),
         // Shadow Memory Interface
         .shadow_req_o          ( sadow_req                   ),
         .shadow_gnt_i          ( '0                          ),
@@ -275,7 +258,7 @@ module core_region
         .core_sleep_o          ( core_sleep                  ),
         // External performance monitoring signals
         // .ext_perf_counters_i   ( perf_counters               )
-        .external_perf_i       ( perf_counters               )
+        .external_perf_i       ( ext_perf_i                  )
       );
       assign core_busy_o = ~core_sleep;
     end else begin: CL_CORE
@@ -319,9 +302,9 @@ module core_region
         .clk_i       (clk_i             ),
         .rst_ni      (rst_ni            ),
         .core_req_i  (core_mem_req      ),
-        .mem_req_o   (s_core_bus.req    ),
-        .mem_gnt_i   (s_core_bus.gnt    ),
-        .mem_rvalid_i(s_core_bus.r_valid)
+        .mem_req_o   (core_bus_mst_o.req    ),
+        .mem_gnt_i   (core_bus_mst_o.gnt    ),
+        .mem_rvalid_i(core_bus_mst_o.r_valid)
       );
 
 `ifdef VERILATOR
@@ -369,13 +352,13 @@ module core_region
 
         // Data memory interface:
         .data_req_o            ( core_mem_req       ),
-        .data_gnt_i            ( s_core_bus.gnt     ),
-        .data_rvalid_i         ( s_core_bus.r_valid ),
-        .data_we_o             ( s_core_bus.we      ),
-        .data_be_o             ( s_core_bus.be      ),
-        .data_addr_o           ( s_core_bus.add     ),
-        .data_wdata_o          ( s_core_bus.wdata   ),
-        .data_rdata_i          ( s_core_bus.r_rdata ),
+        .data_gnt_i            ( core_bus_mst_o.gnt     ),
+        .data_rvalid_i         ( core_bus_mst_o.r_valid ),
+        .data_we_o             ( ~core_bus_mst_o.we     ),
+        .data_be_o             ( core_bus_mst_o.be      ),
+        .data_addr_o           ( core_bus_mst_o.add     ),
+        .data_wdata_o          ( core_bus_mst_o.wdata   ),
+        .data_rdata_i          ( core_bus_mst_o.r_rdata ),
         .data_err_i            ( 1'b0               ),
 
         .irq_software_i        ( 1'b0               ),
@@ -408,128 +391,6 @@ module core_region
     end
   end
 
-  //assign debug_bus.r_opc = 1'b0;
-
-  // Bind to 0 Unused Signals in CORE interface
-  assign s_core_bus.r_gnt       = 1'b0;
-  assign s_core_bus.barrier     = 1'b0;
-  assign s_core_bus.exec_cancel = 1'b0;
-  assign s_core_bus.exec_stall  = 1'b0;
-
-  // Performance Counters
-  assign perf_counters[4] = tcdm_data_master.req & (~tcdm_data_master.gnt);  // Cycles lost due to contention
-
-
-  //********************************************************
-  //****** DEMUX TO TCDM AND PERIPHERAL INTERCONNECT *******
-  //********************************************************
-   
-  // demuxes to TCDM & memory hierarchy
-  core_demux #(
-    .ADDR_WIDTH         ( 32                 ),
-    .DATA_WIDTH         ( 32                 ),
-    .BYTE_ENABLE_BIT    ( DATA_WIDTH/8       ),
-    .REMAP_ADDRESS      ( REMAP_ADDRESS      ),
-    .CLUSTER_ALIAS      ( CLUSTER_ALIAS      ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE )
-  ) core_demux_i (
-    .clk                (  clk_int                    ),
-    .rst_ni             (  rst_ni                     ),
-    .test_en_i          (  test_mode_i                ),
-    .base_addr_i        (  base_addr_i                ),
-    .data_req_i         (  s_core_bus.req             ),
-    .data_add_i         (  s_core_bus.add             ),
-    .data_wen_i         ( ~s_core_bus.we              ), //inverted when using OR10N
-    .data_wdata_i       (  s_core_bus.wdata           ),
-    .data_be_i          (  s_core_bus.be              ),
-    .data_gnt_o         (  s_core_bus.gnt             ),
-    .data_r_gnt_i       (  s_core_bus.r_gnt           ),
-    .data_r_valid_o     (  s_core_bus.r_valid         ),
-    .data_r_opc_o       (                             ),
-    .data_r_rdata_o     (  s_core_bus.r_rdata         ),
-
-    .data_req_o_SH      (  tcdm_data_master.req       ),
-    .data_add_o_SH      (  tcdm_data_master.add       ),
-    .data_wen_o_SH      (  tcdm_data_master.wen       ),
-    .data_wdata_o_SH    (  tcdm_data_master.data      ),
-    .data_be_o_SH       (  tcdm_data_master.be        ),
-    .data_gnt_i_SH      (  tcdm_data_master.gnt       ),
-    .data_r_valid_i_SH  (  tcdm_data_master.r_valid   ),
-    .data_r_rdata_i_SH  (  tcdm_data_master.r_data    ),
-
-    .data_req_o_EXT     (  periph_demux_bus.req         ),
-    .data_add_o_EXT     (  periph_demux_bus.add         ),
-    .data_wen_o_EXT     (  periph_demux_bus.wen         ),
-    .data_wdata_o_EXT   (  periph_demux_bus.wdata       ),
-    .data_be_o_EXT      (  periph_demux_bus.be          ),
-    .data_gnt_i_EXT     (  periph_demux_bus.gnt         ),
-    .data_r_valid_i_EXT (  periph_demux_bus.r_valid     ),
-    .data_r_rdata_i_EXT (  periph_demux_bus.r_rdata     ),
-    .data_r_opc_i_EXT   (  periph_demux_bus.r_opc       ),
-
-    .data_req_o_PE      (  periph_data_master.req     ),
-    .data_add_o_PE      (  periph_data_master.add     ),
-    .data_wen_o_PE      (  periph_data_master.wen     ),
-    .data_wdata_o_PE    (  periph_data_master.wdata   ),
-    .data_be_o_PE       (  periph_data_master.be      ),
-    .data_gnt_i_PE      (  periph_data_master.gnt     ),
-    .data_r_valid_i_PE  (  periph_data_master.r_valid ),
-    .data_r_rdata_i_PE  (  periph_data_master.r_rdata ),
-    .data_r_opc_i_PE    (  periph_data_master.r_opc   ),
-
-    .perf_l2_ld_o       (  perf_counters[0]           ),
-    .perf_l2_st_o       (  perf_counters[1]           ),
-    .perf_l2_ld_cyc_o   (  perf_counters[2]           ),
-    .perf_l2_st_cyc_o   (  perf_counters[3]           ),
-    .CLUSTER_ID         (  cluster_id_i               )
-  );
-
-  assign tcdm_data_master.boffs = '0;
-  assign tcdm_data_master.lrdy  = '1;
-
-  assign periph_demux_bus.id = '0;
-
-   periph_demux periph_demux_i (
-     .clk               ( clk_int                  ),
-     .rst_ni            ( rst_ni                   ),
-
-     .data_req_i        ( periph_demux_bus.req     ),
-     .data_add_i        ( periph_demux_bus.add     ),
-     .data_wen_i        ( periph_demux_bus.wen     ),
-     .data_wdata_i      ( periph_demux_bus.wdata   ),
-     .data_be_i         ( periph_demux_bus.be      ),
-     .data_gnt_o        ( periph_demux_bus.gnt     ),
-
-     .data_r_valid_o    ( periph_demux_bus.r_valid ),
-     .data_r_opc_o      ( periph_demux_bus.r_opc   ),
-     .data_r_rdata_o    ( periph_demux_bus.r_rdata ),
-
-     .data_req_o_MH     ( dma_ctrl_master.req      ),
-     .data_add_o_MH     ( dma_ctrl_master.add      ),
-     .data_wen_o_MH     ( dma_ctrl_master.wen      ),
-     .data_wdata_o_MH   ( dma_ctrl_master.data     ),
-     .data_be_o_MH      ( dma_ctrl_master.be       ),
-     .data_gnt_i_MH     ( dma_ctrl_master.gnt      ),
-
-     .data_r_valid_i_MH ( dma_ctrl_master.r_valid  ),
-     .data_r_rdata_i_MH ( dma_ctrl_master.r_data   ),
-     .data_r_opc_i_MH   ( dma_ctrl_master.r_opc    ),
-
-     .data_req_o_EU     ( eu_ctrl_master.req       ),
-     .data_add_o_EU     ( eu_ctrl_master.add       ),
-     .data_wen_o_EU     ( eu_ctrl_master.wen       ),
-     .data_wdata_o_EU   ( eu_ctrl_master.wdata     ),
-     .data_be_o_EU      ( eu_ctrl_master.be        ),
-     .data_gnt_i_EU     ( eu_ctrl_master.gnt       ),
-
-     .data_r_valid_i_EU ( eu_ctrl_master.r_valid   ),
-     .data_r_rdata_i_EU ( eu_ctrl_master.r_rdata   ),
-     .data_r_opc_i_EU   ( eu_ctrl_master.r_opc     )
-    );
-
-  assign dma_ctrl_master.boffs = '0;
-  assign dma_ctrl_master.lrdy  = '1;
-
   /* debug stuff */
   //synopsys translate_off
 
@@ -537,12 +398,12 @@ module core_region
   always @(posedge clk_i)
   begin : CHECK_ASSERTIONS
 `ifndef CLUSTER_ALIAS
-    if ((s_core_bus.req == 1'b1) && (s_core_bus.add < 32'h1000_0000)) begin
-      $error("ERROR_1 (0x00000000 -> 0x10000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,s_core_bus.add, $time()/1000 );
+    if ((core_bus_mst_o.req == 1'b1) && (core_bus_mst_o.add < 32'h1000_0000)) begin
+      $error("ERROR_1 (0x00000000 -> 0x10000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_bus_mst_o.add, $time()/1000 );
       $finish();
     end
-    if ((s_core_bus.req == 1'b1) && (s_core_bus.add >= 32'h1040_0000) && ((s_core_bus.add < 32'h1A00_0000))) begin
-      $error("ERROR_2 (0x10400000 -> 0x1A000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,s_core_bus.add, $time()/1000 );
+    if ((core_bus_mst_o.req == 1'b1) && (core_bus_mst_o.add >= 32'h1040_0000) && ((core_bus_mst_o.add < 32'h1A00_0000))) begin
+      $error("ERROR_2 (0x10400000 -> 0x1A000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_bus_mst_o.add, $time()/1000 );
       $finish();
     end
 `endif

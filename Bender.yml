@@ -67,7 +67,8 @@ sources:
     # Level 1
   - rtl/cluster_interconnect_wrap.sv
   - rtl/cluster_peripherals.sv
-  - rtl/core_demux.sv
+  - rtl/data_periph_demux.sv
+  - rtl/core_demux_wrap.sv
     # Level 2
   - target: rtl
     defines:
