@@ -26,7 +26,7 @@
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter CORE_TYPE_CL        = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
   // parameter USE_FPU             = 1,
   // parameter USE_HWPE            = 1,
   parameter N_EXT_PERF_COUNTERS = 1,
@@ -154,35 +154,23 @@ module core_region
    //********************************************************
 
   generate
-    if ( CORE_TYPE_CL == 0 ) begin: CL_CORE
+    if ( CORE_TYPE_CL == 0 ) begin: CV32_CORE
       assign boot_addr = boot_addr_i;
       cv32e40p_wrapper #(
-        // .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH ),
         .PULP_XPULP          ( 1                           ), // For now this is a no
         .PULP_CLUSTER        ( 1                           ),
         .FPU                 ( FPU                         ),
         .NUM_EXTERNAL_PERF   ( N_EXT_PERF_COUNTERS         ),
-        // .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL  ),
-        .NUM_INTERRUPTS      ( NUM_INTERRUPTS             ),
-        // .PULP_OBI_INTF       ( 1                          ),
-        // .TRANS_STABLE        ( 0                          ),
-        .PULP_ZFINX          ( 0                          )
-        // .Zfinx               ( 0                           ),
-        // .WAPUTYPE            ( WAPUTYPE                    ),
-        // .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-      ) RISCV_CORE (
+        .NUM_INTERRUPTS      ( NUM_INTERRUPTS              ),
+        .PULP_ZFINX          ( 0                           )
+      ) CV32_CORE (
         .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
-        // .clock_en_i            ( clock_en_i                  ),
-        // .test_en_i             ( test_mode_i                 ),
         .setback_i             ( '0                          ),
         // Control Interface
         .pulp_clock_en_i       ( clock_en_i                  ),
-        // .fregfile_disable_i    ( '1                          ),
         .scan_cg_en_i          ( test_mode_i                 ),
         .boot_addr_i           ( boot_addr                   ),
-        // .core_id_i             ( hart_id[3:0]                ),
-        // .cluster_id_i          ( cluster_id_i                ),
         .mtvec_addr_i          ( '0                          ),
         .mtvt_addr_i           ( '0                          ),
         .dm_halt_addr_i        ( DEBUG_START_ADDR + 16'h0800 ),
@@ -216,37 +204,23 @@ module core_region
         .data_atop_o           ( core_data_atop              ),
         // apu-interconnect
         // Handshake
-        // .apu_master_req_o      ( apu_master_req_o            ),
-        // .apu_master_ready_o    ( apu_master_ready_o          ),
-        // .apu_master_gnt_i      ( apu_master_gnt_i            ),
         .apu_req_o             ( apu_master_req_o            ),
         .apu_gnt_i             ( apu_master_gnt_i            ),
         // Request Bus
-        // .apu_master_operands_o ( apu_master_operands_o       ),
-        // .apu_master_op_o       ( apu_master_op_o             ),
-        // .apu_master_type_o     ( apu_master_type_o           ),
-        // .apu_master_flags_o    ( apu_master_flags_o          ),
         .apu_operands_o        ( apu_master_operands_o       ),
         .apu_op_o              ( apu_master_op_o             ),
         .apu_type_o            ( apu_master_type_o           ),
         .apu_flags_o           ( apu_master_flags_o          ),
         // Response Bus
-        // .apu_master_valid_i    ( apu_master_valid_i          ),
-        // .apu_master_result_i   ( apu_master_result_i         ),
-        // .apu_master_flags_i    ( apu_master_flags_i          ),
         .apu_rvalid_i          ( apu_master_valid_i          ),
         .apu_result_i          ( apu_master_result_i         ),
         .apu_flags_i           ( apu_master_flags_i          ),
         // IRQ Interface
-        // .irq_i                 ( irq_req_i                   ),
         .irq_i                 ( core_irq_x                  ),
-        // .irq_id_i              ( irq_id_i                    ),
         .irq_level_i           ( '0                          ), // CLIC interrupt level
         .irq_shv_i             ( '0                          ), // CLIC selective hardware vectoring
         .irq_ack_o             ( irq_ack_o                   ),
         .irq_id_o              ( irq_ack_id_o                ),
-        // .irq_sec_i             ( '0                          ),
-        // .sec_lvl_o             (                             ),
         // Debug Interface
         .debug_req_i           ( debug_req_i                 ),
         .debug_havereset_o     ( debug_havereset_o           ),
@@ -254,14 +228,81 @@ module core_region
         .debug_halted_o        ( debug_halted_o              ),
         // Yet other control signals
         .fetch_enable_i        ( fetch_en_i                  ),
-        // .core_busy_o           ( core_busy_o                 ),
         .core_sleep_o          ( core_sleep                  ),
         // External performance monitoring signals
-        // .ext_perf_counters_i   ( perf_counters               )
         .external_perf_i       ( ext_perf_i                  )
       );
       assign core_busy_o = ~core_sleep;
-    end else begin: CL_CORE
+    end else if ( CORE_TYPE_CL == 1 ) begin: RI5CY_CORE
+      assign boot_addr = boot_addr_i;
+      riscv_core #(
+        .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH           ),
+        .PULP_CLUSTER        ( 1                           ),
+        .FPU                 ( FPU                         ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL  ),
+        .Zfinx               ( 0                           ),
+        .WAPUTYPE            ( WAPUTYPE                    ),
+        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
+      ) RI5CY_CORE (
+        .clk_i                 ( clk_i                       ),
+        .rst_ni                ( rst_ni                      ),
+        .clock_en_i            ( clock_en_i                  ),
+        .test_en_i             ( test_mode_i                 ),
+        // .setback_i             ( '0                          ), // Useful for HMR
+        // Control Interface
+        .fregfile_disable_i    ( '1                          ),
+        .boot_addr_i           ( boot_addr                   ),
+        .core_id_i             ( hart_id[3:0]                ),
+        .cluster_id_i          ( cluster_id_i                ),
+        // Instruction Interface
+        .instr_req_o           ( instr_req_o                 ),
+        .instr_gnt_i           ( instr_gnt_i                 ),
+        .instr_rvalid_i        ( instr_r_valid_i             ),
+        .instr_addr_o          ( instr_addr_o                ),
+        .instr_rdata_i         ( instr_r_rdata_i             ),
+        // Data Interface
+        .data_req_o            ( core_bus_mst_o.req          ),
+        .data_gnt_i            ( core_bus_mst_o.gnt          ),
+        .data_rvalid_i         ( core_bus_mst_o.r_valid      ),
+        .data_we_o             ( core_bus_must_we            ),
+        .data_be_o             ( core_bus_mst_o.be           ),
+        .data_addr_o           ( core_bus_mst_o.add          ),
+        .data_wdata_o          ( core_bus_mst_o.data         ),
+        .data_rdata_i          ( core_bus_mst_o.r_data       ),
+        .data_unaligned_o      (         /* Unused */        ),
+        // apu-interconnect
+        // Handshake
+        .apu_master_req_o      ( apu_master_req_o            ),
+        .apu_master_ready_o    ( apu_master_ready_o          ),
+        .apu_master_gnt_i      ( apu_master_gnt_i            ),
+        // Request Bus
+        .apu_master_operands_o ( apu_master_operands_o       ),
+        .apu_master_op_o       ( apu_master_op_o             ),
+        .apu_master_type_o     ( apu_master_type_o           ),
+        .apu_master_flags_o    ( apu_master_flags_o          ),
+        // Response Bus
+        .apu_master_valid_i    ( apu_master_valid_i          ),
+        .apu_master_result_i   ( apu_master_result_i         ),
+        .apu_master_flags_i    ( apu_master_flags_i          ),
+        // IRQ Interface
+        .irq_i                 ( irq_req_i                   ),
+        .irq_id_i              ( irq_id_i                    ),
+        .irq_ack_o             ( irq_ack_o                   ),
+        .irq_id_o              ( irq_ack_id_o                ),
+        .irq_sec_i             ( '0                          ),
+        .sec_lvl_o             (                             ),
+        // Debug Interface
+        .debug_req_i           ( debug_req_i                 ),
+        // .debug_havereset_o     ( debug_havereset_o           ), // Useful for HMR
+        // .debug_running_o       ( debug_running_o             ), // Useful for HMR
+        // .debug_halted_o        ( debug_halted_o              ), // Useful for HMR
+        // Yet other control signals
+        .fetch_enable_i        ( fetch_en_i                  ),
+        .core_busy_o           ( core_busy_o                 ),
+        // External performance monitoring signals
+        .ext_perf_counters_i   ( ext_perf_i                  )
+      );
+    end else begin: IBEX_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
       // Core busy
       assign core_busy_o = ~core_sleep;

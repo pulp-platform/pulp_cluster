@@ -209,6 +209,14 @@ packages:
     - axi
     - common_cells
     - common_verification
+  riscv:
+    revision: 779b107a5968a2a7cb37bd8270b44c10a4187b6e
+    version: null
+    source:
+      Git: git@github.com:AlSaqr-platform/riscv_nn.git
+    dependencies:
+    - fpnew
+    - tech_cells_generic
   scm:
     revision: f7b51416f3c407e4c31e9c016616d57aae2687bd
     version: null
