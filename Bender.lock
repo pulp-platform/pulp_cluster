@@ -220,7 +220,7 @@ packages:
     - common_cells
     - common_verification
   riscv:
-    revision: dbcf0bbf827e1ec323ca223883c92ebfe9347c67
+    revision: 4ceb402db8619718a9170058bb31f75fcdf7ed1c
     version: null
     source:
       Git: git@github.com:AlSaqr-platform/riscv_nn.git

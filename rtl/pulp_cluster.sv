@@ -727,8 +727,7 @@ cluster_interconnect_wrap #(
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************
-//*************************************************** 
-
+//***************************************************
 cluster_peripherals #(
   .NB_CORES       ( NB_CORES       ),
   .NB_MPERIPHS    ( NB_MPERIPHS    ),
@@ -771,7 +770,7 @@ cluster_peripherals #(
   // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
   .dma_fc_event_i         ( s_dma_fc_event                     ),
-  .dma_fc_irq_i           (                                    ),
+  .dma_fc_irq_i           ( '0                                 ),
 
   .soc_periph_evt_ready_o ( s_events_ready                     ),
   .soc_periph_evt_valid_i ( s_events_valid                     ),
@@ -916,9 +915,9 @@ generate
       //debug unit bind
       .debug_req_i         ( hmr2core[i].debug_req |
                              s_core_dbg_irq[i]        ),
-      // .debug_halted_o      ( dbg_core_halted[i]    ),
-      // .debug_havereset_o   ( dbg_core_havereset[i] ),
-      // .debug_running_o     ( dbg_core_running[i]   ),
+      .debug_halted_o      ( dbg_core_halted[i]       ),
+      .debug_havereset_o   ( dbg_core_havereset[i]    ),
+      .debug_running_o     ( dbg_core_running[i]      ),
       .ext_perf_i          ( ext_perf[i]              ),
       .core_data_req_o     ( core_data_req[i]         ),
       .core_data_rsp_i     ( core_data_rsp[i]         ),

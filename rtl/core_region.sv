@@ -304,6 +304,9 @@ module core_region
         // External performance monitoring signals
         .ext_perf_counters_i   ( ext_perf_i                  )
       );
+      assign debug_havereset_o = '0;
+      assign debug_running_o   = '0;
+      assign debug_halted_o    = '0;
     end else begin: IBEX_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
       // Core busy
