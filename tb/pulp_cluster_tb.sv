@@ -259,9 +259,9 @@ module pulp_cluster_tb;
 
   pulp_cluster  #(
     .NB_CORES                     ( `NB_CORES                ),
-    .NB_HWPE_PORTS                ( 4                        ),
+    .NB_HWPE_PORTS                ( 9                        ),
     .NB_DMAS                      ( `NB_DMAS                 ),
-    .HWPE_PRESENT                 ( 0                        ),
+    .HWPE_PRESENT                 ( 1                        ),
     .TCDM_SIZE                    ( 128*1024                 ),
     .NB_TCDM_BANKS                ( 16                       ),
     .SET_ASSOCIATIVE              ( 4                        ),
