@@ -199,6 +199,16 @@ packages:
       Git: https://github.com/pulp-platform/per2axi.git
     dependencies:
     - axi_slice
+  redundancy_cells:
+    revision: 6e10650b50c7b40f7f81602acf61526330c4d69d
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/redundancy_cells.git
+    dependencies:
+    - common_cells
+    - common_verification
+    - register_interface
+    - tech_cells_generic
   register_interface:
     revision: 19163bb5191d2669a8cbc267cdd4ce8e60f20746
     version: null
@@ -210,7 +220,7 @@ packages:
     - common_cells
     - common_verification
   riscv:
-    revision: 779b107a5968a2a7cb37bd8270b44c10a4187b6e
+    revision: dbcf0bbf827e1ec323ca223883c92ebfe9347c67
     version: null
     source:
       Git: git@github.com:AlSaqr-platform/riscv_nn.git

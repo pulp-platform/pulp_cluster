@@ -1,11 +1,13 @@
 module core_demux_wrap #(
-  parameter  int unsigned AddrWidth      = 32         ,
-  parameter  int unsigned DataWidth      = 32         ,
-  parameter  int unsigned RemapAddress   = 1          ,
-  parameter  int unsigned ClustAlias     = 1          ,
-  parameter  int unsigned ClustAliasBase = 12'h000    ,
-  parameter  int unsigned NumExtPerf     = 5          ,
-  localparam int unsigned ByteEnable     = DataWidth/8
+  parameter  int unsigned AddrWidth       = 32         ,
+  parameter  int unsigned DataWidth       = 32         ,
+  parameter  int unsigned RemapAddress    = 1          ,
+  parameter  int unsigned ClustAlias      = 1          ,
+  parameter  int unsigned ClustAliasBase  = 12'h000    ,
+  parameter  int unsigned NumExtPerf      = 5          ,
+  parameter  type         core_data_req_t = logic      ,
+  parameter  type         core_data_rsp_t = logic      ,
+  localparam int unsigned ByteEnable      = DataWidth/8
 )(
   input  logic clk_i                         ,
   input  logic rst_ni                        ,
@@ -14,24 +16,19 @@ module core_demux_wrap #(
   input  logic [3:0] base_addr_i             ,
   input  logic [5:0] cluster_id_i            ,
   output logic [NumExtPerf-1:0] ext_perf_o   ,
-  hci_core_intf.slave core_bus_slv_i         ,
+  input  core_data_req_t core_data_req_i     ,
+  output core_data_rsp_t core_data_rsp_o     ,
   hci_core_intf.master tcdm_bus_mst_o        ,
   hci_core_intf.master dma_ctrl_mst_o        ,
   XBAR_PERIPH_BUS.Master eventunit_bus_mst_o ,
   XBAR_PERIPH_BUS.Master peripheral_bus_mst_o
 );
 
-localparam N_EXT_PERF_COUNTERS_ACTUAL = 5; // Temporary
-
-logic clk_int;
-logic [N_EXT_PERF_COUNTERS_ACTUAL-1:0] perf_counters;
-
 XBAR_PERIPH_BUS periph_demux_bus();
-
-assign core_bus_slv_i.r_user  = '0;
 
 assign tcdm_bus_mst_o.boffs = '0;
 assign tcdm_bus_mst_o.lrdy  = '1;
+assign tcdm_bus_mst_o.user  = '0;
 
 data_periph_demux #(
   .ADDR_WIDTH         ( AddrWidth      ),
@@ -45,15 +42,15 @@ data_periph_demux #(
   .rst_ni             (  rst_ni                   ),
   .test_en_i          (  test_en_i                ),
   .base_addr_i        (  base_addr_i              ),
-  .data_req_i         (  core_bus_slv_i.req       ),
-  .data_add_i         (  core_bus_slv_i.add       ),
-  .data_wen_i         (  core_bus_slv_i.wen       ), //inverted when using OR10N
-  .data_wdata_i       (  core_bus_slv_i.data      ),
-  .data_be_i          (  core_bus_slv_i.be        ),
-  .data_gnt_o         (  core_bus_slv_i.gnt       ),
-  .data_r_valid_o     (  core_bus_slv_i.r_valid   ),
-  .data_r_opc_o       (  core_bus_slv_i.r_opc     ),
-  .data_r_rdata_o     (  core_bus_slv_i.r_data    ),
+  .data_req_i         (  core_data_req_i.req      ),
+  .data_add_i         (  core_data_req_i.add      ),
+  .data_wen_i         (  core_data_req_i.wen      ), //inverted when using OR10N
+  .data_wdata_i       (  core_data_req_i.data     ),
+  .data_be_i          (  core_data_req_i.be       ),
+  .data_gnt_o         (  core_data_rsp_o.gnt      ),
+  .data_r_valid_o     (  core_data_rsp_o.r_valid  ),
+  .data_r_opc_o       (   /* ucnconnected */      ),
+  .data_r_rdata_o     (  core_data_rsp_o.r_data   ),
 
   .data_req_o_SH      (  tcdm_bus_mst_o.req       ),
   .data_add_o_SH      (  tcdm_bus_mst_o.add       ),
@@ -90,6 +87,8 @@ data_periph_demux #(
   .perf_l2_st_cyc_o   (  ext_perf_o [3]             ),
   .CLUSTER_ID         (  cluster_id_i               )
 );
+
+assign ext_perf_o[4] = '0;
 
 assign periph_demux_bus.id  = '0;
 

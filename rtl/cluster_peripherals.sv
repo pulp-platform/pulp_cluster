@@ -89,6 +89,7 @@ module cluster_peripherals
   output logic [1:0]                  TCDM_arb_policy_o,
                                     
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
+  XBAR_PERIPH_BUS.Master              hmr_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
@@ -331,12 +332,22 @@ module cluster_peripherals
   assign hwpe_cfg_master.be    = speriph_slave[SPER_HWPE_ID].be;
   assign hwpe_cfg_master.id    = speriph_slave[SPER_HWPE_ID].id;
 
-  assign speriph_slave[SPER_DECOMP_ID].gnt     = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_rdata = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_opc   = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_id    = '0;
-  assign speriph_slave[SPER_DECOMP_ID].r_valid = '0;
+  //********************************************************
+  //******************** HMR UNIT **************************
+  //********************************************************
 
+  assign speriph_slave[SPER_HMR_UNIT_ID].gnt     = hmr_cfg_master.gnt;
+  assign speriph_slave[SPER_HMR_UNIT_ID].r_rdata = hmr_cfg_master.r_rdata;
+  assign speriph_slave[SPER_HMR_UNIT_ID].r_opc   = hmr_cfg_master.r_opc;
+  assign speriph_slave[SPER_HMR_UNIT_ID].r_id    = hmr_cfg_master.r_id;
+  assign speriph_slave[SPER_HMR_UNIT_ID].r_valid = hmr_cfg_master.r_valid;
+
+  assign hmr_cfg_master.req   = speriph_slave[SPER_HMR_UNIT_ID].req;
+  assign hmr_cfg_master.add   = speriph_slave[SPER_HMR_UNIT_ID].add;
+  assign hmr_cfg_master.wen   = speriph_slave[SPER_HMR_UNIT_ID].wen;
+  assign hmr_cfg_master.wdata = speriph_slave[SPER_HMR_UNIT_ID].wdata;
+  assign hmr_cfg_master.be    = speriph_slave[SPER_HMR_UNIT_ID].be;
+  assign hmr_cfg_master.id    = speriph_slave[SPER_HMR_UNIT_ID].id;
 
   generate
     if(FEATURE_DEMUX_MAPPED == 0) begin : eu_not_demux_mapped_gen

@@ -26,39 +26,42 @@
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL        = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
-  // parameter USE_FPU             = 1,
-  // parameter USE_HWPE            = 1,
-  parameter N_EXT_PERF_COUNTERS = 1,
-  parameter NUM_INTERRUPTS      = 32,
-  parameter CORE_ID             = 0,
-  parameter ADDR_WIDTH          = 32,
-  parameter DATA_WIDTH          = 32,
-  parameter INSTR_RDATA_WIDTH   = 32,
-  parameter CLUSTER_ALIAS       = 1,
-  parameter CLUSTER_ALIAS_BASE  = 12'h000,
-  parameter REMAP_ADDRESS       = 0,
+  parameter CORE_TYPE_CL            = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
+  // parameter USE_FPU              = 1,
+  // parameter USE_HWPE             = 1,
+  parameter N_EXT_PERF_COUNTERS     = 1,
+  parameter NUM_INTERRUPTS          = 32,
+  parameter CORE_ID                 = 0,
+  parameter ADDR_WIDTH              = 32,
+  parameter DATA_WIDTH              = 32,
+  parameter INSTR_RDATA_WIDTH       = 32,
+  parameter CLUSTER_ALIAS           = 1,
+  parameter CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter REMAP_ADDRESS           = 0,
 
-  parameter APU_NARGS_CPU       = 2,
-  parameter APU_WOP_CPU         = 1,
-  parameter WAPUTYPE            = 3,
-  parameter APU_NDSFLAGS_CPU    = 3,
-  parameter APU_NUSFLAGS_CPU    = 5,
-  
-  parameter FPU                 =  0,
-  parameter FP_DIVSQRT          =  0,
-  parameter SHARED_FP           =  0,
-  parameter SHARED_FP_DIVSQRT   =  0,
+  parameter APU_NARGS_CPU           = 2,
+  parameter APU_WOP_CPU             = 1,
+  parameter WAPUTYPE                = 3,
+  parameter APU_NDSFLAGS_CPU        = 3,
+  parameter APU_NUSFLAGS_CPU        = 5,
 
-  parameter DEBUG_START_ADDR    = 32'h1A110000,
+  parameter FPU                     =  0,
+  parameter FP_DIVSQRT              =  0,
+  parameter SHARED_FP               =  0,
+  parameter SHARED_FP_DIVSQRT       =  0,
 
-  parameter L2_SLM_FILE         = "./slm_files/l2_stim.slm",
-  parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"
+  parameter DEBUG_START_ADDR        = 32'h1A110000,
+
+  parameter type core_data_req_t    = logic,
+  parameter type core_data_rsp_t    = logic,
+
+  parameter L2_SLM_FILE             = "./slm_files/l2_stim.slm",
+  parameter ROM_SLM_FILE            = "../sw/apps/boot/slm_files/l2_stim.slm"
 )
 (
   input logic                            clk_i,
   input logic                            rst_ni,
-  input logic                            init_ni,
+  input logic                            setback_i,
 
   input logic [5:0]                      cluster_id_i,
   
@@ -90,8 +93,8 @@ module core_region
 
   input logic [N_EXT_PERF_COUNTERS-1:0]  ext_perf_i,
 
-  hci_core_intf.master                   core_bus_mst_o,
-
+  output core_data_req_t                 core_data_req_o,
+  input  core_data_rsp_t                 core_data_rsp_i,
   output logic                           apu_master_req_o,
   input logic                            apu_master_gnt_i,
   // request channel
@@ -142,11 +145,9 @@ module core_region
   logic [31:0] core_shadow_addr ;
   logic [31:0] core_shadow_wdata;
   logic [5:0]  core_data_atop   ;
-  logic        core_bus_must_we;
+  logic        core_data_req_we ;
 
-  assign core_bus_mst_o.wen = ~core_bus_must_we;
-  assign core_bus_mst_o.lrdy = '1;
-  assign core_bus_mst_o.user = '0;
+  assign core_data_req_o.wen  = ~core_data_req_we;
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
 
    //********************************************************
@@ -183,14 +184,14 @@ module core_region
         .instr_addr_o          ( instr_addr_o                ),
         .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_req_o            ( core_bus_mst_o.req          ),
-        .data_gnt_i            ( core_bus_mst_o.gnt          ),
-        .data_rvalid_i         ( core_bus_mst_o.r_valid      ),
-        .data_we_o             ( core_bus_must_we            ),
-        .data_be_o             ( core_bus_mst_o.be           ),
-        .data_addr_o           ( core_bus_mst_o.add          ),
-        .data_wdata_o          ( core_bus_mst_o.data         ),
-        .data_rdata_i          ( core_bus_mst_o.r_data       ),
+        .data_req_o            ( core_data_req_o.req          ),
+        .data_gnt_i            ( core_data_rsp_i.gnt          ),
+        .data_rvalid_i         ( core_data_rsp_i.r_valid      ),
+        .data_we_o             ( core_data_req_we             ),
+        .data_be_o             ( core_data_req_o.be           ),
+        .data_addr_o           ( core_data_req_o.add          ),
+        .data_wdata_o          ( core_data_req_o.data         ),
+        .data_rdata_i          ( core_data_rsp_i.r_data       ),
         // Shadow Memory Interface
         .shadow_req_o          ( sadow_req                   ),
         .shadow_gnt_i          ( '0                          ),
@@ -246,6 +247,7 @@ module core_region
       ) RI5CY_CORE (
         .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
+        .setback_i             ( setback_i                   ),
         .clock_en_i            ( clock_en_i                  ),
         .test_en_i             ( test_mode_i                 ),
         // .setback_i             ( '0                          ), // Useful for HMR
@@ -261,14 +263,14 @@ module core_region
         .instr_addr_o          ( instr_addr_o                ),
         .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_req_o            ( core_bus_mst_o.req          ),
-        .data_gnt_i            ( core_bus_mst_o.gnt          ),
-        .data_rvalid_i         ( core_bus_mst_o.r_valid      ),
-        .data_we_o             ( core_bus_must_we            ),
-        .data_be_o             ( core_bus_mst_o.be           ),
-        .data_addr_o           ( core_bus_mst_o.add          ),
-        .data_wdata_o          ( core_bus_mst_o.data         ),
-        .data_rdata_i          ( core_bus_mst_o.r_data       ),
+        .data_req_o            ( core_data_req_o.req          ),
+        .data_gnt_i            ( core_data_rsp_i.gnt          ),
+        .data_rvalid_i         ( core_data_rsp_i.r_valid      ),
+        .data_we_o             ( core_data_req_we             ),
+        .data_be_o             ( core_data_req_o.be           ),
+        .data_addr_o           ( core_data_req_o.add          ),
+        .data_wdata_o          ( core_data_req_o.data         ),
+        .data_rdata_i          ( core_data_rsp_i.r_data       ),
         .data_unaligned_o      (         /* Unused */        ),
         // apu-interconnect
         // Handshake
@@ -343,9 +345,9 @@ module core_region
         .clk_i       (clk_i             ),
         .rst_ni      (rst_ni            ),
         .core_req_i  (core_mem_req      ),
-        .mem_req_o   (core_bus_mst_o.req    ),
-        .mem_gnt_i   (core_bus_mst_o.gnt    ),
-        .mem_rvalid_i(core_bus_mst_o.r_valid)
+        .mem_req_o   (core_data_req_o.req    ),
+        .mem_gnt_i   (core_data_rsp_i.gnt    ),
+        .mem_rvalid_i(core_data_rsp_i.r_valid)
       );
 
 `ifdef VERILATOR
@@ -392,14 +394,14 @@ module core_region
         .instr_err_i           ( 1'b0               ),
 
         // Data memory interface:
-        .data_req_o            ( core_mem_req       ),
-        .data_gnt_i            ( core_bus_mst_o.gnt     ),
-        .data_rvalid_i         ( core_bus_mst_o.r_valid ),
-        .data_we_o             ( ~core_bus_mst_o.we     ),
-        .data_be_o             ( core_bus_mst_o.be      ),
-        .data_addr_o           ( core_bus_mst_o.add     ),
-        .data_wdata_o          ( core_bus_mst_o.wdata   ),
-        .data_rdata_i          ( core_bus_mst_o.r_rdata ),
+        .data_req_o            ( core_mem_req            ),
+        .data_gnt_i            ( core_data_rsp_i.gnt     ),
+        .data_rvalid_i         ( core_data_rsp_i.r_valid ),
+        .data_we_o             ( core_data_req_we        ),
+        .data_be_o             ( core_data_req_o.be      ),
+        .data_addr_o           ( core_data_req_o.add     ),
+        .data_wdata_o          ( core_data_req_o.wdata   ),
+        .data_rdata_i          ( core_data_rsp_i.r_rdata ),
         .data_err_i            ( 1'b0               ),
 
         .irq_software_i        ( 1'b0               ),
@@ -439,12 +441,12 @@ module core_region
   always @(posedge clk_i)
   begin : CHECK_ASSERTIONS
 `ifndef CLUSTER_ALIAS
-    if ((core_bus_mst_o.req == 1'b1) && (core_bus_mst_o.add < 32'h1000_0000)) begin
-      $error("ERROR_1 (0x00000000 -> 0x10000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_bus_mst_o.add, $time()/1000 );
+    if ((core_data_req_o.req == 1'b1) && (core_data_req_o.add < 32'h1000_0000)) begin
+      $error("ERROR_1 (0x00000000 -> 0x10000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_data_req_o.add, $time()/1000 );
       $finish();
     end
-    if ((core_bus_mst_o.req == 1'b1) && (core_bus_mst_o.add >= 32'h1040_0000) && ((core_bus_mst_o.add < 32'h1A00_0000))) begin
-      $error("ERROR_2 (0x10400000 -> 0x1A000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_bus_mst_o.add, $time()/1000 );
+    if ((core_data_req_o.req == 1'b1) && (core_data_req_o.add >= 32'h1040_0000) && ((core_data_req_o.add < 32'h1A00_0000))) begin
+      $error("ERROR_2 (0x10400000 -> 0x1A000000) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" ,core_data_req_o.add, $time()/1000 );
       $finish();
     end
 `endif

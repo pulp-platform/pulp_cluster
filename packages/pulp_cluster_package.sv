@@ -31,7 +31,7 @@ package pulp_cluster_package;
   parameter SPER_ICACHE_CTRL = 5;
   parameter SPER_DMA_CL_ID   = 6;
   parameter SPER_DMA_FC_ID   = 7;
-  parameter SPER_DECOMP_ID   = 8; // Currently unused / grounded, available for specific designs
+  parameter SPER_HMR_UNIT_ID = 8;
   parameter SPER_EXT_ID      = 9; 
   parameter SPER_ERROR_ID    = 10;
    
@@ -47,5 +47,52 @@ package pulp_cluster_package;
   // // MCHAN regs are mapped  from 0x10100000 - 0x800
   // // remember to change the defines in the pulp.h as well to be coherent with this approach
   // parameter DEM_PER_BEFORE_TCDM_TS = 0;
+
+  typedef struct packed {
+    logic gnt;
+    logic [31:0] r_data;
+    logic r_valid;
+  } core_data_rsp_t;
+
+  typedef struct packed {
+    logic req;
+    logic [31:0] add;
+    logic wen;
+    logic [31:0] data;
+    logic [3:0] be;
+  } core_data_req_t;
+
+  typedef struct packed {
+    logic        clock_en;
+    logic [31:0] boot_addr;
+    logic [3:0]  core_id;
+    logic [5:0]  cluster_id;
+    logic        instr_gnt;
+    logic        instr_rvalid;
+    logic [31:0] instr_rdata;
+    logic        data_gnt;
+    logic        data_rvalid;
+    logic [31:0] data_rdata;
+    logic        irq_req;
+    logic [4:0]  irq_id;
+    logic        debug_req;
+    // logic        debug_resume;
+  } core_inputs_t;
+
+  typedef struct packed {
+    logic        instr_req;
+    logic [31:0] instr_addr;
+    logic        data_req;
+    logic        data_we;
+    logic  [3:0] data_be;
+    logic [31:0] data_add;
+    logic [31:0] data_wdata;
+    logic        irq_ack;
+    logic [4:0]  irq_ack_id;
+    // logic        debug_havereset;
+    // logic        debug_running;
+    // logic        debug_halted;
+    logic        core_busy;
+  } core_outputs_t;
 
 endpackage

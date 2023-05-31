@@ -21,6 +21,7 @@
 `include "axi/assign.svh"
 `include "cluster_bus_defines.sv"
 `include "pulp_interfaces.sv"
+`include "register_interface/typedef.svh"
 
 module pulp_cluster
   import pulp_cluster_package::*;
@@ -144,7 +145,6 @@ module pulp_cluster
   input logic                                    rst_ni,
   input logic                                    ref_clk_i,
   input logic                                    pwr_on_rst_ni,
-  input logic                                    core_init_ni,
   input logic                                    pmu_mem_pwdn_i,
 
   
@@ -392,6 +392,9 @@ XBAR_PERIPH_BUS s_core_periph_bus[NB_CORES-1:0]();
 
 // periph interconnect -> DMA
 XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
+
+// periph interconnect -> HMR unit
+XBAR_PERIPH_BUS s_periph_hmr_bus ();
 
 // debug
 XBAR_TCDM_BUS s_debug_bus[NB_CORES-1:0]();
@@ -757,6 +760,7 @@ cluster_peripherals #(
   .core_eu_direct_link    ( s_core_euctrl_bus                  ), 
 
   .dma_cfg_master         ( s_periph_dma_bus                   ),
+  .hmr_cfg_master         ( s_periph_hmr_bus                   ),
 
   .dma_cl_event_i         ( s_dma_cl_event                     ),
   .dma_cl_irq_i           ( s_dma_cl_irq                       ),
@@ -813,16 +817,42 @@ cluster_peripherals #(
 //------------------------------------------------------//
 
 /* cluster cores + core-coupled accelerators / shared execution units */
-logic [NB_CORES-1:0] clk_core;
-logic [NB_CORES-1:0][4:0] ext_perf;
+`REG_BUS_TYPEDEF_ALL(hmr_reg, logic[31:0], logic[31:0], logic[3:0])
+hmr_reg_req_t hmr_reg_req;
+hmr_reg_rsp_t hmr_reg_rsp;
 
-hci_core_intf #(
-  .DW ( DATA_WIDTH ),
-  .AW ( ADDR_WIDTH ),
-  .OW ( 1          )
-) core_bus_mst [NB_CORES-1:0] (
-  .clk ( clk_i )
+periph_to_reg #(
+  .AW          ( ADDR_WIDTH    ),
+  .DW          ( DATA_WIDTH    ),
+  .BW          ( 8             ),
+  .IW          ( NB_CORES + 1  ),
+  .req_t       ( hmr_reg_req_t ),
+  .rsp_t       ( hmr_reg_rsp_t )
+) i_periph_to_hmr (
+  .clk_i          ( clk_i                    ),
+  .rst_ni         ( rst_ni                   ),
+  .req_i          ( s_periph_hmr_bus.req     ),
+  .add_i          ( s_periph_hmr_bus.add     ),
+  .wen_i          ( s_periph_hmr_bus.wen     ),
+  .wdata_i        ( s_periph_hmr_bus.wdata   ),
+  .be_i           ( s_periph_hmr_bus.be      ),
+  .id_i           ( s_periph_hmr_bus.id      ),
+  .gnt_o          ( s_periph_hmr_bus.gnt     ),
+  .r_rdata_o      ( s_periph_hmr_bus.r_rdata ),
+  .r_opc_o        ( s_periph_hmr_bus.r_opc   ),
+  .r_id_o         ( s_periph_hmr_bus.r_id    ),
+  .r_valid_o      ( s_periph_hmr_bus.r_valid ),
+  .reg_req_o      ( hmr_reg_req              ),
+  .reg_rsp_i      ( hmr_reg_rsp              )
 );
+
+core_data_req_t [NB_CORES-1:0] core_data_req, demux_data_req;
+core_data_rsp_t [NB_CORES-1:0] core_data_rsp, demux_data_rsp;
+core_inputs_t [NB_CORES-1:0] sys2hmr, hmr2core;
+core_outputs_t [NB_CORES-1:0] hmr2sys, core2hmr;
+logic [NB_CORES-1:0] clk_core;
+logic [NB_CORES-1:0] setback;
+logic [NB_CORES-1:0][4:0] ext_perf;
 
 generate
   for (genvar i=0; i<NB_CORES; i++) begin : CORE
@@ -860,34 +890,38 @@ generate
       .FPU                 ( CLUST_FPU               ),
       .FP_DIVSQRT          ( CLUST_FP_DIVSQRT        ),
       .SHARED_FP           ( CLUST_SHARED_FP         ),
-      .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT )
-    ) core_region_i (
-      .clk_i               ( clk_core[i]           ),
-      .rst_ni              ( rst_ni                ),
-      .init_ni             ( core_init_ni          ),
-      .cluster_id_i        ( cluster_id_i          ),
-      .clock_en_i          ( clk_core_en[i]        ),
-      .fetch_en_i          ( fetch_en_int[i]       ),
-      .boot_addr_i         ( boot_addr[i]          ),
-      .irq_id_i            ( irq_id[i]             ),
-      .irq_ack_id_o        ( irq_ack_id[i]         ),
-      .irq_req_i           ( irq_req[i]            ),
-      .irq_ack_o           ( irq_ack[i]            ),
-      .test_mode_i         ( test_mode_i           ),
-      .core_busy_o         ( core_busy[i]          ),
+      .SHARED_FP_DIVSQRT   ( CLUST_SHARED_FP_DIVSQRT ),
+      .core_data_req_t     ( core_data_req_t         ),
+      .core_data_rsp_t     ( core_data_rsp_t         )
+    ) core_region_i        (
+      .clk_i               ( clk_core[i]              ),
+      .rst_ni              ( rst_ni                   ),
+      .setback_i           ( setback[i]               ),
+      .cluster_id_i        ( hmr2core[i].cluster_id   ),
+      .clock_en_i          ( hmr2core[i].clock_en     ),
+      .fetch_en_i          ( fetch_en_int[i]          ),
+      .boot_addr_i         ( hmr2core[i].boot_addr    ),
+      .irq_id_i            ( hmr2core[i].irq_id       ),
+      .irq_ack_id_o        ( core2hmr[i].irq_ack_id   ),
+      .irq_req_i           ( hmr2core[i].irq_req      ),
+      .irq_ack_o           ( core2hmr[i].irq_ack      ),
+      .test_mode_i         ( test_mode_i              ),
+      .core_busy_o         ( core2hmr[i].core_busy    ),
       //instruction cache bind 
-      .instr_req_o         ( instr_req[i]          ),
-      .instr_gnt_i         ( instr_gnt[i]          ),
-      .instr_addr_o        ( instr_addr[i]         ),
-      .instr_r_rdata_i     ( instr_r_rdata[i]      ),
-      .instr_r_valid_i     ( instr_r_valid[i]      ),
+      .instr_req_o         ( core2hmr[i].instr_req    ),
+      .instr_gnt_i         ( hmr2core[i].instr_gnt    ),
+      .instr_addr_o        ( core2hmr[i].instr_addr   ),
+      .instr_r_rdata_i     ( hmr2core[i].instr_rdata  ),
+      .instr_r_valid_i     ( hmr2core[i].instr_rvalid ),
       //debug unit bind
-      .debug_req_i         ( s_core_dbg_irq[i]     ),
-      .debug_halted_o      ( dbg_core_halted[i]    ),
-      .debug_havereset_o   ( dbg_core_havereset[i] ),
-      .debug_running_o     ( dbg_core_running[i]   ),
-      .ext_perf_i          ( ext_perf[i]           ),
-      .core_bus_mst_o      ( core_bus_mst[i]       ),
+      .debug_req_i         ( hmr2core[i].debug_req |
+                             s_core_dbg_irq[i]        ),
+      // .debug_halted_o      ( dbg_core_halted[i]    ),
+      // .debug_havereset_o   ( dbg_core_havereset[i] ),
+      // .debug_running_o     ( dbg_core_running[i]   ),
+      .ext_perf_i          ( ext_perf[i]              ),
+      .core_data_req_o     ( core_data_req[i]         ),
+      .core_data_rsp_i     ( core_data_rsp[i]         ),
       // .debug_resume_i   ( dbg_core_resume[i]    ), // Useful for HMR, consider keeping
       //apu interface
       .apu_master_req_o      ( s_apu_master_req     [i] ),
@@ -902,13 +936,52 @@ generate
       .apu_master_flags_i    ( s_apu_master_rflags  [i] )
     );
 
+    // Binding inputs/outputs from HMR to the system and vice versa
+    assign sys2hmr[i].clock_en     = clk_core_en[i];
+    assign sys2hmr[i].boot_addr    = boot_addr;
+    assign sys2hmr[i].core_id      = '0; // FIXME
+    assign sys2hmr[i].cluster_id   = cluster_id_i;
+    assign sys2hmr[i].instr_gnt    = instr_gnt[i];
+    assign sys2hmr[i].instr_rvalid = instr_r_valid[i];
+    assign sys2hmr[i].instr_rdata  = instr_r_rdata[i];
+    assign sys2hmr[i].data_gnt     = demux_data_rsp[i].gnt;
+    assign sys2hmr[i].data_rvalid  = demux_data_rsp[i].r_valid;
+    assign sys2hmr[i].data_rdata   = demux_data_rsp[i].r_data;
+    assign sys2hmr[i].irq_req      = irq_req[i];
+    assign sys2hmr[i].irq_id       = irq_id[i];
+    assign sys2hmr[i].debug_req    = '0;
+
+    assign instr_req[i]            = hmr2sys[i].instr_req;
+    assign instr_addr[i]           = hmr2sys[i].instr_addr;
+    assign demux_data_req[i].req   = hmr2sys[i].data_req;
+    assign demux_data_req[i].wen   = hmr2sys[i].data_we; // The protocol is handeled within the core
+    assign demux_data_req[i].be    = hmr2sys[i].data_be;
+    assign demux_data_req[i].add   = hmr2sys[i].data_add;
+    assign demux_data_req[i].data  = hmr2sys[i].data_wdata;
+    assign irq_ack[i]              = hmr2sys[i].irq_ack;
+    assign irq_ack_id[i]           = hmr2sys[i].irq_ack_id;
+    assign core_busy[i]            = hmr2sys[i].core_busy;
+
+    // Binding data interface from HMR to the core and vice versa
+    assign core_data_rsp[i].gnt     = hmr2core[i].data_gnt;
+    assign core_data_rsp[i].r_data  = hmr2core[i].data_rdata;
+    assign core_data_rsp[i].r_valid = hmr2core[i].data_rvalid;
+
+    assign core2hmr[i].data_req   = core_data_req[i].req;
+    assign core2hmr[i].data_add   = core_data_req[i].add;
+    assign core2hmr[i].data_we    = core_data_req[i].wen; // The protocol is handeled within the core
+    assign core2hmr[i].data_wdata = core_data_req[i].data;
+    assign core2hmr[i].data_be    = core_data_req[i].be;
+
     core_demux_wrap       #(
       .AddrWidth           ( ADDR_WIDTH         ),
       .DataWidth           ( DATA_WIDTH         ),
       .RemapAddress        ( REMAP_ADDRESS      ),
       .ClustAlias          ( CLUSTER_ALIAS      ),
       .ClustAliasBase      ( CLUSTER_ALIAS_BASE ),
-      .NumExtPerf          ( 5                  )
+      .NumExtPerf          ( 5                  ),
+      .core_data_req_t     ( core_data_req_t    ),
+      .core_data_rsp_t     ( core_data_rsp_t    )
     ) i_core_demux         (
       .clk_i               ( clk_core[i]           ),
       .rst_ni              ( rst_ni                ),
@@ -917,7 +990,8 @@ generate
       .base_addr_i         ( base_addr_i           ),
       .cluster_id_i        ( cluster_id_i          ),
       .ext_perf_o          ( ext_perf[i]           ),
-      .core_bus_slv_i      ( core_bus_mst[i]       ),
+      .core_data_req_i     ( demux_data_req[i]     ),
+      .core_data_rsp_o     ( demux_data_rsp[i]     ),
       .tcdm_bus_mst_o      ( s_hci_core[i]         ),
       .dma_ctrl_mst_o      ( s_core_dmactrl_bus[i] ),
       .eventunit_bus_mst_o ( s_core_euctrl_bus[i]  ),
@@ -925,6 +999,49 @@ generate
     );
   end
 endgenerate
+
+hmr_unit #(
+  .NumCores          ( NB_CORES       ),
+  .DMRSupported      ( 1              ),
+  .DMRFixed          ( 0              ),
+  .TMRSupported      ( 1              ),
+  .TMRFixed          ( 0              ),
+  .InterleaveGrps    ( 1              ),
+  .RapidRecovery     ( 0              ),
+  .SeparateData      ( 1              ),
+  .NumBusVoters      ( 1              ),
+  .all_inputs_t      ( core_inputs_t  ),
+  .nominal_outputs_t ( core_outputs_t ),
+  .reg_req_t         ( hmr_reg_req_t  ),
+  .reg_rsp_t         ( hmr_reg_rsp_t  )
+) i_hmr_unit         (
+  .clk_i                  ( clk_i        ),
+  .rst_ni                 ( rst_ni       ),
+  // Port to configuration unit
+  .reg_request_i          ( hmr_reg_req  ),
+  .reg_response_o         ( hmr_reg_rsp  ),
+  // TMR signals
+  .tmr_failure_o          (              ),
+  .tmr_error_o            (              ), // Should this not be NumTMRCores? or NumCores?
+  .tmr_resynch_req_o      (              ),
+  .tmr_sw_synch_req_o     (              ),
+  .tmr_cores_synch_i      ( '0           ),
+  // DMR signals
+  .dmr_failure_o          (              ),
+  .dmr_error_o            (              ), // Should this not be NumDMRCores? or NumCores?
+  .dmr_resynch_req_o      (              ),
+  .dmr_sw_synch_req_o     (              ),
+  .dmr_cores_synch_i      ( '0           ),
+  .sys_inputs_i           ( sys2hmr      ),
+  .sys_nominal_outputs_o  ( hmr2sys      ),
+  .sys_bus_outputs_o      (              ),
+  .sys_fetch_en_i         ( fetch_en_int ),
+  .enable_bus_vote_i      ( '0           ),
+  .core_setback_o         ( setback      ),
+  .core_inputs_o          ( hmr2core     ),
+  .core_nominal_outputs_i ( core2hmr     ),
+  .core_bus_outputs_i     ( '0           )
+);
 
 //****************************************************
 //**** Shared FPU cluster - Shared execution units ***
