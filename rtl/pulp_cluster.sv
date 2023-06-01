@@ -873,7 +873,6 @@ generate
     core_region #(
       .CORE_TYPE_CL        ( CORE_TYPE_CL            ),
       .N_EXT_PERF_COUNTERS ( 5                       ),
-      .CORE_ID             ( i                       ),
       .ADDR_WIDTH          ( 32                      ),
       .DATA_WIDTH          ( 32                      ),
       .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH       ),
@@ -897,6 +896,7 @@ generate
       .rst_ni              ( rst_ni                   ),
       .setback_i           ( setback[i]               ),
       .cluster_id_i        ( hmr2core[i].cluster_id   ),
+      .core_id_i           ( hmr2core[i].core_id      ),
       .clock_en_i          ( hmr2core[i].clock_en     ),
       .fetch_en_i          ( fetch_en_int[i]          ),
       .boot_addr_i         ( hmr2core[i].boot_addr    ),
@@ -938,7 +938,7 @@ generate
     // Binding inputs/outputs from HMR to the system and vice versa
     assign sys2hmr[i].clock_en     = clk_core_en[i];
     assign sys2hmr[i].boot_addr    = boot_addr;
-    assign sys2hmr[i].core_id      = '0; // FIXME
+    assign sys2hmr[i].core_id      = i[3:0];
     assign sys2hmr[i].cluster_id   = cluster_id_i;
     assign sys2hmr[i].instr_gnt    = instr_gnt[i];
     assign sys2hmr[i].instr_rvalid = instr_r_valid[i];

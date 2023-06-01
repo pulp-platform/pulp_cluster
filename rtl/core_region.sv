@@ -27,11 +27,8 @@ module core_region
 #(
   // CORE PARAMETERS
   parameter CORE_TYPE_CL            = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
-  // parameter USE_FPU              = 1,
-  // parameter USE_HWPE             = 1,
   parameter N_EXT_PERF_COUNTERS     = 1,
   parameter NUM_INTERRUPTS          = 32,
-  parameter CORE_ID                 = 0,
   parameter ADDR_WIDTH              = 32,
   parameter DATA_WIDTH              = 32,
   parameter INSTR_RDATA_WIDTH       = 32,
@@ -63,6 +60,7 @@ module core_region
   input logic                            rst_ni,
   input logic                            setback_i,
 
+  input logic [3:0]                      core_id_i,
   input logic [5:0]                      cluster_id_i,
   
   input logic                            irq_req_i,
@@ -148,7 +146,7 @@ module core_region
   logic        core_data_req_we ;
 
   assign core_data_req_o.wen  = ~core_data_req_we;
-  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, CORE_ID[3:0]};
+  assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, core_id_i};
 
    //********************************************************
    //***************** PROCESSOR ****************************
@@ -244,17 +242,16 @@ module core_region
         .Zfinx               ( 0                           ),
         .WAPUTYPE            ( WAPUTYPE                    ),
         .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-      ) RI5CY_CORE (
+      ) RI5CY_CORE             (
         .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
         .setback_i             ( setback_i                   ),
         .clock_en_i            ( clock_en_i                  ),
         .test_en_i             ( test_mode_i                 ),
-        // .setback_i             ( '0                          ), // Useful for HMR
         // Control Interface
         .fregfile_disable_i    ( '1                          ),
         .boot_addr_i           ( boot_addr                   ),
-        .core_id_i             ( hart_id[3:0]                ),
+        .core_id_i             ( core_id_i                   ),
         .cluster_id_i          ( cluster_id_i                ),
         // Instruction Interface
         .instr_req_o           ( instr_req_o                 ),
@@ -471,7 +468,7 @@ module core_region
 
   initial
   begin
-    FILE_ID.itoa(CORE_ID);
+    FILE_ID.itoa(core_id_i);
     FILENAME = {"FETCH_CORE_", FILE_ID, ".log" };
     FILE=$fopen(FILENAME,"w");
   end
