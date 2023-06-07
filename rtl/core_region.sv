@@ -136,13 +136,6 @@ module core_region
 
   logic            core_mem_req;
 
-  // Shadow registers
-  logic        core_shadow_req  ;
-  logic        core_shadow_we   ;
-  logic [3:0]  core_shadow_be   ;
-  logic [31:0] core_shadow_addr ;
-  logic [31:0] core_shadow_wdata;
-  logic [5:0]  core_data_atop   ;
   logic        core_data_req_we ;
 
   assign core_data_req_o.wen  = ~core_data_req_we;
@@ -182,25 +175,25 @@ module core_region
         .instr_addr_o          ( instr_addr_o                ),
         .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_req_o            ( core_data_req_o.req          ),
-        .data_gnt_i            ( core_data_rsp_i.gnt          ),
-        .data_rvalid_i         ( core_data_rsp_i.r_valid      ),
-        .data_we_o             ( core_data_req_we             ),
-        .data_be_o             ( core_data_req_o.be           ),
-        .data_addr_o           ( core_data_req_o.add          ),
-        .data_wdata_o          ( core_data_req_o.data         ),
-        .data_rdata_i          ( core_data_rsp_i.r_data       ),
+        .data_req_o            ( core_data_req_o.req         ),
+        .data_gnt_i            ( core_data_rsp_i.gnt         ),
+        .data_rvalid_i         ( core_data_rsp_i.r_valid     ),
+        .data_we_o             ( core_data_req_we            ),
+        .data_be_o             ( core_data_req_o.be          ),
+        .data_addr_o           ( core_data_req_o.add         ),
+        .data_wdata_o          ( core_data_req_o.data        ),
+        .data_rdata_i          ( core_data_rsp_i.r_data      ),
         // Shadow Memory Interface
-        .shadow_req_o          ( sadow_req                   ),
+        .shadow_req_o          ( /* Unconnected */           ),
         .shadow_gnt_i          ( '0                          ),
         .shadow_rvalid_i       ( '0                          ),
-        .shadow_we_o           ( core_shadow_we              ),
-        .shadow_be_o           ( core_shadow_be              ),
-        .shadow_addr_o         ( core_shadow_addr            ),
-        .shadow_wdata_o        ( core_shadow_wdata           ),
+        .shadow_we_o           ( /* Unconnected */           ),
+        .shadow_be_o           ( /* Unconnected */           ),
+        .shadow_addr_o         ( /* Unconnected */           ),
+        .shadow_wdata_o        ( /* Unconnected */           ),
         .shadow_rdata_i        ( '0                          ),
         // Atomic operation
-        .data_atop_o           ( core_data_atop              ),
+        .data_atop_o           ( /* Unconnected */           ),
         // apu-interconnect
         // Handshake
         .apu_req_o             ( apu_master_req_o            ),
@@ -260,14 +253,14 @@ module core_region
         .instr_addr_o          ( instr_addr_o                ),
         .instr_rdata_i         ( instr_r_rdata_i             ),
         // Data Interface
-        .data_req_o            ( core_data_req_o.req          ),
-        .data_gnt_i            ( core_data_rsp_i.gnt          ),
-        .data_rvalid_i         ( core_data_rsp_i.r_valid      ),
-        .data_we_o             ( core_data_req_we             ),
-        .data_be_o             ( core_data_req_o.be           ),
-        .data_addr_o           ( core_data_req_o.add          ),
-        .data_wdata_o          ( core_data_req_o.data         ),
-        .data_rdata_i          ( core_data_rsp_i.r_data       ),
+        .data_req_o            ( core_data_req_o.req         ),
+        .data_gnt_i            ( core_data_rsp_i.gnt         ),
+        .data_rvalid_i         ( core_data_rsp_i.r_valid     ),
+        .data_we_o             ( core_data_req_we            ),
+        .data_be_o             ( core_data_req_o.be          ),
+        .data_addr_o           ( core_data_req_o.add         ),
+        .data_wdata_o          ( core_data_req_o.data        ),
+        .data_rdata_i          ( core_data_rsp_i.r_data      ),
         .data_unaligned_o      (         /* Unused */        ),
         // apu-interconnect
         // Handshake

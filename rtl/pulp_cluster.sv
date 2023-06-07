@@ -369,7 +369,7 @@ XBAR_TCDM_BUS s_mperiph_xbar_bus[NB_MPERIPHS-1:0]();
 
 // periph demux
 XBAR_TCDM_BUS s_mperiph_bus();
-XBAR_TCDM_BUS s_mperiph_demux_bus[1:0]();
+XBAR_TCDM_BUS s_mperiph_demux_bus[1:0](); // bus 1 is no longer in use.
 
 // cores & accelerators -> log interconnect
 hci_core_intf #(
@@ -596,6 +596,12 @@ per_demux_wrap #(
 );
 
 `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[NB_MPERIPHS-1], s_mperiph_demux_bus[0])
+
+/* Binding of unused bus */
+assign s_mperiph_demux_bus[1].gnt     = '0;
+assign s_mperiph_demux_bus[1].r_rdata = '0;
+assign s_mperiph_demux_bus[1].r_opc   = '0;
+assign s_mperiph_demux_bus[1].r_valid = '0;
 
 per2axi_wrap #(
   .NB_CORES       ( NB_CORES             ),
@@ -1144,6 +1150,7 @@ generate
     assign s_hwpe_cfg_bus.gnt     = '1;
     assign s_hwpe_cfg_bus.r_rdata = 32'hdeadbeef;
     assign s_hwpe_cfg_bus.r_id    = '0;
+    assign s_hwpe_cfg_bus.r_opc   = '0;
     assign s_hci_hwpe[0].req   = 1'b0;
     assign s_hci_hwpe[0].add   = '0;
     assign s_hci_hwpe[0].wen   = '0;
@@ -1151,6 +1158,7 @@ generate
     assign s_hci_hwpe[0].be    = '0;
     assign s_hci_hwpe[0].boffs = '0;
     assign s_hci_hwpe[0].lrdy  = '1;
+    assign s_hci_hwpe[0].user  = '0;
     assign s_hwpe_busy = '0;
     assign s_hwpe_evt  = '0;
   end
