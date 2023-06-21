@@ -87,6 +87,8 @@ module pulp_cluster
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
   parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000,
+  parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
+  parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
   // CLUSTER TO SOC CDC AXI PARAMETER
   localparam S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
   localparam S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
@@ -149,6 +151,7 @@ module pulp_cluster
 
   
   input logic [3:0]                              base_addr_i,
+  input logic [31:0]                             boot_addr_i,
 
   input logic                                    test_mode_i,
 
@@ -531,17 +534,19 @@ assign fetch_en_int = fetch_enable_reg_int;
 
 /* cluster bus and attached peripherals */
 cluster_bus_wrap #(
-  .NB_MASTER            ( NumAxiMst          ),
-  .NB_SLAVE             ( NumAxiSlv          ),
-  .NB_CORES             ( NB_CORES           ),
-  .DMA_NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
-  .TCDM_SIZE            ( TCDM_SIZE          ),
-  .AXI_ADDR_WIDTH       ( AXI_ADDR_WIDTH     ),
-  .AXI_DATA_WIDTH       ( AXI_DATA_C2S_WIDTH ),
-  .AXI_USER_WIDTH       ( AXI_USER_WIDTH     ),
-  .AXI_ID_IN_WIDTH      ( AXI_ID_IN_WIDTH    ),
-  .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   ),
-  .BaseAddr             ( BaseAddr           )
+  .NB_MASTER              ( NumAxiMst              ),
+  .NB_SLAVE               ( NumAxiSlv              ),
+  .NB_CORES               ( NB_CORES               ),
+  .DMA_NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS       ),
+  .TCDM_SIZE              ( TCDM_SIZE              ),
+  .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH         ),
+  .AXI_DATA_WIDTH         ( AXI_DATA_C2S_WIDTH     ),
+  .AXI_USER_WIDTH         ( AXI_USER_WIDTH         ),
+  .AXI_ID_IN_WIDTH        ( AXI_ID_IN_WIDTH        ),
+  .AXI_ID_OUT_WIDTH       ( AXI_ID_OUT_WIDTH       ),
+  .BaseAddr               ( BaseAddr               ),
+  .ClusterPeripheralsOffs ( ClusterPeripheralsOffs ),
+  .ClusterExternalOffs    ( ClusterExternalOffs    )
 ) cluster_bus_wrap_i (
   .clk_i         ( clk_i             ),
   .rst_ni        ( rst_ni            ),
@@ -625,29 +630,33 @@ per2axi_wrap #(
 //*************************************************** 
 
 cluster_interconnect_wrap #(
-  .NB_CORES           ( NB_CORES           ),
-  .HWPE_PRESENT       ( HWPE_PRESENT       ),
-  .NB_HWPE_PORTS      ( NB_HWPE_PORTS      ),
-  .NB_DMAS            ( NB_DMAS            ),
-  .NB_MPERIPHS        ( NB_MPERIPHS        ),
-  .NB_TCDM_BANKS      ( NB_TCDM_BANKS      ),
-  .NB_SPERIPHS        ( NB_SPERIPHS        ),
+  .NB_CORES               ( NB_CORES               ),
+  .HWPE_PRESENT           ( HWPE_PRESENT           ),
+  .NB_HWPE_PORTS          ( NB_HWPE_PORTS          ),
+  .NB_DMAS                ( NB_DMAS                ),
+  .NB_MPERIPHS            ( NB_MPERIPHS            ),
+  .NB_TCDM_BANKS          ( NB_TCDM_BANKS          ),
+  .NB_SPERIPHS            ( NB_SPERIPHS            ),
 
-  .DATA_WIDTH         ( DATA_WIDTH         ),
-  .ADDR_WIDTH         ( ADDR_WIDTH         ),
-  .BE_WIDTH           ( BE_WIDTH           ),
+  .DATA_WIDTH             ( DATA_WIDTH             ),
+  .ADDR_WIDTH             ( ADDR_WIDTH             ),
+  .BE_WIDTH               ( BE_WIDTH               ),
+  .ClusterBaseAddr        ( BaseAddr               ),
+  .ClusterPeripheralsOffs ( ClusterPeripheralsOffs ),
+  .ClusterExternalOffs    ( ClusterExternalOffs    ),
 
-  .TEST_SET_BIT       ( TEST_SET_BIT       ),
-  .ADDR_MEM_WIDTH     ( ADDR_MEM_WIDTH     ),
+  .TEST_SET_BIT           ( TEST_SET_BIT           ),
+  .ADDR_MEM_WIDTH         ( ADDR_MEM_WIDTH         ),
 
-  .LOG_CLUSTER        ( LOG_CLUSTER        ),
-  .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
-  .CLUSTER_ALIAS      ( CLUSTER_ALIAS      ),
+  .LOG_CLUSTER            ( LOG_CLUSTER            ),
+  .PE_ROUTING_LSB         ( PE_ROUTING_LSB         ),
+  .CLUSTER_ALIAS          ( CLUSTER_ALIAS          ),
   .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
 
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                               ),
   .rst_ni             ( rst_ni                              ),
+  .cluster_id_i       ( cluster_id_i                        ),
 
   .core_tcdm_slave    ( s_hci_core                          ),
   .hwpe_tcdm_slave    ( s_hci_hwpe                          ),

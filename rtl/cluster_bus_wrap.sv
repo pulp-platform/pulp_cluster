@@ -23,17 +23,19 @@
 module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
 #(
-  parameter int unsigned NB_MASTER              = 3 ,
-  parameter int unsigned NB_SLAVE               = 4 ,
-  parameter int unsigned NB_CORES               = 4 ,
-  parameter int unsigned AXI_ADDR_WIDTH         = 32,
-  parameter int unsigned AXI_DATA_WIDTH         = 64,
-  parameter int unsigned AXI_ID_IN_WIDTH        = 4 ,
-  parameter int unsigned AXI_ID_OUT_WIDTH       = 6 ,
-  parameter int unsigned AXI_USER_WIDTH         = 6 ,
-  parameter int unsigned DMA_NB_OUTSND_BURSTS   = 8 ,
-  parameter int unsigned TCDM_SIZE              = 0 ,
-  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000
+  parameter int unsigned NB_MASTER                            = 3         ,
+  parameter int unsigned NB_SLAVE                             = 4         ,
+  parameter int unsigned NB_CORES                             = 4         ,
+  parameter int unsigned AXI_ADDR_WIDTH                       = 32        ,
+  parameter int unsigned AXI_DATA_WIDTH                       = 64        ,
+  parameter int unsigned AXI_ID_IN_WIDTH                      = 4         ,
+  parameter int unsigned AXI_ID_OUT_WIDTH                     = 6         ,
+  parameter int unsigned AXI_USER_WIDTH                       = 6         ,
+  parameter int unsigned DMA_NB_OUTSND_BURSTS                 = 8         ,
+  parameter int unsigned TCDM_SIZE                            = 0         ,
+  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr               = 'h10000000,
+  parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
+  parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000
 )(
   input logic       clk_i,
   input logic       rst_ni,
@@ -111,12 +113,12 @@ module cluster_bus_wrap
   };
   assign addr_map[1] = '{ // Peripherals
     idx:  1,
-    start_addr: cluster_base_addr + 32'h0020_0000,
-    end_addr:   cluster_base_addr + 32'h0040_0000
+    start_addr: cluster_base_addr + ClusterPeripheralsOffs,
+    end_addr:   cluster_base_addr + ClusterExternalOffs
   };
   assign addr_map[2] = '{ // everything above cluster to ext_slave
     idx:  2,
-    start_addr: cluster_base_addr + 32'h0040_0000,
+    start_addr: cluster_base_addr + ClusterExternalOffs,
     end_addr:   32'hFFFF_FFFF
   };
     

@@ -244,7 +244,7 @@ module core_region
         // Control Interface
         .fregfile_disable_i    ( '1                          ),
         .boot_addr_i           ( boot_addr                   ),
-        .core_id_i             ( core_id_i                   ),
+        .core_id_i             ( hart_id                     ),
         .cluster_id_i          ( cluster_id_i                ),
         // Instruction Interface
         .instr_req_o           ( instr_req_o                 ),

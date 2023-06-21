@@ -37,17 +37,28 @@ module xbar_pe_wrap
   parameter bit HWPE_PRESENT   = 1'b1,
   parameter CLUSTER_ALIAS      = 1,
   parameter CLUSTER_ALIAS_BASE =  12'h000,
-  parameter ADDREXT         = 1'b0
+  parameter ADDREXT         = 1'b0,
+  parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000
 )
 (
   input logic                          clk_i,
   input logic                          rst_ni,
+  input logic                    [5:0] cluster_id_i,
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
 
   logic                               cluster_alias;
+  logic              [ADDR_WIDTH-1:0] cluster_base_addr       ,
+                                      cluster_peripherals_base,
+                                      cluster_peripherals_end ;
+
+   assign cluster_base_addr = ClusterBaseAddr + (cluster_id_i << 22);            // same as in the cluster_bus_wrap
+   assign cluster_peripherals_base = cluster_base_addr + ClusterPeripheralsOffs; // same as in the cluster_bus_wrap
+   assign cluster_peripherals_end  = cluster_base_addr + ClusterExternalOffs;    // same as in the cluster_bus_wrap
    
   assign cluster_alias = (CLUSTER_ALIAS == 1) ? 1'b1 : 1'b0;
 
@@ -88,11 +99,15 @@ module xbar_pe_wrap
         // if the access is to this cluster ..
         (addr[31:24] == 8'h10 || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
         // .. and the peripherals
-        && (addr[23:20] >= 4'h2 && addr[23:20] <= 4'h3)
+        && (addr >= cluster_peripherals_base
+        && addr <= cluster_peripherals_end)
       ) begin
         // decode peripheral to access
         pe_idx = addr[PE_ROUTING_MSB:PE_ROUTING_LSB];
-        if (addr[23:20] == 4'h2 && addr[19:PE_ROUTING_MSB+1] == '0 && pe_idx < NB_SPERIPHS) begin
+        if (addr[23:20] == cluster_peripherals_base &&
+            addr[19:PE_ROUTING_MSB+1] == '0 &&
+            pe_idx < NB_SPERIPHS)
+        begin
           if (pe_idx >= pulp_cluster_package::SPER_EVENT_U_ID &&
               pe_idx < pulp_cluster_package::SPER_EVENT_U_ID
                         + pulp_cluster_package::NB_SPERIPH_PLUGS_EU

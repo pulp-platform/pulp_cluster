@@ -30,6 +30,9 @@ module cluster_interconnect_wrap
   parameter DATA_WIDTH      = 32,
   parameter ADDR_WIDTH      = 32,
   parameter BE_WIDTH        = DATA_WIDTH/8,
+  parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
 
   //TCDM PARAMETERS
   parameter TEST_SET_BIT    = 20,
@@ -45,6 +48,7 @@ module cluster_interconnect_wrap
 (
   input logic                          clk_i,
   input logic                          rst_ni,
+  input logic                    [5:0] cluster_id_i,
   hci_core_intf.slave                  core_tcdm_slave [NB_CORES-1:0],
   hci_core_intf.slave                  hwpe_tcdm_slave [0:0],
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
@@ -165,21 +169,25 @@ module cluster_interconnect_wrap
   //********************************************************
   xbar_pe_wrap
   #(
-    .NB_CORES           ( NB_CORES             ),
-    .NB_MPERIPHS        ( NB_MPERIPHS          ),
-    .NB_SPERIPHS        ( NB_SPERIPHS          ),
-    .ADDR_WIDTH         ( ADDR_WIDTH           ),
-    .DATA_WIDTH         ( DATA_WIDTH           ),
-    .BE_WIDTH           ( BE_WIDTH             ),
-    .PE_ROUTING_LSB     ( PE_ROUTING_LSB       ),
-    .PE_ROUTING_MSB     ( PE_ROUTING_MSB       ),
-    .CLUSTER_ALIAS      ( CLUSTER_ALIAS        ),
-    .CLUSTER_ALIAS_BASE ( CLUSTER_ALIAS_BASE   )
+    .NB_CORES               ( NB_CORES               ),
+    .NB_MPERIPHS            ( NB_MPERIPHS            ),
+    .NB_SPERIPHS            ( NB_SPERIPHS            ),
+    .ADDR_WIDTH             ( ADDR_WIDTH             ),
+    .DATA_WIDTH             ( DATA_WIDTH             ),
+    .BE_WIDTH               ( BE_WIDTH               ),
+    .PE_ROUTING_LSB         ( PE_ROUTING_LSB         ),
+    .PE_ROUTING_MSB         ( PE_ROUTING_MSB         ),
+    .CLUSTER_ALIAS          ( CLUSTER_ALIAS          ),
+    .CLUSTER_ALIAS_BASE     ( CLUSTER_ALIAS_BASE     ),
+    .ClusterBaseAddr        ( ClusterBaseAddr        ),
+    .ClusterPeripheralsOffs ( ClusterPeripheralsOffs ),
+    .ClusterExternalOffs    ( ClusterExternalOffs    )
    ) 
    xbar_pe_inst
    (
     .clk_i            ( clk_i ),
     .rst_ni           ( rst_ni),
+    .cluster_id_i     ( cluster_id_i     ),
     .core_periph_slave( core_periph_slave),
     .speriph_master   ( speriph_master   ),
     .mperiph_slave    ( mperiph_slave    )
