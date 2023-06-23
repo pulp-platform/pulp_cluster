@@ -104,7 +104,7 @@ module xbar_pe_wrap
       ) begin
         // decode peripheral to access
         pe_idx = addr[PE_ROUTING_MSB:PE_ROUTING_LSB];
-        if (addr[23:20] == cluster_peripherals_base &&
+        if (addr[31:16] == cluster_peripherals_base[31:16] &&
             addr[19:PE_ROUTING_MSB+1] == '0 &&
             pe_idx < NB_SPERIPHS)
         begin
