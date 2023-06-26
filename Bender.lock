@@ -60,8 +60,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 4ac82b420e46fd0005513ca2283cb3c905e7599a
-    version: 1.29.0
+    revision: 0989ff73d0315922791bf42137c0ce0cbb4a76ca
+    version: 1.30.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -224,7 +224,7 @@ packages:
     - common_cells
     - common_verification
   riscv:
-    revision: 4ef49607a0093378d3f6dccce2e673178d6481af
+    revision: 4eac53237c6d0062715d17016fe95462eb81ebc3
     version: null
     source:
       Git: git@github.com:AlSaqr-platform/riscv_nn.git

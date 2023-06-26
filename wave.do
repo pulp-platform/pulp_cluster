@@ -147,93 +147,6 @@ add wave -noupdate -group cluster /pulp_cluster_tb/cluster_i/dst_req
 add wave -noupdate -group cluster /pulp_cluster_tb/cluster_i/isolate_dst_req
 add wave -noupdate -group cluster /pulp_cluster_tb/cluster_i/dst_resp
 add wave -noupdate -group cluster /pulp_cluster_tb/cluster_i/isolate_dst_resp
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/clk}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/rst_ni}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/test_en_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/base_addr_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_i}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_valid_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_rdata_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_opc_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_o_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_o_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_o_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_o_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_o_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_i_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_valid_i_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_rdata_i_SH}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_o_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_o_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_o_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_o_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_o_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_i_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_valid_i_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_rdata_i_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_opc_i_EXT}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_o_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_o_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_o_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_o_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_o_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_i_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_valid_i_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_opc_i_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_rdata_i_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/perf_l2_ld_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/perf_l2_st_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/perf_l2_ld_cyc_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/perf_l2_st_cyc_o}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/CLUSTER_ID}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/CLUSTER_ALIAS_BASE_11}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/CLUSTER_ALIAS_BASE_12}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_req_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_gnt_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_data_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_valid_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_opc_PE}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_data_PE_0}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_valid_PE_0}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/s_data_r_opc_PE_0}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/CS}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/NS}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_to_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_to_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_to_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_to_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_to_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_from_L2}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/request_destination}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/destination}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_int}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_busy_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_req_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_add_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wen_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_wdata_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_be_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_gnt_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_valid_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_opc_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/data_r_rdata_PE_fifo}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/TCDM_RW}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/TCDM_TS}
-add wave -noupdate -group data_periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/data_periph_demux_i/DEM_PER}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/clk_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/rst_ni}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/test_en_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/clk_en_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/base_addr_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/cluster_id_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/ext_perf_o}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/core_data_req_i}
-add wave -noupdate -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/core_data_rsp_o}
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/clk_i
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/rst_ni
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/reg_request_i
@@ -295,36 +208,6 @@ add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/core_config_
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/core_config_hw2reg
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/tmr_incr_mismatches
 add wave -noupdate -group hmr /pulp_cluster_tb/cluster_i/i_hmr_unit/dmr_incr_mismatches
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/clk}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/rst_ni}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_req_i}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_add_i}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wen_i}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wdata_i}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_be_i}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_gnt_o}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_valid_o}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_rdata_o}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_opc_o}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_req_o_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_add_o_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wen_o_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wdata_o_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_be_o_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_gnt_i_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_valid_i_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_rdata_i_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_opc_i_MH}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_req_o_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_add_o_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wen_o_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_wdata_o_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_be_o_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_gnt_i_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_valid_i_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_rdata_i_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/data_r_opc_i_EU}
-add wave -noupdate -group periph_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/periph_demux_i/request_destination}
 add wave -noupdate -group cluster_peripherals /pulp_cluster_tb/cluster_i/cluster_peripherals_i/clk_i
 add wave -noupdate -group cluster_peripherals /pulp_cluster_tb/cluster_i/cluster_peripherals_i/rst_ni
 add wave -noupdate -group cluster_peripherals /pulp_cluster_tb/cluster_i/cluster_peripherals_i/ref_clk_i
@@ -495,2498 +378,1578 @@ add wave -noupdate -group hwpe_subsystem -group redmule /pulp_cluster_tb/cluster
 add wave -noupdate -group hwpe_subsystem -group redmule /pulp_cluster_tb/cluster_i/hwpe_gen/hwpe_subsystem_i/i_redmule/out_valid
 add wave -noupdate -group hwpe_subsystem -group redmule /pulp_cluster_tb/cluster_i/hwpe_gen/hwpe_subsystem_i/i_redmule/out_ready
 add wave -noupdate -group hwpe_subsystem -group redmule /pulp_cluster_tb/cluster_i/hwpe_gen/hwpe_subsystem_i/i_redmule/busy
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/clk_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/setback_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/hart_id}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/FILE}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/destination}
-add wave -noupdate -group core_region_0 {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_0 -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/clk_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/setback_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/hart_id}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/FILE}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/destination}
-add wave -noupdate -group core_region_1 {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_1 -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/clk_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/setback_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/hart_id}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/FILE}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/destination}
-add wave -noupdate -group core_region_2 {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_2 -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/clk_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/setback_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/hart_id}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/FILE}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/destination}
-add wave -noupdate -group core_region_3 {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_3 -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/clk_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/setback_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/hart_id}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/FILE}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/destination}
-add wave -noupdate -group core_region_4 {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_4 -group core {/pulp_cluster_tb/cluster_i/CORE[4]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/clk_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/setback_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/hart_id}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/FILE}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/destination}
-add wave -noupdate -group core_region_5 {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_5 -group core {/pulp_cluster_tb/cluster_i/CORE[5]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/clk_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/setback_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/hart_id}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/FILE}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/destination}
-add wave -noupdate -group core_region_6 {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_6 -group core {/pulp_cluster_tb/cluster_i/CORE[6]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/clk_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/rst_ni}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/setback_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_id_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/cluster_id_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/irq_req_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/irq_ack_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/irq_id_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/irq_ack_id_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/clock_en_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/fetch_en_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/boot_addr_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/test_mode_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_busy_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_req_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_gnt_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_addr_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_rdata_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_valid_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/debug_req_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/debug_havereset_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/debug_running_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/debug_halted_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/ext_perf_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_data_req_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_data_rsp_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_req_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_gnt_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_type_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_operands_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_op_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_flags_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_ready_o}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_valid_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_result_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/apu_master_flags_i}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/hart_id}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_sleep}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/boot_addr}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_irq_x}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_instr_req}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_instr_gnt}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_instr_addr}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_instr_r_rdata}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_instr_r_valid}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_mem_req}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_shadow_req}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_shadow_we}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_shadow_be}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_shadow_addr}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_shadow_wdata}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_data_atop}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/core_data_req_we}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/FILE}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_gnt_L2}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_gnt_ROM}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_rdata_ROM}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_valid_ROM}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_rdata_L2}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/instr_r_valid_L2}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/destination}
-add wave -noupdate -group core_region_7 {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/reg_cache_refill}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
-add wave -noupdate -group core_region_7 -group core {/pulp_cluster_tb/cluster_i/CORE[7]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/clk_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/rst_ni}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/setback_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_id_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/cluster_id_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_req_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_ack_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_id_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/irq_ack_id_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/clock_en_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/fetch_en_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/boot_addr_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/test_mode_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_busy_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_req_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_addr_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_req_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_havereset_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_running_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/debug_halted_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/ext_perf_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_req_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_rsp_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_req_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_gnt_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_type_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_operands_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_op_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_flags_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_ready_o}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_valid_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_result_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/apu_master_flags_i}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/hart_id}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_sleep}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/boot_addr}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_irq_x}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_req}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_gnt}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_addr}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_r_rdata}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_instr_r_valid}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_mem_req}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/core_data_req_we}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/FILE}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_L2}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_gnt_ROM}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_ROM}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_ROM}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_rdata_L2}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/instr_r_valid_L2}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/destination}
+add wave -noupdate -group {Core[0]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/reg_cache_refill}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
+add wave -noupdate -group {Core[0]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[0]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/clk_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/rst_ni}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/test_en_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/clk_en_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/base_addr_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/cluster_id_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/ext_perf_o}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/core_data_req_i}
+add wave -noupdate -group {Core[0]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[0]/i_core_demux/core_data_rsp_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/clk_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/rst_ni}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/setback_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_id_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/cluster_id_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_req_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_ack_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_id_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/irq_ack_id_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/clock_en_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/fetch_en_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/boot_addr_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/test_mode_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_busy_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_req_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_addr_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_req_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_havereset_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_running_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/debug_halted_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/ext_perf_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_req_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_rsp_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_req_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_gnt_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_type_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_operands_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_op_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_flags_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_ready_o}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_valid_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_result_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/apu_master_flags_i}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/hart_id}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_sleep}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/boot_addr}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_irq_x}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_req}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_gnt}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_addr}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_r_rdata}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_instr_r_valid}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_mem_req}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/core_data_req_we}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/FILE}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_L2}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_gnt_ROM}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_ROM}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_ROM}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_rdata_L2}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/instr_r_valid_L2}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/destination}
+add wave -noupdate -group {Core[1]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/reg_cache_refill}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core -radix unsigned {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
+add wave -noupdate -group {Core[1]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[1]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/clk_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/rst_ni}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/test_en_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/clk_en_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/base_addr_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/cluster_id_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/ext_perf_o}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/core_data_req_i}
+add wave -noupdate -group {Core[1]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[1]/i_core_demux/core_data_rsp_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/clk_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/rst_ni}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/setback_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_id_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/cluster_id_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_req_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_ack_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_id_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/irq_ack_id_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/clock_en_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/fetch_en_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/boot_addr_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/test_mode_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_busy_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_req_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_addr_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_req_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_havereset_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_running_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/debug_halted_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/ext_perf_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_req_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_rsp_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_req_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_gnt_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_type_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_operands_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_op_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_flags_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_ready_o}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_valid_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_result_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/apu_master_flags_i}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/hart_id}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_sleep}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/boot_addr}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_irq_x}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_req}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_gnt}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_addr}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_r_rdata}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_instr_r_valid}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_mem_req}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/core_data_req_we}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/FILE}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_L2}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_gnt_ROM}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_ROM}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_ROM}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_rdata_L2}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/instr_r_valid_L2}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/destination}
+add wave -noupdate -group {Core[2]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/reg_cache_refill}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
+add wave -noupdate -group {Core[2]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[2]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/clk_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/rst_ni}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/test_en_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/clk_en_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/base_addr_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/cluster_id_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/ext_perf_o}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/core_data_req_i}
+add wave -noupdate -group {Core[2]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[2]/i_core_demux/core_data_rsp_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/clk_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/rst_ni}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/setback_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_id_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/cluster_id_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_req_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_ack_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_id_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/irq_ack_id_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/clock_en_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/fetch_en_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/boot_addr_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/test_mode_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_busy_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_req_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_addr_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_req_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_havereset_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_running_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/debug_halted_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/ext_perf_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_req_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_rsp_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_req_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_gnt_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_type_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_operands_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_op_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_flags_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_ready_o}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_valid_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_result_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/apu_master_flags_i}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/hart_id}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_sleep}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/boot_addr}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_irq_x}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_req}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_gnt}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_addr}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_r_rdata}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_instr_r_valid}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_mem_req}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/core_data_req_we}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/FILE}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_L2}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_gnt_ROM}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_ROM}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_ROM}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_rdata_L2}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/instr_r_valid_L2}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/destination}
+add wave -noupdate -group {Core[3]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/reg_cache_refill}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
+add wave -noupdate -group {Core[3]} -group core_region -group core {/pulp_cluster_tb/cluster_i/CORE[3]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/clk_i}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/rst_ni}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/test_en_i}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/clk_en_i}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/base_addr_i}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/cluster_id_i}
+add wave -noupdate -group {Core[3]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[3]/i_core_demux/ext_perf_o}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/clk_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/rst_ni}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/test_en_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/clk_en_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/base_addr_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/cluster_id_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/ext_perf_o}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/core_data_req_i}
+add wave -noupdate -group {Core[11]} -group core_demux {/pulp_cluster_tb/cluster_i/CORE[11]/i_core_demux/core_data_rsp_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/clk_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/rst_ni}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/setback_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_id_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/cluster_id_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/irq_req_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/irq_ack_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/irq_id_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/irq_ack_id_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/clock_en_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/fetch_en_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/boot_addr_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/test_mode_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_busy_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_req_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_gnt_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_addr_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_rdata_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_valid_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/debug_req_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/debug_havereset_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/debug_running_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/debug_halted_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/ext_perf_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_data_req_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_data_rsp_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_req_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_gnt_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_type_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_operands_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_op_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_flags_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_ready_o}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_valid_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_result_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/apu_master_flags_i}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/hart_id}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_sleep}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/boot_addr}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_irq_x}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_instr_req}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_instr_gnt}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_instr_addr}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_instr_r_rdata}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_instr_r_valid}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_mem_req}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/core_data_req_we}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/FILE}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_gnt_L2}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_gnt_ROM}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_rdata_ROM}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_valid_ROM}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_rdata_L2}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/instr_r_valid_L2}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/destination}
+add wave -noupdate -group {Core[11]} -group core_region {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/reg_cache_refill}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/rst_ni}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/setback_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/test_en_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fregfile_disable_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/boot_addr_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_id_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/cluster_id_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rvalid_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_be_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_wdata_o}
+add wave -noupdate -group {Core[11]} -group core -radix unsigned {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rdata_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_unaligned_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_req_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_ready_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_gnt_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_operands_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_op_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_type_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_valid_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_result_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_master_flags_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_ack_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_id_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/irq_sec_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/sec_lvl_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_req_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fetch_enable_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ext_perf_counters_i}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_hwlp_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_dec_cnt_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_valid_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_rdata_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_compressed_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_fetch_failed_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/illegal_c_insn_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_if}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/clear_instr_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_set}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_mux_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_pc_mux_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/exc_cause}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/trap_addr_mux}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_load_err}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_store_err}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tosprw_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_tospra_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/dot_spr_operand_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_w_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/update_a_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_decoding}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/useincr_addr_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_multicycle}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/jump_target_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_in_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/branch_decision}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ctrl_busy}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/if_busy}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_busy}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_busy}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pc_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_en_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operator_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_operand_c_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/bmask_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/imm_vec_ext_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_vec_mode_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_op_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_clpx_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_is_subrot_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/alu_clpx_shift_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operator_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_operand_c_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_en_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_sel_subword_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_signed_mode_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_imm_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_h_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_b_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_n_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_a_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_b_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_op_c_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_dot_signed_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex_o}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_shift_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_clpx_img_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fprec_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/frm_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/fflags_we}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_en_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_type_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_flags_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_op_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_lat_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_operands_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_waddr_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_regs_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_read_dep}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_regs_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_write_dep}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_type}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_cont}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_dep}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_apu_wb}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_waddr_fw_wb}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_we_wb}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_wdata}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr2_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_waddr_fw}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_we_fw}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/regfile_alu_wdata_fw}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ivec_fmt_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_cycle_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/skip_size_csr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/sb_legacy_mode}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mtvec}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/utvec}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_access}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_op}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_addr_int}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_rdata}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_wdata}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/current_priv_lvl}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_op}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_addr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_macl_wdata}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_address}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_address}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_stride}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_stride}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_rollback}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_rollback}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/a_skip}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/w_skip}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_a_rstn}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/macl_w_rstn}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/curr_cyc_sel}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_type_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_sign_ext_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_reg_offset_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_load_event_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_misaligned_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_rdata}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_rvalid_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/loadComputeVLIW_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/halt_if}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_ready}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_ready}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/id_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/ex_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/wb_valid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/lsu_ready_wb}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/apu_ready_wb}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_int}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/m_irq_enable}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/u_irq_enable}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_irq_sec}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mepc}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/uepc}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/depc}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_cause}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_if}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_save_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_cause}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_mret_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_uret_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_restore_dret_id}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_mode}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_cause}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_csr_save}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_single_step}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreakm}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/debug_ebreaku}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_start}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_end}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/hwlp_cnt}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_regid}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_we}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/csr_hwlp_data}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_imiss}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jump}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_jr_stall}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_ld_stall}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/perf_pipeline_stall}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_ctrl_firstfetch}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_int}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/core_busy_q}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_addr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/pmp_cfg}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_req_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_addr_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_we_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_gnt_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/data_err_ack}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_req_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_gnt_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_addr_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/instr_err_pmp}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mpc_next_cycle}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mux_sel_wcsr}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/is_interrupt}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/clk}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/clock_en}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/sleeping}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/mult_is_clpx_ex}
+add wave -noupdate -group {Core[11]} -group core {/pulp_cluster_tb/cluster_i/CORE[11]/core_region_i/RI5CY_CORE/RI5CY_CORE/tracer_clk}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {112525599521 ps} 0} {{Cursor 2} {89136000000 ps} 0} {{Cursor 3} {222455730424 ps} 0}
-quietly wave cursor active 3
-configure wave -namecolwidth 211
+WaveRestoreCursors {{Cursor 1} {226440000000 ps} 0}
+quietly wave cursor active 1
+configure wave -namecolwidth 184
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 1
@@ -3000,4 +1963,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {305197047167 ps} {305528576465 ps}
+WaveRestoreZoom {225717754960 ps} {227423563880 ps}

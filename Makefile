@@ -74,11 +74,11 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
-	git clone https://github.com/pulp-platform/pulp-runtime.git -b yt/carfield $@
+	git clone git@github.com:pulp-platform/pulp-runtime.git -b yt/carfield $@
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
-	git clone https://github.com/pulp-platform/regression_tests $@
+	git clone git@github.com:pulp-platform/regression_tests.git -b yt/carfield $@
 
 ########################
 # Build and simulation #

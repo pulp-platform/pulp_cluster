@@ -325,7 +325,7 @@ module pulp_cluster_tb;
       .fetch_en_i                  ( s_cluster_fetch_en                   ),
       .eoc_o                       ( s_cluster_eoc                        ),
       .busy_o                      ( s_cluster_busy                       ),
-      .cluster_id_i                ( 6'b000000                            ),
+      .cluster_id_i                ( 6'b000001                            ),
 
       .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
       .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),

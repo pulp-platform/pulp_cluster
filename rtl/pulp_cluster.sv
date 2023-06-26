@@ -151,7 +151,6 @@ module pulp_cluster
 
   
   input logic [3:0]                              base_addr_i,
-  input logic [31:0]                             boot_addr_i,
 
   input logic                                    test_mode_i,
 
