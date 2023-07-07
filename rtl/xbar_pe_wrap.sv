@@ -97,7 +97,7 @@ module xbar_pe_wrap
     end else begin
       if (
         // if the access is to this cluster ..
-        (addr[31:24] == 8'h10 || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
+        (addr[31:24] == cluster_base_addr[31:24] || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
         // .. and the peripherals
         && (addr >= cluster_peripherals_base
         && addr <= cluster_peripherals_end)
