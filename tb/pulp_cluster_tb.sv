@@ -46,7 +46,7 @@ module pulp_cluster_tb;
       .rst_no ( s_rstn )
   );
    
-  localparam AxiAw  = 32;
+  localparam AxiAw  = 48;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
   localparam NMst   = 2;
@@ -54,7 +54,7 @@ module pulp_cluster_tb;
   localparam AxiIwMst = AxiIw + $clog2(NMst);
   localparam AxiWideBeWidth = AxiDw/8;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
-  localparam AxiUw = 1;
+  localparam AxiUw = 2;
    
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
@@ -261,8 +261,8 @@ module pulp_cluster_tb;
     .NB_CORES                       ( `NB_CORES                ),
     .NB_HWPE_PORTS                  ( 9                        ),
     .NB_DMAS                        ( `NB_DMAS                 ),
-    .NB_MPERIPHS                    ( 1                        ),
-    .NB_SPERIPHS                    ( 10                       ),
+    .NB_MPERIPHS                    ( `NB_MPERIPHS             ),
+    .NB_SPERIPHS                    ( `NB_SPERIPHS             ),
     .CLUSTER_ALIAS                  ( 1                        ),
     .CLUSTER_ALIAS_BASE             ( 12'h000                  ),
     .TCDM_SIZE                      ( 256*1024                 ),
@@ -273,13 +273,7 @@ module pulp_cluster_tb;
     .NB_CACHE_BANKS                 ( 2                        ),
     .CACHE_LINE                     ( 1                        ),
     .CACHE_SIZE                     ( 4*1024                   ),
-    .ICACHE_DATA_WIDTH              ( 128                      ),
-    .L0_BUFFER_FEATURE              ( "DISABLED"               ),
-    .MULTICAST_FEATURE              ( "DISABLED"               ),
-    .SHARED_ICACHE                  ( "ENABLED"                ),
-    .DIRECT_MAPPED_FEATURE          ( "DISABLED"               ),
-    .L2_SIZE                        ( 32'h10000                ),
-    .USE_REDUCED_TAG                ( "TRUE"                   ),
+    .L2_SIZE                        ( 32'h100000               ),
     .ROM_BOOT_ADDR                  ( 32'h1A000000             ),
     .BOOT_ADDR                      ( 32'h1c008080             ),
     .INSTR_RDATA_WIDTH              ( 32                       ),
@@ -293,12 +287,7 @@ module pulp_cluster_tb;
     .AXI_USER_WIDTH                 ( AxiUw                    ),
     .AXI_ID_IN_WIDTH                ( AxiIw-2                  ),
     .AXI_ID_OUT_WIDTH               ( AxiIw                    ),
-    .LOG_DEPTH                      ( 3                        ),
-    .DATA_WIDTH                     ( 32                       ),
-    .ADDR_WIDTH                     ( 32                       ),
-    .LOG_CLUSTER                    ( 3                        ),
-    .PE_ROUTING_LSB                 ( 10                       ),
-    .EVNT_WIDTH                     ( 8                        )
+    .LOG_DEPTH                      ( 3                        )
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
