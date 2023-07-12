@@ -29,7 +29,7 @@ dependencies:
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
   riscv:                  { git: "git@github.com:AlSaqr-platform/riscv_nn.git", rev: 6187537f9994d16bad2d721c0f5ebc5193c0f010 } # branch: yt/hmr
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: 9b77611 } # `michaero/safety-island-clic` branch
-  ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
+  ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: f7b51416f3c407e4c31e9c016616d57aae2687bd } # branch: yt/bump-clkgating
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: b2e6f391aa6c10c03f45b693d80a0aaddecf169b } # branch: master
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
