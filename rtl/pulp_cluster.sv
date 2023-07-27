@@ -1395,7 +1395,7 @@ axi_cdc_src #(
  .axi_req_t  ( c2s_req_t     ),
  .axi_resp_t ( c2s_resp_t    ),
  .LogDepth   ( LOG_DEPTH     ),
- .SyncStages ( CDC_SYNC_STAGES ),
+ .SyncStages ( CDC_SYNC_STAGES )
 ) axi_master_cdc_i (
  .src_rst_ni                       ( pwr_on_rst_ni               ),
  .src_clk_i                        ( clk_i                       ),
