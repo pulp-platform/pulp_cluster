@@ -86,6 +86,7 @@ module pulp_cluster
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
+  parameter CDC_SYNC_STAGES         = 2,
   parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
@@ -1393,7 +1394,8 @@ axi_cdc_src #(
  .ar_chan_t  ( c2s_ar_chan_t ),
  .axi_req_t  ( c2s_req_t     ),
  .axi_resp_t ( c2s_resp_t    ),
- .LogDepth   ( LOG_DEPTH     )
+ .LogDepth   ( LOG_DEPTH     ),
+ .SyncStages ( CDC_SYNC_STAGES ),
 ) axi_master_cdc_i (
  .src_rst_ni                       ( pwr_on_rst_ni               ),
  .src_clk_i                        ( clk_i                       ),
@@ -1440,7 +1442,8 @@ axi_cdc_dst #(
   .ar_chan_t (s2c_ar_chan_t),
   .axi_req_t (s2c_req_t    ),
   .axi_resp_t(s2c_resp_t   ),
-  .LogDepth       ( LOG_DEPTH              )
+  .LogDepth       ( LOG_DEPTH              ),
+  .SyncStages     ( CDC_SYNC_STAGES        )
 ) axi_slave_cdc_i (
   .dst_rst_ni                       ( pwr_on_rst_ni              ),
   .dst_clk_i                        ( clk_i                      ),
