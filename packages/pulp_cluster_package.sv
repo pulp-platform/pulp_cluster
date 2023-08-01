@@ -16,6 +16,7 @@
 
 package pulp_cluster_package;
 
+  import rapid_recovery_pkg::*;
   parameter NB_SPERIPH_PLUGS_EU  =  2;
 
   // number of master and slave cluster periphs
@@ -75,8 +76,6 @@ package pulp_cluster_package;
     logic [31:0] data_rdata;
     logic        irq_req;
     logic [4:0]  irq_id;
-    logic        debug_req;
-    // logic        debug_resume;
   } core_inputs_t;
 
   typedef struct packed {
@@ -91,8 +90,11 @@ package pulp_cluster_package;
     logic [4:0]  irq_ack_id;
     // logic        debug_havereset;
     // logic        debug_running;
-    // logic        debug_halted;
+    logic        debug_halted;
     logic        core_busy;
+    rapid_recovery_pkg::regfile_write_t regfile_backup;
+    rapid_recovery_pkg::csrs_intf_t     csr_backup;
+    rapid_recovery_pkg::pc_intf_t       pc_backup;
   } core_outputs_t;
 
 endpackage

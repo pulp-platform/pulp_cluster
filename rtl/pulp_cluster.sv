@@ -26,6 +26,7 @@
 module pulp_cluster
   import pulp_cluster_package::*;
   import hci_package::*;
+  import rapid_recovery_pkg::*;
 #(
   // cluster parameters
   parameter CORE_TYPE_CL       = 1, // 0 for CV32, 1 for RI5CY, 2 for IBEX RV32IMC
@@ -86,6 +87,7 @@ module pulp_cluster
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
+  parameter int unsigned CdcSynchStages = 3,
   parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
@@ -863,6 +865,7 @@ core_data_req_t [NB_CORES-1:0] core_data_req, demux_data_req;
 core_data_rsp_t [NB_CORES-1:0] core_data_rsp, demux_data_rsp;
 core_inputs_t [NB_CORES-1:0] sys2hmr, hmr2core;
 core_outputs_t [NB_CORES-1:0] hmr2sys, core2hmr;
+rapid_recovery_pkg::rapid_recovery_t [NB_CORES-1:0] recovery_bus;
 logic [NB_CORES-1:0] clk_core;
 logic [NB_CORES-1:0] setback;
 logic [NB_CORES-1:0][4:0] ext_perf;
@@ -927,15 +930,24 @@ generate
       .instr_r_rdata_i     ( hmr2core[i].instr_rdata  ),
       .instr_r_valid_i     ( hmr2core[i].instr_rvalid ),
       //debug unit bind
-      .debug_req_i         ( hmr2core[i].debug_req |
-                             s_core_dbg_irq[i]        ),
-      .debug_halted_o      ( dbg_core_halted[i]       ),
-      .debug_havereset_o   ( dbg_core_havereset[i]    ),
-      .debug_running_o     ( dbg_core_running[i]      ),
-      .ext_perf_i          ( ext_perf[i]              ),
-      .core_data_req_o     ( core_data_req[i]         ),
-      .core_data_rsp_i     ( core_data_rsp[i]         ),
-      // .debug_resume_i   ( dbg_core_resume[i]    ), // Useful for HMR, consider keeping
+      .debug_req_i         ( recovery_bus[i].debug_req |
+                             s_core_dbg_irq[i]         ),
+      // .debug_halted_o      ( dbg_core_halted[i]        ),
+      .debug_halted_o      ( core2hmr[i].debug_halted  ),
+      .debug_havereset_o   ( dbg_core_havereset[i]     ),
+      .debug_running_o     ( dbg_core_running[i]       ),
+      .ext_perf_i          ( ext_perf[i]               ),
+      .core_data_req_o     ( core_data_req[i]          ),
+      .core_data_rsp_i     ( core_data_rsp[i]          ),
+      // .debug_resume_i   ( recovery_bus[i].debug_resume       ), // Useful for HMR, consider keeping
+      //HMR Recovery Bus
+      // .csr_recovery_i    ( recovery_bus[i].csr_recovery      ),
+      // .pc_recovery_i     ( recovery_bus[i].pc_recovery       ),
+      // .instr_lock_i      ( recovery_bus[i].instr_lock        ),
+      // .pc_recovery_en    ( recovery_bus[i].pc_recovery_en    ),
+      // .rf_recovery_en    ( recovery_bus[i].rf_recovery_en    ),
+      // .rf_recovery_wdata ( recovery_bus[i].rf_recovery_wdata ),
+      // .rf_recovery_rdata ( recovery_bus[i].rf_recovery_rdata ),
       //apu interface
       .apu_master_req_o      ( s_apu_master_req     [i] ),
       .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
@@ -948,6 +960,8 @@ generate
       .apu_master_result_i   ( s_apu_master_rdata   [i] ),
       .apu_master_flags_i    ( s_apu_master_rflags  [i] )
     );
+
+    assign dbg_core_halted[i] = core2hmr[i].debug_halted;
 
     // Binding inputs/outputs from HMR to the system and vice versa
     assign sys2hmr[i].clock_en     = clk_core_en[i];
@@ -962,7 +976,6 @@ generate
     assign sys2hmr[i].data_rdata   = demux_data_rsp[i].r_data;
     assign sys2hmr[i].irq_req      = irq_req[i];
     assign sys2hmr[i].irq_id       = irq_id[i];
-    assign sys2hmr[i].debug_req    = '0;
 
     assign instr_req[i]            = hmr2sys[i].instr_req;
     assign instr_addr[i]           = hmr2sys[i].instr_addr;
@@ -985,6 +998,10 @@ generate
     assign core2hmr[i].data_we    = core_data_req[i].wen; // The protocol is handeled within the core
     assign core2hmr[i].data_wdata = core_data_req[i].data;
     assign core2hmr[i].data_be    = core_data_req[i].be;
+
+    assign core2hmr[i].regfile_backup = '0;
+    assign core2hmr[i].csr_backup     = '0;
+    assign core2hmr[i].pc_backup      = '0;
 
     core_demux_wrap       #(
       .AddrWidth           ( ADDR_WIDTH         ),
@@ -1014,19 +1031,20 @@ generate
 endgenerate
 
 hmr_unit #(
-  .NumCores          ( NB_CORES       ),
-  .DMRSupported      ( 1              ),
-  .DMRFixed          ( 0              ),
-  .TMRSupported      ( 1              ),
-  .TMRFixed          ( 0              ),
-  .InterleaveGrps    ( 1              ),
-  .RapidRecovery     ( 0              ),
-  .SeparateData      ( 1              ),
-  .NumBusVoters      ( 1              ),
-  .all_inputs_t      ( core_inputs_t  ),
-  .nominal_outputs_t ( core_outputs_t ),
-  .reg_req_t         ( hmr_reg_req_t  ),
-  .reg_rsp_t         ( hmr_reg_rsp_t  )
+  .NumCores          ( NB_CORES                             ),
+  .DMRSupported      ( 1                                    ),
+  .DMRFixed          ( 0                                    ),
+  .TMRSupported      ( 1                                    ),
+  .TMRFixed          ( 0                                    ),
+  .InterleaveGrps    ( 1                                    ),
+  .RapidRecovery     ( 1                                    ),
+  .SeparateData      ( 1                                    ),
+  .NumBusVoters      ( 1                                    ),
+  .all_inputs_t      ( core_inputs_t                        ),
+  .nominal_outputs_t ( core_outputs_t                       ),
+  .reg_req_t         ( hmr_reg_req_t                        ),
+  .reg_rsp_t         ( hmr_reg_rsp_t                        ),
+  .rapid_recovery_t  ( rapid_recovery_pkg::rapid_recovery_t )
 ) i_hmr_unit         (
   .clk_i                  ( clk_i        ),
   .rst_ni                 ( rst_ni       ),
@@ -1045,6 +1063,8 @@ hmr_unit #(
   .dmr_resynch_req_o      (              ),
   .dmr_sw_synch_req_o     (              ),
   .dmr_cores_synch_i      ( '0           ),
+  // Rapid recovery output bus
+  .rapid_recovery_o       ( recovery_bus ),
   .sys_inputs_i           ( sys2hmr      ),
   .sys_nominal_outputs_o  ( hmr2sys      ),
   .sys_bus_outputs_o      (              ),
@@ -1385,15 +1405,16 @@ axi_isolate            #(
   .isolated_o           ( axi_isolated_o    )
 );
 
-axi_cdc_src #(
- .aw_chan_t  ( c2s_aw_chan_t ),
- .w_chan_t   ( c2s_w_chan_t  ),
- .b_chan_t   ( c2s_b_chan_t  ),     
- .r_chan_t   ( c2s_r_chan_t  ),
- .ar_chan_t  ( c2s_ar_chan_t ),
- .axi_req_t  ( c2s_req_t     ),
- .axi_resp_t ( c2s_resp_t    ),
- .LogDepth   ( LOG_DEPTH     )
+axi_cdc_src  #(
+ .aw_chan_t   ( c2s_aw_chan_t  ),
+ .w_chan_t    ( c2s_w_chan_t   ),
+ .b_chan_t    ( c2s_b_chan_t   ),
+ .r_chan_t    ( c2s_r_chan_t   ),
+ .ar_chan_t   ( c2s_ar_chan_t  ),
+ .axi_req_t   ( c2s_req_t      ),
+ .axi_resp_t  ( c2s_resp_t     ),
+ .LogDepth    ( LOG_DEPTH      ),
+ .SyncStages  ( CdcSynchStages )
 ) axi_master_cdc_i (
  .src_rst_ni                       ( pwr_on_rst_ni               ),
  .src_clk_i                        ( clk_i                       ),
@@ -1432,15 +1453,16 @@ axi_cdc_src #(
 `AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
 `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
 
-axi_cdc_dst #(
-  .aw_chan_t (s2c_aw_chan_t),
-  .w_chan_t  (s2c_w_chan_t ),
-  .b_chan_t  (s2c_b_chan_t ),     
-  .r_chan_t  (s2c_r_chan_t ),
-  .ar_chan_t (s2c_ar_chan_t),
-  .axi_req_t (s2c_req_t    ),
-  .axi_resp_t(s2c_resp_t   ),
-  .LogDepth       ( LOG_DEPTH              )
+axi_cdc_dst   #(
+  .aw_chan_t   ( s2c_aw_chan_t  ),
+  .w_chan_t    ( s2c_w_chan_t   ),
+  .b_chan_t    ( s2c_b_chan_t   ),
+  .r_chan_t    ( s2c_r_chan_t   ),
+  .ar_chan_t   ( s2c_ar_chan_t  ),
+  .axi_req_t   ( s2c_req_t      ),
+  .axi_resp_t  ( s2c_resp_t     ),
+  .LogDepth    ( LOG_DEPTH      ),
+  .SyncStages  ( CdcSynchStages )
 ) axi_slave_cdc_i (
   .dst_rst_ni                       ( pwr_on_rst_ni              ),
   .dst_clk_i                        ( clk_i                      ),

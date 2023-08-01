@@ -287,7 +287,8 @@ module pulp_cluster_tb;
     .AXI_USER_WIDTH                 ( AxiUw                    ),
     .AXI_ID_IN_WIDTH                ( AxiIw-2                  ),
     .AXI_ID_OUT_WIDTH               ( AxiIw                    ),
-    .LOG_DEPTH                      ( 3                        )
+    .LOG_DEPTH                      ( 3                        ),
+    .CdcSynchStages                 ( 3                        )
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
@@ -467,7 +468,7 @@ module pulp_cluster_tb;
    assign s_cluster_fetch_en = 1'b1;  
 
    ret_val = '0;
-   while(~ret_val[31]) begin
+   while(~s_cluster_eoc) begin
       
       ar_beat.ax_addr  = 32'h1A10_40A0;
       ar_beat.ax_len   = '0;
@@ -477,7 +478,7 @@ module pulp_cluster_tb;
       axi_master_drv.send_ar(ar_beat);
       @(posedge s_clk);
       axi_master_drv.recv_r(r_beat);
-      ret_val = r_beat.r_data;      
+      ret_val = r_beat.r_data;
       repeat(1000)
         @(posedge s_clk);
       
@@ -492,7 +493,7 @@ module pulp_cluster_tb;
      $fatal(1,"[TB] Test not passed: ret_val!=0\n");
    end
   
-  end // initial begin
+  end
    
    
-endmodule // pulp_cluster_tb
+endmodule : pulp_cluster_tb
