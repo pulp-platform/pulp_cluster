@@ -55,6 +55,15 @@ module pulp_cluster_tb;
   localparam AxiWideBeWidth = AxiDw/8;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
   localparam AxiUw = 2;
+
+  localparam bit[AxiAw-1:0] ClustBase       = 'h50000000;
+  localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
+  localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
+  localparam bit[      5:0] ClustIdx        = 'h1;
+  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase - ClustIdx*ClustExtOffs;
+  localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
+  localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
+  localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
    
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
@@ -173,13 +182,13 @@ module pulp_cluster_tb;
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
-    start_addr: 32'h1C00_0000,
-    end_addr:   32'h1C08_0000
+    start_addr: L2BaseAddr,
+    end_addr:   L2BaseAddr + L2Size
   };
   assign addr_map[2] = '{ // Pulp Cluster
     idx:        2,
-    start_addr: 32'h1000_0000,
-    end_addr:   32'h1004_0000
+    start_addr: ClustBaseAddr,
+    end_addr:   ClustBaseAddr + ClustExtOffs
   };
   assign addr_map[3] = '{ // Return address
     idx:        1, // Just put it in axi_sim_mem
@@ -275,7 +284,7 @@ module pulp_cluster_tb;
     .CACHE_SIZE                     ( 4*1024                   ),
     .L2_SIZE                        ( 32'h100000               ),
     .ROM_BOOT_ADDR                  ( 32'h1A000000             ),
-    .BOOT_ADDR                      ( 32'h1c008080             ),
+    .BOOT_ADDR                      ( BootAddr                 ),
     .INSTR_RDATA_WIDTH              ( 32                       ),
     .CLUST_FPU                      ( 0                        ),
     .CLUST_FP_DIVSQRT               ( 0                        ),
@@ -288,6 +297,9 @@ module pulp_cluster_tb;
     .AXI_ID_IN_WIDTH                ( AxiIw-2                  ),
     .AXI_ID_OUT_WIDTH               ( AxiIw                    ),
     .LOG_DEPTH                      ( 3                        ),
+    .BaseAddr                       ( ClustBaseAddr            ),
+    .ClusterPeripheralsOffs         ( ClustPeriphOffs          ),
+    .ClusterExternalOffs            ( ClustExtOffs             ),
     .CdcSynchStages                 ( 3                        )
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
