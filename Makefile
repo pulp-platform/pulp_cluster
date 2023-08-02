@@ -119,7 +119,7 @@ run:
 .PHONY: test-rt-par-bare
 ## Run only parallel tests on pulp-runtime
 test-rt-par-bare: pulp-runtime regression-tests
-	source env/env.sh; \
+	source env/carfield-env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-parallel.xml parallel-bare-tests.yaml
@@ -128,7 +128,7 @@ test-rt-par-bare: pulp-runtime regression-tests
 .PHONY: test-rt-mchan
 ## Run mchan tests on pulp-runtime
 test-rt-mchan: pulp-runtime regression-tests
-	source env/env.sh; \
+	source env/carfield-env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml
