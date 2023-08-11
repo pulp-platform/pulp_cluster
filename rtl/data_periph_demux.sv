@@ -135,9 +135,9 @@ module data_periph_demux
 
   always_comb
   begin
-    TCDM_RW          = 12'h100 + (CLUSTER_ID << 2) + 0;
-    TCDM_TS          = 12'h100 + (CLUSTER_ID << 2) + 1;
-    DEM_PER          = 12'h100 + (CLUSTER_ID << 2) + 2;
+    TCDM_RW          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 0;
+    TCDM_TS          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 1;
+    DEM_PER          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 2;
   end
  
  

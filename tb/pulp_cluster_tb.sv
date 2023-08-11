@@ -60,7 +60,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
   localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
   localparam bit[      5:0] ClustIdx        = 'h1;
-  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase - ClustIdx*ClustExtOffs;
+  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
@@ -311,7 +311,7 @@ module pulp_cluster_tb;
                                        
       .pmu_mem_pwdn_i              ( 1'b0                                 ),
                                        
-      .base_addr_i                 ( '0                                   ),
+      .base_addr_i                 ( 4'd5                                 ),
                                        
       .dma_pe_evt_ack_i            ( '1                                   ),
       .dma_pe_evt_valid_o          (                                      ),
@@ -334,7 +334,7 @@ module pulp_cluster_tb;
       .fetch_en_i                  ( s_cluster_fetch_en                   ),
       .eoc_o                       ( s_cluster_eoc                        ),
       .busy_o                      ( s_cluster_busy                       ),
-      .cluster_id_i                ( 6'b000001                            ),
+      .cluster_id_i                ( ClustIdx                             ),
 
       .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
       .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),

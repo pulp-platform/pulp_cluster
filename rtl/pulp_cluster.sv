@@ -552,7 +552,7 @@ cluster_bus_wrap #(
   .clk_i         ( clk_i             ),
   .rst_ni        ( rst_ni            ),
   .test_en_i     ( test_mode_i       ),
-  .cluster_id_i  ( cluster_id_i      ),
+  .cluster_id_i  ( '0                ),
   .instr_slave   ( s_core_instr_bus  ),
   .data_slave    ( s_core_ext_bus    ),
   .dma_slave     ( s_dma_ext_bus     ),
@@ -657,7 +657,7 @@ cluster_interconnect_wrap #(
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                               ),
   .rst_ni             ( rst_ni                              ),
-  .cluster_id_i       ( cluster_id_i                        ),
+  .cluster_id_i       ( '0                                  ),
 
   .core_tcdm_slave    ( s_hci_core                          ),
   .hwpe_tcdm_slave    ( s_hci_hwpe                          ),
@@ -1018,7 +1018,7 @@ generate
       .test_en_i           ( test_mode_i           ),
       .clk_en_i            ( clk_core_en[i]        ),
       .base_addr_i         ( base_addr_i           ),
-      .cluster_id_i        ( cluster_id_i          ),
+      .cluster_id_i        ( '0                    ),
       .ext_perf_o          ( ext_perf[i]           ),
       .core_data_req_i     ( demux_data_req[i]     ),
       .core_data_rsp_o     ( demux_data_rsp[i]     ),
