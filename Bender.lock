@@ -60,8 +60,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 0989ff73d0315922791bf42137c0ce0cbb4a76ca
-    version: 1.30.0
+    revision: 53b0b58af2db5bd3c850a7038fae170ed78326bb
+    version: 1.31.1
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -122,7 +122,7 @@ packages:
     - hwpe-stream
     - l2_tcdm_hybrid_interco
   hier-icache:
-    revision: a7e3f4e4c7fe607bcd6b9d94db77f612fd6ef6be
+    revision: 9631f34f5d057f099808e2c93745e4fdf7f88dfe
     version: null
     source:
       Git: https://github.com/pulp-platform/hier-icache.git
