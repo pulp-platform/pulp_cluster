@@ -311,7 +311,7 @@ module pulp_cluster_tb;
                                        
       .pmu_mem_pwdn_i              ( 1'b0                                 ),
                                        
-      .base_addr_i                 ( 4'd5                                 ),
+      .base_addr_i                 ( ClustBase[31:28]                     ),
                                        
       .dma_pe_evt_ack_i            ( '1                                   ),
       .dma_pe_evt_valid_o          (                                      ),
