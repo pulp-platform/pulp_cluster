@@ -35,7 +35,7 @@ dependencies:
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 482d2f5ed05f25c851f4048f1bd402cc0d2b58b6 } # branch: yt/rapidrecovery
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 3797413e5f190c2a86185ab6d8b12af365051b1e } # branch: carfield
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 886ad5ecf5fd908e0c0b278c22914a76a704eda3 } # branch: carfield
 
 export_include_dirs:
   - include

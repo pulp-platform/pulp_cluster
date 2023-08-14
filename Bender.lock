@@ -134,8 +134,8 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: 3d9b9bea7b98df24e6b235408364521a1a27d561
-    version: 1.7.2
+    revision: b7857919ea14b586901ff4282ad7749a3d50501e
+    version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
@@ -191,7 +191,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 3797413e5f190c2a86185ab6d8b12af365051b1e
+    revision: 886ad5ecf5fd908e0c0b278c22914a76a704eda3
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
