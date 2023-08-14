@@ -122,7 +122,7 @@ packages:
     - hwpe-stream
     - l2_tcdm_hybrid_interco
   hier-icache:
-    revision: 24643e55ef34f90427cf00b2da9a57ec064bb966
+    revision: fac03040e4901daad29c141fc481f7c5d3758e99
     version: null
     source:
       Git: https://github.com/pulp-platform/hier-icache.git
@@ -232,7 +232,7 @@ packages:
     - fpnew
     - tech_cells_generic
   scm:
-    revision: f7b51416f3c407e4c31e9c016616d57aae2687bd
+    revision: 74426dee36f28ae1c02f7635cf844a0156145320
     version: null
     source:
       Git: https://github.com/pulp-platform/scm.git
