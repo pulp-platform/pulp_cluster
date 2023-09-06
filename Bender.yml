@@ -72,14 +72,11 @@ sources:
   - rtl/data_periph_demux.sv
   - rtl/core_demux_wrap.sv
     # Level 2
-  - target: rtl
+  - rtl/core_region.sv
+  - target: simulation
+    files:
     defines:
       TRACE_EXECUTION: ~
-    files:
-      - rtl/core_region.sv
-  - target: not(rtl)
-    files:
-      - rtl/core_region.sv
     # Level 3
   - rtl/pulp_cluster.sv
   
