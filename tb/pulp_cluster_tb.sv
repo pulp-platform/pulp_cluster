@@ -173,12 +173,19 @@ module pulp_cluster_tb;
    
   // XBAR
   localparam int unsigned NumRules = NSlv+1;
-  typedef axi_pkg::xbar_rule_32_t rule_t;
+
+  typedef struct packed {
+    int unsigned idx;
+    logic [AxiAw-1:0] start_addr;
+    logic [AxiAw-1:0] end_addr;
+  } rule_t;
+
+  // typedef axi_pkg::xbar_rule_32_t rule_t;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
     idx:        0,
-    start_addr: 32'h4000_0000,
-    end_addr:   32'h4000_ffff
+    start_addr: 'h4000_0000,
+    end_addr:   'h4000_ffff
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
@@ -192,8 +199,8 @@ module pulp_cluster_tb;
   };
   assign addr_map[3] = '{ // Return address
     idx:        1, // Just put it in axi_sim_mem
-    start_addr: 32'h1A10_4000,
-    end_addr:   32'h1A10_40F0
+    start_addr: 'h1A10_4000,
+    end_addr:   'h1A10_40F0
   };
   // Crossbar Configuration and Instantiation
   localparam axi_pkg::xbar_cfg_t XbarCfg = '{
