@@ -1167,6 +1167,7 @@ generate
       .clk               ( clk_i          ),
       .rst_n             ( rst_ni         ),
       .test_mode         ( test_mode_i    ),
+      .hwpe_en_i         ( s_hwpe_en      ),
       .hwpe_xbar_master  ( s_hci_hwpe [0] ),
       .hwpe_cfg_slave    ( s_hwpe_cfg_bus ),
       .evt_o             ( s_hwpe_evt     ),
