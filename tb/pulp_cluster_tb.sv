@@ -290,7 +290,7 @@ module pulp_cluster_tb;
     .CACHE_LINE                     ( 1                        ),
     .CACHE_SIZE                     ( 4*1024                   ),
     .L2_SIZE                        ( 32'h100000               ),
-    .ROM_BOOT_ADDR                  ( 32'h1A000000             ),
+    .ROM_BOOT_ADDR                  ( BootAddr                 ),
     .BOOT_ADDR                      ( BootAddr                 ),
     .INSTR_RDATA_WIDTH              ( 32                       ),
     .CLUST_FPU                      ( 0                        ),
