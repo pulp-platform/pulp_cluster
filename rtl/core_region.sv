@@ -24,6 +24,7 @@
 //`define DUMP_INSTR_FETCH
 
 module core_region
+import rapid_recovery_pkg::*;
 #(
   // CORE PARAMETERS
   parameter CORE_TYPE_CL            = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
@@ -88,6 +89,12 @@ module core_region
   output logic                           debug_havereset_o,
   output logic                           debug_running_o,
   output logic                           debug_halted_o,
+  // Recovery bus
+  input  rapid_recovery_pkg::rapid_recovery_t recovery_bus_i,
+  // Backup bus
+  output rapid_recovery_pkg::regfile_write_t  regfile_backup_o,
+  output rapid_recovery_pkg::pc_intf_t        pc_backup_o,
+  output rapid_recovery_pkg::csrs_intf_t      csr_backup_o,
 
   input logic [N_EXT_PERF_COUNTERS-1:0]  ext_perf_i,
 
@@ -285,18 +292,57 @@ module core_region
         .sec_lvl_o             (                             ),
         // Debug Interface
         .debug_req_i           ( debug_req_i                 ),
-        // .debug_havereset_o     ( debug_havereset_o           ), // Useful for HMR
-        // .debug_running_o       ( debug_running_o             ), // Useful for HMR
-        // .debug_halted_o        ( debug_halted_o              ), // Useful for HMR
+        .debug_mode_o          ( debug_halted_o              ),
         // Yet other control signals
         .fetch_enable_i        ( fetch_en_i                  ),
         .core_busy_o           ( core_busy_o                 ),
         // External performance monitoring signals
-        .ext_perf_counters_i   ( ext_perf_i                  )
+        .ext_perf_counters_i   ( ext_perf_i                  ),
+        // RF recovery ports
+        .recover_i         ( recovery_bus_i.rf_recovery_en            ),
+        // Write port A
+        .regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata.waddr_a ),
+        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_wdata.wdata_a ),
+        .regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata.we_a    ),
+        // Write port B
+        .regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata.waddr_b ),
+        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_wdata.wdata_b ),
+        .regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata.we_b    ),
+        // Outputs from RF
+        // Port A
+        .regfile_we_a_o    ( regfile_backup_o.we_a    ),
+        .regfile_waddr_a_o ( regfile_backup_o.waddr_a ),
+        .regfile_wdata_a_o ( regfile_backup_o.wdata_a ),
+        // Port B
+        .regfile_we_b_o    ( regfile_backup_o.we_b    ),
+        .regfile_waddr_b_o ( regfile_backup_o.waddr_b ),
+        .regfile_wdata_b_o ( regfile_backup_o.wdata_b ),
+        // Program Counter Backup
+        .backup_program_counter_o   ( pc_backup_o.program_counter ),
+        .backup_branch_o            ( pc_backup_o.is_branch       ),
+        .backup_branch_addr_o       ( pc_backup_o.branch_addr     ),
+        // Program Counter Recovery
+        .pc_recover_i               ( recovery_bus_i.pc_recovery_en              ),
+        .recovery_program_counter_i ( recovery_bus_i.pc_recovery.program_counter ),
+        .recovery_branch_i          ( recovery_bus_i.pc_recovery.is_branch       ),
+        .recovery_branch_addr_i     ( recovery_bus_i.pc_recovery.branch_addr     ),
+        // CSRs Backup
+        .backup_mstatus_o  ( csr_backup_o.csr_mstatus  ),
+        .backup_mtvec_o    ( csr_backup_o.csr_mtvec    ),
+        .backup_mscratch_o ( csr_backup_o.csr_mscratch ),
+        .backup_mepc_o     ( csr_backup_o.csr_mepc     ),
+        .backup_mcause_o   ( csr_backup_o.csr_mcause   ),
+        // CSRs Recovery
+        .recovery_mstatus_i  ( recovery_bus_i.csr_recovery.csr_mstatus  ),
+        .recovery_mtvec_i    ( recovery_bus_i.csr_recovery.csr_mtvec    ),
+        .recovery_mscratch_i ( recovery_bus_i.csr_recovery.csr_mscratch ),
+        .recovery_mepc_i     ( recovery_bus_i.csr_recovery.csr_mepc     ),
+        .recovery_mcause_i   ( recovery_bus_i.csr_recovery.csr_mcause   )
       );
       assign debug_havereset_o = '0;
       assign debug_running_o   = '0;
-      assign debug_halted_o    = '0;
+      assign csr_backup_o.csr_mie = '0;
+      assign csr_backup_o.csr_mip = '0;
     end else begin: IBEX_CORE
       assign boot_addr = boot_addr_i & 32'hFFFFFF00; // RI5CY expects 0x80 offset, Ibex expects 0x00 offset (adds reset offset 0x80 internally)
       // Core busy

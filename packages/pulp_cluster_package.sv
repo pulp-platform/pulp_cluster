@@ -88,8 +88,6 @@ package pulp_cluster_package;
     logic [31:0] data_wdata;
     logic        irq_ack;
     logic [4:0]  irq_ack_id;
-    // logic        debug_havereset;
-    // logic        debug_running;
     logic        debug_halted;
     logic        core_busy;
     rapid_recovery_pkg::regfile_write_t regfile_backup;

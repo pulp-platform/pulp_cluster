@@ -932,22 +932,17 @@ generate
       //debug unit bind
       .debug_req_i         ( recovery_bus[i].debug_req |
                              s_core_dbg_irq[i]         ),
-      // .debug_halted_o      ( dbg_core_halted[i]        ),
       .debug_halted_o      ( core2hmr[i].debug_halted  ),
       .debug_havereset_o   ( dbg_core_havereset[i]     ),
       .debug_running_o     ( dbg_core_running[i]       ),
       .ext_perf_i          ( ext_perf[i]               ),
       .core_data_req_o     ( core_data_req[i]          ),
       .core_data_rsp_i     ( core_data_rsp[i]          ),
-      // .debug_resume_i   ( recovery_bus[i].debug_resume       ), // Useful for HMR, consider keeping
       //HMR Recovery Bus
-      // .csr_recovery_i    ( recovery_bus[i].csr_recovery      ),
-      // .pc_recovery_i     ( recovery_bus[i].pc_recovery       ),
-      // .instr_lock_i      ( recovery_bus[i].instr_lock        ),
-      // .pc_recovery_en    ( recovery_bus[i].pc_recovery_en    ),
-      // .rf_recovery_en    ( recovery_bus[i].rf_recovery_en    ),
-      // .rf_recovery_wdata ( recovery_bus[i].rf_recovery_wdata ),
-      // .rf_recovery_rdata ( recovery_bus[i].rf_recovery_rdata ),
+      .recovery_bus_i      ( recovery_bus[i]            ),
+      .regfile_backup_o    ( core2hmr[i].regfile_backup ),
+      .pc_backup_o         ( core2hmr[i].pc_backup      ),
+      .csr_backup_o        ( core2hmr[i].csr_backup     ),
       //apu interface
       .apu_master_req_o      ( s_apu_master_req     [i] ),
       .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
@@ -998,10 +993,6 @@ generate
     assign core2hmr[i].data_we    = core_data_req[i].wen; // The protocol is handeled within the core
     assign core2hmr[i].data_wdata = core_data_req[i].data;
     assign core2hmr[i].data_be    = core_data_req[i].be;
-
-    assign core2hmr[i].regfile_backup = '0;
-    assign core2hmr[i].csr_backup     = '0;
-    assign core2hmr[i].pc_backup      = '0;
 
     core_demux_wrap       #(
       .AddrWidth           ( ADDR_WIDTH         ),
