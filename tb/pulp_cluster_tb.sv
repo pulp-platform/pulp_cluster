@@ -62,7 +62,7 @@ module pulp_cluster_tb;
   localparam bit[      5:0] ClustIdx        = 'h1;
   localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
-  localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
+  localparam bit[AxiAw-1:0] L2Size          = 'h10000000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
    
   typedef logic [AxiAw-1:0]    axi_addr_t;
@@ -184,8 +184,8 @@ module pulp_cluster_tb;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
     idx:        0,
-    start_addr: 'h4000_0000,
-    end_addr:   'h4000_ffff
+    start_addr: 'h6000_0000, // FIXME: Adjust with Carfield memory map
+    end_addr:   'h6000_ffff
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
@@ -199,7 +199,7 @@ module pulp_cluster_tb;
   };
   assign addr_map[3] = '{ // Return address
     idx:        1, // Just put it in axi_sim_mem
-    start_addr: 'h1A10_4000,
+    start_addr: 'h1A10_4000, // FIXME: Adjust with Carfield memory map
     end_addr:   'h1A10_40F0
   };
   // Crossbar Configuration and Instantiation
