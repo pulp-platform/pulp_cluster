@@ -184,8 +184,8 @@ module pulp_cluster_tb;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
     idx:        0,
-    start_addr: 'h6000_0000, // FIXME: Adjust with Carfield memory map
-    end_addr:   'h6000_ffff
+    start_addr: 'h03002000,
+    end_addr:   'h03003000
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
