@@ -31,7 +31,8 @@ module cluster_peripherals
   parameter EVNT_WIDTH     = 8,
   parameter FEATURE_DEMUX_MAPPED = 1,
   parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4
+  parameter int unsigned  RW_MARGIN_WIDTH = 4,
+  parameter int unsigned  NB_BARRIERS = NB_CORES
 )
 (
   input  logic                        clk_i,
@@ -84,6 +85,11 @@ module cluster_peripherals
 
   input  logic [NB_CORES-1:0]         dbg_req_i,
   output logic [NB_CORES-1:0]         dbg_req_o,
+  output logic [NB_BARRIERS-1:0]      barrier_matched_o,
+
+  // HMR synch requests
+  input  logic [NB_CORES-1:0]         hmr_sw_resynch_req_i,
+  input  logic [NB_CORES-1:0]         hmr_sw_synch_req_i,
 
   // SRAM SPEED REGULATION --> TCDM
   output logic [1:0]                  TCDM_arb_policy_o,
@@ -136,7 +142,10 @@ module cluster_peripherals
   // decide between common or core-specific event sources
   generate
     for (genvar I=0; I<NB_CORES; I++) begin
-      assign s_cluster_events[I] = {31'd0, mbox_irq_i};
+      assign s_cluster_events[I][31:3] = '0;
+      assign s_cluster_events[I][2] = hmr_sw_resynch_req_i[I];
+      assign s_cluster_events[I][1] = hmr_sw_synch_req_i[I];
+      assign s_cluster_events[I][0] = mbox_irq_i;
       assign s_acc_events[I]     = hwpe_events_i[I];
       assign s_timer_events[I]   = {s_timer_out_hi_event,s_timer_out_lo_event};
       assign s_dma_events[I][0] = dma_event_i[I];
@@ -249,7 +258,7 @@ module cluster_peripherals
     .dbg_req_i              ( dbg_req_i              ),
     .core_dbg_req_o         ( dbg_req_o              ),
 
-
+    .barrier_matched_o      ( barrier_matched_o      ),
     .core_busy_i            ( core_busy_i            ),
     .core_clock_en_o        ( core_clk_en_o          ),
     

@@ -83,7 +83,7 @@ packages:
     - fpnew
     - tech_cells_generic
   event_unit_flex:
-    revision: 53fb3a1093aaaedfe883739fd8a3155d601210bc
+    revision: 28e0499374117c7b0ef4c6ad81b60d7526af886f
     version: null
     source:
       Git: https://github.com/pulp-platform/event_unit_flex.git
@@ -196,7 +196,7 @@ packages:
     - hwpe-stream
     - tech_cells_generic
   redundancy_cells:
-    revision: 482d2f5ed05f25c851f4048f1bd402cc0d2b58b6
+    revision: f206f5ecbfaa028f9eae6f0efaed9e34631d9171
     version: null
     source:
       Git: https://github.com/pulp-platform/redundancy_cells.git

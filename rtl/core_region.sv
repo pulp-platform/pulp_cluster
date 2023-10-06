@@ -291,7 +291,9 @@ import rapid_recovery_pkg::*;
         .irq_sec_i             ( '0                          ),
         .sec_lvl_o             (                             ),
         // Debug Interface
-        .debug_req_i           ( debug_req_i                 ),
+        .debug_req_i           ( debug_req_i |
+                                 recovery_bus_i.debug_req    ),
+        .debug_resume_i        ( recovery_bus_i.debug_resume ),
         .debug_mode_o          ( debug_halted_o              ),
         // Yet other control signals
         .fetch_enable_i        ( fetch_en_i                  ),

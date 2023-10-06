@@ -16,7 +16,7 @@ dependencies:
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", version: 1.0.1 }
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", version: 1.0.4 }
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
-  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
+  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "fac03040e4901daad29c141fc481f7c5d3758e99" } # branch: yt/carfield
@@ -34,7 +34,7 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: b2e6f391aa6c10c03f45b693d80a0aaddecf169b } # branch: master
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 482d2f5ed05f25c851f4048f1bd402cc0d2b58b6 } # branch: yt/rapidrecovery
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: f206f5ecbfaa028f9eae6f0efaed9e34631d9171 } # branch: yt/rapidrecovery
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 0fe14edd77e9a35d3d220bd78bd6b41a0e5935ea } # branch: carfield
 
 export_include_dirs:

@@ -333,6 +333,10 @@ logic                                       s_dma_cl_event;
 logic                                       s_dma_cl_irq;
 logic                                       s_dma_fc_event;
 logic                                       s_dma_fc_irq;
+
+logic [NB_CORES-1:0] hmr_barrier_matched;
+logic [NB_CORES-1:0] hmr_dmr_sw_resynch_req, hmr_tmr_sw_resynch_req;
+logic [NB_CORES-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
  
 // FIXME: iDMA
 // logic                                       s_dma_decompr_event;
@@ -805,6 +809,11 @@ cluster_peripherals #(
   .irq_ack_i              ( irq_ack                            ),
   .dbg_req_i              ( s_dbg_irq                          ),
   .dbg_req_o              ( s_core_dbg_irq                     ),
+  .barrier_matched_o      ( hmr_barrier_matched                ),
+
+  // HMR synch requests
+  .hmr_sw_resynch_req_i   ( hmr_dmr_sw_resynch_req | hmr_tmr_sw_resynch_req ),
+  .hmr_sw_synch_req_i     ( hmr_dmr_sw_synch_req | hmr_tmr_sw_synch_req ),
 
   .fregfile_disable_o     ( s_fregfile_disable                 ),   
   
@@ -930,8 +939,7 @@ generate
       .instr_r_rdata_i     ( hmr2core[i].instr_rdata  ),
       .instr_r_valid_i     ( hmr2core[i].instr_rvalid ),
       //debug unit bind
-      .debug_req_i         ( recovery_bus[i].debug_req |
-                             s_core_dbg_irq[i]         ),
+      .debug_req_i         ( s_core_dbg_irq[i]         ),
       .debug_halted_o      ( core2hmr[i].debug_halted  ),
       .debug_havereset_o   ( dbg_core_havereset[i]     ),
       .debug_running_o     ( dbg_core_running[i]       ),
@@ -1021,6 +1029,38 @@ generate
   end
 endgenerate
 
+logic [NB_CORES/3-1:0] hmr_tmr_synch;
+for (genvar i = 0; i < NB_CORES/3; i++) begin
+  if (1'b1) begin // InterleaveGrps
+    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
+  end else begin
+    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
+  end
+end
+
+logic [NB_CORES/3-1:0] hmr_tmr_sw_resynch_req_short;
+logic [NB_CORES/2-1:0] hmr_dmr_sw_resynch_req_short;
+always_comb begin
+  hmr_tmr_sw_resynch_req = '0;
+  hmr_dmr_sw_resynch_req = '0;
+
+  for (int i = 0; i < NB_CORES/3; i++) begin
+    if (1'b1) begin // InterleaveGrps
+      hmr_tmr_sw_resynch_req[i] = hmr_tmr_sw_resynch_req_short[i];
+    end else begin
+      hmr_tmr_sw_resynch_req[3*i] = hmr_tmr_sw_resynch_req_short[i];
+    end
+  end
+
+  for (int i = 0; i < NB_CORES/2; i++) begin
+    if (1'b1) begin // InterleaveGrps
+      hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
+    end else begin
+      hmr_dmr_sw_resynch_req[2*i] = hmr_dmr_sw_resynch_req_short[i];
+    end
+  end
+end
+
 hmr_unit #(
   .NumCores          ( NB_CORES                             ),
   .DMRSupported      ( 1                                    ),
@@ -1043,17 +1083,17 @@ hmr_unit #(
   .reg_request_i          ( hmr_reg_req  ),
   .reg_response_o         ( hmr_reg_rsp  ),
   // TMR signals
-  .tmr_failure_o          (              ),
-  .tmr_error_o            (              ), // Should this not be NumTMRCores? or NumCores?
-  .tmr_resynch_req_o      (              ),
-  .tmr_sw_synch_req_o     (              ),
-  .tmr_cores_synch_i      ( '0           ),
+  .tmr_failure_o          (               ),
+  .tmr_error_o            (               ), // Should this not be NumTMRCores? or NumCores?
+  .tmr_resynch_req_o      ( hmr_tmr_sw_resynch_req_short ),
+  .tmr_sw_synch_req_o     ( hmr_tmr_sw_synch_req         ),
+  .tmr_cores_synch_i      ( hmr_tmr_synch                ),
   // DMR signals
   .dmr_failure_o          (              ),
   .dmr_error_o            (              ), // Should this not be NumDMRCores? or NumCores?
-  .dmr_resynch_req_o      (              ),
-  .dmr_sw_synch_req_o     (              ),
-  .dmr_cores_synch_i      ( '0           ),
+  .dmr_resynch_req_o      ( hmr_dmr_sw_resynch_req_short      ),
+  .dmr_sw_synch_req_o     ( hmr_dmr_sw_synch_req              ),
+  .dmr_cores_synch_i      ( hmr_barrier_matched[NB_CORES/2:1] ),
   // Rapid recovery output bus
   .rapid_recovery_o       ( recovery_bus ),
   .sys_inputs_i           ( sys2hmr      ),
