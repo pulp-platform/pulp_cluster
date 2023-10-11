@@ -19,18 +19,18 @@ import hci_package::*;
 
 module cluster_interconnect_wrap
 #(
-  parameter NB_CORES        = 8,
+  parameter NB_CORES        = 12,
   parameter HWPE_PRESENT    = 1,
-  parameter NB_HWPE_PORTS   = 4,
+  parameter NB_HWPE_PORTS   = 9,
   parameter NB_DMAS         = 4,
   parameter NB_MPERIPHS     = 1,
   parameter NB_TCDM_BANKS   = 16,
-  parameter NB_SPERIPHS     = 8, //differ
+  parameter NB_SPERIPHS     = 10, //differ
 
   parameter DATA_WIDTH      = 32,
   parameter ADDR_WIDTH      = 32,
   parameter BE_WIDTH        = DATA_WIDTH/8,
-  parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h50000000,
   parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
 
@@ -38,7 +38,7 @@ module cluster_interconnect_wrap
   parameter TEST_SET_BIT    = 20,
   parameter ADDR_MEM_WIDTH  = 11,
   parameter LOG_CLUSTER     = 5,
-  parameter PE_ROUTING_LSB  = 16,
+  parameter PE_ROUTING_LSB  = 10,
   parameter PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
   parameter CLUSTER_ALIAS   = 1,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
@@ -182,16 +182,14 @@ module cluster_interconnect_wrap
     .ClusterBaseAddr        ( ClusterBaseAddr        ),
     .ClusterPeripheralsOffs ( ClusterPeripheralsOffs ),
     .ClusterExternalOffs    ( ClusterExternalOffs    )
-   ) 
-   xbar_pe_inst
-   (
-    .clk_i            ( clk_i ),
-    .rst_ni           ( rst_ni),
-    .cluster_id_i     ( cluster_id_i     ),
-    .core_periph_slave( core_periph_slave),
-    .speriph_master   ( speriph_master   ),
-    .mperiph_slave    ( mperiph_slave    )
-    );
+   ) xbar_pe_inst      (
+     .clk_i            ( clk_i            ),
+     .rst_ni           ( rst_ni           ),
+     .cluster_id_i     ( cluster_id_i     ),
+     .core_periph_slave( core_periph_slave),
+     .speriph_master   ( speriph_master   ),
+     .mperiph_slave    ( mperiph_slave    )
+   );
 
 
 endmodule
