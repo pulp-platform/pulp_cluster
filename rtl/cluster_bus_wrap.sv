@@ -25,15 +25,15 @@ module cluster_bus_wrap
 #(
   parameter int unsigned NB_MASTER                            = 3         ,
   parameter int unsigned NB_SLAVE                             = 4         ,
-  parameter int unsigned NB_CORES                             = 4         ,
-  parameter int unsigned AXI_ADDR_WIDTH                       = 32        ,
+  parameter int unsigned NB_CORES                             = 12        ,
+  parameter int unsigned AXI_ADDR_WIDTH                       = 48        ,
   parameter int unsigned AXI_DATA_WIDTH                       = 64        ,
   parameter int unsigned AXI_ID_IN_WIDTH                      = 4         ,
   parameter int unsigned AXI_ID_OUT_WIDTH                     = 6         ,
-  parameter int unsigned AXI_USER_WIDTH                       = 6         ,
+  parameter int unsigned AXI_USER_WIDTH                       = 10        ,
   parameter int unsigned DMA_NB_OUTSND_BURSTS                 = 8         ,
-  parameter int unsigned TCDM_SIZE                            = 0         ,
-  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr               = 'h10000000,
+  parameter int unsigned TCDM_SIZE                            = 256*1024  ,
+  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr               = 'h50000000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000
 )(
@@ -100,7 +100,7 @@ module cluster_bus_wrap
   } addr_map_rule_t;
 
   // address map
-  logic [31:0] cluster_base_addr;
+  logic [AXI_ADDR_WIDTH-1:0] cluster_base_addr;
   assign cluster_base_addr = BaseAddr + ( cluster_id_i << 22);
   localparam int unsigned N_RULES = 4;
   addr_map_rule_t [N_RULES-1:0] addr_map;

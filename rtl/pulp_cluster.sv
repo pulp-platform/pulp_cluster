@@ -30,7 +30,7 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter CORE_TYPE_CL       = 1, // 0 for CV32, 1 for RI5CY, 2 for IBEX RV32IMC
-  parameter NB_CORES           = 8,
+  parameter NB_CORES           = 12,
   parameter NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
@@ -38,57 +38,57 @@ module pulp_cluster
   parameter NB_MPERIPHS        = 1,
   parameter NB_SPERIPHS        = 10,
 
-  parameter CLUSTER_ALIAS      = 1,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
+  parameter CLUSTER_ALIAS      = 1,       // to be checked, we do not want it
+  parameter CLUSTER_ALIAS_BASE = 12'h000, // to be checked, we do not want it
 
-  parameter int unsigned SynchStages = 2,
+  parameter int unsigned SynchStages = 3,
   
-  parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
+  parameter TCDM_SIZE               = 256*1024,                // [B], must be 2**N
   parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
   parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
   parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 0,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
   parameter SET_ASSOCIATIVE         = 4,
   parameter NB_CACHE_BANKS          = 2,
   parameter CACHE_LINE              = 1,
-  parameter CACHE_SIZE              = 4096,
+  parameter CACHE_SIZE              = 4*1024,
   parameter ICACHE_DATA_WIDTH       = 128,
   parameter L0_BUFFER_FEATURE       = "DISABLED",
   parameter MULTICAST_FEATURE       = "DISABLED",
   parameter SHARED_ICACHE           = "ENABLED",
   parameter DIRECT_MAPPED_FEATURE   = "DISABLED",
-  parameter L2_SIZE                 = 512*1024,
+  parameter L2_SIZE                 = 2**20,
   parameter USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
-  parameter DEBUG_START_ADDR        = 32'h1A110000,
-  parameter ROM_BOOT_ADDR           = 32'h1A000000,
-  parameter BOOT_ADDR               = 32'h1C000000,
+  parameter DEBUG_START_ADDR        = 32'h60203000,
+  parameter ROM_BOOT_ADDR           = 32'h78000000,
+  parameter BOOT_ADDR               = 32'h78000000,
   parameter INSTR_RDATA_WIDTH       = 32,
 
-  parameter CLUST_FPU               = 1,
-  parameter CLUST_FP_DIVSQRT        = 1,
-  parameter CLUST_SHARED_FP         = 2,
-  parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter CLUST_FPU               = 0,
+  parameter CLUST_FP_DIVSQRT        = 0,
+  parameter CLUST_SHARED_FP         = 0,
+  parameter CLUST_SHARED_FP_DIVSQRT = 0,
   
   // AXI parameters
   parameter int unsigned NumAxiMst  = 3 ,
   parameter int unsigned NumAxiSlv  = 4 ,
-  parameter AXI_ADDR_WIDTH          = 32,
+  parameter AXI_ADDR_WIDTH          = 48,
   parameter AXI_DATA_C2S_WIDTH      = 64,
-  parameter AXI_DATA_S2C_WIDTH      = 32,
-  parameter AXI_USER_WIDTH          = 6,
-  parameter AXI_ID_IN_WIDTH         = 5,
-  parameter AXI_ID_OUT_WIDTH        = 7, 
+  parameter AXI_DATA_S2C_WIDTH      = 64,
+  parameter AXI_USER_WIDTH          = 10,
+  parameter AXI_ID_IN_WIDTH         = 4,
+  parameter AXI_ID_OUT_WIDTH        = AXI_ID_IN_WIDTH + $clog2(NumAxiSlv),
   parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
   parameter int unsigned CdcSynchStages = 3,
-  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h10000000,
+  parameter logic [AXI_ADDR_WIDTH-1:0] BaseAddr = 'h50000000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [AXI_ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
   // CLUSTER TO SOC CDC AXI PARAMETER
