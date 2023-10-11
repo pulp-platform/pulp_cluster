@@ -872,9 +872,11 @@ periph_to_reg #(
 
 core_data_req_t [NB_CORES-1:0] core_data_req, demux_data_req;
 core_data_rsp_t [NB_CORES-1:0] core_data_rsp, demux_data_rsp;
-core_inputs_t [NB_CORES-1:0] sys2hmr, hmr2core;
-core_outputs_t [NB_CORES-1:0] hmr2sys, core2hmr;
+core_inputs_t   [NB_CORES-1:0] sys2hmr, hmr2core;
+core_outputs_t  [NB_CORES-1:0] hmr2sys, core2hmr;
+core_backup_t   [NB_CORES-1:0] backup_bus;
 rapid_recovery_pkg::rapid_recovery_t [NB_CORES-1:0] recovery_bus;
+
 logic [NB_CORES-1:0] clk_core;
 logic [NB_CORES-1:0] setback;
 logic [NB_CORES-1:0][4:0] ext_perf;
@@ -947,10 +949,10 @@ generate
       .core_data_req_o     ( core_data_req[i]          ),
       .core_data_rsp_i     ( core_data_rsp[i]          ),
       //HMR Recovery Bus
-      .recovery_bus_i      ( recovery_bus[i]            ),
-      .regfile_backup_o    ( core2hmr[i].regfile_backup ),
-      .pc_backup_o         ( core2hmr[i].pc_backup      ),
-      .csr_backup_o        ( core2hmr[i].csr_backup     ),
+      .recovery_bus_i      ( recovery_bus[i]              ),
+      .regfile_backup_o    ( backup_bus[i].regfile_backup ),
+      .pc_backup_o         ( backup_bus[i].pc_backup      ),
+      .csr_backup_o        ( backup_bus[i].csr_backup     ),
       //apu interface
       .apu_master_req_o      ( s_apu_master_req     [i] ),
       .apu_master_gnt_i      ( s_apu_master_gnt     [i] ),
@@ -1073,6 +1075,7 @@ hmr_unit #(
   .NumBusVoters      ( 1                                    ),
   .all_inputs_t      ( core_inputs_t                        ),
   .nominal_outputs_t ( core_outputs_t                       ),
+  .core_backup_t     ( core_backup_t                        ),
   .reg_req_t         ( hmr_reg_req_t                        ),
   .reg_rsp_t         ( hmr_reg_rsp_t                        ),
   .rapid_recovery_t  ( rapid_recovery_pkg::rapid_recovery_t )
@@ -1096,6 +1099,7 @@ hmr_unit #(
   .dmr_cores_synch_i      ( hmr_barrier_matched[NB_CORES/2:1] ),
   // Rapid recovery output bus
   .rapid_recovery_o       ( recovery_bus ),
+  .core_backup_i          ( backup_bus   ),
   .sys_inputs_i           ( sys2hmr      ),
   .sys_nominal_outputs_o  ( hmr2sys      ),
   .sys_bus_outputs_o      (              ),

@@ -196,7 +196,7 @@ packages:
     - hwpe-stream
     - tech_cells_generic
   redundancy_cells:
-    revision: 257344b589b151844d85d04279a89f65183c7741
+    revision: f3b1bc9b2e816fe1b51147ceafa8955326d1b466
     version: null
     source:
       Git: https://github.com/pulp-platform/redundancy_cells.git

@@ -90,9 +90,12 @@ package pulp_cluster_package;
     logic [4:0]  irq_ack_id;
     logic        debug_halted;
     logic        core_busy;
+  } core_outputs_t;
+
+  typedef struct packed {
     rapid_recovery_pkg::regfile_write_t regfile_backup;
     rapid_recovery_pkg::csrs_intf_t     csr_backup;
     rapid_recovery_pkg::pc_intf_t       pc_backup;
-  } core_outputs_t;
+  } core_backup_t;
 
 endpackage
