@@ -377,7 +377,6 @@ XBAR_TCDM_BUS s_mperiph_xbar_bus[NB_MPERIPHS-1:0]();
 
 // periph demux
 XBAR_TCDM_BUS s_mperiph_bus();
-XBAR_TCDM_BUS s_mperiph_demux_bus[1:0](); // bus 1 is no longer in use.
 
 // cores & accelerators -> log interconnect
 hci_core_intf #(
@@ -467,14 +466,14 @@ AXI_BUS #(
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
   .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-) s_data_slave_64(); 
+) s_data_slave_int();
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
   .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-) s_data_slave_32(); 
+) s_data_slave_ext();
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
@@ -560,7 +559,7 @@ cluster_bus_wrap #(
   .instr_slave   ( s_core_instr_bus  ),
   .data_slave    ( s_core_ext_bus    ),
   .dma_slave     ( s_dma_ext_bus     ),
-  .ext_slave     ( s_data_slave_64   ),
+  .ext_slave     ( s_data_slave_int  ),
   .tcdm_master   ( s_ext_tcdm_bus    ),
   .periph_master ( s_ext_mperiph_bus ),
   .ext_master    ( s_data_master     )
@@ -595,23 +594,24 @@ axi2per_wrap #(
   .busy_o        ( s_axi2per_busy    )
 );
 
-per_demux_wrap #(
-  .NB_MASTERS  (  2 ),
-  .ADDR_OFFSET ( 20 )
-) per_demux_wrap_i (
-  .clk_i   ( clk_i               ),
-  .rst_ni  ( rst_ni              ),
-  .slave   ( s_mperiph_bus       ),
-  .masters ( s_mperiph_demux_bus )
-);
+if (NB_MPERIPHS > 1) begin
+  XBAR_TCDM_BUS s_mperiph_demux_bus[NB_MPERIPHS-1:0]();
+  per_demux_wrap #(
+    .NB_MASTERS  ( NB_MPERIPHS ),
+    .ADDR_OFFSET ( 20          )
+  ) per_demux_wrap_i (
+    .clk_i   ( clk_i               ),
+    .rst_ni  ( rst_ni              ),
+    .slave   ( s_mperiph_bus       ),
+    .masters ( s_mperiph_demux_bus )
+  );
 
-`TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[NB_MPERIPHS-1], s_mperiph_demux_bus[0])
-
-/* Binding of unused bus */
-assign s_mperiph_demux_bus[1].gnt     = '0;
-assign s_mperiph_demux_bus[1].r_rdata = '0;
-assign s_mperiph_demux_bus[1].r_opc   = '0;
-assign s_mperiph_demux_bus[1].r_valid = '0;
+  for (genvar i = 0; i < NB_MPERIPHS; i++) begin
+    `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[i], s_mperiph_demux_bus[i])
+  end
+end else begin
+  `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[0], s_mperiph_bus)
+end
 
 per2axi_wrap #(
   .NB_CORES       ( NB_CORES             ),
@@ -1483,11 +1483,8 @@ axi_cdc_src  #(
 `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
- s2c_req_t  dst_req , isolate_dst_req;
- s2c_resp_t dst_resp, isolate_dst_resp;
- 
-`AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
-`AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
+s2c_req_t  dst_req , isolate_dst_req;
+s2c_resp_t dst_resp, isolate_dst_resp;
 
 axi_cdc_dst   #(
   .aw_chan_t   ( s2c_aw_chan_t  ),
@@ -1521,20 +1518,28 @@ axi_cdc_dst   #(
   .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
 );
 
-axi_dw_converter_intf #(
-  .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
-  .AXI_ADDR_WIDTH          ( AXI_ADDR_WIDTH     ),
-  .AXI_SLV_PORT_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-  .AXI_MST_PORT_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_USER_WIDTH          ( AXI_USER_WIDTH     ),
-  .AXI_MAX_READS           ( 1                  )
-) axi_dw_UPSIZE_32_64_wrap_i (
-  .clk_i  ( clk_i           ),
-  .rst_ni ( rst_ni          ),
-  .slv    ( s_data_slave_32 ),
-  .mst    ( s_data_slave_64 )
-);
-   
+if (AXI_DATA_S2C_WIDTH != AXI_DATA_C2S_WIDTH) begin
+  `AXI_ASSIGN_FROM_REQ(s_data_slave_ext,dst_req)
+  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_ext)
+
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
+    .AXI_ADDR_WIDTH          ( AXI_ADDR_WIDTH     ),
+    .AXI_SLV_PORT_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
+    .AXI_MST_PORT_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
+    .AXI_USER_WIDTH          ( AXI_USER_WIDTH     ),
+    .AXI_MAX_READS           ( 1                  )
+  ) axi_dw_UPSIZE_32_64_wrap_i (
+    .clk_i  ( clk_i            ),
+    .rst_ni ( rst_ni           ),
+    .slv    ( s_data_slave_ext ),
+    .mst    ( s_data_slave_int )
+  );
+end else begin
+  `AXI_ASSIGN_FROM_REQ(s_data_slave_int,dst_req)
+  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_int)
+end
+
 /* event synchronizers */
 cdc_fifo_gray_dst #(
   .T(logic[EVNT_WIDTH-1:0]),
