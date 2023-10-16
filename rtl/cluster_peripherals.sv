@@ -101,8 +101,8 @@ module cluster_peripherals
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
-  SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
-  PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
+  SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS-1:0],
+  PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES-1:0],
   output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
 );
    
