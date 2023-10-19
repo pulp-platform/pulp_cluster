@@ -20,7 +20,7 @@ dependencies:
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "a971e364bf8090cf77fafad995b480c1ac7ea4e0" } # branch: yt/carfield
-  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: a596f17fc77713909bceb7eecf3ea2c3cdfe707c } # branch: yt/bump-hci
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: c015839816938a790c8da5fd5829cfc536f1ca9c } # branch: yt/return-reg
   # fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "4aec4b68424947b0c4cf25fd7c4b907cb9ec3dfa" } # branch: yt/carfield
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.1-beta  }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)

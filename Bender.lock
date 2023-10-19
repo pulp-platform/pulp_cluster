@@ -53,7 +53,7 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: a596f17fc77713909bceb7eecf3ea2c3cdfe707c
+    revision: c015839816938a790c8da5fd5829cfc536f1ca9c
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git

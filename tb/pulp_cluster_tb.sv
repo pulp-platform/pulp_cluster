@@ -64,6 +64,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h10000000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
+  localparam bit[AxiAw-1:0] ClustReturnInt  = 'h50200100;
    
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
@@ -502,27 +503,26 @@ module pulp_cluster_tb;
    end
 
    @(negedge s_clk);
-   assign s_cluster_en_sa_boot = 1'b1;
+     assign s_cluster_en_sa_boot = 1'b1;
    @(negedge s_clk);
-   assign s_cluster_fetch_en = 1'b1;
+     assign s_cluster_fetch_en = 1'b1;
 
    ret_val = '0;
    while(~s_cluster_eoc) begin
-      
-      ar_beat.ax_addr  = 32'h1A10_40A0;
-      ar_beat.ax_len   = '0;
-      ar_beat.ax_burst = axi_pkg::BURST_INCR;
-      ar_beat.ax_size  = 4'h2;
-
-      axi_master_drv.send_ar(ar_beat);
-      @(posedge s_clk);
-      axi_master_drv.recv_r(r_beat);
-      ret_val = r_beat.r_data;
-      repeat(1000)
-        @(posedge s_clk);
-      
+     repeat(1)
+       @(posedge s_clk);
    end
-     
+
+   ar_beat.ax_addr  = ClustReturnInt;
+   ar_beat.ax_len   = '0;
+   ar_beat.ax_burst = axi_pkg::BURST_INCR;
+   ar_beat.ax_size  = 4'h2;
+
+   axi_master_drv.send_ar(ar_beat);
+   @(posedge s_clk);
+   axi_master_drv.recv_r(r_beat);
+   ret_val = r_beat.r_data;
+
    $display("[TB] Received ret_val: %d\n", ret_val[30:0]);
      
    if(ret_val[30:0]==0) begin
@@ -531,7 +531,7 @@ module pulp_cluster_tb;
    end else begin
      $fatal(1,"[TB] Test not passed: ret_val!=0\n");
    end
-  
+
   end
    
    
