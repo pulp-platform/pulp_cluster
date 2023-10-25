@@ -304,11 +304,11 @@ import rapid_recovery_pkg::*;
         .recover_i         ( recovery_bus_i.rf_recovery_en            ),
         // Write port A
         .regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata.waddr_a ),
-        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_wdata.wdata_a ),
+        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_rdata.rdata_a ),
         .regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata.we_a    ),
         // Write port B
         .regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata.waddr_b ),
-        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_wdata.wdata_b ),
+        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_rdata.rdata_b ),
         .regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata.we_b    ),
         // Outputs from RF
         // Port A
