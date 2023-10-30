@@ -985,7 +985,7 @@ generate
     assign instr_req[i]            = hmr2sys[i].instr_req;
     assign instr_addr[i]           = hmr2sys[i].instr_addr;
     assign demux_data_req[i].req   = hmr2sys[i].data_req;
-    assign demux_data_req[i].wen   = hmr2sys[i].data_we; // The protocol is handeled within the core
+    assign demux_data_req[i].we    = hmr2sys[i].data_we;
     assign demux_data_req[i].be    = hmr2sys[i].data_be;
     assign demux_data_req[i].add   = hmr2sys[i].data_add;
     assign demux_data_req[i].data  = hmr2sys[i].data_wdata;
@@ -1000,7 +1000,7 @@ generate
 
     assign core2hmr[i].data_req   = core_data_req[i].req;
     assign core2hmr[i].data_add   = core_data_req[i].add;
-    assign core2hmr[i].data_we    = core_data_req[i].wen; // The protocol is handeled within the core
+    assign core2hmr[i].data_we    = core_data_req[i].we;
     assign core2hmr[i].data_wdata = core_data_req[i].data;
     assign core2hmr[i].data_be    = core_data_req[i].be;
 

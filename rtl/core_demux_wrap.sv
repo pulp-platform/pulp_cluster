@@ -44,7 +44,7 @@ data_periph_demux #(
   .base_addr_i        (  base_addr_i              ),
   .data_req_i         (  core_data_req_i.req      ),
   .data_add_i         (  core_data_req_i.add      ),
-  .data_wen_i         (  core_data_req_i.wen      ), //inverted when using OR10N
+  .data_wen_i         (  ~core_data_req_i.we      ), //inverted when using OR10N
   .data_wdata_i       (  core_data_req_i.data     ),
   .data_be_i          (  core_data_req_i.be       ),
   .data_gnt_o         (  core_data_rsp_o.gnt      ),

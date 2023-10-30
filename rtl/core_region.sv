@@ -145,7 +145,6 @@ import rapid_recovery_pkg::*;
 
   logic        core_data_req_we ;
 
-  assign core_data_req_o.wen  = ~core_data_req_we;
   assign hart_id = {21'b0, cluster_id_i[5:0], 1'b0, core_id_i};
 
    //********************************************************
@@ -185,7 +184,7 @@ import rapid_recovery_pkg::*;
         .data_req_o            ( core_data_req_o.req         ),
         .data_gnt_i            ( core_data_rsp_i.gnt         ),
         .data_rvalid_i         ( core_data_rsp_i.r_valid     ),
-        .data_we_o             ( core_data_req_we            ),
+        .data_we_o             ( core_data_req_o.we          ),
         .data_be_o             ( core_data_req_o.be          ),
         .data_addr_o           ( core_data_req_o.add         ),
         .data_wdata_o          ( core_data_req_o.data        ),
@@ -263,7 +262,7 @@ import rapid_recovery_pkg::*;
         .data_req_o            ( core_data_req_o.req         ),
         .data_gnt_i            ( core_data_rsp_i.gnt         ),
         .data_rvalid_i         ( core_data_rsp_i.r_valid     ),
-        .data_we_o             ( core_data_req_we            ),
+        .data_we_o             ( core_data_req_o.we          ),
         .data_be_o             ( core_data_req_o.be          ),
         .data_addr_o           ( core_data_req_o.add         ),
         .data_wdata_o          ( core_data_req_o.data        ),
@@ -439,7 +438,7 @@ import rapid_recovery_pkg::*;
         .data_req_o            ( core_mem_req            ),
         .data_gnt_i            ( core_data_rsp_i.gnt     ),
         .data_rvalid_i         ( core_data_rsp_i.r_valid ),
-        .data_we_o             ( core_data_req_we        ),
+        .data_we_o             ( core_data_req_o.we      ),
         .data_be_o             ( core_data_req_o.be      ),
         .data_addr_o           ( core_data_req_o.add     ),
         .data_wdata_o          ( core_data_req_o.wdata   ),

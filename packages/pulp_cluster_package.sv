@@ -58,7 +58,7 @@ package pulp_cluster_package;
   typedef struct packed {
     logic req;
     logic [31:0] add;
-    logic wen;
+    logic we;
     logic [31:0] data;
     logic [3:0] be;
   } core_data_req_t;
