@@ -320,9 +320,10 @@ import rapid_recovery_pkg::*;
         .regfile_waddr_b_o ( regfile_backup_o.waddr_b ),
         .regfile_wdata_b_o ( regfile_backup_o.wdata_b ),
         // Program Counter Backup
-        .backup_program_counter_o   ( pc_backup_o.program_counter ),
-        .backup_branch_o            ( pc_backup_o.is_branch       ),
-        .backup_branch_addr_o       ( pc_backup_o.branch_addr     ),
+        .backup_program_counter_o    ( pc_backup_o.program_counter    ),
+        .backup_program_counter_if_o ( pc_backup_o.program_counter_if ),
+        .backup_branch_o             ( pc_backup_o.is_branch          ),
+        .backup_branch_addr_o        ( pc_backup_o.branch_addr        ),
         // Program Counter Recovery
         .pc_recover_i               ( recovery_bus_i.pc_recovery_en              ),
         .recovery_program_counter_i ( recovery_bus_i.pc_recovery.program_counter ),
