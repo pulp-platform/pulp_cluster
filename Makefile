@@ -107,7 +107,7 @@ $(library):
 compile: $(library) $(dpi) $(dpi-library)/cl_dpi.so
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
-	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
+	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
 build: compile $(dpi)
 	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
