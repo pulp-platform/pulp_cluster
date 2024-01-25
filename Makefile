@@ -4,10 +4,11 @@
 
 ROOT_DIR      = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
+QUESTA ?= questa-2022.3
 GIT ?= git
 BENDER ?= bender
-VSIM ?= vsim
-VOPT ?= vopt
+VSIM ?= $(QUESTA) vsim
+VOPT ?= $(QUESTA) vopt
 top_level ?= pulp_cluster_tb
 dpi-library ?= work-dpi
 library ?= work
@@ -76,7 +77,7 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
-	git clone git@github.com:pulp-platform/pulp-runtime.git -b yt/carfield $@
+	git clone git@github.com:pulp-platform/pulp-runtime.git -b astral $@
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
@@ -92,30 +93,22 @@ sim_clean:
 
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, $(bender_defs) $(bender_targs),..)
-
-# compile the elfloader.cpp
-$(dpi-library)/%.o: tb/dpi/%.cc $(dpi_hdr)
-	mkdir -p $(dpi-library)
-	$(CXX) -shared -fPIC -std=c++0x -Bsymbolic $(CFLAGS) -c $< -o $@
-
-$(dpi-library)/cl_dpi.so: $(dpi)
-	$(CXX) -shared -m64 -o $(dpi-library)/cl_dpi.so $? -L$(RISCV)/lib -L$(SPIKE_ROOT)/lib -Wl,-rpath,$(RISCV)/lib -Wl,-rpath,$(SPIKE_ROOT)/lib -lfesvr
+	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
+	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized'
 
 $(library):
 	$(QUESTA) vlib $(library)
 
-compile: $(library) $(dpi) $(dpi-library)/cl_dpi.so
+compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
 
-build: compile $(dpi)
+build: compile
 	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
 
-
 run:
-	$(VSIM) +permissive $(questa-flags) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
-	$(uvm-flags) $(QUESTASIM_FLAGS) -sv_lib $(dpi-library)/cl_dpi  \
+	$(VSIM) +permissive $(questa-flags) $(uvm-flags) $(QUESTASIM_FLAGS) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
 	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
 .PHONY: test-rt-par-bare
