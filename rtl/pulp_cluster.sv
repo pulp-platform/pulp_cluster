@@ -27,6 +27,7 @@ module pulp_cluster
   import pulp_cluster_package::*;
   import hci_package::*;
   import rapid_recovery_pkg::*;
+  import fpnew_pkg::*;
 #(
   // cluster parameters
   parameter CORE_TYPE_CL       = 1, // 0 for CV32, 1 for RI5CY, 2 for IBEX RV32IMC
@@ -70,7 +71,7 @@ module pulp_cluster
   parameter INSTR_RDATA_WIDTH       = 32,
 
   parameter bit CLUST_FPU           = 1,
-  parameter int unsigned NumFpu     = NB_CORES,
+  parameter int unsigned NumFpus    = NB_CORES,
   parameter CLUST_FP_DIVSQRT        = 0,
   parameter CLUST_SHARED_FP         = 0,
   parameter CLUST_SHARED_FP_DIVSQRT = 0,
@@ -967,37 +968,6 @@ generate
       .apu_master_flags_i    ( fpu_master_out_flags[i] )
     );
 
-    if (CLUST_FPU) begin: gen_fpu
-      fpu_wrap           #(
-        .DataWidth        ( 32                         ),
-        .FpuNumOperands   ( APU_NARGS_CPU              ),
-        .FpuOpcodeWidth   ( APU_WOP_CPU                ),
-        .FpuInFlagsWidth  ( APU_NDSFLAGS_CPU           ),
-        .FpuOutFlagsWidth ( APU_NUSFLAGS_CPU           ),
-        .FpuFmtBits       ( fpnew_pkg::FP_FORMAT_BITS  ),
-        .FpuIntFmtBits    ( fpnew_pkg::INT_FORMAT_BITS ),
-        .FpuRoundBits     ( 3                          ),
-        .FpuOpBits        ( fpnew_pkg::OP_BITS         ),
-        .FpuDivSqrt       ( CLUST_FP_DIVSQRT           )
-      ) i_fpu_wrap      (
-        .clk_i          ( clk_core[i]             ),
-        .rst_ni         ( rst_ni                  ),
-        .hart_id_i      ( i                       ),
-        .fpu_req_i      ( fpu_master_req[i]       ),
-        .fpu_gnt_o      ( fpu_master_gnt[i]       ),
-        .fpu_operands_i ( fpu_master_operands[i]  ),
-        .fpu_op_i       ( fpu_master_op[i]        ),
-        .fpu_flags_i    ( fpu_master_in_flags[i]  ),
-        .fpu_valid_o    ( fpu_master_valid[i]     ),
-        .fpu_result_o   ( fpu_master_result[i]    ),
-        .fpu_flags_o    ( fpu_master_out_flags[i] )
-      );
-    end else begin: gen_no_fpu
-      assign fpu_master_gnt[i] = '0;
-      assign fpu_master_valid[i] = '0;
-      assign fpu_master_result[i] = '0;
-      assign fpu_master_out_flags[i] = '0;
-    end
     assign dbg_core_halted[i] = core2hmr[i].debug_halted;
 
     // Binding inputs/outputs from HMR to the system and vice versa
@@ -1146,7 +1116,7 @@ hmr_unit #(
 //****************************************************
 //**** Shared FPU cluster - Shared execution units ***
 //****************************************************
-if (CLUST_SHARED_FP) begin: gen_shared_fpu
+if (CLUST_FPU) begin: gen_fpu_subsystem
   // request channel
   logic [NB_CORES-1:0][2:0][31:0]                s_apu__operands;
   logic [NB_CORES-1:0][5:0]                      s_apu__op;
@@ -1166,7 +1136,7 @@ if (CLUST_SHARED_FP) begin: gen_shared_fpu
   shared_fpu_cluster #(
     .NB_CORES         ( NB_CORES          ),
     .NB_APUS          ( 1                 ),
-    .NB_FPNEW         ( 4                 ),
+    .NB_FPNEW         ( NumFpus           ),
     .FP_TYPE_WIDTH    ( 3                 ),
 
     .NB_CORE_ARGS      ( 3                ),

@@ -1,4 +1,5 @@
 overrides:
+  hci                 : { git: "https://github.com/pulp-platform/hci.git"                 , rev: 3cb3d99b2cebfeed55cb6ab9d98fce7b99e97cb9 } # branch: master
   axi                 : { git: "https://github.com/pulp-platform/axi.git"                 , version: =0.39.1-beta                         }
   register_interface  : { git: "https://github.com/pulp-platform/register_interface.git"  , rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746 } # branch: master
   cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
