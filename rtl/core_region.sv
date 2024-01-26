@@ -238,7 +238,7 @@ import rapid_recovery_pkg::*;
         .PULP_CLUSTER        ( 1                           ),
         .FPU                 ( FPU                         ),
         .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL  ),
-        .Zfinx               ( 0                           ),
+        .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),
         .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
       ) RI5CY_CORE             (

@@ -104,14 +104,6 @@ packages:
       Git: https://github.com/pulp-platform/fpu_div_sqrt_mvp.git
     dependencies:
     - common_cells
-  fpu_interco:
-    revision: b5f7a315929308823cacd81e1e4898f1eeecfc64
-    version: null
-    source:
-      Git: https://github.com/pulp-platform/fpu_interco.git
-    dependencies:
-    - fpnew
-    - riscv
   hci:
     revision: 3cb3d99b2cebfeed55cb6ab9d98fce7b99e97cb9
     version: null
@@ -224,7 +216,7 @@ packages:
     - common_cells
     - common_verification
   riscv:
-    revision: a1dcae35edae6092ddbf92c424690cb903b678d5
+    revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
     version: null
     source:
       Git: git@github.com:AlSaqr-platform/riscv_nn.git

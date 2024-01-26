@@ -424,21 +424,6 @@ hci_core_intf #(
 // cores -> event unit ctrl
 XBAR_PERIPH_BUS s_core_euctrl_bus[NB_CORES-1:0]();
 
-// apu-interconnect
-// handshake signals
-logic [NB_CORES-1:0]                           fpu_master_req;
-logic [NB_CORES-1:0]                           fpu_master_gnt;
-// request channel
-logic [NB_CORES-1:0][APU_NARGS_CPU-1:0][31:0]  fpu_master_operands;
-logic [NB_CORES-1:0][APU_WOP_CPU-1:0]          fpu_master_op;
-logic [NB_CORES-1:0][WAPUTYPE-1:0]             fpu_master_type;
-logic [NB_CORES-1:0][APU_NDSFLAGS_CPU-1:0]     fpu_master_in_flags;
-// response channel
-logic [NB_CORES-1:0]                           fpu_master_rready;
-logic [NB_CORES-1:0]                           fpu_master_valid;
-logic [NB_CORES-1:0][31:0]                     fpu_master_result;
-logic [NB_CORES-1:0][APU_NUSFLAGS_CPU-1:0]     fpu_master_out_flags;
-
 //----------------------------------------------------------------------//
 // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
 //                                                                      //
@@ -956,16 +941,16 @@ generate
       .pc_backup_o         ( backup_bus[i].pc_backup      ),
       .csr_backup_o        ( backup_bus[i].csr_backup     ),
       //apu interface
-      .apu_master_req_o      ( fpu_master_req      [i] ),
-      .apu_master_gnt_i      ( fpu_master_gnt      [i] ),
-      .apu_master_type_o     ( fpu_master_type     [i] ),
-      .apu_master_operands_o ( fpu_master_operands [i] ),
-      .apu_master_op_o       ( fpu_master_op       [i] ),
-      .apu_master_flags_o    ( fpu_master_in_flags [i] ),
-      .apu_master_valid_i    ( fpu_master_valid    [i] ),
-      .apu_master_ready_o    ( fpu_master_rready   [i] ),
-      .apu_master_result_i   ( fpu_master_result   [i] ),
-      .apu_master_flags_i    ( fpu_master_out_flags[i] )
+      .apu_master_req_o      (    ),
+      .apu_master_gnt_i      ( '0 ),
+      .apu_master_type_o     (    ),
+      .apu_master_operands_o (    ),
+      .apu_master_op_o       (    ),
+      .apu_master_flags_o    (    ),
+      .apu_master_valid_i    ( '0 ),
+      .apu_master_ready_o    (    ),
+      .apu_master_result_i   ( '0 ),
+      .apu_master_flags_i    ( '0 )
     );
 
     assign dbg_core_halted[i] = core2hmr[i].debug_halted;
@@ -1112,80 +1097,6 @@ hmr_unit #(
   .core_nominal_outputs_i ( core2hmr     ),
   .core_bus_outputs_i     ( '0           )
 );
-
-//****************************************************
-//**** Shared FPU cluster - Shared execution units ***
-//****************************************************
-if (CLUST_FPU) begin: gen_fpu_subsystem
-  // request channel
-  logic [NB_CORES-1:0][2:0][31:0]                s_apu__operands;
-  logic [NB_CORES-1:0][5:0]                      s_apu__op;
-  logic [NB_CORES-1:0][2:0]                      s_apu__type;
-  logic [NB_CORES-1:0][14:0]                     s_apu__flags;
-  // response channel
-  logic [NB_CORES-1:0][4:0]                      s_apu__rflags;
-
-  for(genvar k=0; k< NB_CORES; k++) begin
-    assign s_apu__operands[k][2:0] = fpu_master_operands[k][2:0];
-    assign s_apu__op[k][5:0] = fpu_master_op[k][5:0];
-    assign s_apu__type[k][2:0] = fpu_master_type[k][2:0];
-    assign s_apu__flags[k][14:0] = fpu_master_in_flags[k][14:0];
-    assign fpu_master_out_flags[k][4:0] = s_apu__rflags[k][4:0];
-  end
-
-  shared_fpu_cluster #(
-    .NB_CORES         ( NB_CORES          ),
-    .NB_APUS          ( 1                 ),
-    .NB_FPNEW         ( NumFpus           ),
-    .FP_TYPE_WIDTH    ( 3                 ),
-
-    .NB_CORE_ARGS      ( 3                ),
-    .CORE_DATA_WIDTH   ( 32               ),
-    .CORE_OPCODE_WIDTH ( 6                ),
-    .CORE_DSFLAGS_CPU  ( 15               ),
-    .CORE_USFLAGS_CPU  ( 5                ),
-
-    .NB_APU_ARGS      ( 2                 ),
-    .APU_OPCODE_WIDTH ( 6                 ),
-    .APU_DSFLAGS_CPU  ( 15                ),
-    .APU_USFLAGS_CPU  ( 5                 ),
-
-    .NB_FPNEW_ARGS        ( 3             ), //= 3,
-    .FPNEW_OPCODE_WIDTH   ( 6             ), //= 6,
-    .FPNEW_DSFLAGS_CPU    ( 15            ), //= 15,
-    .FPNEW_USFLAGS_CPU    ( 5             ), //= 5,
-
-    .APUTYPE_ID       ( 1                 ),
-    .FPNEWTYPE_ID     ( 0                 ),
-
-    .C_FPNEW_FMTBITS     (fpnew_pkg::FP_FORMAT_BITS  ),
-    .C_FPNEW_IFMTBITS    (fpnew_pkg::INT_FORMAT_BITS ),
-    .C_ROUND_BITS        (3                          ),
-    .C_FPNEW_OPBITS      (fpnew_pkg::OP_BITS         ),
-    .USE_FPU_OPT_ALLOC   ("FALSE"),
-    .USE_FPNEW_OPT_ALLOC ("TRUE"),
-    .FPNEW_INTECO_TYPE   ("SINGLE_INTERCO")
-  ) i_shared_fpu_cluster (
-    .clk                   ( clk_i             ),
-    .rst_n                 ( rst_ni            ),
-    .test_mode_i           ( test_mode_i       ),
-    .core_slave_req_i      ( fpu_master_req    ),
-    .core_slave_gnt_o      ( fpu_master_gnt    ),
-    .core_slave_type_i     ( s_apu__type       ),
-    .core_slave_operands_i ( s_apu__operands   ),
-    .core_slave_op_i       ( s_apu__op         ),
-    .core_slave_flags_i    ( s_apu__flags      ),
-    .core_slave_rready_i   ( fpu_master_rready ),
-    .core_slave_rvalid_o   ( fpu_master_valid  ),
-    .core_slave_rdata_o    ( fpu_master_result ),
-    .core_slave_rflags_o   ( s_apu__rflags     )
-  );
-end else begin: gen_no_shared_fpu
-  assign fpu_master_gnt = '0;
-  assign fpu_master_valid = '0;
-  assign fpu_master_result = '0;
-  assign fpu_master_out_flags = '0;
-end
 
 //**************************************************************
 //**** HW Processing Engines / Cluster-Coupled Accelerators ****
