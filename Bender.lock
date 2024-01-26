@@ -105,7 +105,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 78fb8fc8a6f2c376554562c47755b4d0febaba25
+    revision: 3cb3d99b2cebfeed55cb6ab9d98fce7b99e97cb9
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -133,8 +133,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: ddc154424187dff42a8fcec946c768ceb13f13de
-    version: 1.6.4
+    revision: 389bd7fb1975d2df1546910c5f220c668122e646
+    version: 1.6.5
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -216,7 +216,7 @@ packages:
     - common_cells
     - common_verification
   riscv:
-    revision: a1dcae35edae6092ddbf92c424690cb903b678d5
+    revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
     version: null
     source:
       Git: git@github.com:AlSaqr-platform/riscv_nn.git
