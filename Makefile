@@ -81,7 +81,7 @@ pulp-runtime:
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
-	git clone git@github.com:pulp-platform/regression_tests.git -b yt/carfield $@
+	git clone git@github.com:pulp-platform/regression_tests.git -b astral $@
 
 ########################
 # Build and simulation #
