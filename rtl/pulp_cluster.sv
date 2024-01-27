@@ -31,7 +31,7 @@ module pulp_cluster
 #(
   // cluster parameters
   parameter CORE_TYPE_CL       = 1, // 0 for CV32, 1 for RI5CY, 2 for IBEX RV32IMC
-  parameter NB_CORES           = 12,
+  parameter NB_CORES           = 8,
   parameter NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
