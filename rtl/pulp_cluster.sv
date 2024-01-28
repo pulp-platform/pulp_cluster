@@ -1246,17 +1246,27 @@ assign s_core_instr_bus.aw_atop = '0;
 
 /* TCDM banks */
 tcdm_banks_wrap #(
-  .BankSize (TCDM_NUM_ROWS),
-  .NbBanks  (NB_TCDM_BANKS),
-  .DataWidth(DATA_WIDTH   ),
-  .AddrWidth(ADDR_WIDTH   ),
-  .BeWidth  (BE_WIDTH     ),
-  .IdWidth  (TCDM_ID_WIDTH)
+  .BankSize    (TCDM_NUM_ROWS),
+  .NbBanks     (NB_TCDM_BANKS),
+  .DataWidth   (DATA_WIDTH   ),
+  .AddrWidth   (ADDR_WIDTH   ),
+  .BeWidth     (BE_WIDTH     ),
+  .IdWidth     (TCDM_ID_WIDTH),
+  .EnableEcc   ( 1           ),
+  .EccInterco  ( 0           ) // Not supported at the moment
 ) tcdm_banks_i (
-  .clk_i      (clk_i          ),
-  .rst_ni     (rst_ni         ),
-  .test_mode_i(test_mode_i    ),
-  .tcdm_slave (s_tcdm_bus_sram)  //PMU ??
+  .clk_i                 ( clk_i                    ),
+  .rst_ni                ( rst_ni                   ),
+  .test_mode_i           ( test_mode_i              ),
+  // Scrubber
+  .scrub_trigger_i       ( '0                       ), // TODO: to be connected to a register
+                                                       // in the cluster control unit.
+  .scrub_fix_o           ( /* TODO: left pending */ ),
+  .scrub_uncorrectable_o ( /* TODO: left pending */ ),
+  // ECC
+  .ecc_single_error_o    ( /* TODO: left pending */ ),
+  .ecc_multile_error_o   ( /* TODO: left pending */ ),
+  .tcdm_slave            ( s_tcdm_bus_sram          )  //PMU ??
 );
 
 /* AXI interconnect infrastructure (slices, size conversion) */ 
