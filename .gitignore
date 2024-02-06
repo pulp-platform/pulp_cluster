@@ -1,0 +1,7 @@
+.bender
+scripts/compile.tcl
+
+modelsim.ini
+work
+transcript
+

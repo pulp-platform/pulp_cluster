@@ -22,34 +22,31 @@ README.
 
 To simulate the cluster on its own, you can perform the following steps:
 
+Warning: requires QuestaSim 2022.3 or newer.
+
 1. Make sure the PULP RV32 toolchain is in your `PATH`. Please refer to [PULP
    RISCV GCC toolchain](https://github.com/pulp-platform/pulp-riscv-gcc) to use
    a pre-built release.
 
-2. We need RV64 toolchain to compile DPI libraries. Export it to a `RISCV` env
-   variable. Please refer to [RISC-V GNU
-   toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain/) to use a
-   pre-built release.
-
-3. Compile the hw:
+2. Compile the hw:
    ```
    make checkout
    make scripts/compile.tcl
    make build
    ```
 
-4. Source the environment:
-   ```
-   source env/env.sh
-   ```
-
-5. Download the sw stack and bare-metal tests:
+3. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
 	make regression-tests
 	```
 
-6. Run the tests. Choose any test among the `parallel_bare_tests` and the
+4. Source the environment:
+   ```
+   source env/env.sh
+   ```
+
+5. Run the tests. Choose any test among the `parallel_bare_tests` and the
    `mchan_tests`, move into the related folder and do:
 
    ```

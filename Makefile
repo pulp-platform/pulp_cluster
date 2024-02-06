@@ -7,8 +7,9 @@ ROOT_DIR      = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))
 GIT ?= git
 BENDER ?= bender
 VSIM ?= vsim
+VLIB ?= vlib
+VOPT ?= vopt
 top_level ?= pulp_cluster_tb
-dpi-library ?= work-dpi
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
@@ -17,14 +18,12 @@ CFLAGS ?= -I$(QUESTASIM_HOME)/include \
 					-I$(RISCV)/include/ \
 					-I/include -std=c++11 -I../tb/dpi -O3
 
-dpi := $(patsubst tb/dpi/%.cc, ${dpi-library}/%.o, $(wildcard tb/dpi/*.cc))
-
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
 XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
-	bender script $(VSIM) --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
+	bender script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
 	echo >> $1
 endef
 
@@ -76,30 +75,22 @@ sim_clean:
 
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, -t rtl -t test -t cluster_standalone,..)
-
-# compile the elfloader.cpp
-$(dpi-library)/%.o: tb/dpi/%.cc $(dpi_hdr)
-	mkdir -p $(dpi-library)
-	$(CXX) -shared -fPIC -std=c++0x -Bsymbolic $(CFLAGS) -c $< -o $@
-
-$(dpi-library)/cl_dpi.so: $(dpi)
-	$(CXX) -shared -m64 -o $(dpi-library)/cl_dpi.so $? -L$(RISCV)/lib -L$(SPIKE_ROOT)/lib -Wl,-rpath,$(RISCV)/lib -Wl,-rpath,$(SPIKE_ROOT)/lib -lfesvr
+	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
 
 $(library):
-	vlib${questa_version} $(library)
+	$(VLIB) $(library)
 
-compile: $(library) $(dpi) $(dpi-library)/cl_dpi.so
+compile: $(library) scripts/compile.tcl
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
-	vsim -c -do 'source scripts/compile.tcl; quit'
+	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
 
-build: compile $(dpi)
-	vopt $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
+build: compile
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
 
 
 run:
-	vsim +permissive $(questa-flags) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
-	$(uvm-flags) $(QUESTASIM_FLAGS) -sv_lib $(dpi-library)/cl_dpi  \
+	$(VSIM) +permissive $(questa-flags) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
 	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
 .PHONY: test-rt-par-bare
