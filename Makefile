@@ -76,7 +76,7 @@ sim_clean:
 	rm -rf work
 
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, -t rtl -t test -t cluster_standalone,..)
+	$(call generate_vsim, $@, -t rtl -t test -t pulp -t cluster_standalone,..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
 
 $(library):

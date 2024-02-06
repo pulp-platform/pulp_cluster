@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: 1.1.1 }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: "1.4.1" }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: 1.2.3 }
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "fc231dfc9559c6715c3577049eae3d1887282cb0" }
+  cluster_icache:          { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "c8520bcd66e6892930ded3618b8712f012d6fc13" }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: 2.1.0 }
   fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "66b4084117546d5b748c30b5500769805f489d2f" }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.1  }
