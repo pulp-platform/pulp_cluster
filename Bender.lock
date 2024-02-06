@@ -1,7 +1,7 @@
 packages:
   axi:
-    revision: fd60be8b51a4fa7476856be162ce3334474592ba
-    version: 0.39.0-beta.4
+    revision: fccffb5953ec8564218ba05e20adbedec845e014
+    version: 0.39.1
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -45,8 +45,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 4ac82b420e46fd0005513ca2283cb3c905e7599a
-    version: 1.29.0
+    revision: 2bd027cb87eaa9bf7d17196ec5f69864b35b630f
+    version: 1.32.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -118,8 +118,8 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: 4bf1487a463c262bf7d8ffee79d1cf392937daa2
-    version: 1.7.1
+    revision: 1916c72f024175f1fe351acc3db3c6e9925a117d
+    version: 1.7.3
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
@@ -134,8 +134,8 @@ packages:
     - hwpe-ctrl
     - hwpe-stream
   hwpe-stream:
-    revision: ddc154424187dff42a8fcec946c768ceb13f13de
-    version: 1.6.4
+    revision: 389bd7fb1975d2df1546910c5f220c668122e646
+    version: 1.6.5
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -180,15 +180,15 @@ packages:
       Git: https://github.com/pulp-platform/scm.git
     dependencies: []
   tech_cells_generic:
-    revision: a9cae21902e75b1434328ecf36f85327ba5717de
-    version: 0.2.11
+    revision: 7968dd6e6180df2c644636bc6d2908a49f2190cf
+    version: 0.2.13
     source:
       Git: https://github.com/pulp-platform/tech_cells_generic.git
     dependencies:
     - common_verification
   timer_unit:
-    revision: 3f4ee3e5b3875a473242de5d0c3ebb5a0fe4b8db
-    version: 1.0.2
+    revision: 4c69615c89db9397a9747d6f6d6a36727854f0bc
+    version: 1.0.3
     source:
       Git: https://github.com/pulp-platform/timer_unit.git
     dependencies: []
