@@ -35,19 +35,6 @@ package pulp_cluster_package;
   parameter SPER_HMR_UNIT_ID = 8;  // 0x2000 - 0x2400
   parameter SPER_EXT_ID      = 9;  // 0x2400 - 0x2800
   parameter SPER_ERROR_ID    = 10; // 0x2800 - 0x2C00
-   
-  // if set to 1, then instantiate APU in the cluster
- // parameter APU_CLUSTER = 0;
-
-  // // if set to 1, the 0x0000_0000 to 0x0040_0000 is the alias of the current cluster address space (eg cluster 0 is from  0x1000_0000 to 0x1040_0000)
-  // parameter CLUSTER_ALIAS = 1;
-
-  // // if set to 1, the DEMUX peripherals (EU, MCHAN) are placed right before the test and set region.
-  // // This will steal 16KB from the 1MB TCDM reegion.
-  // // EU is mapped           from 0x10100000 - 0x400
-  // // MCHAN regs are mapped  from 0x10100000 - 0x800
-  // // remember to change the defines in the pulp.h as well to be coherent with this approach
-  // parameter DEM_PER_BEFORE_TCDM_TS = 0;
 
   typedef struct packed {
     logic gnt;
