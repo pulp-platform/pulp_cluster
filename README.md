@@ -26,7 +26,7 @@ Warning: requires QuestaSim 2022.3 or newer.
 
 1. Make sure the PULP RV32 toolchain is in your `PATH`. Please refer to [PULP
    RISCV GCC toolchain](https://github.com/pulp-platform/pulp-riscv-gcc) to use
-   a pre-built release.
+   a pre-built release. (At IIS, this is set up by the env script in step 4.)
 
 2. Compile the hw:
    ```
@@ -45,6 +45,7 @@ Warning: requires QuestaSim 2022.3 or newer.
    ```
    source env/env.sh
    ```
+   (At IIS, this sets up a proper QuestaSim environment, and links the toolchain.)
 
 5. Run the tests. Choose any test among the `parallel_bare_tests` and the
    `mchan_tests`, move into the related folder and do:
