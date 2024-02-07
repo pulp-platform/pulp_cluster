@@ -4,5 +4,19 @@
 
 # set up environment variables for rtl simulation, pulp-runtime and freertos
 ROOTD=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)
+
+# If at IIS, set up appropriate questa version.
+if test -f /etc/iis.version; then
+  export QUESTA=questa-2023.4-zr
+  export VLOG="$QUESTA vlog"
+  export VLIB="$QUESTA vlib"
+  export VMAP="$QUESTA vmap"
+  export VCOM="$QUESTA vcom"
+  export VOPT="$QUESTA vopt"
+  export VSIM="$QUESTA vsim"
+  export QUESTA_HOME=/usr/pack/${QUESTA}/questasim
+  export QUESTASIM_HOME=/usr/pack/${QUESTA}/questasim
+fi
+
 source "$ROOTD/pulp-runtime/configs/pulp_cluster.sh"
 source "$ROOTD/scripts/vsim.sh"
