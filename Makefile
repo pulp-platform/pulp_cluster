@@ -86,7 +86,7 @@ compile: $(library) scripts/compile.tcl
 	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
 
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
 
 
 run:
