@@ -1123,6 +1123,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
     .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
   );
+  assign s_core_instr_bus.aw_atop = '0;
 
   /* TCDM banks */
   tcdm_banks_wrap #(
