@@ -17,6 +17,122 @@
 package pulp_cluster_package;
 
   import rapid_recovery_pkg::*;
+
+  typedef bit [ 7:0] byte_t;
+  typedef bit [31:0] word_t;
+  typedef bit [63:0] doub_t;
+
+  // Core type
+  typedef enum logic[1:0] {
+    CV32,
+    RISCY,
+    IBEX
+  } core_type_e;
+
+  // PULP cluster configuration
+  typedef struct packed {
+    // Type of core in the cluster
+    core_type_e CoreType;
+    // Number of cores in the cluster
+    byte_t NumCores;
+    // Number of DMA TCDM plugs
+    byte_t DmaNumPlugs;
+    // Number of DMA outstanding transactions
+    byte_t DmaNumOutstandingBursts;
+    // DMA burst length in bits
+    word_t DmaBurstLength;
+    // Number of masters in crossbar peripherals
+    byte_t NumMstPeriphs;
+    // Number of slaves in crossbar peripherals
+    byte_t NumSlvPeriphs;
+    // Enable cluster aliasing
+    bit ClusterAlias;
+    // Base of the cluster alias
+    byte_t ClusterAliasBase;
+    // Number of internal synchronization stages
+    byte_bt NumSyncStages;
+    // Enable HCI
+    bit UseHci;
+    // Size of the TCDM in bytes (power of two)
+    word_t TcdmSize;
+    // Number of TCDM banks (power of two)
+    byte_t TcdmNumBank,
+    // Enable HWPEs
+    bit HwpePresent;
+    // Number of memory ports available for HWPEs
+    byte_t HwpeNumPorts;
+    // I$ associativity
+    byte_t iCacheSetAssociative;
+    // Number if I$ banks
+    byte_t iCacheNumBanks;
+    // Number of I$ lines
+    byte_t iCacheNumLines;
+    // I$ size
+    word_t iCacheSize;
+    // Instruction read data width
+    byte_t InstructionReadDataWidth;
+    // Enable L0 buffer
+    bit EnableL0;
+    // Enable multicast
+    bit EnableMultiCast;
+    // Enable shared I$
+    bit EnableSharediCache;
+    // Enable reduced tag
+    bit EnableReducedTag;
+    // Enable direct map
+    bit EnableDirectMap;
+    // L2 size
+    word_t L2Size;
+    // Debug module base address
+    doub_t DmBaseAddr;
+    // BootROM base address
+    doub_t BootRomBaseAddr;
+    // Cores boot address
+    doub_t BootAddr;
+    // Enable FPU
+    bit EnableFpu;
+    // Enable FP division/sqrt
+    bit EnableFpDivSqrt;
+    // Number of FPUs
+    bite_t NumFpu;
+    // Enable shared FPUs
+    bit EnableSharedFpu;
+    // Enable shared FP division/sqrt
+    bit EnableSharedFpDivSqrt;
+    byte_t FpuNumInput;
+    byte_t Fpu
+    // Number of AXI crossbar manager ports
+    byte_t NumAxiIn;
+    // AXI ID width of subordinate ports
+    byte_t NumAxiOut;
+    // Number of AXI crossbar subordinate ports
+    byte_t AxiIdInWidth;
+    // AXI ID width of subordinate ports
+    byte_t AxiIdOutWidth;
+    // AXI address width
+    byte_t AxiAddrWidth;
+    // AXI data width from external to cluster
+    byte_t AxiDatInWidth;
+    // AXI data width from cluster to external
+    byte_t AxiDatOutWidth;;
+    // AXI user width
+    byte_t AxiUserWidth;
+    // Log depth of AXI CDC FIFOs
+    byte_t AxiCdcLogDepth;
+    // Sinchronization stages of AXI CDC FIFOs
+    byte_t AxiCdcSyncStages;
+    // Cluster base address
+    doub_t ClusterBaseAddr;
+    // Cluster peripherals offset
+    doub_t ClusterPeriphOffs;
+    // Cluster base external offset
+    doub_t ClusterExternalOffs;
+    // Address remap for virtualization
+    bit EnableRemapAddress;
+    // LSB used as routing BIT in periph interco
+    byte_t PeRoutingLsb;
+  } pulp_cluster_cfg_t;
+
   parameter NB_SPERIPH_PLUGS_EU  =  2;
 
   // number of master and slave cluster periphs
