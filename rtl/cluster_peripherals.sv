@@ -61,8 +61,6 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
   input logic                         dma_cl_irq_i,
-  //input  logic                        dma_pe_irq_i,
-  //output logic                        pf_event_o,
  
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
@@ -93,32 +91,13 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
-  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o   
-                                
-  //output logic [NB_L1_CUTS-1:0][RW_MARGIN_WIDTH-1:0] rw_margin_L1_o,
+  output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
-`ifdef PRIVATE_ICACHE
-  ,
   SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS],
   PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES],
   output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
-`else
-  `ifdef SP_ICACHE
-    ,
-    // Control ports
-    SP_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus[NB_CACHE_BANKS],
-    L0_CTRL_UNIT_BUS.Master             L0_ctrl_unit_bus[NB_CORES]
-  `else
-    `ifdef MP_ICACHE
-      ,
-      MP_PF_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus
-    `endif
-  `endif
-`endif
- 
- 
-  );
+);
    
   logic                      s_timer_out_lo_event;
   logic                      s_timer_out_hi_event;
@@ -205,8 +184,6 @@ module cluster_peripherals
     .TCDM_arb_policy_o (TCDM_arb_policy_o          )
     //.rw_margin_L1_o    ( rw_margin_L1_o            )
   );
-  
-
 
   //********************************************************
   //******************** TIMER *****************************
@@ -248,8 +225,6 @@ module cluster_peripherals
     end
   endgenerate
 
-
-
   event_unit_top #(
     .NB_CORES     ( NB_CORES   ),
     .NB_BARR      ( NB_CORES   ),
@@ -286,15 +261,10 @@ module cluster_peripherals
     
     .message_master         ( eu_message_master      )
   );
-
   
   //********************************************************
   //******************** icache_ctrl_unit ******************
   //********************************************************
-  
-   
-
-`ifdef PRIVATE_ICACHE   //to be integrated hier_icache
    
   hier_icache_ctrl_unit_wrap #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
@@ -309,42 +279,7 @@ module cluster_peripherals
     .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
     .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
   );
-   
-`else
- `ifdef MP_ICACHE
-  mp_pf_icache_ctrl_unit #(
-    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-    .NB_CORES       ( NB_CORES             ),
-    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
-    .FEATURE_STAT   ( FEATURE_STAT         )
-  ) icache_ctrl_unit_i (
-    .clk_i                       (  clk_i                           ),
-    .rst_ni                      (  rst_ni                          ),
 
-    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-    .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
-    .pf_event_o                  (                                  )
-  );
- `else
-  `ifdef SP_ICACHE
-  sp_icache_ctrl_unit #(
-    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-    .NB_CORES       ( NB_CORES             ),
-    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS ),
-    .OFFSET         ( 4                    ),
-    .FEATURE_STAT   ( FEATURE_STAT         )
-  ) icache_ctrl_unit_i (
-    .clk_i                       (  clk_i                           ),
-    .rst_ni                      (  rst_ni                          ),
-
-    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-    .IC_ctrl_unit_master_if      (  IC_ctrl_unit_bus                ),
-    .L0_ctrl_unit_master_if      (  L0_ctrl_unit_bus                )
-  );
-  `endif
- `endif
-`endif
-   
   //********************************************************
   //******************** DMA CL CONFIG PORT ****************
   //********************************************************
