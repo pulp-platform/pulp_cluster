@@ -32,7 +32,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= e327fb9f8cb4a583d219862e81245405f22283bb
+NONFREE_COMMIT ?= a6b9e5f9c80134168f4750407a8188c5f82f71e9
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -98,7 +98,6 @@ run:
 .PHONY: test-rt-par-bare
 ## Run only parallel tests on pulp-runtime
 test-rt-par-bare: pulp-runtime regression-tests
-	source env/env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-parallel.xml parallel-bare-tests.yaml
@@ -107,7 +106,6 @@ test-rt-par-bare: pulp-runtime regression-tests
 .PHONY: test-rt-mchan
 ## Run mchan tests on pulp-runtime
 test-rt-mchan: pulp-runtime regression-tests
-	source env/env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml
