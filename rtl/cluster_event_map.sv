@@ -15,7 +15,7 @@
  
 module cluster_event_map
 #(
-  parameter NB_CORES = 4
+  parameter int unsigned NB_CORES = 4
 )
 (
   // events generated inside event unit

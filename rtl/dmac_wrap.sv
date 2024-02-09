@@ -18,19 +18,19 @@
 
 module dmac_wrap
 #(
-  parameter NB_CTRLS           = 2,
-  parameter NB_CORES           = 8,
-  parameter NB_OUTSND_BURSTS   = 8,
-  parameter MCHAN_BURST_LENGTH = 256,
-  parameter AXI_ADDR_WIDTH     = 32,
-  parameter AXI_DATA_WIDTH     = 64,
-  parameter AXI_USER_WIDTH     = 6,
-  parameter AXI_ID_WIDTH       = 4,
-  parameter PE_ID_WIDTH        = 1,
-  parameter TCDM_ADD_WIDTH     = 13,
-  parameter DATA_WIDTH         = 32,
-  parameter ADDR_WIDTH         = 32,
-  parameter BE_WIDTH           = DATA_WIDTH/8
+  parameter int unsigned NB_CTRLS           = 2,
+  parameter int unsigned NB_CORES           = 8,
+  parameter int unsigned NB_OUTSND_BURSTS   = 8,
+  parameter int unsigned MCHAN_BURST_LENGTH = 256,
+  parameter int unsigned AXI_ADDR_WIDTH     = 32,
+  parameter int unsigned AXI_DATA_WIDTH     = 64,
+  parameter int unsigned AXI_USER_WIDTH     = 6,
+  parameter int unsigned AXI_ID_WIDTH       = 4,
+  parameter int unsigned PE_ID_WIDTH        = 1,
+  parameter int unsigned TCDM_ADD_WIDTH     = 13,
+  parameter int unsigned DATA_WIDTH         = 32,
+  parameter int unsigned ADDR_WIDTH         = 32,
+  parameter int unsigned BE_WIDTH           = DATA_WIDTH/8
 )
 ( 
   input logic  clk_i,

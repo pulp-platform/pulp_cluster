@@ -19,10 +19,10 @@
 
 module core_demux
 #(
-    parameter ADDR_WIDTH = 32,
-    parameter DATA_WIDTH = 32,
-    parameter BYTE_ENABLE_BIT = DATA_WIDTH/8,
-    parameter CLUSTER_ALIAS_BASE = 12'h000
+    parameter int unsigned ADDR_WIDTH = 32,
+    parameter int unsigned DATA_WIDTH = 32,
+    parameter int unsigned BYTE_ENABLE_BIT = DATA_WIDTH/8,
+    parameter bit [11:0]   CLUSTER_ALIAS_BASE = 12'h000
 )
 (
     input logic                          clk,

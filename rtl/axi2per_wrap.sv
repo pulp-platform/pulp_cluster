@@ -18,14 +18,14 @@
 
 module axi2per_wrap
 #(
-  parameter PER_ADDR_WIDTH = 32,
-  parameter PER_ID_WIDTH   = 5,
-  parameter AXI_ADDR_WIDTH = 32,
-  parameter AXI_DATA_WIDTH = 64,
-  parameter AXI_USER_WIDTH = 6,
-  parameter AXI_ID_WIDTH   = 6,
-  parameter BUFFER_DEPTH   = 2,
-  parameter AXI_STRB_WIDTH = AXI_DATA_WIDTH/8
+  parameter int unsigned PER_ADDR_WIDTH = 32,
+  parameter int unsigned PER_ID_WIDTH   = 5,
+  parameter int unsigned AXI_ADDR_WIDTH = 32,
+  parameter int unsigned AXI_DATA_WIDTH = 64,
+  parameter int unsigned AXI_USER_WIDTH = 6,
+  parameter int unsigned AXI_ID_WIDTH   = 6,
+  parameter int unsigned BUFFER_DEPTH   = 2,
+  parameter int unsigned AXI_STRB_WIDTH = AXI_DATA_WIDTH/8
 )
 (
   input logic          clk_i,

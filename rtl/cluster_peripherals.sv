@@ -22,17 +22,17 @@ import pulp_cluster_package::*;
 
 module cluster_peripherals
 #(
-  parameter NB_CORES       = 8,
-  parameter NB_MPERIPHS    = 1,
-  parameter NB_CACHE_BANKS = 4,
-  parameter NB_SPERIPHS    = 8,
-  parameter NB_TCDM_BANKS  = 8,
-  parameter ROM_BOOT_ADDR  = 32'h1A000000,
-  parameter BOOT_ADDR      = 32'h1C000000,
-  parameter EVNT_WIDTH     = 8,
-  parameter FEATURE_DEMUX_MAPPED = 1,
-  parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4
+  parameter int unsigned NB_CORES       = 8,
+  parameter int unsigned NB_MPERIPHS    = 1,
+  parameter int unsigned NB_CACHE_BANKS = 4,
+  parameter int unsigned NB_SPERIPHS    = 8,
+  parameter int unsigned NB_TCDM_BANKS  = 8,
+  parameter bit [31:0]   ROM_BOOT_ADDR  = 32'h1A000000,
+  parameter bit [31:0]   BOOT_ADDR      = 32'h1C000000,
+  parameter int unsigned EVNT_WIDTH     = 8,
+  parameter int unsigned FEATURE_DEMUX_MAPPED = 1,
+  parameter int unsigned NB_L1_CUTS      = 16,
+  parameter int unsigned RW_MARGIN_WIDTH = 4
 )
 (
   input  logic                        clk_i,

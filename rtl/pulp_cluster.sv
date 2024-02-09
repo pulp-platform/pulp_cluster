@@ -29,110 +29,110 @@ import hci_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  parameter NB_CORES           = 8,
-  parameter NB_HWPE_PORTS      = 9,
+  parameter int unsigned CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter int unsigned NB_CORES           = 8,
+  parameter int unsigned NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
+  parameter int unsigned NB_DMAS            = 4,
+  parameter int unsigned NB_MPERIPHS        = NB_MPERIPHS,
+  parameter int unsigned NB_SPERIPHS        = NB_SPERIPHS,
   
-  parameter CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter bit [11:0]   CLUSTER_ALIAS_BASE      = 12'h000,
   
-  parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
-  parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
-  parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
-  parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
-  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
+  parameter int unsigned TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
+  parameter int unsigned NB_TCDM_BANKS           = 16,                      // must be 2**N
+  parameter int unsigned TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
+  parameter int unsigned TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
+  parameter bit          HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter bit          USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
-  parameter SET_ASSOCIATIVE         = 4,
-  parameter NB_CACHE_BANKS          = 2,
-  parameter CACHE_LINE              = 1,
-  parameter CACHE_SIZE              = 4096,
-  parameter ICACHE_DATA_WIDTH       = 128,
-  parameter L0_BUFFER_FEATURE       = "DISABLED",
-  parameter MULTICAST_FEATURE       = "DISABLED",
-  parameter SHARED_ICACHE           = "ENABLED",
-  parameter DIRECT_MAPPED_FEATURE   = "DISABLED",
-  parameter L2_SIZE                 = 512*1024,
-  parameter USE_REDUCED_TAG         = "TRUE",
+  parameter int unsigned SET_ASSOCIATIVE         = 4,
+  parameter int unsigned NB_CACHE_BANKS          = 2,
+  parameter int unsigned CACHE_LINE              = 1,
+  parameter int unsigned CACHE_SIZE              = 4096,
+  parameter int unsigned ICACHE_DATA_WIDTH       = 128,
+  parameter              L0_BUFFER_FEATURE       = "DISABLED",
+  parameter              MULTICAST_FEATURE       = "DISABLED",
+  parameter              SHARED_ICACHE           = "ENABLED",
+  parameter              DIRECT_MAPPED_FEATURE   = "DISABLED",
+  parameter int unsigned L2_SIZE                 = 512*1024,
+  parameter              USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
-  parameter ROM_BOOT_ADDR           = 32'h1A000000,
-  parameter BOOT_ADDR               = 32'h1C000000,
-  parameter INSTR_RDATA_WIDTH       = 32,
+  parameter bit [31:0]   ROM_BOOT_ADDR           = 32'h1A000000,
+  parameter bit [31:0]   BOOT_ADDR               = 32'h1C000000,
+  parameter int unsigned INSTR_RDATA_WIDTH       = 32,
 
-  parameter CLUST_FPU               = 1,
-  parameter CLUST_FP_DIVSQRT        = 1,
-  parameter CLUST_SHARED_FP         = 2,
-  parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter int unsigned CLUST_FPU               = 1,
+  parameter int unsigned CLUST_FP_DIVSQRT        = 1,
+  parameter int unsigned CLUST_SHARED_FP         = 2,
+  parameter int unsigned CLUST_SHARED_FP_DIVSQRT = 2,
   
   // AXI parameters
-  parameter AXI_ADDR_WIDTH          = 32,
-  parameter AXI_DATA_C2S_WIDTH      = 64,
-  parameter AXI_DATA_S2C_WIDTH      = 32,
-  parameter AXI_USER_WIDTH          = 6,
-  parameter AXI_ID_IN_WIDTH         = 5,
-  parameter AXI_ID_OUT_WIDTH        = 7, 
-  parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
-  parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
-  parameter DC_SLICE_BUFFER_WIDTH   = 8,
-  parameter LOG_DEPTH               = 3,
+  parameter int unsigned AXI_ADDR_WIDTH          = 32,
+  parameter int unsigned AXI_DATA_C2S_WIDTH      = 64,
+  parameter int unsigned AXI_DATA_S2C_WIDTH      = 32,
+  parameter int unsigned AXI_USER_WIDTH          = 6,
+  parameter int unsigned AXI_ID_IN_WIDTH         = 5,
+  parameter int unsigned AXI_ID_OUT_WIDTH        = 7, 
+  parameter int unsigned AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
+  parameter int unsigned AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
+  parameter int unsigned DC_SLICE_BUFFER_WIDTH   = 8,
+  parameter int unsigned LOG_DEPTH               = 3,
   // CLUSTER TO SOC CDC AXI PARAMETER
-  localparam S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_R_WIDTH            = axi_pkg::r_width(AXI_DATA_S2C_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_B_WIDTH            = axi_pkg::b_width(AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_R_WIDTH            = axi_pkg::r_width(AXI_DATA_S2C_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_B_WIDTH            = axi_pkg::b_width(AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
   // CLUSTER TO SOC CDC AXI PARAMETERS
-  localparam C2S_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_W_WIDTH            = axi_pkg::w_width(AXI_DATA_C2S_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_R_WIDTH            = axi_pkg::r_width(AXI_DATA_C2S_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_B_WIDTH            = axi_pkg::b_width(AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_W_WIDTH            = axi_pkg::w_width(AXI_DATA_C2S_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_R_WIDTH            = axi_pkg::r_width(AXI_DATA_C2S_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_B_WIDTH            = axi_pkg::b_width(AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
 
-  localparam ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
-  localparam ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
-  localparam ASYNC_C2S_B_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_B_WIDTH,
-  localparam ASYNC_C2S_AR_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AR_WIDTH,
-  localparam ASYNC_C2S_R_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_R_WIDTH,
+  localparam int unsigned ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
+  localparam int unsigned ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
+  localparam int unsigned ASYNC_C2S_B_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_B_WIDTH,
+  localparam int unsigned ASYNC_C2S_AR_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AR_WIDTH,
+  localparam int unsigned ASYNC_C2S_R_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_R_WIDTH,
   
-  localparam ASYNC_S2C_AW_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AW_WIDTH,
-  localparam ASYNC_S2C_W_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_W_WIDTH,
-  localparam ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
-  localparam ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
-  localparam ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
+  localparam int unsigned ASYNC_S2C_AW_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AW_WIDTH,
+  localparam int unsigned ASYNC_S2C_W_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_W_WIDTH,
+  localparam int unsigned ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
+  localparam int unsigned ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
+  localparam int unsigned ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
  
   // TCDM and log interconnect parameters
-  parameter DATA_WIDTH              = 32,
-  parameter ADDR_WIDTH              = 32,
-  parameter BE_WIDTH                = DATA_WIDTH/8,
-  parameter TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
-  parameter ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
+  parameter int unsigned DATA_WIDTH              = 32,
+  parameter int unsigned ADDR_WIDTH              = 32,
+  parameter int unsigned BE_WIDTH                = DATA_WIDTH/8,
+  parameter int unsigned TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter int unsigned ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter NB_OUTSND_BURSTS        = 8,
-  parameter MCHAN_BURST_LENGTH      = 256,
+  parameter int unsigned TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
+  parameter int unsigned NB_OUTSND_BURSTS        = 8,
+  parameter int unsigned MCHAN_BURST_LENGTH      = 256,
 
 
   // peripheral and periph interconnect parameters
-  parameter LOG_CLUSTER             = 5,  // unused
-  parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
+  parameter int unsigned LOG_CLUSTER             = 5,  // unused
+  parameter int unsigned PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
   // parameter PE_ROUTING_MSB          = 13, // MSB used as routing BIT in periph interco
-  parameter EVNT_WIDTH              = 8,  // size of the event bus
-  parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
+  parameter int unsigned EVNT_WIDTH              = 8,  // size of the event bus
+  parameter int unsigned REMAP_ADDRESS           = 1,  // for cluster virtualization
 
-  localparam ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
+  localparam int unsigned ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
   // FPU PARAMETERS
-  parameter APU_NARGS_CPU           = 3,
-  parameter APU_WOP_CPU             = 6,
-  parameter WAPUTYPE                = 3,
-  parameter APU_NDSFLAGS_CPU        = 15,
-  parameter APU_NUSFLAGS_CPU        = 5
+  parameter int unsigned APU_NARGS_CPU           = 3,
+  parameter int unsigned APU_WOP_CPU             = 6,
+  parameter int unsigned WAPUTYPE                = 3,
+  parameter int unsigned APU_NDSFLAGS_CPU        = 15,
+  parameter int unsigned APU_NUSFLAGS_CPU        = 5
 )
 (
   input logic                                    clk_i,

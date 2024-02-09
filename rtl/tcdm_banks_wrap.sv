@@ -17,12 +17,12 @@
  */
 
 module tcdm_banks_wrap #(
-  parameter BankSize  = 256,         //- -> OVERRIDE
-  parameter NbBanks   = 1,           // --> OVERRIDE
-  parameter DataWidth = 32,
-  parameter AddrWidth = 32,
-  parameter BeWidth   = DataWidth/8,
-  parameter IdWidth   = 1
+  parameter int unsigned BankSize  = 256,         //- -> OVERRIDE
+  parameter int unsigned NbBanks   = 1,           // --> OVERRIDE
+  parameter int unsigned DataWidth = 32,
+  parameter int unsigned AddrWidth = 32,
+  parameter int unsigned BeWidth   = DataWidth/8,
+  parameter int unsigned IdWidth   = 1
 ) (
   input logic        clk_i,
   input logic        rst_ni,

@@ -18,7 +18,7 @@
 
 module cluster_timer_wrap
 #(
-  parameter ID_WIDTH  = 2
+  parameter int unsigned ID_WIDTH  = 2
 )
 (
   input  logic          clk_i,

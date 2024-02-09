@@ -18,15 +18,15 @@
 
 module per2axi_wrap
 #(
-  parameter NB_CORES       = 4,
-  parameter PER_ADDR_WIDTH = 32,
-  parameter PER_ID_WIDTH   = 5,
-  parameter AXI_ADDR_WIDTH = 32,
-  parameter AXI_DATA_WIDTH = 64,
-  parameter AXI_USER_WIDTH = 6,
-  parameter AXI_ID_WIDTH   = 4,
-  parameter AXI_STRB_WIDTH = AXI_DATA_WIDTH/8,
-  parameter ID_WIDTH       = PER_ID_WIDTH // required for XBAR_PERIPH_BUS interface
+  parameter int unsigned NB_CORES       = 4,
+  parameter int unsigned PER_ADDR_WIDTH = 32,
+  parameter int unsigned PER_ID_WIDTH   = 5,
+  parameter int unsigned AXI_ADDR_WIDTH = 32,
+  parameter int unsigned AXI_DATA_WIDTH = 64,
+  parameter int unsigned AXI_USER_WIDTH = 6,
+  parameter int unsigned AXI_ID_WIDTH   = 4,
+  parameter int unsigned AXI_STRB_WIDTH = AXI_DATA_WIDTH/8,
+  parameter int unsigned ID_WIDTH       = PER_ID_WIDTH // required for XBAR_PERIPH_BUS interface
 )
 (
   input logic	          clk_i,

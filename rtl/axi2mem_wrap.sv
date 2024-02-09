@@ -18,11 +18,11 @@
 
 module axi2mem_wrap
 #(
-  parameter NB_DMAS        = 4,
-  parameter AXI_ADDR_WIDTH = 32,
-  parameter AXI_DATA_WIDTH = 64,
-  parameter AXI_USER_WIDTH = 6,
-  parameter AXI_ID_WIDTH   = 6
+  parameter int unsigned NB_DMAS        = 4,
+  parameter int unsigned AXI_ADDR_WIDTH = 32,
+  parameter int unsigned AXI_DATA_WIDTH = 64,
+  parameter int unsigned AXI_USER_WIDTH = 6,
+  parameter int unsigned AXI_ID_WIDTH   = 6
 )
 (
   input logic          clk_i,
