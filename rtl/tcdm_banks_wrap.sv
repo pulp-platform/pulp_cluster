@@ -96,10 +96,10 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
   end else begin: gen_standard_banks
 
     assign tcdm_slave[i].gnt    =  1'b1;
-    assign ecc_single_error = 1'b0;
-    assign ecc_multiple_error = 1'b0;
-    assign scrub_fix = 1'b0;
-    assign scrub_uncorrectable = 1'b0;
+    assign ecc_single_error[i] = 1'b0;
+    assign ecc_multiple_error[i] = 1'b0;
+    assign scrub_fix[i] = 1'b0;
+    assign scrub_uncorrectable[i] = 1'b0;
 
     tc_sram #(
       .NumWords   (BankSize ), // Number of Words in data array
