@@ -34,7 +34,7 @@ dependencies:
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 651441e4a6459f84f3dde4242cf34961925a2142 } # branch: astral_rebase
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 532f9514ad5c7ee21dde9e3a84ae99d2a5760610 } # branch: astral
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: afc6d5cfd5cf966e30e74837eefd441c6bfacec7 } # branch: carfield
 
 export_include_dirs:
   - include
