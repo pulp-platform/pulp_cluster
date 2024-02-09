@@ -19,6 +19,7 @@ package pulp_cluster_package;
   import rapid_recovery_pkg::*;
 
   typedef bit [ 7:0] byte_t;
+  typedef bit [12:0] alias_t;
   typedef bit [31:0] word_t;
   typedef bit [63:0] doub_t;
 
@@ -48,39 +49,33 @@ package pulp_cluster_package;
     // Enable cluster aliasing
     bit ClusterAlias;
     // Base of the cluster alias
-    byte_t ClusterAliasBase;
+    alias_t ClusterAliasBase;
     // Number of internal synchronization stages
-    byte_bt NumSyncStages;
+    byte_t NumSyncStages;
     // Enable HCI
     bit UseHci;
     // Size of the TCDM in bytes (power of two)
     word_t TcdmSize;
     // Number of TCDM banks (power of two)
-    byte_t TcdmNumBank,
+    byte_t TcdmNumBank;
     // Enable HWPEs
     bit HwpePresent;
     // Number of memory ports available for HWPEs
     byte_t HwpeNumPorts;
-    // I$ associativity
-    byte_t iCacheSetAssociative;
     // Number if I$ banks
     byte_t iCacheNumBanks;
     // Number of I$ lines
     byte_t iCacheNumLines;
-    // I$ size
-    word_t iCacheSize;
-    // Instruction read data width
-    byte_t InstructionReadDataWidth;
-    // Enable L0 buffer
-    bit EnableL0;
-    // Enable multicast
-    bit EnableMultiCast;
-    // Enable shared I$
-    bit EnableSharediCache;
+    // Number of I$ ways
+    byte_t iCacheNumWays; // default is 4
+    // Shared I$ size in bytes
+    word_t iCacheSharedSize; // default is 4096
+    // Private I$ size in bytes
+    word_t iCachePrivateSize; // default is 521
+    // Private I$ data width
+    byte_t iCachePrivateDataWidth;
     // Enable reduced tag
     bit EnableReducedTag;
-    // Enable direct map
-    bit EnableDirectMap;
     // L2 size
     word_t L2Size;
     // Debug module base address
@@ -89,38 +84,38 @@ package pulp_cluster_package;
     doub_t BootRomBaseAddr;
     // Cores boot address
     doub_t BootAddr;
-    // Enable FPU
-    bit EnableFpu;
-    // Enable FP division/sqrt
-    bit EnableFpDivSqrt;
-    // Number of FPUs
-    bite_t NumFpu;
+    // Enable private FPU
+    bit EnablePrivateFpu;
+    // Enable private FP division/sqrt
+    bit EnablePrivateFpDivSqrt;
     // Enable shared FPUs
     bit EnableSharedFpu;
     // Enable shared FP division/sqrt
     bit EnableSharedFpDivSqrt;
-    byte_t FpuNumInput;
-    byte_t Fpu
-    // Number of AXI crossbar manager ports
-    byte_t NumAxiIn;
-    // AXI ID width of subordinate ports
-    byte_t NumAxiOut;
+    // Number of shared FPUs
+    byte_t NumSharedFpu;
     // Number of AXI crossbar subordinate ports
+    byte_t NumAxiIn;
+    // Number of AXI crossbar manager ports
+    byte_t NumAxiOut;
+    // AXI ID width of crossbar subordinate ports
     byte_t AxiIdInWidth;
-    // AXI ID width of subordinate ports
+    // AXI ID width of crossbar manager ports
     byte_t AxiIdOutWidth;
     // AXI address width
     byte_t AxiAddrWidth;
     // AXI data width from external to cluster
-    byte_t AxiDatInWidth;
+    byte_t AxiDataInWidth;
     // AXI data width from cluster to external
-    byte_t AxiDatOutWidth;;
+    byte_t AxiDataOutWidth;
     // AXI user width
     byte_t AxiUserWidth;
     // Log depth of AXI CDC FIFOs
-    byte_t AxiCdcLogDepth;
+    byte_t AxiCdcLogDepth; // old LOG_DEPTH
     // Sinchronization stages of AXI CDC FIFOs
     byte_t AxiCdcSyncStages;
+    // Input synchronization stages
+    byte_t SyncStages;
     // Cluster base address
     doub_t ClusterBaseAddr;
     // Cluster peripherals offset
@@ -129,8 +124,6 @@ package pulp_cluster_package;
     doub_t ClusterExternalOffs;
     // Address remap for virtualization
     bit EnableRemapAddress;
-    // LSB used as routing BIT in periph interco
-    byte_t PeRoutingLsb;
   } pulp_cluster_cfg_t;
 
   parameter NB_SPERIPH_PLUGS_EU  =  2;
@@ -151,6 +144,61 @@ package pulp_cluster_package;
   parameter SPER_HMR_UNIT_ID = 8;  // 0x2000 - 0x2400
   parameter SPER_EXT_ID      = 9;  // 0x2400 - 0x2800
   parameter SPER_ERROR_ID    = 10; // 0x2800 - 0x2C00
+
+  // The following parameters refer to the cluster AXI crossbar
+  localparam byte_t NumAxiSubordinatePorts = 4;
+  localparam byte_t NumAxiManagerPorts = 3;
+  localparam byte_t AxiSubordinateIdwidth = 4;
+  localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
+
+  localparam pulp_cluster_cfg_t PulpClusterDefaultCfg = '{
+    CoreType: CV32,
+    NumCores: 8,
+    DmaNumPlugs: 4,
+    DmaNumOutstandingBursts: 8,
+    DmaBurstLength: 256,
+    NumMstPeriphs: NB_MPERIPHS,
+    NumSlvPeriphs: NB_SPERIPHS,
+    ClusterAlias: 1,
+    ClusterAliasBase: 'h0,
+    NumSyncStages: 3,
+    UseHci: 1,
+    TcdmSize: 64*1024,
+    TcdmNumBank: 16,
+    HwpePresent: 0,
+    HwpeNumPorts: 0,
+    iCacheNumBanks: 2,
+    iCacheNumLines: 1,
+    iCacheNumWays: 4,
+    iCacheSharedSize: 4*1024,
+    iCachePrivateSize: 512,
+    iCachePrivateDataWidth: 32,
+    EnableReducedTag: 1,
+    L2Size: 1000*1024,
+    DmBaseAddr: 'h1A110000,
+    BootRomBaseAddr: 'h1A000000,
+    BootAddr: 'h1C000000,
+    EnablePrivateFpu: 1,
+    EnablePrivateFpDivSqrt: 0,
+    EnableSharedFpu: 0,
+    EnableSharedFpDivSqrt: 0,
+    NumSharedFpu: 0,
+    NumAxiIn: NumAxiSubordinatePorts,
+    NumAxiOut: NumAxiManagerPorts,
+    AxiIdInWidth: AxiSubordinateIdwidth,
+    AxiIdOutWidth:AxiManagerIdwidth,
+    AxiAddrWidth: 32,
+    AxiDataInWidth: 32,
+    AxiDataOutWidth: 32,
+    AxiUserWidth: 10,
+    AxiCdcLogDepth: 3,
+    AxiCdcSyncStages: 3,
+    ClusterBaseAddr: 'h10000000,
+    ClusterPeriphOffs: 'h00200000,
+    ClusterExternalOffs: 'h00400000,
+    EnableRemapAddress: 0,
+    default: '0
+  };
 
   typedef struct packed {
     logic gnt;
