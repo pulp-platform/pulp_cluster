@@ -53,7 +53,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= bb64efc82c3cff99a5de9585c8963025078c16c2
+NONFREE_COMMIT ?= 7bd4e0bab5282a20aebbe63de6bb94462bdc1231
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -86,7 +86,7 @@ pulp-runtime:
 ## Clone regression tests for bare-metal verification
 regression-tests:
 	git clone https://github.com/pulp-platform/regression_tests.git $@
-	cd $@; git checkout b85310fd9ed068a0b310b67ed7b3aa46ec30c9bb; cd $(ROOT_DIR)
+	cd $@; git checkout 8c9dc7e5a489cad272378c81a0058517f11d9adf; cd $(ROOT_DIR)
 
 ########################
 # Build and simulation #
