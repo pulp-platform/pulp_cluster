@@ -51,7 +51,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= e327fb9f8cb4a583d219862e81245405f22283bb
+NONFREE_COMMIT ?= f069d0a234e5d33e6971d2fdd590b5df22ea6bd8
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -78,11 +78,13 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
-	git clone git@github.com:pulp-platform/pulp-runtime.git -b astral $@
+	git clone https://github.com/pulp-platform/pulp-runtime.git $@
+	cd $@; git checkout 38ae6be6e28ff39f79218d333c41632a935bd584; cd ..
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
-	git clone git@github.com:pulp-platform/regression_tests.git -b astral $@
+	git clone https://github.com/pulp-platform/regression_tests.git $@
+	cd $@; git checkout 7343d39bb9d1137b6eb3f2561777df546cd1e421; cd ..
 
 ########################
 # Build and simulation #
