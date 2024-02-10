@@ -2,7 +2,7 @@
 # Solderpad Hardware License, Version 0.51, see LICENSE for details.
 # SPDX-License-Identifier: SHL-0.51
 
-ROOT_DIR      = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
+ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 QUESTA ?= questa-2022.3
 GIT ?= git
@@ -14,6 +14,8 @@ dpi-library ?= work-dpi
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
+
+REGRESSIONS := $(ROOT_DIR)/regression-tests
 
 CFLAGS ?= -I$(QUESTASIM_HOME)/include \
 					-I$(RISCV)/include/ \
@@ -51,7 +53,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= f069d0a234e5d33e6971d2fdd590b5df22ea6bd8
+NONFREE_COMMIT ?= bb64efc82c3cff99a5de9585c8963025078c16c2
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -79,12 +81,12 @@ Bender.lock:
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
 	git clone https://github.com/pulp-platform/pulp-runtime.git $@
-	cd $@; git checkout 38ae6be6e28ff39f79218d333c41632a935bd584; cd ..
+	cd $@; git checkout 197d06b6ad1d8014cef73e0e87b59b5ebf66d019; cd $(ROOT_DIR)
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
 	git clone https://github.com/pulp-platform/regression_tests.git $@
-	cd $@; git checkout 7343d39bb9d1137b6eb3f2561777df546cd1e421; cd ..
+	cd $@; git checkout b85310fd9ed068a0b310b67ed7b3aa46ec30c9bb; cd $(ROOT_DIR)
 
 ########################
 # Build and simulation #
@@ -117,16 +119,13 @@ run:
 .PHONY: test-rt-par-bare
 ## Run only parallel tests on pulp-runtime
 test-rt-par-bare: pulp-runtime regression-tests
-	source env/carfield-env.sh; \
-	cd regression-tests && $(bwruntest) --proc-verbose -v \
+	cd $(REGRESSIONS)/carfield && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
-		-o runtime-parallel.xml parallel-bare-tests.yaml
-
+		-o $(REGRESSIONS)/carfield/runtime-parallel.xml $(REGRESSIONS)/carfield/parallel-bare-tests.yaml
 
 .PHONY: test-rt-mchan
 ## Run mchan tests on pulp-runtime
 test-rt-mchan: pulp-runtime regression-tests
-	source env/carfield-env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
-		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml
+		-o $(REGRESSIONS)/carfield/runtime-mchan.xml $(REGRESSIONS)/carfield/pulp_cluster-mchan-tests.yaml
