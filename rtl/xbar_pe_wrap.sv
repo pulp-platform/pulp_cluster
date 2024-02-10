@@ -27,17 +27,17 @@
 module xbar_pe_wrap
   import pulp_cluster_package::*;
   #(
-  parameter NB_CORES           = 8,
-  parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 10,   
-  parameter ADDR_WIDTH         = 32,
-  parameter DATA_WIDTH         = 32,
-  parameter BE_WIDTH           = 0,
-  parameter PE_ROUTING_LSB     = 10,
-  parameter PE_ROUTING_MSB     = 13,
-  parameter bit HWPE_PRESENT   = 1'b1,
-  parameter CLUSTER_ALIAS_BASE =  12'h000,
-  parameter ADDREXT         = 1'b0
+  parameter int unsigned NB_CORES           = 8,
+  parameter int unsigned NB_MPERIPHS        = 1,
+  parameter int unsigned NB_SPERIPHS        = 10,   
+  parameter int unsigned ADDR_WIDTH         = 32,
+  parameter int unsigned DATA_WIDTH         = 32,
+  parameter int unsigned BE_WIDTH           = 0,
+  parameter int unsigned PE_ROUTING_LSB     = 10,
+  parameter int unsigned PE_ROUTING_MSB     = 13,
+  parameter bit          HWPE_PRESENT       = 1'b1,
+  parameter bit [11:0]   CLUSTER_ALIAS_BASE =  12'h000,
+  parameter bit          ADDREXT            = 1'b0
 )
 (
   input logic                          clk_i,

@@ -18,7 +18,7 @@
 
  module cluster_clock_gate
 #(
-  parameter NB_CORES = 4
+  parameter int unsigned NB_CORES = 4
 ) (
   input  logic                clk_i,
   input  logic                rstn_i,

@@ -146,7 +146,21 @@ module pulp_cluster_tb;
      .clk_i     ( s_clk      ),
      .rst_ni    ( s_rstn     ),
      .axi_req_i ( axi_memreq ),
-     .axi_rsp_o ( axi_memrsp )
+     .axi_rsp_o ( axi_memrsp ),
+     .mon_w_valid_o     (),
+     .mon_w_addr_o      (),
+     .mon_w_data_o      (),
+     .mon_w_id_o        (),
+     .mon_w_user_o      (),
+     .mon_w_beat_count_o(),
+     .mon_w_last_o      (),
+     .mon_r_valid_o     (),
+     .mon_r_addr_o      (),
+     .mon_r_data_o      (),
+     .mon_r_id_o        (),
+     .mon_r_user_o      (),
+     .mon_r_beat_count_o(),
+     .mon_r_last_o      ()
   );
 
   mock_uart_axi #(

@@ -20,27 +20,27 @@ import hci_package::*;
 
 module cluster_interconnect_wrap
 #(
-  parameter NB_CORES        = 8,
-  parameter HWPE_PRESENT    = 1,
-  parameter NB_HWPE_PORTS   = 4,
-  parameter NB_DMAS         = 4,
-  parameter NB_MPERIPHS     = 1,
-  parameter NB_TCDM_BANKS   = 16,
-  parameter NB_SPERIPHS     = 8, //differ
+  parameter int unsigned NB_CORES        = 8,
+  parameter int unsigned HWPE_PRESENT    = 1,
+  parameter int unsigned NB_HWPE_PORTS   = 4,
+  parameter int unsigned NB_DMAS         = 4,
+  parameter int unsigned NB_MPERIPHS     = 1,
+  parameter int unsigned NB_TCDM_BANKS   = 16,
+  parameter int unsigned NB_SPERIPHS     = 8, //differ
 
-  parameter DATA_WIDTH      = 32,
-  parameter ADDR_WIDTH      = 32,
-  parameter BE_WIDTH        = DATA_WIDTH/8,
+  parameter int unsigned DATA_WIDTH      = 32,
+  parameter int unsigned ADDR_WIDTH      = 32,
+  parameter int unsigned BE_WIDTH        = DATA_WIDTH/8,
 
   //TCDM PARAMETERS
-  parameter TEST_SET_BIT    = 20,
-  parameter ADDR_MEM_WIDTH  = 11,
-  parameter LOG_CLUSTER     = 5,
-  parameter PE_ROUTING_LSB  = 16,
-  parameter PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
+  parameter int unsigned TEST_SET_BIT    = 20,
+  parameter int unsigned ADDR_MEM_WIDTH  = 11,
+  parameter int unsigned LOG_CLUSTER     = 5,
+  parameter int unsigned PE_ROUTING_LSB  = 16,
+  parameter int unsigned PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
+  parameter bit [11:0]   CLUSTER_ALIAS_BASE = 12'h000,
 
-  parameter USE_HETEROGENEOUS_INTERCONNECT = 1
+  parameter bit          USE_HETEROGENEOUS_INTERCONNECT = 1
 )
 (
   input logic                          clk_i,

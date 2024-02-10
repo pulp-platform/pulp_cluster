@@ -30,29 +30,29 @@
 module core_region
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  // parameter USE_FPU             = 1,
-  // parameter USE_HWPE            = 1,
-  parameter N_EXT_PERF_COUNTERS = 1,
-  parameter CORE_ID             = 0,
-  parameter ADDR_WIDTH          = 32,
-  parameter DATA_WIDTH          = 32,
-  parameter INSTR_RDATA_WIDTH   = 32,
-  parameter CLUSTER_ALIAS_BASE  = 12'h000,
-  parameter REMAP_ADDRESS       = 0,
+  parameter int unsigned CORE_TYPE_CL        = 0,  // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  // parameter bit          USE_FPU             = 1,
+  // parameter bit          USE_HWPE            = 1,
+  parameter int unsigned N_EXT_PERF_COUNTERS = 1,
+  parameter int unsigned CORE_ID             = 0,
+  parameter int unsigned ADDR_WIDTH          = 32,
+  parameter int unsigned DATA_WIDTH          = 32,
+  parameter int unsigned INSTR_RDATA_WIDTH   = 32,
+  parameter bit [11:0]   CLUSTER_ALIAS_BASE  = 12'h000,
+  parameter int unsigned REMAP_ADDRESS       = 0,
 
-  parameter APU_NARGS_CPU       = 2,
-  parameter APU_WOP_CPU         = 1,
-  parameter WAPUTYPE            = 3,
-  parameter APU_NDSFLAGS_CPU    = 3,
-  parameter APU_NUSFLAGS_CPU    = 5,
+  parameter int unsigned APU_NARGS_CPU       = 2,
+  parameter int unsigned APU_WOP_CPU         = 1,
+  parameter int unsigned WAPUTYPE            = 3,
+  parameter int unsigned APU_NDSFLAGS_CPU    = 3,
+  parameter int unsigned APU_NUSFLAGS_CPU    = 5,
   
-  parameter FPU                 =  0,
-  parameter FP_DIVSQRT          =  0,
-  parameter SHARED_FP           =  0,
-  parameter SHARED_FP_DIVSQRT   =  0,
+  parameter int unsigned FPU                 =  0,
+  parameter int unsigned FP_DIVSQRT          =  0,
+  parameter int unsigned SHARED_FP           =  0,
+  parameter int unsigned SHARED_FP_DIVSQRT   =  0,
 
-  parameter DEBUG_START_ADDR    = `DEBUG_START_ADDR,
+  parameter bit [31:0]   DEBUG_START_ADDR    = `DEBUG_START_ADDR,
 
   parameter L2_SLM_FILE         = "./slm_files/l2_stim.slm",
   parameter ROM_SLM_FILE        = "../sw/apps/boot/slm_files/l2_stim.slm"

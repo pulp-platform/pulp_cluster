@@ -18,8 +18,8 @@
 
 module per_demux_wrap
 #(
-  parameter NB_MASTERS  = 2,
-  parameter ADDR_OFFSET = 10
+  parameter int unsigned NB_MASTERS  = 2,
+  parameter int unsigned ADDR_OFFSET = 10
 )
 (
   input logic           clk_i,

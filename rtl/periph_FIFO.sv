@@ -18,9 +18,9 @@
 
 module periph_FIFO
 #(
-  parameter ADDR_WIDTH=32,
-  parameter DATA_WIDTH=32,
-  parameter BYTE_ENABLE_BIT=DATA_WIDTH/8
+  parameter int unsigned ADDR_WIDTH=32,
+  parameter int unsigned DATA_WIDTH=32,
+  parameter int unsigned BYTE_ENABLE_BIT=DATA_WIDTH/8
 )
 (
   input  logic                         clk_i,

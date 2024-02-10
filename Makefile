@@ -32,7 +32,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= e327fb9f8cb4a583d219862e81245405f22283bb
+NONFREE_COMMIT ?= f069d0a234e5d33e6971d2fdd590b5df22ea6bd8
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -59,11 +59,13 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
-	git clone https://github.com/pulp-platform/pulp-runtime.git -b lv/pulp_cluster $@
+	git clone https://github.com/pulp-platform/pulp-runtime.git $@
+	cd $@; git checkout 38ae6be6e28ff39f79218d333c41632a935bd584; cd ..
 
 ## Clone regression tests for bare-metal verification
 regression-tests:
-	git clone https://github.com/pulp-platform/regression_tests $@
+	git clone https://github.com/pulp-platform/regression_tests.git $@
+	cd $@; git checkout 7343d39bb9d1137b6eb3f2561777df546cd1e421; cd ..
 
 ########################
 # Build and simulation #
@@ -86,7 +88,7 @@ compile: $(library) scripts/compile.tcl
 	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
 
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized -debug
 
 
 run:
@@ -96,7 +98,6 @@ run:
 .PHONY: test-rt-par-bare
 ## Run only parallel tests on pulp-runtime
 test-rt-par-bare: pulp-runtime regression-tests
-	source env/env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-parallel.xml parallel-bare-tests.yaml
@@ -105,7 +106,6 @@ test-rt-par-bare: pulp-runtime regression-tests
 .PHONY: test-rt-mchan
 ## Run mchan tests on pulp-runtime
 test-rt-mchan: pulp-runtime regression-tests
-	source env/env.sh; \
 	cd regression-tests && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml

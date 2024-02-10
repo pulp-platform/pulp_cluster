@@ -29,110 +29,110 @@ import hci_package::*;
 module pulp_cluster
 #(
   // cluster parameters
-  parameter CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
-  parameter NB_CORES           = 8,
-  parameter NB_HWPE_PORTS      = 9,
+  parameter int unsigned CORE_TYPE_CL            = 0, // 0 for RISCY, 1 for IBEX RV32IMC (formerly ZERORISCY), 2 for IBEX RV32EC (formerly MICRORISCY)
+  parameter int unsigned NB_CORES           = 8,
+  parameter int unsigned NB_HWPE_PORTS      = 9,
   // number of DMA TCDM plugs, NOT number of DMA slave peripherals!
   // Everything will go to hell if you change this!
-  parameter NB_DMAS            = 4,
-  parameter NB_MPERIPHS        = NB_MPERIPHS,
-  parameter NB_SPERIPHS        = NB_SPERIPHS,
+  parameter int unsigned NB_DMAS            = 4,
+  parameter int unsigned NB_MPERIPHS        = NB_MPERIPHS,
+  parameter int unsigned NB_SPERIPHS        = NB_SPERIPHS,
   
-  parameter CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter bit [11:0]   CLUSTER_ALIAS_BASE      = 12'h000,
   
-  parameter TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
-  parameter NB_TCDM_BANKS           = 16,                      // must be 2**N
-  parameter TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
-  parameter TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
-  parameter HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
-  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
+  parameter int unsigned TCDM_SIZE               = 64*1024,                 // [B], must be 2**N
+  parameter int unsigned NB_TCDM_BANKS           = 16,                      // must be 2**N
+  parameter int unsigned TCDM_BANK_SIZE          = TCDM_SIZE/NB_TCDM_BANKS, // [B]
+  parameter int unsigned TCDM_NUM_ROWS           = TCDM_BANK_SIZE/4,        // [words]
+  parameter bit          HWPE_PRESENT            = 1,                       // set to 1 if HW Processing Engines are present in the cluster
+  parameter bit          USE_HETEROGENEOUS_INTERCONNECT = 1,                // set to 1 to connect HWPEs via heterogeneous interconnect; to 0 for larger LIC
 
   // I$ parameters
-  parameter SET_ASSOCIATIVE         = 4,
-  parameter NB_CACHE_BANKS          = 2,
-  parameter CACHE_LINE              = 1,
-  parameter CACHE_SIZE              = 4096,
-  parameter ICACHE_DATA_WIDTH       = 128,
-  parameter L0_BUFFER_FEATURE       = "DISABLED",
-  parameter MULTICAST_FEATURE       = "DISABLED",
-  parameter SHARED_ICACHE           = "ENABLED",
-  parameter DIRECT_MAPPED_FEATURE   = "DISABLED",
-  parameter L2_SIZE                 = 512*1024,
-  parameter USE_REDUCED_TAG         = "TRUE",
+  parameter int unsigned SET_ASSOCIATIVE         = 4,
+  parameter int unsigned NB_CACHE_BANKS          = 2,
+  parameter int unsigned CACHE_LINE              = 1,
+  parameter int unsigned CACHE_SIZE              = 4096,
+  parameter int unsigned ICACHE_DATA_WIDTH       = 128,
+  parameter              L0_BUFFER_FEATURE       = "DISABLED",
+  parameter              MULTICAST_FEATURE       = "DISABLED",
+  parameter              SHARED_ICACHE           = "ENABLED",
+  parameter              DIRECT_MAPPED_FEATURE   = "DISABLED",
+  parameter int unsigned L2_SIZE                 = 512*1024,
+  parameter              USE_REDUCED_TAG         = "TRUE",
 
   // core parameters
-  parameter ROM_BOOT_ADDR           = 32'h1A000000,
-  parameter BOOT_ADDR               = 32'h1C000000,
-  parameter INSTR_RDATA_WIDTH       = 32,
+  parameter bit [31:0]   ROM_BOOT_ADDR           = 32'h1A000000,
+  parameter bit [31:0]   BOOT_ADDR               = 32'h1C000000,
+  parameter int unsigned INSTR_RDATA_WIDTH       = 32,
 
-  parameter CLUST_FPU               = 1,
-  parameter CLUST_FP_DIVSQRT        = 1,
-  parameter CLUST_SHARED_FP         = 2,
-  parameter CLUST_SHARED_FP_DIVSQRT = 2,
+  parameter int unsigned CLUST_FPU               = 1,
+  parameter int unsigned CLUST_FP_DIVSQRT        = 1,
+  parameter int unsigned CLUST_SHARED_FP         = 2,
+  parameter int unsigned CLUST_SHARED_FP_DIVSQRT = 2,
   
   // AXI parameters
-  parameter AXI_ADDR_WIDTH          = 32,
-  parameter AXI_DATA_C2S_WIDTH      = 64,
-  parameter AXI_DATA_S2C_WIDTH      = 32,
-  parameter AXI_USER_WIDTH          = 6,
-  parameter AXI_ID_IN_WIDTH         = 5,
-  parameter AXI_ID_OUT_WIDTH        = 7, 
-  parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
-  parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
-  parameter DC_SLICE_BUFFER_WIDTH   = 8,
-  parameter LOG_DEPTH               = 3,
+  parameter int unsigned AXI_ADDR_WIDTH          = 32,
+  parameter int unsigned AXI_DATA_C2S_WIDTH      = 64,
+  parameter int unsigned AXI_DATA_S2C_WIDTH      = 32,
+  parameter int unsigned AXI_USER_WIDTH          = 6,
+  parameter int unsigned AXI_ID_IN_WIDTH         = 5,
+  parameter int unsigned AXI_ID_OUT_WIDTH        = 7, 
+  parameter int unsigned AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
+  parameter int unsigned AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
+  parameter int unsigned DC_SLICE_BUFFER_WIDTH   = 8,
+  parameter int unsigned LOG_DEPTH               = 3,
   // CLUSTER TO SOC CDC AXI PARAMETER
-  localparam S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_R_WIDTH            = axi_pkg::r_width(AXI_DATA_S2C_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_B_WIDTH            = axi_pkg::b_width(AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
-  localparam S2C_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_W_WIDTH            = axi_pkg::w_width(AXI_DATA_S2C_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_R_WIDTH            = axi_pkg::r_width(AXI_DATA_S2C_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_B_WIDTH            = axi_pkg::b_width(AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned S2C_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_IN_WIDTH,AXI_USER_WIDTH),
   // CLUSTER TO SOC CDC AXI PARAMETERS
-  localparam C2S_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_W_WIDTH            = axi_pkg::w_width(AXI_DATA_C2S_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_R_WIDTH            = axi_pkg::r_width(AXI_DATA_C2S_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_B_WIDTH            = axi_pkg::b_width(AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
-  localparam C2S_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_AW_WIDTH           = axi_pkg::aw_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_W_WIDTH            = axi_pkg::w_width(AXI_DATA_C2S_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_R_WIDTH            = axi_pkg::r_width(AXI_DATA_C2S_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_B_WIDTH            = axi_pkg::b_width(AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
+  localparam int unsigned C2S_AR_WIDTH           = axi_pkg::ar_width(AXI_ADDR_WIDTH,AXI_ID_OUT_WIDTH,AXI_USER_WIDTH),
 
-  localparam ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
-  localparam ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
-  localparam ASYNC_C2S_B_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_B_WIDTH,
-  localparam ASYNC_C2S_AR_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AR_WIDTH,
-  localparam ASYNC_C2S_R_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_R_WIDTH,
+  localparam int unsigned ASYNC_C2S_AW_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AW_WIDTH,
+  localparam int unsigned ASYNC_C2S_W_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_W_WIDTH,
+  localparam int unsigned ASYNC_C2S_B_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_B_WIDTH,
+  localparam int unsigned ASYNC_C2S_AR_DATA_WIDTH = (2**LOG_DEPTH)*C2S_AR_WIDTH,
+  localparam int unsigned ASYNC_C2S_R_DATA_WIDTH  = (2**LOG_DEPTH)*C2S_R_WIDTH,
   
-  localparam ASYNC_S2C_AW_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AW_WIDTH,
-  localparam ASYNC_S2C_W_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_W_WIDTH,
-  localparam ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
-  localparam ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
-  localparam ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
+  localparam int unsigned ASYNC_S2C_AW_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AW_WIDTH,
+  localparam int unsigned ASYNC_S2C_W_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_W_WIDTH,
+  localparam int unsigned ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
+  localparam int unsigned ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
+  localparam int unsigned ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
  
   // TCDM and log interconnect parameters
-  parameter DATA_WIDTH              = 32,
-  parameter ADDR_WIDTH              = 32,
-  parameter BE_WIDTH                = DATA_WIDTH/8,
-  parameter TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
-  parameter ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
+  parameter int unsigned DATA_WIDTH              = 32,
+  parameter int unsigned ADDR_WIDTH              = 32,
+  parameter int unsigned BE_WIDTH                = DATA_WIDTH/8,
+  parameter int unsigned TEST_SET_BIT            = 20,                       // bit used to indicate a test-and-set operation during a load in TCDM
+  parameter int unsigned ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
   
   // DMA parameters
-  parameter TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
-  parameter NB_OUTSND_BURSTS        = 8,
-  parameter MCHAN_BURST_LENGTH      = 256,
+  parameter int unsigned TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
+  parameter int unsigned NB_OUTSND_BURSTS        = 8,
+  parameter int unsigned MCHAN_BURST_LENGTH      = 256,
 
 
   // peripheral and periph interconnect parameters
-  parameter LOG_CLUSTER             = 5,  // unused
-  parameter PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
+  parameter int unsigned LOG_CLUSTER             = 5,  // unused
+  parameter int unsigned PE_ROUTING_LSB          = 10, // LSB used as routing BIT in periph interco
   // parameter PE_ROUTING_MSB          = 13, // MSB used as routing BIT in periph interco
-  parameter EVNT_WIDTH              = 8,  // size of the event bus
-  parameter REMAP_ADDRESS           = 1,  // for cluster virtualization
+  parameter int unsigned EVNT_WIDTH              = 8,  // size of the event bus
+  parameter int unsigned REMAP_ADDRESS           = 1,  // for cluster virtualization
 
-  localparam ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
+  localparam int unsigned ASYNC_EVENT_DATA_WIDTH = (2**LOG_DEPTH)*EVNT_WIDTH,
   // FPU PARAMETERS
-  parameter APU_NARGS_CPU           = 3,
-  parameter APU_WOP_CPU             = 6,
-  parameter WAPUTYPE                = 3,
-  parameter APU_NDSFLAGS_CPU        = 15,
-  parameter APU_NUSFLAGS_CPU        = 5
+  parameter int unsigned APU_NARGS_CPU           = 3,
+  parameter int unsigned APU_WOP_CPU             = 6,
+  parameter int unsigned WAPUTYPE                = 3,
+  parameter int unsigned APU_NDSFLAGS_CPU        = 15,
+  parameter int unsigned APU_NUSFLAGS_CPU        = 5
 )
 (
   input logic                                    clk_i,
@@ -433,78 +433,73 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   //***************************************************
   /* synchronous AXI interfaces at CLUSTER/SOC interface */
   //*************************************************** 
-    
   
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_64(); 
+  `AXI_TYPEDEF_AW_CHAN_T(c2s_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_W_CHAN_T(c2s_w_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_DATA_C2S_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_B_CHAN_T(c2s_b_chan_t,logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_AR_CHAN_T(c2s_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_R_CHAN_T(c2s_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
 
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_slave_32(); 
+  `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_W_CHAN_T(s2c_w_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_DATA_S2C_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_B_CHAN_T(s2c_b_chan_t,logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_AR_CHAN_T(s2c_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+  `AXI_TYPEDEF_R_CHAN_T(s2c_r_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
 
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_data_master(); 
-
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_instr_bus(); 
+  typedef s2c_aw_chan_t c2s_in_aw_chan_t;
+  typedef c2s_w_chan_t c2s_in_w_chan_t;
+  typedef s2c_b_chan_t c2s_in_b_chan_t;
+  typedef s2c_ar_chan_t c2s_in_ar_chan_t;
+  `AXI_TYPEDEF_R_CHAN_T(c2s_in_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
 
 
-   // ***********************************************************************************************+
-   // ***********************************************************************************************+
-   // ***********************************************************************************************+
-   // ***********************************************************************************************+
-   // ***********************************************************************************************+
-   
+  `AXI_TYPEDEF_REQ_T(c2s_req_t, c2s_aw_chan_t, c2s_w_chan_t, c2s_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(c2s_resp_t, c2s_b_chan_t, c2s_r_chan_t)
+
+  `AXI_TYPEDEF_REQ_T(c2s_in_req_t, c2s_in_aw_chan_t, c2s_in_w_chan_t, c2s_in_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(c2s_in_resp_t, c2s_in_b_chan_t, c2s_in_r_chan_t)
+
+  `AXI_TYPEDEF_REQ_T(s2c_req_t, s2c_aw_chan_t, s2c_w_chan_t, s2c_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(s2c_resp_t, s2c_b_chan_t, s2c_r_chan_t)
+
+  c2s_in_req_t s_data_slave_64_req;
+  c2s_in_resp_t s_data_slave_64_resp;
+
+  s2c_req_t s_data_slave_32_req;
+  s2c_resp_t s_data_slave_32_resp;
+
+  c2s_req_t s_data_master_req;
+  c2s_resp_t s_data_master_resp;
+
+  c2s_in_req_t s_core_instr_bus_req;
+  c2s_in_resp_t s_core_instr_bus_resp;
+
+  // ***********************************************************************************************+
+  // ***********************************************************************************************+
+  // ***********************************************************************************************+
+  // ***********************************************************************************************+
+  // ***********************************************************************************************+
+
   //***************************************************
   /* synchronous AXI interfaces internal to the cluster */
   //*************************************************** 
-  
+
+
   // core per2axi -> ext
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_core_ext_bus(); 
+  c2s_in_req_t s_core_ext_bus_req;
+  c2s_in_resp_t s_core_ext_bus_resp;
 
   // DMA -> ext
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_dma_ext_bus(); 
+  c2s_in_req_t s_dma_ext_bus_req;
+  c2s_in_resp_t s_dma_ext_bus_resp;
 
   // ext -> axi2mem
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_ext_tcdm_bus(); 
+  c2s_req_t s_ext_tcdm_bus_req;
+  c2s_resp_t s_ext_tcdm_bus_resp;
 
   // cluster bus -> axi2per 
-  AXI_BUS #(
-    .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
-    .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
-  ) s_ext_mperiph_bus();
+  c2s_req_t s_ext_mperiph_bus_req;
+  c2s_resp_t s_ext_mperiph_bus_resp;
 
   /* reset generator */
   rstgen rstgen_i (
@@ -529,19 +524,39 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .AXI_DATA_WIDTH       ( AXI_DATA_C2S_WIDTH ),
     .AXI_USER_WIDTH       ( AXI_USER_WIDTH     ),
     .AXI_ID_IN_WIDTH      ( AXI_ID_IN_WIDTH    ),
-    .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   )
+    .AXI_ID_OUT_WIDTH     ( AXI_ID_OUT_WIDTH   ),
+    .slave_req_t          ( c2s_in_req_t       ),
+    .slave_resp_t         ( c2s_in_resp_t      ),
+    .master_req_t         ( c2s_req_t          ),
+    .master_resp_t        ( c2s_resp_t         ),
+    .slave_aw_chan_t      ( c2s_in_aw_chan_t   ),
+    .master_aw_chan_t     ( c2s_aw_chan_t      ),
+    .w_chan_t             ( c2s_w_chan_t       ),
+    .slave_b_chan_t       ( c2s_in_b_chan_t    ),
+    .master_b_chan_t      ( c2s_b_chan_t       ),
+    .slave_ar_chan_t      ( c2s_in_ar_chan_t   ),
+    .master_ar_chan_t     ( c2s_ar_chan_t      ),
+    .slave_r_chan_t       ( c2s_in_r_chan_t    ),
+    .master_r_chan_t      ( c2s_r_chan_t       )
   ) cluster_bus_wrap_i (
     .clk_i         ( clk_cluster       ),
     .rst_ni        ( s_rst_n           ),
     .test_en_i     ( test_mode_i       ),
     .cluster_id_i  ( cluster_id_i      ),
-    .instr_slave   ( s_core_instr_bus  ),
-    .data_slave    ( s_core_ext_bus    ),
-    .dma_slave     ( s_dma_ext_bus     ),
-    .ext_slave     ( s_data_slave_64   ),
-    .tcdm_master   ( s_ext_tcdm_bus    ),
-    .periph_master ( s_ext_mperiph_bus ),
-    .ext_master    ( s_data_master     )
+    .data_slave_req_i    ( s_core_ext_bus_req ),
+    .data_slave_resp_o   ( s_core_ext_bus_resp ),
+    .instr_slave_req_i   ( s_core_instr_bus_req ),
+    .instr_slave_resp_o  ( s_core_instr_bus_resp ),
+    .dma_slave_req_i     ( s_dma_ext_bus_req ),
+    .dma_slave_resp_o    ( s_dma_ext_bus_resp ),
+    .ext_slave_req_i     ( s_data_slave_64_req ),
+    .ext_slave_resp_o    ( s_data_slave_64_resp ),
+    .tcdm_master_req_o   ( s_ext_tcdm_bus_req ),
+    .tcdm_master_resp_i  ( s_ext_tcdm_bus_resp ),
+    .periph_master_req_o ( s_ext_mperiph_bus_req ),
+    .periph_master_resp_i( s_ext_mperiph_bus_resp),
+    .ext_master_req_o    ( s_data_master_req ),
+    .ext_master_resp_i   ( s_data_master_resp )
   );
 
   axi2mem_wrap #(
@@ -549,28 +564,34 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
+    .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+    .axi_req_t      ( c2s_req_t          ),
+    .axi_resp_t     ( c2s_resp_t         )
   ) axi2mem_wrap_i (
-    .clk_i       ( clk_cluster    ),
-    .rst_ni      ( s_rst_n        ),
-    .test_en_i   ( test_mode_i    ),
-    .axi_slave   ( s_ext_tcdm_bus ),
-    .tcdm_master ( s_hci_ext      ),
-    .busy_o      ( s_axi2mem_busy )
+    .clk_i            ( clk_cluster         ),
+    .rst_ni           ( s_rst_n             ),
+    .test_en_i        ( test_mode_i         ),
+    .axi_slave_req_i  ( s_ext_tcdm_bus_req  ),
+    .axi_slave_resp_o ( s_ext_tcdm_bus_resp ),
+    .tcdm_master      ( s_hci_ext           ),
+    .busy_o           ( s_axi2mem_busy      )
   );
 
   axi2per_wrap #(
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
-    .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
+    .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
+    .axi_req_t      ( c2s_req_t          ),
+    .axi_resp_t     ( c2s_resp_t         )
   ) axi2per_wrap_i (
-    .clk_i         ( clk_cluster       ),
-    .rst_ni        ( s_rst_n           ),
-    .test_en_i     ( test_mode_i       ),
-    .axi_slave     ( s_ext_mperiph_bus ),
-    .periph_master ( s_mperiph_bus     ),
-    .busy_o        ( s_axi2per_busy    )
+    .clk_i            ( clk_cluster            ),
+    .rst_ni           ( s_rst_n                ),
+    .test_en_i        ( test_mode_i            ),
+    .axi_slave_req_i  ( s_ext_mperiph_bus_req  ),
+    .axi_slave_resp_o ( s_ext_mperiph_bus_resp ),
+    .periph_master    ( s_mperiph_bus          ),
+    .busy_o           ( s_axi2per_busy         )
   );
 
   per_demux_wrap #(
@@ -614,14 +635,17 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH       ),
     .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH       ),
-    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
+    .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      ),
+    .axi_req_t      ( c2s_in_req_t         ),
+    .axi_resp_t     ( c2s_in_resp_t        )
   ) per2axi_wrap_i (
-    .clk_i          ( clk_cluster                     ),
-    .rst_ni         ( s_rst_n                         ),
-    .test_en_i      ( test_mode_i                     ),
-    .periph_slave   ( s_xbar_speriph_bus[SPER_EXT_ID] ),
-    .axi_master     ( s_core_ext_bus                  ),
-    .busy_o         ( s_per2axi_busy                  )
+    .clk_i             ( clk_cluster                     ),
+    .rst_ni            ( s_rst_n                         ),
+    .test_en_i         ( test_mode_i                     ),
+    .periph_slave      ( s_xbar_speriph_bus[SPER_EXT_ID] ),
+    .axi_master_req_o  ( s_core_ext_bus_req              ),
+    .axi_master_resp_i ( s_core_ext_bus_resp             ),
+    .busy_o            ( s_per2axi_busy                  )
   );
     
 
@@ -685,7 +709,9 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
     .DATA_WIDTH         ( DATA_WIDTH         ),
     .ADDR_WIDTH         ( ADDR_WIDTH         ),
-    .BE_WIDTH           ( BE_WIDTH           )
+    .BE_WIDTH           ( BE_WIDTH           ),
+    .axi_req_t          ( c2s_in_req_t       ),
+    .axi_resp_t         ( c2s_in_resp_t      )
   ) dmac_wrap_i (
     .clk_i             ( clk_cluster        ),
     .rst_ni            ( s_rst_n            ),
@@ -694,7 +720,8 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .cl_ctrl_slave     ( s_periph_dma_bus[0]),
     .fc_ctrl_slave     ( s_periph_dma_bus[1]),
     .tcdm_master       ( s_hci_dma          ),
-    .ext_master        ( s_dma_ext_bus      ),
+    .ext_master_req_o  ( s_dma_ext_bus_req  ),
+    .ext_master_resp_i ( s_dma_ext_bus_resp ),
     .term_event_cl_o   ( s_dma_cl_event     ),
     .term_irq_cl_o     ( s_dma_cl_irq       ),
     .term_event_pe_o   ( s_dma_fc_event     ),
@@ -1064,66 +1091,66 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .enable_l1_l15_prefetch_i  ( s_enable_l1_l15_prefetch ), // set it to 1 to use prefetch feature
 
     //AXI read address bus -------------------------------------------
-    .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
-    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
-    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),  //burst length - 1 to 16
-    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),  //size of each transfer in burst
-    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),  //accept only incr burst=01
-    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),  //only normal access supported axs_awlock=00
-    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
-    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
-    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ), //
-    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),  //
-    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),  //
-    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),  //master addr valid
-    .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),  //slave ready to accept
+    .axi_master_arid_o      ( s_core_instr_bus_req.ar.id     ),
+    .axi_master_araddr_o    ( s_core_instr_bus_req.ar.addr   ),
+    .axi_master_arlen_o     ( s_core_instr_bus_req.ar.len    ),  //burst length - 1 to 16
+    .axi_master_arsize_o    ( s_core_instr_bus_req.ar.size   ),  //size of each transfer in burst
+    .axi_master_arburst_o   ( s_core_instr_bus_req.ar.burst  ),  //accept only incr burst=01
+    .axi_master_arlock_o    ( s_core_instr_bus_req.ar.lock   ),  //only normal access supported axs_awlock=00
+    .axi_master_arcache_o   ( s_core_instr_bus_req.ar.cache  ),
+    .axi_master_arprot_o    ( s_core_instr_bus_req.ar.prot   ),
+    .axi_master_arregion_o  ( s_core_instr_bus_req.ar.region ), //
+    .axi_master_aruser_o    ( s_core_instr_bus_req.ar.user   ),  //
+    .axi_master_arqos_o     ( s_core_instr_bus_req.ar.qos    ),  //
+    .axi_master_arvalid_o   ( s_core_instr_bus_req.ar_valid  ),  //master addr valid
+    .axi_master_arready_i   ( s_core_instr_bus_resp.ar_ready ),  //slave ready to accept
     // ---------------------------------------------------------------
 
     //AXI BACKWARD read data bus ----------------------------------------------
-    .axi_master_rid_i       ( s_core_instr_bus.r_id     ),
-    .axi_master_rdata_i     ( s_core_instr_bus.r_data   ),
-    .axi_master_rresp_i     ( s_core_instr_bus.r_resp   ),
-    .axi_master_rlast_i     ( s_core_instr_bus.r_last   ), //last transfer in burst
-    .axi_master_ruser_i     ( s_core_instr_bus.r_user   ),
-    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid  ), //slave data valid
-    .axi_master_rready_o    ( s_core_instr_bus.r_ready  ), //master ready to accept
+    .axi_master_rid_i       ( s_core_instr_bus_resp.r.id     ),
+    .axi_master_rdata_i     ( s_core_instr_bus_resp.r.data   ),
+    .axi_master_rresp_i     ( s_core_instr_bus_resp.r.resp   ),
+    .axi_master_rlast_i     ( s_core_instr_bus_resp.r.last   ), //last transfer in burst
+    .axi_master_ruser_i     ( s_core_instr_bus_resp.r.user   ),
+    .axi_master_rvalid_i    ( s_core_instr_bus_resp.r_valid  ), //slave data valid
+    .axi_master_rready_o    ( s_core_instr_bus_req.r_ready   ), //master ready to accept
 
     // NOT USED ----------------------------------------------
-    .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
-    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
-    .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
-    .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
-    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
-    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
-    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
-    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
-    .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
-    .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
-    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
-    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
-    .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
+    .axi_master_awid_o      ( s_core_instr_bus_req.aw.id     ),
+    .axi_master_awaddr_o    ( s_core_instr_bus_req.aw.addr   ),
+    .axi_master_awlen_o     ( s_core_instr_bus_req.aw.len    ),
+    .axi_master_awsize_o    ( s_core_instr_bus_req.aw.size   ),
+    .axi_master_awburst_o   ( s_core_instr_bus_req.aw.burst  ),
+    .axi_master_awlock_o    ( s_core_instr_bus_req.aw.lock   ),
+    .axi_master_awcache_o   ( s_core_instr_bus_req.aw.cache  ),
+    .axi_master_awprot_o    ( s_core_instr_bus_req.aw.prot   ),
+    .axi_master_awregion_o  ( s_core_instr_bus_req.aw.region ),
+    .axi_master_awuser_o    ( s_core_instr_bus_req.aw.user   ),
+    .axi_master_awqos_o     ( s_core_instr_bus_req.aw.qos    ),
+    .axi_master_awvalid_o   ( s_core_instr_bus_req.aw_valid  ),
+    .axi_master_awready_i   ( s_core_instr_bus_resp.aw_ready ),
 
     // NOT USED ----------------------------------------------
-    .axi_master_wdata_o     ( s_core_instr_bus.w_data   ),
-    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb   ),
-    .axi_master_wlast_o     ( s_core_instr_bus.w_last   ),
-    .axi_master_wuser_o     ( s_core_instr_bus.w_user   ),
-    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid  ),
-    .axi_master_wready_i    ( s_core_instr_bus.w_ready  ),
+    .axi_master_wdata_o     ( s_core_instr_bus_req.w.data   ),
+    .axi_master_wstrb_o     ( s_core_instr_bus_req.w.strb   ),
+    .axi_master_wlast_o     ( s_core_instr_bus_req.w.last   ),
+    .axi_master_wuser_o     ( s_core_instr_bus_req.w.user   ),
+    .axi_master_wvalid_o    ( s_core_instr_bus_req.w_valid  ),
+    .axi_master_wready_i    ( s_core_instr_bus_resp.w_ready ),
     // ---------------------------------------------------------------
 
     // NOT USED ----------------------------------------------
-    .axi_master_bid_i       ( s_core_instr_bus.b_id     ),
-    .axi_master_bresp_i     ( s_core_instr_bus.b_resp   ),
-    .axi_master_buser_i     ( s_core_instr_bus.b_user   ),
-    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid  ),
-    .axi_master_bready_o    ( s_core_instr_bus.b_ready  ),
+    .axi_master_bid_i       ( s_core_instr_bus_resp.b.id     ),
+    .axi_master_bresp_i     ( s_core_instr_bus_resp.b.resp   ),
+    .axi_master_buser_i     ( s_core_instr_bus_resp.b.user   ),
+    .axi_master_bvalid_i    ( s_core_instr_bus_resp.b_valid  ),
+    .axi_master_bready_o    ( s_core_instr_bus_req.b_ready   ),
     // ---------------------------------------------------------------
 
     .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
     .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
   );
-  assign s_core_instr_bus.aw_atop = '0;
+  assign s_core_instr_bus_req.aw.atop = '0;
 
   /* TCDM banks */
   tcdm_banks_wrap #(
@@ -1141,118 +1168,99 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   );
   
   /* AXI interconnect infrastructure (slices, size conversion) */ 
-   //********************************************************
-   //**************** AXI REGISTER SLICES *******************
-   //********************************************************
-   // CLUSTER TO SOC
-
-   `AXI_TYPEDEF_AW_CHAN_T(c2s_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_W_CHAN_T(c2s_w_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_DATA_C2S_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_B_CHAN_T(c2s_b_chan_t,logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_AR_CHAN_T(c2s_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_R_CHAN_T(c2s_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   
-  `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
-  `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
-
-   c2s_req_t   src_req ;
-   c2s_resp_t  src_resp;   
-   
-  `AXI_ASSIGN_TO_REQ(src_req,s_data_master)
-  `AXI_ASSIGN_FROM_RESP(s_data_master,src_resp)
+  //********************************************************
+  //**************** AXI REGISTER SLICES *******************
+  //********************************************************
+  // CLUSTER TO SOC
 
   axi_cdc_src #(
-     .aw_chan_t (c2s_aw_chan_t),
-     .w_chan_t  (c2s_w_chan_t),
-     .b_chan_t  (c2s_b_chan_t),     
-     .r_chan_t  (c2s_r_chan_t),
-     .ar_chan_t (c2s_ar_chan_t),
-     .axi_req_t (c2s_req_t    ),
-     .axi_resp_t(c2s_resp_t   ),
+    .aw_chan_t (c2s_aw_chan_t),
+    .w_chan_t  (c2s_w_chan_t),
+    .b_chan_t  (c2s_b_chan_t),     
+    .r_chan_t  (c2s_r_chan_t),
+    .ar_chan_t (c2s_ar_chan_t),
+    .axi_req_t (c2s_req_t    ),
+    .axi_resp_t(c2s_resp_t   ),
     .LogDepth        ( LOG_DEPTH              )
-    ) axi_master_cdc_i (
-     .src_rst_ni                       ( s_rst_n                     ),
-     .src_clk_i                        ( clk_cluster                 ),
-     .src_req_i                        ( src_req                     ),
-     .src_resp_o                       ( src_resp                    ),
-     .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
-     .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
-     .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
-     .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
-     .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
-     .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
-     .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
-     .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
-     .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
-     .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
-     .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
-     .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
-     .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
-     .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
-     .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
-    );
+  ) axi_master_cdc_i (
+    .src_rst_ni                       ( s_rst_n                     ),
+    .src_clk_i                        ( clk_cluster                 ),
+    .src_req_i                        ( s_data_master_req           ),
+    .src_resp_o                       ( s_data_master_resp          ),
+    .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
+    .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
+    .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
+    .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
+    .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
+    .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
+    .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
+    .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
+    .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
+    .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
+    .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
+    .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
+    .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
+    .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
+    .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
+  );
       
-   // SOC TO CLUSTER
+  // SOC TO CLUSTER
 
-      
-   `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_W_CHAN_T(s2c_w_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_DATA_S2C_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_B_CHAN_T(s2c_b_chan_t,logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_AR_CHAN_T(s2c_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   `AXI_TYPEDEF_R_CHAN_T(s2c_r_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
-   
-  `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
-  `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
-
-   s2c_req_t      dst_req;
-   s2c_resp_t     dst_resp;
-   
-  `AXI_ASSIGN_FROM_REQ(s_data_slave_32,dst_req)
-  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_32)
-   
   axi_cdc_dst #(
-     .aw_chan_t (s2c_aw_chan_t),
-     .w_chan_t  (s2c_w_chan_t ),
-     .b_chan_t  (s2c_b_chan_t ),     
-     .r_chan_t  (s2c_r_chan_t ),
-     .ar_chan_t (s2c_ar_chan_t),
-     .axi_req_t (s2c_req_t    ),
-     .axi_resp_t(s2c_resp_t   ),
-     .LogDepth        ( LOG_DEPTH              )
-    ) axi_slave_cdc_i (
-     .dst_rst_ni                       ( s_rst_n                    ),
-     .dst_clk_i                        ( clk_i                      ),
-     .dst_req_o                        ( dst_req                    ),
-     .dst_resp_i                       ( dst_resp                   ),
-     .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
-     .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
-     .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
-     .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
-     .async_data_slave_w_rptr_o        ( async_data_slave_w_rptr_o  ),
-     .async_data_slave_w_data_i        ( async_data_slave_w_data_i  ),
-     .async_data_slave_ar_wptr_i       ( async_data_slave_ar_wptr_i ),
-     .async_data_slave_ar_rptr_o       ( async_data_slave_ar_rptr_o ),
-     .async_data_slave_ar_data_i       ( async_data_slave_ar_data_i ),
-     .async_data_slave_b_wptr_o        ( async_data_slave_b_wptr_o  ),
-     .async_data_slave_b_rptr_i        ( async_data_slave_b_rptr_i  ),
-     .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
-     .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
-     .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
-     .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
-    );                
+    .aw_chan_t (s2c_aw_chan_t),
+    .w_chan_t  (s2c_w_chan_t ),
+    .b_chan_t  (s2c_b_chan_t ),     
+    .r_chan_t  (s2c_r_chan_t ),
+    .ar_chan_t (s2c_ar_chan_t),
+    .axi_req_t (s2c_req_t    ),
+    .axi_resp_t(s2c_resp_t   ),
+    .LogDepth        ( LOG_DEPTH              )
+  ) axi_slave_cdc_i (
+    .dst_rst_ni                       ( s_rst_n                    ),
+    .dst_clk_i                        ( clk_i                      ),
+    .dst_req_o                        ( s_data_slave_32_req        ),
+    .dst_resp_i                       ( s_data_slave_32_resp       ),
+    .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
+    .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
+    .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
+    .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
+    .async_data_slave_w_rptr_o        ( async_data_slave_w_rptr_o  ),
+    .async_data_slave_w_data_i        ( async_data_slave_w_data_i  ),
+    .async_data_slave_ar_wptr_i       ( async_data_slave_ar_wptr_i ),
+    .async_data_slave_ar_rptr_o       ( async_data_slave_ar_rptr_o ),
+    .async_data_slave_ar_data_i       ( async_data_slave_ar_data_i ),
+    .async_data_slave_b_wptr_o        ( async_data_slave_b_wptr_o  ),
+    .async_data_slave_b_rptr_i        ( async_data_slave_b_rptr_i  ),
+    .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
+    .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
+    .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
+    .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
+  );                
 
-  axi_dw_converter_intf #(
-    .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
-    .AXI_ADDR_WIDTH          ( AXI_ADDR_WIDTH     ),
-    .AXI_SLV_PORT_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-    .AXI_MST_PORT_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-    .AXI_USER_WIDTH          ( AXI_USER_WIDTH     ),
-    .AXI_MAX_READS           ( 1                  )
+  axi_dw_converter #(
+    .AxiMaxReads         ( 1                  ),
+    .AxiSlvPortDataWidth ( AXI_DATA_S2C_WIDTH ),
+    .AxiMstPortDataWidth ( AXI_DATA_C2S_WIDTH ),
+    .AxiIdWidth          ( AXI_ID_IN_WIDTH    ),
+    .AxiAddrWidth        ( AXI_ADDR_WIDTH     ),
+    .aw_chan_t           ( s2c_aw_chan_t      ),
+    .mst_w_chan_t        ( c2s_w_chan_t       ),
+    .slv_w_chan_t        ( s2c_w_chan_t       ),
+    .b_chan_t            ( s2c_b_chan_t       ),
+    .ar_chan_t           ( s2c_ar_chan_t      ),
+    .mst_r_chan_t        ( c2s_in_r_chan_t    ),
+    .slv_r_chan_t        ( s2c_r_chan_t       ),
+    .axi_mst_req_t       ( s2c_req_t          ),
+    .axi_mst_resp_t      ( s2c_resp_t         ),
+    .axi_slv_req_t       ( c2s_in_req_t       ),
+    .axi_slv_resp_t      ( c2s_in_resp_t      )
   ) axi_dw_UPSIZE_32_64_wrap_i (
-    .clk_i  ( clk_i           ),
-    .rst_ni ( s_rst_n         ),
-    .slv    ( s_data_slave_32 ),
-    .mst    ( s_data_slave_64 )
+    .clk_i     ( clk_i                ),
+    .rst_ni    ( s_rst_n              ),
+    .slv_req_i ( s_data_slave_32_req  ),
+    .slv_resp_o( s_data_slave_32_resp ),
+    .mst_req_o ( s_data_slave_64_req  ),
+    .mst_resp_i( s_data_slave_64_resp )
   );
    
   /* event synchronizers */
