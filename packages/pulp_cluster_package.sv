@@ -17,6 +17,115 @@
 package pulp_cluster_package;
 
   import rapid_recovery_pkg::*;
+
+  typedef bit [ 7:0] byte_t;
+  typedef bit [12:0] alias_t;
+  typedef bit [31:0] word_t;
+  typedef bit [63:0] doub_t;
+
+  // Core type
+  typedef enum logic[1:0] {
+    CV32,
+    RISCY,
+    IBEX
+  } core_type_e;
+
+  // PULP cluster configuration
+  typedef struct packed {
+    // Type of core in the cluster
+    core_type_e CoreType;
+    // Number of cores in the cluster
+    byte_t NumCores;
+    // Number of DMA TCDM plugs
+    byte_t DmaNumPlugs;
+    // Number of DMA outstanding transactions
+    byte_t DmaNumOutstandingBursts;
+    // DMA burst length in bits
+    word_t DmaBurstLength;
+    // Number of masters in crossbar peripherals
+    byte_t NumMstPeriphs;
+    // Number of slaves in crossbar peripherals
+    byte_t NumSlvPeriphs;
+    // Enable cluster aliasing
+    bit ClusterAlias;
+    // Base of the cluster alias
+    alias_t ClusterAliasBase;
+    // Number of internal synchronization stages
+    byte_t NumSyncStages;
+    // Enable HCI
+    bit UseHci;
+    // Size of the TCDM in bytes (power of two)
+    word_t TcdmSize;
+    // Number of TCDM banks (power of two)
+    byte_t TcdmNumBank;
+    // Enable HWPEs
+    bit HwpePresent;
+    // Number of memory ports available for HWPEs
+    byte_t HwpeNumPorts;
+    // Number if I$ banks
+    byte_t iCacheNumBanks;
+    // Number of I$ lines
+    byte_t iCacheNumLines;
+    // Number of I$ ways
+    byte_t iCacheNumWays; // default is 4
+    // Shared I$ size in bytes
+    word_t iCacheSharedSize; // default is 4096
+    // Private I$ size in bytes
+    word_t iCachePrivateSize; // default is 521
+    // Private I$ data width
+    byte_t iCachePrivateDataWidth;
+    // Enable reduced tag
+    bit EnableReducedTag;
+    // L2 size
+    word_t L2Size;
+    // Debug module base address
+    doub_t DmBaseAddr;
+    // BootROM base address
+    doub_t BootRomBaseAddr;
+    // Cores boot address
+    doub_t BootAddr;
+    // Enable private FPU
+    bit EnablePrivateFpu;
+    // Enable private FP division/sqrt
+    bit EnablePrivateFpDivSqrt;
+    // Enable shared FPUs
+    bit EnableSharedFpu;
+    // Enable shared FP division/sqrt
+    bit EnableSharedFpDivSqrt;
+    // Number of shared FPUs
+    byte_t NumSharedFpu;
+    // Number of AXI crossbar subordinate ports
+    byte_t NumAxiIn;
+    // Number of AXI crossbar manager ports
+    byte_t NumAxiOut;
+    // AXI ID width of crossbar subordinate ports
+    byte_t AxiIdInWidth;
+    // AXI ID width of crossbar manager ports
+    byte_t AxiIdOutWidth;
+    // AXI address width
+    byte_t AxiAddrWidth;
+    // AXI data width from external to cluster
+    byte_t AxiDataInWidth;
+    // AXI data width from cluster to external
+    byte_t AxiDataOutWidth;
+    // AXI user width
+    byte_t AxiUserWidth;
+    // Log depth of AXI CDC FIFOs
+    byte_t AxiCdcLogDepth; // old LOG_DEPTH
+    // Sinchronization stages of AXI CDC FIFOs
+    byte_t AxiCdcSyncStages;
+    // Input synchronization stages
+    byte_t SyncStages;
+    // Cluster base address
+    doub_t ClusterBaseAddr;
+    // Cluster peripherals offset
+    doub_t ClusterPeriphOffs;
+    // Cluster base external offset
+    doub_t ClusterExternalOffs;
+    // Address remap for virtualization
+    bit EnableRemapAddress;
+  } pulp_cluster_cfg_t;
+
   parameter NB_SPERIPH_PLUGS_EU  =  2;
 
   // number of master and slave cluster periphs
@@ -35,19 +144,61 @@ package pulp_cluster_package;
   parameter SPER_HMR_UNIT_ID = 8;  // 0x2000 - 0x2400
   parameter SPER_EXT_ID      = 9;  // 0x2400 - 0x2800
   parameter SPER_ERROR_ID    = 10; // 0x2800 - 0x2C00
-   
-  // if set to 1, then instantiate APU in the cluster
- // parameter APU_CLUSTER = 0;
 
-  // // if set to 1, the 0x0000_0000 to 0x0040_0000 is the alias of the current cluster address space (eg cluster 0 is from  0x1000_0000 to 0x1040_0000)
-  // parameter CLUSTER_ALIAS = 1;
+  // The following parameters refer to the cluster AXI crossbar
+  localparam byte_t NumAxiSubordinatePorts = 4;
+  localparam byte_t NumAxiManagerPorts = 3;
+  localparam byte_t AxiSubordinateIdwidth = 4;
+  localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
 
-  // // if set to 1, the DEMUX peripherals (EU, MCHAN) are placed right before the test and set region.
-  // // This will steal 16KB from the 1MB TCDM reegion.
-  // // EU is mapped           from 0x10100000 - 0x400
-  // // MCHAN regs are mapped  from 0x10100000 - 0x800
-  // // remember to change the defines in the pulp.h as well to be coherent with this approach
-  // parameter DEM_PER_BEFORE_TCDM_TS = 0;
+  localparam pulp_cluster_cfg_t PulpClusterDefaultCfg = '{
+    CoreType: CV32,
+    NumCores: 8,
+    DmaNumPlugs: 4,
+    DmaNumOutstandingBursts: 8,
+    DmaBurstLength: 256,
+    NumMstPeriphs: NB_MPERIPHS,
+    NumSlvPeriphs: NB_SPERIPHS,
+    ClusterAlias: 1,
+    ClusterAliasBase: 'h0,
+    NumSyncStages: 3,
+    UseHci: 1,
+    TcdmSize: 64*1024,
+    TcdmNumBank: 16,
+    HwpePresent: 0,
+    HwpeNumPorts: 0,
+    iCacheNumBanks: 2,
+    iCacheNumLines: 1,
+    iCacheNumWays: 4,
+    iCacheSharedSize: 4*1024,
+    iCachePrivateSize: 512,
+    iCachePrivateDataWidth: 32,
+    EnableReducedTag: 1,
+    L2Size: 1000*1024,
+    DmBaseAddr: 'h1A110000,
+    BootRomBaseAddr: 'h1A000000,
+    BootAddr: 'h1C000000,
+    EnablePrivateFpu: 1,
+    EnablePrivateFpDivSqrt: 0,
+    EnableSharedFpu: 0,
+    EnableSharedFpDivSqrt: 0,
+    NumSharedFpu: 0,
+    NumAxiIn: NumAxiSubordinatePorts,
+    NumAxiOut: NumAxiManagerPorts,
+    AxiIdInWidth: AxiSubordinateIdwidth,
+    AxiIdOutWidth:AxiManagerIdwidth,
+    AxiAddrWidth: 32,
+    AxiDataInWidth: 32,
+    AxiDataOutWidth: 32,
+    AxiUserWidth: 10,
+    AxiCdcLogDepth: 3,
+    AxiCdcSyncStages: 3,
+    ClusterBaseAddr: 'h10000000,
+    ClusterPeriphOffs: 'h00200000,
+    ClusterExternalOffs: 'h00400000,
+    EnableRemapAddress: 0,
+    default: '0
+  };
 
   typedef struct packed {
     logic gnt;

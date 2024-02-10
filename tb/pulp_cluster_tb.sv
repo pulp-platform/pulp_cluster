@@ -25,7 +25,8 @@ import "DPI-C" function byte get_section(output longint address, output longint 
 import "DPI-C" context function byte read_section(input longint address, inout byte buffer[], input longint len);
 
 module pulp_cluster_tb;
-   
+
+  import pulp_cluster_package::*;
   import uvm_pkg::*;
   import axi_pkg::*;
 
@@ -273,44 +274,61 @@ module pulp_cluster_tb;
       .dst        ( axi_slave[1]                 )
       );
 
+  localparam pulp_cluster_cfg_t PulpClusterCfg = '{
+    CoreType: pulp_cluster_package::RISCY,
+    NumCores: `NB_CORES,
+    DmaNumPlugs: `NB_DMAS,
+    DmaNumOutstandingBursts: 8,
+    DmaBurstLength: 256,
+    NumMstPeriphs: `NB_MPERIPHS,
+    NumSlvPeriphs: `NB_SPERIPHS,
+    ClusterAlias: 1,
+    ClusterAliasBase: 'h0,
+    NumSyncStages: 3,
+    UseHci: 1,
+    TcdmSize: 256*1024,
+    TcdmNumBank: 16,
+    HwpePresent: 1,
+    HwpeNumPorts: 9,
+    iCacheNumBanks: 2,
+    iCacheNumLines: 1,
+    iCacheNumWays: 4,
+    iCacheSharedSize: 4*1024,
+    iCachePrivateSize: 512,
+    iCachePrivateDataWidth: 32,
+    EnableReducedTag: 1,
+    L2Size: 1000*1024,
+    DmBaseAddr: 'h60203000,
+    BootRomBaseAddr: BootAddr,
+    BootAddr: BootAddr,
+    EnablePrivateFpu: 1,
+    EnablePrivateFpDivSqrt: 0,
+    EnableSharedFpu: 0,
+    EnableSharedFpDivSqrt: 0,
+    NumSharedFpu: 0,
+    NumAxiIn: NumAxiSubordinatePorts,
+    NumAxiOut: NumAxiManagerPorts,
+    AxiIdInWidth: AxiIw-2,
+    AxiIdOutWidth:AxiIw,
+    AxiAddrWidth: AxiAw,
+    AxiDataInWidth: AxiDw,
+    AxiDataOutWidth: AxiDw,
+    AxiUserWidth: AxiUw,
+    AxiCdcLogDepth: 3,
+    AxiCdcSyncStages: 3,
+    SyncStages: 3,
+    ClusterBaseAddr: ClustBaseAddr,
+    ClusterPeriphOffs: ClustPeriphOffs,
+    ClusterExternalOffs: ClustExtOffs,
+    EnableRemapAddress: 0,
+    default: '0
+  };
+
   pulp_cluster
 `ifdef USE_PULP_PARAMETERS
   #(
-    .NB_CORES                       ( `NB_CORES                ),
-    .NB_HWPE_PORTS                  ( 9                        ),
-    .NB_DMAS                        ( `NB_DMAS                 ),
-    .NB_MPERIPHS                    ( `NB_MPERIPHS             ),
-    .NB_SPERIPHS                    ( `NB_SPERIPHS             ),
-    .CLUSTER_ALIAS                  ( 1                        ),
-    .CLUSTER_ALIAS_BASE             ( 12'h000                  ),
-    .TCDM_SIZE                      ( 256*1024                 ),
-    .NB_TCDM_BANKS                  ( 16                       ),
-    .HWPE_PRESENT                   ( 1                        ),
-    .USE_HETEROGENEOUS_INTERCONNECT ( 1                        ),
-    .SET_ASSOCIATIVE                ( 4                        ),
-    .NB_CACHE_BANKS                 ( 2                        ),
-    .CACHE_LINE                     ( 1                        ),
-    .CACHE_SIZE                     ( 4*1024                   ),
-    .L2_SIZE                        ( 32'h100000               ),
-    .ROM_BOOT_ADDR                  ( BootAddr                 ),
-    .BOOT_ADDR                      ( BootAddr                 ),
-    .INSTR_RDATA_WIDTH              ( 32                       ),
-    .CLUST_FPU                      ( 0                        ),
-    .CLUST_FP_DIVSQRT               ( 0                        ),
-    .CLUST_SHARED_FP                ( 0                        ),
-    .CLUST_SHARED_FP_DIVSQRT        ( 0                        ),
-    .AXI_ADDR_WIDTH                 ( AxiAw                    ),
-    .AXI_DATA_S2C_WIDTH             ( AxiDw                    ),
-    .AXI_DATA_C2S_WIDTH             ( AxiDw                    ),
-    .AXI_USER_WIDTH                 ( AxiUw                    ),
-    .AXI_ID_IN_WIDTH                ( AxiIw-2                  ),
-    .AXI_ID_OUT_WIDTH               ( AxiIw                    ),
-    .LOG_DEPTH                      ( 3                        ),
-    .BaseAddr                       ( ClustBaseAddr            ),
-    .ClusterPeripheralsOffs         ( ClustPeriphOffs          ),
-    .ClusterExternalOffs            ( ClustExtOffs             ),
-    .CdcSynchStages                 ( 3                        )
-  )
+    .Cfg ( PulpClusterCfg )
+   )
 `endif
   cluster_i (
     .clk_i                       ( s_clk                                ),

@@ -20,7 +20,7 @@ dependencies:
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "a971e364bf8090cf77fafad995b480c1ac7ea4e0" } # branch: yt/carfield
-  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: c015839816938a790c8da5fd5829cfc536f1ca9c } # branch: yt/return-reg
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: c9defcfb4f4e8733383b28a451c430783c2febbd } # branch: astral
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.1-beta  }
   axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
@@ -30,11 +30,11 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 3cb3d99b2cebfeed55cb6ab9d98fce7b99e97cb9 } # branch: test_mode_fix
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: v1.1 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 651441e4a6459f84f3dde4242cf34961925a2142 } # branch: astral_rebase
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 532f9514ad5c7ee21dde9e3a84ae99d2a5760610 } # branch: astral
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 1b30b0b9a31afa702eb2d166d672ceda2f5d463a } # branch: astral
 
 export_include_dirs:
   - include
