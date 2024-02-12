@@ -5,3 +5,6 @@ modelsim.ini
 work
 transcript
 
+regression-tests
+pulp-runtime
+nonfree
