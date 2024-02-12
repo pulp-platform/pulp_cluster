@@ -3,3 +3,6 @@ overrides:
   register_interface  : { git: "https://github.com/pulp-platform/register_interface.git"  , rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746 } # branch: master
   cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
   cv32e40p            : { git: "https://github.com/pulp-platform/cv32e40p.git"            , rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # branch: michaero/safety-island-clic
+  cluster_peripherals : { git: "https://github.com/pulp-platform/cluster_peripherals.git" , rev: ab82a2c3e10b87b677932e0fa46fd93e6e5df547 } # branch: rt/neureka-redmule-integration
+  hwpe-ctrl           : { git: "https://github.com/pulp-platform/hwpe-ctrl.git"           , rev: a5966201aeeb988d607accdc55da933a53c6a56e } # branch: master
+  redmule             : { git: "https://github.com/pulp-platform/redmule.git"             , rev: 10363c973f987963f27227332c6c6638289f3f9c } # branch: rt/neureka-redmule-integration
