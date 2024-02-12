@@ -93,11 +93,12 @@ module cluster_peripherals
 
   // SRAM SPEED REGULATION --> TCDM
   output logic [1:0]                  TCDM_arb_policy_o,
-                                    
+
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   XBAR_PERIPH_BUS.Master              hmr_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
+  output logic                        hwpe_sel_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
@@ -181,6 +182,7 @@ module cluster_peripherals
 
     // SRAM SPEED REGULATION --> TCDM
     .hwpe_en_o      ( hwpe_en_o                    ),
+    .hwpe_sel_o     ( hwpe_sel_o                   ),
     .hci_ctrl_o     ( hci_ctrl_o                   ),
 
     .fregfile_disable_o ( fregfile_disable_o       ),

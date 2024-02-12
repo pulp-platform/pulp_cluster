@@ -217,7 +217,8 @@ logic [Cfg.NumCores-1:0]                dbg_core_halted;
 logic [Cfg.NumCores-1:0]                dbg_core_havereset;
 logic [Cfg.NumCores-1:0]                dbg_core_running;
 logic [Cfg.NumCores-1:0]                s_dbg_irq;
-logic                               s_hwpe_en;
+logic                                   s_hwpe_en;
+logic                                   s_hwpe_sel;
 
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
@@ -771,6 +772,7 @@ cluster_peripherals #(
   .hwpe_cfg_master          ( s_hwpe_cfg_bus                    ),
   .hwpe_events_i            ( s_hwpe_remap_evt                  ),
   .hwpe_en_o                ( s_hwpe_en                         ),
+  .hwpe_sel_o               ( s_hwpe_sel                        ),
   .hci_ctrl_o               ( s_hci_ctrl                        ),
   .IC_ctrl_unit_bus_main    (  IC_ctrl_unit_bus_main            ),
   .IC_ctrl_unit_bus_pri     (  IC_ctrl_unit_bus_pri             ),
@@ -1145,13 +1147,18 @@ generate
   if(Cfg.HwpePresent) begin: hwpe_gen
     hwpe_subsystem #(
       .N_CORES       ( Cfg.NumCores                     ),
+      .N_HWPES       ( 2                                ),
       .N_MASTER_PORT ( Cfg.HwpeNumPorts                 ),
-      .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs )
+      .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs ),
+      .DW            ( Cfg.HwpeNumPorts * DataWidth     ),
+      .AW            ( AddrWidth                        ),
+      .OW            ( 1                                )
     ) hwpe_subsystem_i (
       .clk               ( clk_i          ),
       .rst_n             ( rst_ni         ),
       .test_mode         ( test_mode_i    ),
       .hwpe_en_i         ( s_hwpe_en      ),
+      .hwpe_sel_i        ( s_hwpe_sel     ),
       .hwpe_xbar_master  ( s_hci_hwpe [0] ),
       .hwpe_cfg_slave    ( s_hwpe_cfg_bus ),
       .evt_o             ( s_hwpe_evt     ),
