@@ -63,7 +63,7 @@ module hwpe_subsystem
     .AW ( AW ),
     .OW ( OW )
   ) tcdm [N_HWPES-1:0] (
-    .clk ( clk_i )
+    .clk ( hwpe_clk )
   );
 
   /////////////
