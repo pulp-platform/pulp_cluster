@@ -45,7 +45,7 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: c9defcfb4f4e8733383b28a451c430783c2febbd
+    revision: ab82a2c3e10b87b677932e0fa46fd93e6e5df547
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
@@ -117,7 +117,7 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: b7857919ea14b586901ff4282ad7749a3d50501e
+    revision: a5966201aeeb988d607accdc55da933a53c6a56e
     version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
@@ -166,6 +166,16 @@ packages:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
+  neureka:
+    revision: d9e4c3c38aa28b3149444840297100f7355ddc22
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/neureka.git
+    dependencies:
+    - hci
+    - hwpe-ctrl
+    - hwpe-stream
+    - zeroriscy
   per2axi:
     revision: 892fcad60b6374fe558cbde76f4a529d473ba5ca
     version: 1.0.4
@@ -174,7 +184,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 1b30b0b9a31afa702eb2d166d672ceda2f5d463a
+    revision: 10363c973f987963f27227332c6c6638289f3f9c
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
@@ -233,4 +243,10 @@ packages:
     version: 1.0.3
     source:
       Git: https://github.com/pulp-platform/timer_unit.git
+    dependencies: []
+  zeroriscy:
+    revision: 8a6c00e899cb6c715dcd5a3a1a92263994fb634b
+    version: null
+    source:
+      Git: git@github.com:yvantor/ibex.git
     dependencies: []
