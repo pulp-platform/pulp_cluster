@@ -81,12 +81,7 @@ Bender.lock:
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
 	git clone https://github.com/pulp-platform/pulp-runtime.git $@
-	cd $@; git checkout 197d06b6ad1d8014cef73e0e87b59b5ebf66d019; cd $(ROOT_DIR)
-
-## Clone regression tests for bare-metal verification
-regression-tests:
-	git clone https://github.com/pulp-platform/regression_tests.git $@
-	cd $@; git checkout 8c9dc7e5a489cad272378c81a0058517f11d9adf; cd $(ROOT_DIR)
+	cd $@; git checkout e90f6e53279248bf64d98a8247f79f0f13545c11; cd $(ROOT_DIR)
 
 ########################
 # Build and simulation #
@@ -116,16 +111,8 @@ run:
 	$(VSIM) +permissive $(questa-flags) $(uvm-flags) $(QUESTASIM_FLAGS) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
 	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
-.PHONY: test-rt-par-bare
-## Run only parallel tests on pulp-runtime
-test-rt-par-bare: pulp-runtime regression-tests
-	cd $(REGRESSIONS)/carfield && $(bwruntest) --proc-verbose -v \
-		-t 3600 --yaml --max-procs 2 \
-		-o $(REGRESSIONS)/carfield/runtime-parallel.xml $(REGRESSIONS)/carfield/parallel-bare-tests.yaml
+####################
+# Regression tests #
+####################
 
-.PHONY: test-rt-mchan
-## Run mchan tests on pulp-runtime
-test-rt-mchan: pulp-runtime regression-tests
-	cd regression-tests && $(bwruntest) --proc-verbose -v \
-		-t 3600 --yaml --max-procs 2 \
-		-o $(REGRESSIONS)/carfield/runtime-mchan.xml $(REGRESSIONS)/carfield/pulp_cluster-mchan-tests.yaml
+include regression.mk
