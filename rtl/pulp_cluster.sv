@@ -1250,10 +1250,10 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .ar_chan_t           ( s2c_ar_chan_t      ),
     .mst_r_chan_t        ( c2s_in_r_chan_t    ),
     .slv_r_chan_t        ( s2c_r_chan_t       ),
-    .axi_mst_req_t       ( s2c_req_t          ),
-    .axi_mst_resp_t      ( s2c_resp_t         ),
-    .axi_slv_req_t       ( c2s_in_req_t       ),
-    .axi_slv_resp_t      ( c2s_in_resp_t      )
+    .axi_mst_req_t       ( c2s_in_req_t       ),
+    .axi_mst_resp_t      ( c2s_in_resp_t      ),
+    .axi_slv_req_t       ( s2c_req_t          ),
+    .axi_slv_resp_t      ( s2c_resp_t         )
   ) axi_dw_UPSIZE_32_64_wrap_i (
     .clk_i     ( clk_i                ),
     .rst_ni    ( s_rst_n              ),
