@@ -4,7 +4,7 @@
 
 package:
   name: pulp_cluster
-  authors: 
+  authors:
     - "Pirmin Vogel <vogelpi@lowrisc.org>"
     - "Angelo Garofalo <angelo.garofalo@unibo.it>"
     - "Francesco Conti <f.conti@unibo.it>"
@@ -33,7 +33,7 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: v1.1 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 651441e4a6459f84f3dde4242cf34961925a2142 } # branch: astral_rebase
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 1b30b0b9a31afa702eb2d166d672ceda2f5d463a } # branch: astral
 
 export_include_dirs:
@@ -79,7 +79,7 @@ sources:
       TRACE_EXECUTION: ~
     # Level 3
   - rtl/pulp_cluster.sv
-  
+
   - target: test
     files:
       - tb/mock_uart.sv
@@ -90,4 +90,4 @@ sources:
   - target: cluster_standalone
     files:
       - include/pulp_interfaces.sv
-  
+
