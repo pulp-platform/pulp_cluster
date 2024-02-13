@@ -167,7 +167,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: d9e4c3c38aa28b3149444840297100f7355ddc22
+    revision: a002f52587418844fff60a2472bd834ffcd6af29
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -184,7 +184,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 10363c973f987963f27227332c6c6638289f3f9c
+    revision: 68999ccc922b10a5043bb98f67aaf3d8d8d59f3f
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
