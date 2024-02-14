@@ -43,28 +43,33 @@ module hwpe_subsystem
   logic [N_HWPES-1:0] busy;
   logic [N_HWPES-1:0][N_CORES-1:0][1:0] evt;
 
-  logic hwpe_clk;
-
-  tc_clk_gating i_hwpe_clock_gate (
-    .clk_i     ( clk       ),
-    .en_i      ( hwpe_en_i ),
-    .test_en_i ( test_mode ),
-    .clk_o     ( hwpe_clk  )
-  );
+  logic [N_HWPES-1:0] hwpe_clk;
+  logic [N_HWPES-1:0] hwpe_en_int;
 
   hwpe_ctrl_intf_periph #(
     .ID_WIDTH ( ID_WIDTH )
-  ) periph [N_HWPES-1:0] (
-    .clk ( hwpe_clk )
-  );
+  ) periph [N_HWPES-1:0] (.clk());
 
   hci_core_intf #(
     .DW ( DW ),
     .AW ( AW ),
     .OW ( OW )
-  ) tcdm [N_HWPES-1:0] (
-    .clk ( hwpe_clk )
-  );
+  ) tcdm [N_HWPES-1:0] (.clk());
+
+  for (genvar i = 0; i < N_HWPES; i++) begin
+    // HWPE specific enable
+    assign hwpe_en_int[i] = hwpe_en_i && (hwpe_sel_i == i);
+    // Clock gating cell
+    tc_clk_gating i_hwpe_clock_gate (
+      .clk_i     ( clk            ),
+      .en_i      ( hwpe_en_int[i] ),
+      .test_en_i ( test_mode      ),
+      .clk_o     ( hwpe_clk[i]    )
+    );
+    // Interface clocks
+    assign periph[i].clk = hwpe_clk[i];
+    assign tcdm[i].clk   = hwpe_clk[i];
+  end
 
   /////////////
   // REDMULE //
@@ -75,7 +80,7 @@ module hwpe_subsystem
     .N_CORES     ( N_CORES          ),
     .DW          ( N_MASTER_PORT*32 )
   ) i_redmule    (
-    .clk_i       ( hwpe_clk         ),
+    .clk_i       ( hwpe_clk[0]      ),
     .rst_ni      ( rst_n            ),
     .test_mode_i ( test_mode        ),
     .busy_o      ( busy[0]          ),
@@ -93,7 +98,7 @@ module hwpe_subsystem
     .AW ( AW ),
     .OW ( OW )
   ) unused_tcdm (
-    .clk ( clk_i )
+    .clk ( hwpe_clk[1] )
   );
 
   // TODO: specify params in package
@@ -103,7 +108,7 @@ module hwpe_subsystem
     .N_CORES ( N_CORES )
   ) i_neureka (
     // global signals
-    .clk_i       ( hwpe_clk    ),
+    .clk_i       ( hwpe_clk[1] ),
     .rst_ni      ( rst_n       ),
     .test_mode_i ( test_mode   ),
     // events
@@ -179,7 +184,7 @@ module hwpe_subsystem
   ) i_hwpe_hci_mux (
 
     /* Internally unused */
-    .clk_i   ( hwpe_clk        ),
+    .clk_i   ( clk             ),
     .rst_ni  ( rst_n           ),
     .clear_i ( '0              ),
     /*********************/
