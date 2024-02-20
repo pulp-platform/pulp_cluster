@@ -7,8 +7,8 @@ packages:
     dependencies:
     - common_cells
   axi:
-    revision: da423834b45f2e1878ecb28a11dc5b72b437f9c1
-    version: 0.39.1-beta
+    revision: fccffb5953ec8564218ba05e20adbedec845e014
+    version: 0.39.1
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -30,19 +30,11 @@ packages:
       Git: https://github.com/pulp-platform/axi2per.git
     dependencies:
     - axi_slice
-  axi_node:
-    revision: e2d038004c5b8cec9dd3bb9d23ad0bee72f9d908
-    version: 1.1.4
-    source:
-      Git: git@github.com:pulp-platform/axi_node.git
-    dependencies:
-    - axi
-    - common_cells
   axi_slice:
     revision: a4f72bc21ac4d7da631e8309d9f8d0c34b735c23
     version: 1.1.4
     source:
-      Git: https://github.com/pulp-platform/axi_slice.git
+      Git: git@github.com:pulp-platform/axi_slice.git
     dependencies:
     - common_cells
   cluster_interconnect:
@@ -114,13 +106,12 @@ packages:
     - hwpe-stream
     - l2_tcdm_hybrid_interco
   hier-icache:
-    revision: a971e364bf8090cf77fafad995b480c1ac7ea4e0
+    revision: 8e77bdc828c717299ac8572a1f9bf10144382105
     version: null
     source:
       Git: https://github.com/pulp-platform/hier-icache.git
     dependencies:
-    - axi_node
-    - axi_slice
+    - axi
     - common_cells
     - icache-intc
     - scm
@@ -133,8 +124,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 389bd7fb1975d2df1546910c5f220c668122e646
-    version: 1.6.5
+    revision: 4c2ef8c33a6e2a8c88127e2153013d4f2dc3f448
+    version: 1.7.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:

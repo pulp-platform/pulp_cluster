@@ -19,10 +19,9 @@ dependencies:
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "a971e364bf8090cf77fafad995b480c1ac7ea4e0" } # branch: yt/carfield
+  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "8e77bdc828c717299ac8572a1f9bf10144382105" } # branch: astral
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: c9defcfb4f4e8733383b28a451c430783c2febbd } # branch: astral
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.1-beta  }
-  axi_slice:              { git: "https://github.com/pulp-platform/axi_slice.git", version: 1.1.4 } # deprecated, replaced by axi_cut (in axi repo)
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
