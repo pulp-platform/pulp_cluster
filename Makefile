@@ -80,8 +80,7 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
-	git clone https://github.com/pulp-platform/pulp-runtime.git $@
-	cd $@; git checkout e90f6e53279248bf64d98a8247f79f0f13545c11; cd $(ROOT_DIR)
+	git submodule update --init --recursive $@
 
 ########################
 # Build and simulation #
