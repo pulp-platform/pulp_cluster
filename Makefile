@@ -63,6 +63,10 @@ nonfree-init:
 # Dependencies #
 ################
 
+.PHONY: init
+
+init: checkout pulp-runtime regression-tests
+
 .PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
 checkout:
@@ -73,6 +77,7 @@ checkout:
 Bender.lock:
 	bender checkout
 	touch Bender.lock
+
 
 ######
 # SW #
