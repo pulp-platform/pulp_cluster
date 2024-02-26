@@ -1,7 +1,6 @@
 ## Clone regression tests for bare-metal verification
 regression-tests:
-	git clone https://github.com/pulp-platform/regression_tests.git $@
-	cd $@; git checkout 6d31694ab395aa7d35daaaea10a7bb66811118bf; cd $(ROOT_DIR)
+	git submodule update --init --recursive $@
 
 .PHONY: test-rt-par-bare
 ## Run only parallel tests on pulp-runtime
