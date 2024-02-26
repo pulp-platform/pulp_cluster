@@ -94,7 +94,11 @@ module pulp_cluster
   localparam int unsigned FpuOpCodeWidth = 6,
   localparam int unsigned FpuTypeWidth = 3,
   localparam int unsigned FpuInFlagsWidth = 15,
-  localparam int unsigned FpuOutFlagsWidth = 5
+  localparam int unsigned FpuOutFlagsWidth = 5,
+  // Number of parity bits for ECC in memory banks
+  localparam int unsigned ParityWidth = 7,
+  // TCDM banks data width extended with parity for ECCs
+  localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -352,6 +356,9 @@ XBAR_PERIPH_BUS s_periph_dma_bus[1:0]();
 
 // periph interconnect -> HMR unit
 XBAR_PERIPH_BUS s_periph_hmr_bus ();
+
+// periph interconnect -> TCDM scrubber
+XBAR_PERIPH_BUS s_periph_tcdm_scrubber_bus ();
 
 // debug
 XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
@@ -729,6 +736,7 @@ cluster_peripherals #(
 
   .dma_cfg_master         ( s_periph_dma_bus                   ),
   .hmr_cfg_master         ( s_periph_hmr_bus                   ),
+  .tcdm_scrubber_cfg_master ( s_periph_tcdm_scrubber_bus       ),
 
   .dma_cl_event_i         ( s_dma_cl_event                     ),
   .dma_cl_irq_i           ( s_dma_cl_irq                       ),
@@ -1282,30 +1290,88 @@ icache_hier_top #(
   .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
 );
 
-assign s_core_instr_bus.aw_atop = '0; 
+assign s_core_instr_bus.aw_atop = '0;
+
+`REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[31:0], logic[31:0], logic[3:0])
+
+tcdm_scrubber_reg_req_t tcdm_scrubber_req;
+tcdm_scrubber_reg_rsp_t tcdm_scrubber_rsp;
+
+periph_to_reg #(
+  .AW          ( AddrWidth               ),
+  .DW          ( DataWidth               ),
+  .BW          ( 8                       ),
+  .IW          ( Cfg.NumCores + 1        ),
+  .req_t       ( tcdm_scrubber_reg_req_t ),
+  .rsp_t       ( tcdm_scrubber_reg_rsp_t )
+) i_periph_to_tcdm_scrubber (
+  .clk_i          ( clk_i                              ),
+  .rst_ni         ( rst_ni                             ),
+  .req_i          ( s_periph_tcdm_scrubber_bus.req     ),
+  .add_i          ( s_periph_tcdm_scrubber_bus.add     ),
+  .wen_i          ( s_periph_tcdm_scrubber_bus.wen     ),
+  .wdata_i        ( s_periph_tcdm_scrubber_bus.wdata   ),
+  .be_i           ( s_periph_tcdm_scrubber_bus.be      ),
+  .id_i           ( s_periph_tcdm_scrubber_bus.id      ),
+  .gnt_o          ( s_periph_tcdm_scrubber_bus.gnt     ),
+  .r_rdata_o      ( s_periph_tcdm_scrubber_bus.r_rdata ),
+  .r_opc_o        ( s_periph_tcdm_scrubber_bus.r_opc   ),
+  .r_id_o         ( s_periph_tcdm_scrubber_bus.r_id    ),
+  .r_valid_o      ( s_periph_tcdm_scrubber_bus.r_valid ),
+  .reg_req_o      ( tcdm_scrubber_reg_req              ),
+  .reg_rsp_i      ( tcdm_scrubber_reg_rsp              )
+);
+
+logic [Cfg.TcdmNumBank] bank_faults;
+logic [Cfg.TcdmNumBank] ecc_single_error;
+logic [Cfg.TcdmNumBank] ecc_multiple_error;
+logic [Cfg.TcdmNumBank] scrubber_fix;
+logic [Cfg.TcdmNumBank] scrubber_uncorrectable;
+logic [Cfg.TcdmNumBank] scrubber_trigger;
+logic [Cfg.TcdmNumBank][ProtectedTcdmWidth-1:0] test_write_mask_n;
+
+assign bank_faults = ecc_single_error | ecc_multiple_error; // TODO: check
+
+ecc_manager      #(
+  .NumBanks       ( Cfg.TcdmNumBank         ),
+  .ecc_mgr_req_t  ( tcdm_scrubber_reg_req_t ),
+  .ecc_mgr_rsp_t  ( tcdm_scrubber_reg_rsp_t )
+) i_tcdm_scrubber (
+  .clk_i                ( clk_i                  ),
+  .rst_ni               ( rst_ni                 ),
+  .ecc_mgr_req_i        ( tcdm_scrubber_reg_req  ),
+  .ecc_mgr_rsp_o        ( tcdm_scrubber_reg_rsp  ),
+  .bank_faults_i        ( bank_faults            ),
+  .scrub_fix_i          ( scrubber_fix           ),
+  .scrub_uncorrectable_i( scrubber_uncorrectable ),
+  .scrub_trigger_o      ( scrubber_trigger       ),
+  .test_write_mask_no   ( test_write_mask_n      )
+);
 
 /* TCDM banks */
-tcdm_banks_wrap #(
-  .BankSize    ( TcdmNumRows     ),
-  .NbBanks     ( Cfg.TcdmNumBank ),
-  .DataWidth   ( DataWidth       ),
-  .AddrWidth   ( AddrWidth       ),
-  .BeWidth     ( BeWidth         ),
-  .IdWidth     ( TCDM_ID_WIDTH   ),
-  .EnableEcc   (  1              ),
-  .EccInterco  (  0              ) // Not supported at the moment
+tcdm_banks_wrap  #(
+  .BankSize       ( TcdmNumRows        ),
+  .NbBanks        ( Cfg.TcdmNumBank    ),
+  .DataWidth      ( DataWidth          ),
+  .AddrWidth      ( AddrWidth          ),
+  .BeWidth        ( BeWidth            ),
+  .IdWidth        ( TCDM_ID_WIDTH      ),
+  .EnableEcc      (  1                 ),
+  .EccInterco     (  0                 ), // Not supported at the moment
+  .ProtectedWidth ( ProtectedTcdmWidth )
 ) tcdm_banks_i (
   .clk_i                 ( clk_i                    ),
   .rst_ni                ( rst_ni                   ),
   .test_mode_i           ( test_mode_i              ),
   // Scrubber
-  .scrub_trigger_i       ( '0                       ), // TODO: to be connected to a register
+  .scrub_trigger_i       ( scrubber_trigger         ),
                                                        // in the cluster control unit.
-  .scrub_fix_o           ( /* TODO: left pending */ ),
-  .scrub_uncorrectable_o ( /* TODO: left pending */ ),
+  .scrub_fix_o           ( scrubber_fix             ),
+  .scrub_uncorrectable_o ( scrubber_uncorrectable   ),
   // ECC
-  .ecc_single_error_o    ( /* TODO: left pending */ ),
-  .ecc_multile_error_o   ( /* TODO: left pending */ ),
+  .ecc_single_error_o    ( ecc_single_error         ),
+  .ecc_multiple_error_o  ( ecc_multiple_error       ),
+  .test_write_mask_ni    ( test_write_mask_n        ),
   .tcdm_slave            ( s_tcdm_bus_sram          )  //PMU ??
 );
 
