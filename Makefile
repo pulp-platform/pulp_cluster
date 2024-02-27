@@ -87,6 +87,10 @@ Bender.lock:
 pulp-runtime:
 	git submodule update --init --recursive $@
 
+## Clone fault injection scripts
+fault_injection_sim:
+	git submodule update --init --recursive $@
+
 ########################
 # Build and simulation #
 ########################

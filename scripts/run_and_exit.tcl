@@ -20,4 +20,8 @@ proc run_and_exit {} {
     quit -code [examine -radix decimal sim:/pulp_cluster_tb/ret_val(30:0)]
 }
 
+if {[info exists ::env(FAULT_INJECTION)]} {
+    source [file join $::env(VSIM_PATH) scripts fault_injection_config pulp_inject_fault.tcl]
+}
+
 run_and_exit

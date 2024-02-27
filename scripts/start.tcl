@@ -9,5 +9,9 @@ if {![info exists VSIM]} {
 
 $VSIM +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
 
+if {[info exists ::env(FAULT_INJECTION)]} {
+    source [file join $::env(VSIM_PATH) scripts fault_injection_config pulp_inject_fault.tcl]
+}
+
 add log -r /*
 run -all
