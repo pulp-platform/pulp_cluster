@@ -48,13 +48,13 @@ module hwpe_subsystem
 
   hwpe_ctrl_intf_periph #(
     .ID_WIDTH ( ID_WIDTH )
-  ) periph [N_HWPES-1:0] (.clk());
+  ) periph [N_HWPES-1:0] (.clk(clk));
 
   hci_core_intf #(
     .DW ( DW ),
     .AW ( AW ),
     .OW ( OW )
-  ) tcdm [N_HWPES-1:0] (.clk());
+  ) tcdm [N_HWPES-1:0] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin
     // HWPE specific enable
@@ -66,9 +66,6 @@ module hwpe_subsystem
       .test_en_i ( test_mode      ),
       .clk_o     ( hwpe_clk[i]    )
     );
-    // Interface clocks
-    assign periph[i].clk = hwpe_clk[i];
-    assign tcdm[i].clk   = hwpe_clk[i];
   end
 
   /////////////
@@ -93,19 +90,12 @@ module hwpe_subsystem
   // NEUREKA //
   /////////////
 
-  hci_core_intf #(
-    .DW ( DW ),
-    .AW ( AW ),
-    .OW ( OW )
-  ) unused_tcdm (
-    .clk ( hwpe_clk[1] )
-  );
-
   // TODO: specify params in package
   neureka_top #(
+    .PE_H    ( 4        ),
+    .PE_W    ( 4        ),
     .ID      ( ID_WIDTH ),
-    .BW      ( N_MASTER_PORT*32 ),
-    .N_CORES ( N_CORES )
+    .N_CORES ( N_CORES  )
   ) i_neureka (
     // global signals
     .clk_i       ( hwpe_clk[1] ),
@@ -116,17 +106,9 @@ module hwpe_subsystem
     .busy_o      ( busy[1]     ),
     // tcdm master ports
     .tcdm        ( tcdm[1]     ),
-    .tcdm_weight ( unused_tcdm ),
     // periph slave port
     .periph      ( periph[1]   )
   );
-
-  // Bind unused target signals of tcdm_weight port
-  assign unused_tcdm.gnt     = 1'b1; // To be sure that unwanted reqs get granted nevertheless
-  assign unused_tcdm.r_data  = '0;
-  assign unused_tcdm.r_valid = '0;
-  assign unused_tcdm.r_opc   = '0;
-  assign unused_tcdm.r_user  = '0;
 
   //////////////////
   // HWPE CFG BUS //
