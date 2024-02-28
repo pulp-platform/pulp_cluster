@@ -143,8 +143,8 @@ package pulp_cluster_package;
   parameter int unsigned SPER_DMA_FC_ID        = 7;  // 0x1C00 - 0x2000
   parameter int unsigned SPER_HMR_UNIT_ID      = 8;  // 0x2000 - 0x2400
   parameter int unsigned SPER_TCDM_SCRUBBER_ID = 9;  // 0x2400 - 0x2800
-  parameter int unsigned SPER_EXT_ID           = 10; // 0x2800 - 0x2C00
-  parameter int unsigned SPER_ERROR_ID         = 11; // 0x2C00 - 0x3000
+  parameter int unsigned SPER_EXT_ID           = 10; // -> unmapped, directed to error
+  parameter int unsigned SPER_ERROR_ID         = 11; // -> unmapped, directed to error
 
   // The following parameters refer to the cluster AXI crossbar
   localparam byte_t NumAxiSubordinatePorts = 4;
