@@ -1,8 +1,8 @@
 [submodule "pulp-runtime"]
 	path = pulp-runtime
 	url = https://github.com/pulp-platform/pulp-runtime.git
-  branch = yt/tcdm-scrubber
+  branch = astral
 [submodule "regression-tests"]
 	path = regression-tests
 	url = https://github.com/pulp-platform/regression_tests.git
-    branch = yt/tcdm-scrubber
+    branch = astral
