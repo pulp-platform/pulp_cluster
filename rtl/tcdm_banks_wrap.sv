@@ -93,6 +93,9 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
     assign scrub_fix_o[i] = '0;
     assign scrub_uncorrectable_o[i] = '0;
 
+    // With regular TCDM banks, the grant is always asseterd.
+    assign tcdm_slave[i].gnt = 1'b1;
+
     tc_sram #(
       .NumWords   (BankSize ), // Number of Words in data array
       .DataWidth  (DataWidth), // Data signal width
