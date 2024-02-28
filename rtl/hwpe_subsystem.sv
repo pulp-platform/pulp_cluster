@@ -114,15 +114,16 @@ module hwpe_subsystem
   // HWPE CFG BUS //
   //////////////////
 
-  // Initiator signals decoded according to `hwpe_sel_i`
   for (genvar i = 0; i < N_HWPES; i++) begin
     always_comb begin
-      periph[i].req  = (hwpe_sel_i == i) ? hwpe_cfg_slave.req   : '0;
-      periph[i].add  = (hwpe_sel_i == i) ? hwpe_cfg_slave.add   : '0;
-      periph[i].wen  = (hwpe_sel_i == i) ? hwpe_cfg_slave.wen   : '0;
-      periph[i].be   = (hwpe_sel_i == i) ? hwpe_cfg_slave.be    : '0;
-      periph[i].data = (hwpe_sel_i == i) ? hwpe_cfg_slave.wdata : '0;
-      periph[i].id   = (hwpe_sel_i == i) ? hwpe_cfg_slave.id    : '0;
+      // Initiator signals decoded according to `hwpe_sel_i`
+      periph[i].req  = (hwpe_sel_i == i) ? hwpe_cfg_slave.req : '0;
+      // No muxing needed
+      periph[i].add  = hwpe_cfg_slave.add;
+      periph[i].wen  = hwpe_cfg_slave.wen;
+      periph[i].be   = hwpe_cfg_slave.be;
+      periph[i].data = hwpe_cfg_slave.wdata;
+      periph[i].id   = hwpe_cfg_slave.id;
     end
   end
 
