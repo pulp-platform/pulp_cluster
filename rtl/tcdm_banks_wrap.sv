@@ -17,35 +17,29 @@
  */
 
 module tcdm_banks_wrap #(
-  parameter int unsigned BankSize   = 256,         //- -> OVERRIDE
-  parameter int unsigned NbBanks    = 1,           // --> OVERRIDE
-  parameter int unsigned DataWidth  = 32,
-  parameter int unsigned AddrWidth  = 32,
-  parameter int unsigned BeWidth    = DataWidth/8,
-  parameter int unsigned IdWidth    = 1,
-  parameter bit          EnableEcc  = 1,
-  parameter bit          EccInterco = 0
+  parameter int unsigned BankSize    = 256,         //- -> OVERRIDE
+  parameter int unsigned NbBanks     = 1,           // --> OVERRIDE
+  parameter int unsigned DataWidth   = 32,
+  parameter int unsigned AddrWidth   = 32,
+  parameter int unsigned BeWidth     = DataWidth/8,
+  parameter int unsigned IdWidth     = 1,
+  parameter bit          EnableEcc   = 1,
+  parameter bit          EccInterco  = 0,
+  parameter int unsigned ProtectedWidth = DataWidth + 7
 ) (
-  input  logic        clk_i,
-  input  logic        rst_ni,
-  input  logic        test_mode_i,
+  input  logic clk_i,
+  input  logic rst_ni,
+  input  logic test_mode_i,
   // Scrubber
-  input  logic        scrub_trigger_i,
-  output logic        scrub_fix_o,
-  output logic        scrub_uncorrectable_o,
+  input  logic [NbBanks-1:0] scrub_trigger_i,
+  output logic [NbBanks-1:0] scrub_fix_o,
+  output logic [NbBanks-1:0] scrub_uncorrectable_o,
   // ECC
-  output logic        ecc_single_error_o,
-  output logic        ecc_multile_error_o,
+  output logic [NbBanks-1:0] ecc_single_error_o,
+  output logic [NbBanks-1:0] ecc_multiple_error_o,
+  input  logic [NbBanks-1:0][ProtectedWidth-1:0] test_write_mask_ni,
   hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
 );
-
-logic [NbBanks-1:0] ecc_single_error, ecc_multiple_error,
-                    scrub_fix, scrub_uncorrectable;
-
-assign ecc_single_error_o = |ecc_single_error;
-assign ecc_multiple_error_o = |ecc_multiple_error;
-assign scrub_fix_o = |scrub_fix;
-assign scrub_uncorrectable_o = |scrub_uncorrectable;
    
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
@@ -67,18 +61,18 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
     /* TODO: blank for the moment */
     end else begin: gen_ecc_banks_only
       ecc_sram_wrap      #(
-        .BankSize         ( BankSize   ),
-        .InputECC         ( EccInterco ),
-        .UnprotectedWidth ( 32         ),
-        .ProtectedWidth   ( 39         )
+        .BankSize         ( BankSize       ),
+        .InputECC         ( EccInterco     ),
+        .UnprotectedWidth ( DataWidth      ),
+        .ProtectedWidth   ( ProtectedWidth )
       ) i_ecc_bank             (
         .clk_i                 ( clk_i                  ),
         .rst_ni                ( rst_ni                 ),
         .test_enable_i         ( test_mode_i            ),
         // Scrubber
-        .scrub_trigger_i       ( scrub_trigger_i        ),
-        .scrubber_fix_o        ( scrub_fix[i]           ),
-        .scrub_uncorrectable_o ( scrub_uncorrectable[i] ),
+        .scrub_trigger_i       ( scrub_trigger_i[i]       ),
+        .scrubber_fix_o        ( scrub_fix_o[i]           ),
+        .scrub_uncorrectable_o ( scrub_uncorrectable_o[i] ),
         // TCDM interface
         .tcdm_wdata_i          ( tcdm_slave[i].data     ),
         .tcdm_add_i            ( tcdm_slave[i].add      ),
@@ -88,18 +82,17 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         .tcdm_rdata_o          ( tcdm_slave[i].r_data   ),
         .tcdm_gnt_o            ( tcdm_slave[i].gnt      ),
         // ECC
-        .single_error_o        ( ecc_single_error[i]    ),
-        .multi_error_o         ( ecc_multiple_error[i]  ),
-        .test_write_mask_ni    ( '0                     ) // TODO: needed?
+        .single_error_o        ( ecc_single_error_o[i]   ),
+        .multi_error_o         ( ecc_multiple_error_o[i] ),
+        .test_write_mask_ni    ( test_write_mask_ni[i]   )
       );
     end
   end else begin: gen_standard_banks
 
-    assign tcdm_slave[i].gnt    =  1'b1;
-    assign ecc_single_error[i] = 1'b0;
-    assign ecc_multiple_error[i] = 1'b0;
-    assign scrub_fix[i] = 1'b0;
-    assign scrub_uncorrectable[i] = 1'b0;
+    assign ecc_single_error_o[i] = '0;
+    assign ecc_multiple_error_o[i] = '0;
+    assign scrub_fix_o[i] = '0;
+    assign scrub_uncorrectable_o[i] = '0;
 
     tc_sram #(
       .NumWords   (BankSize ), // Number of Words in data array

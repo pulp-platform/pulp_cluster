@@ -126,24 +126,25 @@ package pulp_cluster_package;
     bit EnableRemapAddress;
   } pulp_cluster_cfg_t;
 
-  parameter NB_SPERIPH_PLUGS_EU  =  2;
+  parameter int unsigned NB_SPERIPH_PLUGS_EU = 2;
 
   // number of master and slave cluster periphs
-  parameter NB_MPERIPHS          =  1;
-  parameter NB_SPERIPHS          = 10;
+  parameter int unsigned NB_MPERIPHS =  1;
+  parameter int unsigned NB_SPERIPHS = 11;
 
   // position of peripherals on slave port of periph interconnect
-  parameter SPER_EOC_ID      = 0;  // 0x0000 - 0x0400
-  parameter SPER_TIMER_ID    = 1;  // 0x0400 - 0x0800
-  parameter SPER_EVENT_U_ID  = 2;  // 0x0800 - 0x1000
-                            // 3 also used for Event Unit
-  parameter SPER_HWPE_ID     = 4;  // 0x1000 - 0x1400
-  parameter SPER_ICACHE_CTRL = 5;  // 0x1400 - 0x1800
-  parameter SPER_DMA_CL_ID   = 6;  // 0x1800 - 0x1C00
-  parameter SPER_DMA_FC_ID   = 7;  // 0x1C00 - 0x2000
-  parameter SPER_HMR_UNIT_ID = 8;  // 0x2000 - 0x2400
-  parameter SPER_EXT_ID      = 9;  // 0x2400 - 0x2800
-  parameter SPER_ERROR_ID    = 10; // 0x2800 - 0x2C00
+  parameter int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
+  parameter int unsigned SPER_TIMER_ID         = 1;  // 0x0400 - 0x0800
+  parameter int unsigned SPER_EVENT_U_ID       = 2;  // 0x0800 - 0x1000
+                                                     // 3 also used for Event Unit
+  parameter int unsigned SPER_HWPE_ID          = 4;  // 0x1000 - 0x1400
+  parameter int unsigned SPER_ICACHE_CTRL      = 5;  // 0x1400 - 0x1800
+  parameter int unsigned SPER_DMA_CL_ID        = 6;  // 0x1800 - 0x1C00
+  parameter int unsigned SPER_DMA_FC_ID        = 7;  // 0x1C00 - 0x2000
+  parameter int unsigned SPER_HMR_UNIT_ID      = 8;  // 0x2000 - 0x2400
+  parameter int unsigned SPER_TCDM_SCRUBBER_ID = 9;  // 0x2400 - 0x2800
+  parameter int unsigned SPER_EXT_ID           = 10; // 0x2800 - 0x2C00
+  parameter int unsigned SPER_ERROR_ID         = 11; // 0x2C00 - 0x3000
 
   // The following parameters refer to the cluster AXI crossbar
   localparam byte_t NumAxiSubordinatePorts = 4;
