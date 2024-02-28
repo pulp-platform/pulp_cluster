@@ -37,7 +37,6 @@ module tcdm_banks_wrap #(
   // ECC
   output logic [NbBanks-1:0] ecc_single_error_o,
   output logic [NbBanks-1:0] ecc_multiple_error_o,
-  input  logic [NbBanks-1:0][ProtectedWidth-1:0] test_write_mask_ni,
   hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
 );
    
@@ -84,7 +83,7 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         // ECC
         .single_error_o        ( ecc_single_error_o[i]   ),
         .multi_error_o         ( ecc_multiple_error_o[i] ),
-        .test_write_mask_ni    ( test_write_mask_ni[i]   )
+        .test_write_mask_ni    ( '0                      )
       );
     end
   end else begin: gen_standard_banks

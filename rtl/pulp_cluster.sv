@@ -1328,7 +1328,6 @@ logic [Cfg.TcdmNumBank] ecc_multiple_error;
 logic [Cfg.TcdmNumBank] scrubber_fix;
 logic [Cfg.TcdmNumBank] scrubber_uncorrectable;
 logic [Cfg.TcdmNumBank] scrubber_trigger;
-logic [Cfg.TcdmNumBank][ProtectedTcdmWidth-1:0] test_write_mask_n;
 
 assign bank_faults = ecc_single_error | ecc_multiple_error; // TODO: check
 
@@ -1345,7 +1344,7 @@ ecc_manager      #(
   .scrub_fix_i          ( scrubber_fix           ),
   .scrub_uncorrectable_i( scrubber_uncorrectable ),
   .scrub_trigger_o      ( scrubber_trigger       ),
-  .test_write_mask_no   ( test_write_mask_n      )
+  .test_write_mask_no   ( /* not used */         )
 );
 
 /* TCDM banks */
@@ -1371,7 +1370,6 @@ tcdm_banks_wrap  #(
   // ECC
   .ecc_single_error_o    ( ecc_single_error         ),
   .ecc_multiple_error_o  ( ecc_multiple_error       ),
-  .test_write_mask_ni    ( test_write_mask_n        ),
   .tcdm_slave            ( s_tcdm_bus_sram          )  //PMU ??
 );
 
