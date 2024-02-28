@@ -21,7 +21,10 @@ proc run_and_exit {} {
 }
 
 if {[info exists ::env(FAULT_INJECTION)]} {
-    source [file join $::env(VSIM_PATH) scripts fault_injection_config pulp_inject_fault.tcl]
+    if {![info exists ::env(FAULT_INJECTION_SCRIPT)]} {
+        error "Error: Missing FAULT_INJECTION_SCRIPT to source!"
+    }
+    source $::env(FAULT_INJECTION_SCRIPT)
 }
 
 run_and_exit

@@ -8,3 +8,5 @@
 [submodule "fault_injection_sim"]
 	path = fault_injection_sim
 	url = git@iis-git.ee.ethz.ch:michaero/fault_injection_sim.git
+[submodule "fault_injection_sim/"]
+	url = https://github.com/pulp-platform/InjectaFault.git

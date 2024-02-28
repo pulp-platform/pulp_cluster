@@ -244,3 +244,31 @@ proc get_all_core_nets {core} {
   # }
   return $all_signals
 }
+
+##################
+# Memory signals #
+##################
+
+# <------ banks ------>
+#   b1   b2   b3   b4
+# +----+----+----+----+   ^
+# |    |    |    |    | 3 |
+# +----+----+----+----+   |
+# |    |    |    |    | 2 |
+# +----+----+----+----+   | words
+# |    |    |    |    | 1 |
+# +----+----+----+----+   |
+# |    |    |    |    | 0 |
+# +----+----+----+----+   v
+
+# == Path to a word in sram signal in tc_sram ==
+proc get_memory_word {bank word} {return "/pulp_cluster_tb/cluster_i/tcdm_banks_i/banks_gen\[$bank\]/gen_ecc_banks/gen_ecc_banks_only/i_ecc_bank/i_bank/sram($word)"}
+
+proc get_memory_slice {bank_range word_range} {
+  set mem_slice [list]
+  for {set i [lindex $bank_range 0]} {$i < [lindex $bank_range end]} {incr i} {
+    for {set j [lindex $word_range 0]} {$j < [lindex $word_range end]} {incr j} {
+    lappend mem_slice [get_memory_word $i $j]}
+  }
+  return $mem_slice
+}
