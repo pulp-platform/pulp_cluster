@@ -16,7 +16,7 @@ packages:
     - common_verification
     - tech_cells_generic
   axi2mem:
-    revision: 6973e0434d26ba578cdb4aa69c26c1facd1a3f15
+    revision: b0e963433b2f6a61262b1448031e74eaec57c203
     version: null
     source:
       Git: https://github.com/pulp-platform/axi2mem.git
@@ -24,8 +24,8 @@ packages:
     - axi_slice
     - common_cells
   axi2per:
-    revision: a99ef2fac9f3b087671109a27c766f25e8e0f115
-    version: 1.0.1
+    revision: 4932bd2b88a1c7b5f0bf95411fc512905ed32439
+    version: null
     source:
       Git: https://github.com/pulp-platform/axi2per.git
     dependencies:
@@ -34,7 +34,7 @@ packages:
     revision: a4f72bc21ac4d7da631e8309d9f8d0c34b735c23
     version: 1.1.4
     source:
-      Git: git@github.com:pulp-platform/axi_slice.git
+      Git: https://github.com/pulp-platform/axi_slice.git
     dependencies:
     - common_cells
   cluster_interconnect:
@@ -106,12 +106,13 @@ packages:
     - hwpe-stream
     - l2_tcdm_hybrid_interco
   hier-icache:
-    revision: 8e77bdc828c717299ac8572a1f9bf10144382105
+    revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
     version: null
     source:
       Git: https://github.com/pulp-platform/hier-icache.git
     dependencies:
     - axi
+    - axi_slice
     - common_cells
     - icache-intc
     - scm
@@ -141,7 +142,7 @@ packages:
     revision: 663c3b6d3c2bf63ff25cda46f33c799c647b3985
     version: 1.0.1
     source:
-      Git: git@github.com:pulp-platform/icache-intc.git
+      Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
     revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
@@ -167,8 +168,8 @@ packages:
     dependencies:
     - common_cells
   per2axi:
-    revision: 892fcad60b6374fe558cbde76f4a529d473ba5ca
-    version: 1.0.4
+    revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
+    version: null
     source:
       Git: https://github.com/pulp-platform/per2axi.git
     dependencies:
@@ -210,7 +211,7 @@ packages:
     revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
     version: null
     source:
-      Git: git@github.com:AlSaqr-platform/riscv_nn.git
+      Git: https://github.com/AlSaqr-platform/riscv_nn.git
     dependencies:
     - fpnew
     - tech_cells_generic
