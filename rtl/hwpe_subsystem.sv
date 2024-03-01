@@ -17,14 +17,13 @@ import hci_package::*;
 
 module hwpe_subsystem
 #(
-  parameter N_CORES       = 8,
-  parameter N_HWPES       = 1,
-  parameter N_MASTER_PORT = 9,
-  parameter ID_WIDTH      = 8,
-  parameter USE_RBE       = 0,
-  parameter DW            = DEFAULT_DW,
-  parameter AW            = DEFAULT_AW,
-  parameter OW            = AW
+  parameter int unsigned N_CORES       = 8,
+  parameter int unsigned N_HWPES       = 1,
+  parameter int unsigned N_MASTER_PORT = 9,
+  parameter int unsigned ID_WIDTH      = 8,
+  parameter int unsigned DW            = DEFAULT_DW,
+  parameter int unsigned AW            = DEFAULT_AW,
+  parameter int unsigned OW            = AW
 )
 (
   input  logic                       clk,
