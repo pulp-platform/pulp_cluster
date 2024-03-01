@@ -90,7 +90,6 @@ module hwpe_subsystem
   // NEUREKA //
   /////////////
 
-  // TODO: specify params in package
   neureka_top #(
     .PE_H    ( 4        ),
     .PE_W    ( 4        ),
@@ -114,6 +113,12 @@ module hwpe_subsystem
   // HWPE CFG BUS //
   //////////////////
 
+  // Target signals muxed according to `hwpe_sel_i`
+  logic [N_HWPES-1:0]               periph_gnt;
+  logic [N_HWPES-1:0][31:0]         periph_r_rdata;
+  logic [N_HWPES-1:0]               periph_r_valid;
+  logic [N_HWPES-1:0][ID_WIDTH-1:0] periph_r_id;
+
   for (genvar i = 0; i < N_HWPES; i++) begin
     always_comb begin
       // Initiator signals decoded according to `hwpe_sel_i`
@@ -124,33 +129,33 @@ module hwpe_subsystem
       periph[i].be   = hwpe_cfg_slave.be;
       periph[i].data = hwpe_cfg_slave.wdata;
       periph[i].id   = hwpe_cfg_slave.id;
+      // Split interface signals into packed vectors
+      periph_gnt     [i] = periph[i].gnt;
+      periph_r_rdata [i] = periph[i].r_data;
+      periph_r_valid [i] = periph[i].r_valid;
+      periph_r_id    [i] = periph[i].r_id;
     end
   end
 
-  // Target signals muxed according to `hwpe_sel_i`
-  logic [N_HWPES-1:0]               periph_gnt;
-  logic [N_HWPES-1:0][31:0]         periph_r_rdata;
-  logic [N_HWPES-1:0]               periph_r_valid;
-  logic [N_HWPES-1:0][ID_WIDTH-1:0] periph_r_id;
-
-  for (genvar i = 0; i < N_HWPES; i++) begin
-      assign periph_gnt     [i] = periph[i].gnt;
-      assign periph_r_rdata [i] = periph[i].r_data;
-      assign periph_r_valid [i] = periph[i].r_valid;
-      assign periph_r_id    [i] = periph[i].r_id;
-  end
-
   always_comb begin
+    // Config bus
     hwpe_cfg_slave.gnt     = periph_gnt     [0];
     hwpe_cfg_slave.r_rdata = periph_r_rdata [0];
     hwpe_cfg_slave.r_valid = periph_r_valid [0];
     hwpe_cfg_slave.r_id    = periph_r_id    [0];
+    // evt and busy
+    evt_o  = evt[0];
+    busy_o = busy[0];
     for (int i = 1; i < N_HWPES; i++) begin
       if (hwpe_sel_i == i) begin
+        // Config bus
         hwpe_cfg_slave.gnt     = periph_gnt     [i];
         hwpe_cfg_slave.r_rdata = periph_r_rdata [i];
         hwpe_cfg_slave.r_valid = periph_r_valid [i];
         hwpe_cfg_slave.r_id    = periph_r_id    [i];
+        // evt and busy
+        evt_o  = evt[i];
+        busy_o = busy[i];
       end
     end
   end
@@ -177,20 +182,5 @@ module hwpe_subsystem
     .in     ( tcdm             ),
     .out    ( hwpe_xbar_master )
 );
-
-//////////////////
-// EVT AND BUSY //
-//////////////////
-
-always_comb begin
-  evt_o  = evt[0];
-  busy_o = busy[0];
-  for (int i = 1; i < N_HWPES; i++) begin
-    if (hwpe_sel_i == i) begin
-      evt_o  = evt[i];
-      busy_o = busy[i];
-    end
-  end
-end
 
 endmodule
