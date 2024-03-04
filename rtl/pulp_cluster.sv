@@ -102,7 +102,7 @@ module pulp_cluster
   input logic                                    pwr_on_rst_ni,
   input logic                                    pmu_mem_pwdn_i,
 
-  
+
   input logic [3:0]                              base_addr_i,
 
   input logic                                    test_mode_i,
@@ -112,20 +112,20 @@ module pulp_cluster
   input logic [5:0]                              cluster_id_i,
 
   input logic                                    fetch_en_i,
- 
+
   output logic                                   eoc_o,
-  
+
   output logic                                   busy_o,
 
   input  logic                                   axi_isolate_i,
   output logic                                   axi_isolated_o,
- 
+
   input logic                                    dma_pe_evt_ack_i,
   output logic                                   dma_pe_evt_valid_o,
 
   input logic                                    dma_pe_irq_ack_i,
   output logic                                   dma_pe_irq_valid_o,
-  
+
   input logic                                    pf_evt_ack_i,
   output logic                                   pf_evt_valid_o,
 
@@ -137,30 +137,30 @@ module pulp_cluster
   output logic [Cfg.AxiCdcLogDepth:0]            async_cluster_events_rptr_o,
   input  logic [AsyncEventDataWidth-1:0]         async_cluster_events_data_i,
 
- 
+
   // AXI4 SLAVE
   //***************************************
   // WRITE ADDRESS CHANNEL
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_aw_wptr_i,
   input  logic [AsyncInAwDatawidth-1:0]          async_data_slave_aw_data_i,
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_aw_rptr_o,
-                                           
-  // READ ADDRESS CHANNEL                  
+
+  // READ ADDRESS CHANNEL
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_ar_wptr_i,
   input  logic [AsyncInArDatawidth-1:0]          async_data_slave_ar_data_i,
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_ar_rptr_o,
-                                           
-  // WRITE DATA CHANNEL                    
+
+  // WRITE DATA CHANNEL
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_w_wptr_i,
   input  logic [AsyncInWDatawidth-1:0]           async_data_slave_w_data_i,
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_w_rptr_o,
-                                                   
-  // READ DATA CHANNEL                             
+
+  // READ DATA CHANNEL
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_r_wptr_o,
   output logic [AsyncInRDataWidth-1:0]           async_data_slave_r_data_o,
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_r_rptr_i,
-                                                   
-  // WRITE RESPONSE CHANNEL                        
+
+  // WRITE RESPONSE CHANNEL
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_b_wptr_o,
   output logic [AsyncInBDataWidth-1:0]           async_data_slave_b_data_o,
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_slave_b_rptr_i,
@@ -170,23 +170,23 @@ module pulp_cluster
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_master_aw_wptr_o,
   output logic [AsyncOutAwDataWidth-1:0]         async_data_master_aw_data_o,
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_master_aw_rptr_i,
-                                           
-  // READ ADDRESS CHANNEL                  
+
+  // READ ADDRESS CHANNEL
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_master_ar_wptr_o,
   output logic [AsyncOutArDataWidth-1:0]         async_data_master_ar_data_o,
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_master_ar_rptr_i,
-                                           
-  // WRITE DATA CHANNEL                    
+
+  // WRITE DATA CHANNEL
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_master_w_wptr_o,
   output logic [AsyncOutWDataWidth-1:0]          async_data_master_w_data_o,
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_master_w_rptr_i,
-                                                   
-  // READ DATA CHANNEL                             
+
+  // READ DATA CHANNEL
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_master_r_wptr_i,
   input  logic [AsyncOutRDataWidth-1:0]          async_data_master_r_data_i,
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_master_r_rptr_o,
-                                                   
-  // WRITE RESPONSE CHANNEL                        
+
+  // WRITE RESPONSE CHANNEL
   input  logic [Cfg.AxiCdcLogDepth:0]            async_data_master_b_wptr_i,
   input  logic [AsyncOutBDataWidth-1:0]          async_data_master_b_data_i,
   output logic [Cfg.AxiCdcLogDepth:0]            async_data_master_b_rptr_o
@@ -288,7 +288,7 @@ logic                                       s_dma_fc_irq;
 logic [Cfg.NumCores-1:0] hmr_barrier_matched;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_resynch_req, hmr_tmr_sw_resynch_req;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
- 
+
 // FIXME: iDMA
 // logic                                       s_dma_decompr_event;
 // logic                                       s_dma_decompr_irq;
@@ -411,7 +411,7 @@ hci_mem_intf #(
 
 //***************************************************
 /* synchronous AXI interfaces at CLUSTER/SOC interface */
-//*************************************************** 
+//***************************************************
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( Cfg.AxiAddrWidth    ),
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
@@ -431,24 +431,24 @@ AXI_BUS #(
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_ID_WIDTH   ( Cfg.AxiIdOutWidth   ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    )
-) s_data_master(); 
+) s_data_master();
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( Cfg.AxiAddrWidth    ),
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_ID_WIDTH   ( Cfg.AxiIdInWidth    ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    )
-) s_core_instr_bus(); 
+) s_core_instr_bus();
 
 // ***********************************************************************************************+
 // ***********************************************************************************************+
 // ***********************************************************************************************+
 // ***********************************************************************************************+
 // ***********************************************************************************************+
- 
+
 //***************************************************
 /* synchronous AXI interfaces internal to the cluster */
-//*************************************************** 
+//***************************************************
 
 // core per2axi -> ext
 AXI_BUS #(
@@ -456,7 +456,7 @@ AXI_BUS #(
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_ID_WIDTH   ( Cfg.AxiIdInWidth    ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    )
-) s_core_ext_bus(); 
+) s_core_ext_bus();
 
 // DMA -> ext
 AXI_BUS #(
@@ -464,7 +464,7 @@ AXI_BUS #(
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_ID_WIDTH   ( Cfg.AxiIdInWidth    ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    )
-) s_dma_ext_bus(); 
+) s_dma_ext_bus();
 
 // ext -> axi2mem
 AXI_BUS #(
@@ -472,9 +472,9 @@ AXI_BUS #(
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_ID_WIDTH   ( Cfg.AxiIdOutWidth   ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    )
-) s_ext_tcdm_bus(); 
+) s_ext_tcdm_bus();
 
-// cluster bus -> axi2per 
+// cluster bus -> axi2per
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( Cfg.AxiAddrWidth    ),
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
@@ -583,7 +583,7 @@ per2axi_wrap #(
 
 //***************************************************
 /* cluster (log + periph) interconnect and attached peripherals */
-//*************************************************** 
+//***************************************************
 
 cluster_interconnect_wrap #(
   .NB_CORES               ( Cfg.NumCores           ),
@@ -630,7 +630,7 @@ cluster_interconnect_wrap #(
 
 //***************************************************
 //*********************DMAC WRAP*********************
-//*************************************************** 
+//***************************************************
 `ifdef TARGET_MCHAN
   dmac_wrap #(
     .NB_CTRLS           ( Cfg.NumCores + 2            ),
@@ -766,10 +766,10 @@ cluster_peripherals #(
   .hmr_sw_resynch_req_i   ( hmr_dmr_sw_resynch_req | hmr_tmr_sw_resynch_req ),
   .hmr_sw_synch_req_i     ( hmr_dmr_sw_synch_req | hmr_tmr_sw_synch_req ),
 
-  .fregfile_disable_o     ( s_fregfile_disable                 ),   
-  
+  .fregfile_disable_o     ( s_fregfile_disable                 ),
+
   .TCDM_arb_policy_o      ( s_TCDM_arb_policy                  ),
-  
+
   .hwpe_cfg_master          ( s_hwpe_cfg_bus                    ),
   .hwpe_events_i            ( s_hwpe_remap_evt                  ),
   .hwpe_en_o                ( s_hwpe_en                         ),
@@ -886,7 +886,7 @@ generate
       .irq_ack_o           ( core2hmr[i].irq_ack      ),
       .test_mode_i         ( test_mode_i              ),
       .core_busy_o         ( core2hmr[i].core_busy    ),
-      //instruction cache bind 
+      //instruction cache bind
       .instr_req_o         ( core2hmr[i].instr_req    ),
       .instr_gnt_i         ( hmr2core[i].instr_gnt    ),
       .instr_addr_o        ( core2hmr[i].instr_addr   ),
@@ -1290,7 +1290,7 @@ icache_hier_top #(
   .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
 );
 
-assign s_core_instr_bus.aw_atop = '0; 
+assign s_core_instr_bus.aw_atop = '0;
 
 /* TCDM banks */
 tcdm_banks_wrap #(
@@ -1317,7 +1317,7 @@ tcdm_banks_wrap #(
   .tcdm_slave            ( s_tcdm_bus_sram          )  //PMU ??
 );
 
-/* AXI interconnect infrastructure (slices, size conversion) */ 
+/* AXI interconnect infrastructure (slices, size conversion) */
 //********************************************************
 //**************** AXI REGISTER SLICES *******************
 //********************************************************
@@ -1327,13 +1327,13 @@ tcdm_banks_wrap #(
 `AXI_TYPEDEF_B_CHAN_T(c2s_b_chan_t,logic[Cfg.AxiIdOutWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_AR_CHAN_T(c2s_ar_chan_t,logic[Cfg.AxiAddrWidth-1:0],logic[Cfg.AxiIdOutWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_R_CHAN_T(c2s_r_chan_t,logic[Cfg.AxiDataOutWidth-1:0],logic[Cfg.AxiIdOutWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
- 
+
 `AXI_TYPEDEF_REQ_T(c2s_req_t,c2s_aw_chan_t,c2s_w_chan_t,c2s_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(c2s_resp_t,c2s_b_chan_t,c2s_r_chan_t)
 
 c2s_req_t   src_req, isolate_src_req ;
 c2s_resp_t  src_resp, isolate_src_resp;
- 
+
 `AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
 `AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_resp)
 
@@ -1423,7 +1423,7 @@ axi_cdc_src  #(
  .src_clk_i                        ( clk_i                       ),
  .src_req_i                        ( src_req                     ),
  .src_resp_o                       ( src_resp                    ),
- .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
+ .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),
  .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
  .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
  .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
@@ -1437,16 +1437,16 @@ axi_cdc_src  #(
  .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
  .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
  .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
- .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
+ .async_data_master_r_data_i       ( async_data_master_r_data_i  )
 );
-    
+
 // SOC TO CLUSTER
 `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[Cfg.AxiAddrWidth-1:0],logic[Cfg.AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_W_CHAN_T(s2c_w_chan_t,logic[Cfg.AxiDataInWidth-1:0],logic[Cfg.AxiDataInWidth/8-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_B_CHAN_T(s2c_b_chan_t,logic[Cfg.AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_AR_CHAN_T(s2c_ar_chan_t,logic[Cfg.AxiAddrWidth-1:0],logic[Cfg.AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_R_CHAN_T(s2c_r_chan_t,logic[Cfg.AxiDataInWidth-1:0],logic[Cfg.AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
- 
+
 `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
@@ -1468,7 +1468,7 @@ axi_cdc_dst   #(
   .dst_clk_i                        ( clk_i                      ),
   .dst_req_o                        ( dst_req                    ),
   .dst_resp_i                       ( dst_resp                   ),
-  .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
+  .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),
   .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
   .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
   .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
@@ -1482,7 +1482,7 @@ axi_cdc_dst   #(
   .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
   .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
   .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
-  .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
+  .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )
 );
 
 if (Cfg.AxiDataInWidth != Cfg.AxiDataOutWidth) begin
@@ -1521,9 +1521,9 @@ cdc_fifo_gray_dst #(
   (* async *) .async_data_i ( async_cluster_events_data_i ),
   (* async *) .async_wptr_i ( async_cluster_events_wptr_i ),
   (* async *) .async_rptr_o ( async_cluster_events_rptr_o )
-); 
+);
 assign s_events_async = s_events_valid;
-  
+
 edge_propagator_tx ep_dma_pe_evt_i (
   .clk_i   ( clk_i              ),
   .rstn_i  ( rst_ni             ),
@@ -1531,7 +1531,7 @@ edge_propagator_tx ep_dma_pe_evt_i (
   .ack_i   ( dma_pe_evt_ack_i   ),
   .valid_o ( dma_pe_evt_valid_o )
 );
- 
+
 edge_propagator_tx ep_dma_pe_irq_i (
   .clk_i   ( clk_i              ),
   .rstn_i  ( rst_ni             ),
