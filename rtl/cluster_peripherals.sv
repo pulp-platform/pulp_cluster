@@ -22,6 +22,7 @@ import pulp_cluster_package::*;
 module cluster_peripherals
 #(
   parameter NB_CORES       = 8,
+  parameter NB_HWPES       = 8,
   parameter NB_MPERIPHS    = 1,
   parameter NB_CACHE_BANKS = 4,
   parameter NB_SPERIPHS    = 8,
@@ -99,7 +100,7 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              tcdm_scrubber_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
-  output logic                        hwpe_sel_o,
+  output logic [$clog2(NB_HWPES)-1:0] hwpe_sel_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
@@ -163,6 +164,7 @@ module cluster_peripherals
   cluster_control_unit #(
     .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS         ),
     .NB_CORES      ( NB_CORES                     ),
+    .NB_HWPES      ( NB_HWPES                     ),
     .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
     .BOOT_ADDR     ( BOOT_ADDR                    )
     //.NB_L1_CUTS      ( NB_L1_CUTS                 ),

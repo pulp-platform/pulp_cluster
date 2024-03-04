@@ -289,6 +289,7 @@ module pulp_cluster_tb;
     TcdmSize: 256*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
+    HwpeCfg: '{NumHwpes: 2, HwpeList: {NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,

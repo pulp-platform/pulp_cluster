@@ -45,7 +45,7 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: ab82a2c3e10b87b677932e0fa46fd93e6e5df547
+    revision: 8a9f62dafb5ec23c6cd361847ff0047e12befca4
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
@@ -97,7 +97,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 9d266f61deff39e99d87350e671ace8909e696f4
+    revision: e47627c20b33bcaf4842c1add81fb888b4f12a9d
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -125,8 +125,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 4c2ef8c33a6e2a8c88127e2153013d4f2dc3f448
-    version: 1.7.0
+    revision: bcb4435f802add732f557dc7fa1c6b5dd8854458
+    version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:

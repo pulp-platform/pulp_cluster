@@ -30,6 +30,19 @@ package pulp_cluster_package;
     IBEX
   } core_type_e;
 
+  // HWPE type
+  typedef enum byte_t {
+    REDMULE,
+    NEUREKA
+  } hwpe_type_e;
+
+  parameter MAX_NUM_HWPES = 8;
+
+  typedef struct packed {
+    hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
+    byte_t NumHwpes;
+  } hwpe_subsystem_cfg_t;
+
   // PULP cluster configuration
   typedef struct packed {
     // Type of core in the cluster
@@ -60,6 +73,8 @@ package pulp_cluster_package;
     byte_t TcdmNumBank;
     // Enable HWPEs
     bit HwpePresent;
+    // HWPEs selection and ID map
+    hwpe_subsystem_cfg_t HwpeCfg;
     // Number of memory ports available for HWPEs
     byte_t HwpeNumPorts;
     // Number if I$ banks
@@ -171,6 +186,7 @@ package pulp_cluster_package;
     TcdmSize: 64*1024,
     TcdmNumBank: 16,
     HwpePresent: 0,
+    HwpeCfg: '0,
     HwpeNumPorts: 0,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
