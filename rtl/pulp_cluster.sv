@@ -218,7 +218,7 @@ logic [Cfg.NumCores-1:0]                dbg_core_havereset;
 logic [Cfg.NumCores-1:0]                dbg_core_running;
 logic [Cfg.NumCores-1:0]                s_dbg_irq;
 logic                                   s_hwpe_en;
-logic                                   s_hwpe_sel;
+logic [$clog2(MAX_NUM_HWPES)-1:0]       s_hwpe_sel;
 
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
@@ -700,6 +700,7 @@ cluster_interconnect_wrap #(
 //***************************************************
 cluster_peripherals #(
   .NB_CORES       ( Cfg.NumCores      ),
+  .NB_HWPES       ( MAX_NUM_HWPES     ),
   .NB_MPERIPHS    ( Cfg.NumMstPeriphs ),
   .NB_CACHE_BANKS ( Cfg.iCacheNumBanks),
   .NB_SPERIPHS    ( Cfg.NumSlvPeriphs ),
@@ -1146,8 +1147,8 @@ endgenerate
 generate
   if(Cfg.HwpePresent) begin: hwpe_gen
     hwpe_subsystem #(
+      .HWPE_CFG      ( Cfg.HwpeCfg                      ),
       .N_CORES       ( Cfg.NumCores                     ),
-      .N_HWPES       ( 2                                ),
       .N_MASTER_PORT ( Cfg.HwpeNumPorts                 ),
       .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs ),
       .DW            ( Cfg.HwpeNumPorts * DataWidth     ),
