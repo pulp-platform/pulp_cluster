@@ -4,9 +4,9 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-QUESTA ?= questa-2022.3
+QUESTA ?= 
 GIT ?= git
-BENDER ?= bender
+BENDER ?= ./bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 top_level ?= pulp_cluster_tb
@@ -44,7 +44,7 @@ bender_targs += -t cv32e40p_use_ff_regfile
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
-	bender script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
 	echo >> $1
 endef
 
@@ -71,12 +71,12 @@ init: checkout
 .PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
 checkout:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
 	make scripts/compile.tcl
 
 Bender.lock:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
 
 
@@ -95,6 +95,11 @@ fault_injection_sim:
 ########################
 # Build and simulation #
 ########################
+
+$(BENDER): 
+	curl --proto '=https'  \
+	--tlsv1.2 https://pulp-platform.github.io/bender/init -sSf | sh -s -- 0.24.0
+	mv bender $(BENDER)
 
 sim_clean:
 	rm -rf scripts/compile.tcl

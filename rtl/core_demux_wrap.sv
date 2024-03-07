@@ -18,17 +18,42 @@ module core_demux_wrap #(
   output logic [NumExtPerf-1:0] ext_perf_o   ,
   input  core_data_req_t core_data_req_i     ,
   output core_data_rsp_t core_data_rsp_o     ,
-  hci_core_intf.master tcdm_bus_mst_o        ,
-  hci_core_intf.master dma_ctrl_mst_o        ,
+  hci_core_intf.initiator tcdm_bus_mst_o     ,
+  hci_core_intf.initiator dma_ctrl_mst_o     ,
   XBAR_PERIPH_BUS.Master eventunit_bus_mst_o ,
   XBAR_PERIPH_BUS.Master peripheral_bus_mst_o
 );
 
 XBAR_PERIPH_BUS periph_demux_bus();
 
-assign tcdm_bus_mst_o.boffs = '0;
-assign tcdm_bus_mst_o.lrdy  = '1;
-assign tcdm_bus_mst_o.user  = '0;
+// bindings for tcdm_bus_mst
+logic                    tcdm_bus_mst_req;
+logic [AddrWidth  - 1:0] tcdm_bus_mst_add;
+logic                    tcdm_bus_mst_wen;
+logic [DataWidth  - 1:0] tcdm_bus_mst_wdata;
+logic [ByteEnable - 1:0] tcdm_bus_mst_be;
+logic                    tcdm_bus_mst_gnt;
+logic                    tcdm_bus_mst_r_valid;
+logic [DataWidth  - 1:0] tcdm_bus_mst_r_rdata;
+
+// bindings initiator -> target
+assign tcdm_bus_mst_o.req     = tcdm_bus_mst_req;
+assign tcdm_bus_mst_o.add     = tcdm_bus_mst_add;
+assign tcdm_bus_mst_o.wen     = tcdm_bus_mst_wen;
+assign tcdm_bus_mst_o.data    = tcdm_bus_mst_wdata;
+assign tcdm_bus_mst_o.be      = tcdm_bus_mst_be;
+// bidings target -> initiator
+assign tcdm_bus_mst_gnt     = tcdm_bus_mst_o.gnt;
+assign tcdm_bus_mst_r_valid = tcdm_bus_mst_o.r_valid;
+assign tcdm_bus_mst_r_rdata = tcdm_bus_mst_o.r_data;
+
+// ties initiator -> target
+assign tcdm_bus_mst_o.r_ready  = '1;
+assign tcdm_bus_mst_o.user     = '0;
+assign tcdm_bus_mst_o.id       = '0;
+assign tcdm_bus_mst_o.ecc      = '0;
+assign tcdm_bus_mst_o.ereq     = '0;
+assign tcdm_bus_mst_o.r_eready = '1;
 
 data_periph_demux #(
   .ADDR_WIDTH         ( AddrWidth      ),
@@ -52,14 +77,14 @@ data_periph_demux #(
   .data_r_opc_o       (   /* ucnconnected */      ),
   .data_r_rdata_o     (  core_data_rsp_o.r_data   ),
 
-  .data_req_o_SH      (  tcdm_bus_mst_o.req       ),
-  .data_add_o_SH      (  tcdm_bus_mst_o.add       ),
-  .data_wen_o_SH      (  tcdm_bus_mst_o.wen       ),
-  .data_wdata_o_SH    (  tcdm_bus_mst_o.data      ),
-  .data_be_o_SH       (  tcdm_bus_mst_o.be        ),
-  .data_gnt_i_SH      (  tcdm_bus_mst_o.gnt       ),
-  .data_r_valid_i_SH  (  tcdm_bus_mst_o.r_valid   ),
-  .data_r_rdata_i_SH  (  tcdm_bus_mst_o.r_data    ),
+  .data_req_o_SH      (  tcdm_bus_mst_req         ),
+  .data_add_o_SH      (  tcdm_bus_mst_add         ),
+  .data_wen_o_SH      (  tcdm_bus_mst_wen         ),
+  .data_wdata_o_SH    (  tcdm_bus_mst_wdata       ),
+  .data_be_o_SH       (  tcdm_bus_mst_be          ),
+  .data_gnt_i_SH      (  tcdm_bus_mst_gnt         ),
+  .data_r_valid_i_SH  (  tcdm_bus_mst_r_valid     ),
+  .data_r_rdata_i_SH  (  tcdm_bus_mst_r_rdata     ),
 
   .data_req_o_EXT     (  periph_demux_bus.req     ),
   .data_add_o_EXT     (  periph_demux_bus.add     ),
@@ -92,8 +117,12 @@ assign ext_perf_o[4] = '0;
 
 assign periph_demux_bus.id  = '0;
 
-assign dma_ctrl_mst_o.boffs = '0;
-assign dma_ctrl_mst_o.lrdy  = '1;
+assign dma_ctrl_mst_o.r_ready  = '1;
+assign dma_ctrl_mst_o.user     = '0;
+assign dma_ctrl_mst_o.id       = '0;
+assign dma_ctrl_mst_o.ecc      = '0;
+assign dma_ctrl_mst_o.ereq     = '0;
+assign dma_ctrl_mst_o.r_eready = '1;
 
 periph_demux
 periph_demux_i       (
