@@ -38,11 +38,11 @@ module dmac_wrap
   input logic  test_mode_i,
   //FIXME: iDMA
   // XBAR_TCDM_BUS.Slave   ctrl_slave[NB_CORES-1:0],
-  hci_core_intf.slave   ctrl_slave[NB_CORES-1:0],
+  hci_core_intf.target   ctrl_slave[0:NB_CORES-1],
   XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
 
-  hci_core_intf.master tcdm_master[3:0],
+  hci_core_intf.initiator tcdm_master[0:3],
   AXI_BUS.Master ext_master,
   output logic term_event_cl_o,
   output logic term_irq_cl_o,
@@ -130,9 +130,12 @@ module dmac_wrap
       assign tcdm_master[i].data     = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen      = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be       = s_tcdm_bus_be[i];
-      assign tcdm_master[i].boffs    = '0;
-      assign tcdm_master[i].lrdy     = '1;
+      assign tcdm_master[i].r_ready  = '1;
       assign tcdm_master[i].user     = '0;
+      assign tcdm_master[i].ecc      = '0;
+      assign tcdm_master[i].id       = '0;
+      assign tcdm_master[i].ereq     = '0;
+      assign tcdm_master[i].r_eready = '1;
 
       assign s_tcdm_bus_gnt[i]       = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i]   = tcdm_master[i].r_valid;

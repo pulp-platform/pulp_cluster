@@ -49,14 +49,14 @@ module cluster_interconnect_wrap
   input logic                          clk_i,
   input logic                          rst_ni,
   input logic                    [5:0] cluster_id_i,
-  hci_core_intf.slave                  core_tcdm_slave [NB_CORES-1:0],
-  hci_core_intf.slave                  hwpe_tcdm_slave [0:0],
-  XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
-  hci_core_intf.slave                  ext_slave [3:0],
-  hci_core_intf.slave                  dma_slave [NB_DMAS-1:0], //FIXME IGOR --> check NB_CORES depend ASK DAVIDE
-  XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0],
-  hci_mem_intf.master                  tcdm_sram_master[NB_TCDM_BANKS-1:0],
-  XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
+  hci_core_intf.target                 core_tcdm_slave   [0             : NB_CORES-1     ],
+  hci_core_intf.target                 hwpe_tcdm_slave   [0             : 0              ],
+  XBAR_PERIPH_BUS.Slave                core_periph_slave [NB_CORES-1    : 0              ],
+  hci_core_intf.target                 ext_slave         [0             : 3              ],
+  hci_core_intf.target                 dma_slave         [0             : NB_DMAS-1      ],
+  XBAR_TCDM_BUS.Slave                  mperiph_slave     [NB_MPERIPHS-1 : 0              ],
+  hci_core_intf.initiator              tcdm_sram_master  [0             : NB_TCDM_BANKS-1],
+  XBAR_PERIPH_BUS.Master               speriph_master    [NB_SPERIPHS-1 : 0              ],
   input hci_interconnect_ctrl_t        hci_ctrl_i,
   input logic [1:0]                    TCDM_arb_policy_i
 );
@@ -84,7 +84,6 @@ module cluster_interconnect_wrap
         .TS_BIT ( TEST_SET_BIT             ),
         .AWH    ( ADDR_WIDTH               ),
         .DWH    ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .OWH    ( 1                        ),
         .AWM    ( ADDR_MEM_WIDTH+2         )
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
@@ -102,16 +101,14 @@ module cluster_interconnect_wrap
 
       hci_core_intf #(
         .DW ( 32 ),
-        .AW ( 32 ),
-        .OW ( 1  )
-      ) core_hwpe_tcdm_slave [NB_CORES+NB_HWPE_PORTS-1:0] (
+        .AW ( 32 )
+      ) core_hwpe_tcdm_slave [0:NB_CORES+NB_HWPE_PORTS-1] (
         .clk ( clk_i )
       );
 
       hci_core_intf #(
         .DW ( NB_HWPE_PORTS*32 ),
-        .AW ( 32               ),
-        .OW ( 1                )
+        .AW ( 32               )
       ) null_hwpe_tcdm_slave (
         .clk ( clk_i )
       );
@@ -124,7 +121,7 @@ module cluster_interconnect_wrap
         .rst_ni      ( rst_ni                                                  ),
         .clear_i     ( clear_i                                                 ),
         .tcdm_slave  ( hwpe_tcdm_slave[0]                                      ),
-        .tcdm_master ( core_hwpe_tcdm_slave[NB_CORES+NB_HWPE_PORTS-1:NB_CORES] )
+        .tcdm_master ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+NB_HWPE_PORTS-1] )
       );
   
       for(genvar ii=0; ii<NB_CORES; ii++) begin : core_tcdm_slave_gen

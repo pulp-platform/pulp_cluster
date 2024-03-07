@@ -21,10 +21,7 @@ module hwpe_subsystem
   parameter  hwpe_subsystem_cfg_t HWPE_CFG = '0,
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
-  parameter  int unsigned ID_WIDTH         = 8,
-  parameter  int unsigned DW               = DEFAULT_DW,
-  parameter  int unsigned AW               = DEFAULT_AW,
-  parameter  int unsigned OW               = AW
+  parameter  int unsigned ID_WIDTH         = 8
 )
 (
   input  logic                             clk,
@@ -33,12 +30,15 @@ module hwpe_subsystem
   input  logic                             hwpe_en_i,
   input  logic [$clog2(MAX_NUM_HWPES)-1:0] hwpe_sel_i,
 
-  hci_core_intf.master                     hwpe_xbar_master,
+  hci_core_intf.initiator                  hwpe_xbar_master,
   XBAR_PERIPH_BUS.Slave                    hwpe_cfg_slave,
 
   output logic [N_CORES-1:0][1:0]          evt_o,
   output logic                             busy_o
 );
+
+  localparam int unsigned DW = hwpe_xbar_master.DW;
+  localparam int unsigned AW = hwpe_xbar_master.AW;
 
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
 
@@ -58,9 +58,8 @@ module hwpe_subsystem
 
   hci_core_intf #(
     .DW ( DW ),
-    .AW ( AW ),
-    .OW ( OW )
-  ) tcdm [N_HWPES-1:0] (.clk(clk));
+    .AW ( AW )
+  ) tcdm [0:N_HWPES-1] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin : gen_hwpe
 
@@ -180,10 +179,7 @@ module hwpe_subsystem
   //////////////////////
 
   hci_core_mux_static #(
-    .NB_CHAN ( N_HWPES ),
-    .DW      ( DW      ),
-    .AW      ( AW      ),
-    .OW      ( OW      )
+    .NB_CHAN ( N_HWPES )
   ) i_hwpe_hci_mux (
 
     /* Internally unused */

@@ -301,9 +301,8 @@ logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
 // ext -> log interconnect
 hci_core_intf #(
   .DW ( DataWidth ),
-  .AW ( AddrWidth ),
-  .OW ( 1  )
-) s_hci_ext[Cfg.DmaNumPlugs-1:0] (
+  .AW ( AddrWidth )
+) s_hci_ext[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
 
@@ -316,9 +315,8 @@ XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 // DMA -> log interconnect
 hci_core_intf #(
   .DW ( DataWidth ),
-  .AW ( AddrWidth ),
-  .OW ( 1  )
-) s_hci_dma[Cfg.DmaNumPlugs-1:0] (
+  .AW ( AddrWidth )
+) s_hci_dma[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
 XBAR_TCDM_BUS s_dma_plugin_xbar_bus[Cfg.DmaNumPlugs-1:0]();
@@ -332,16 +330,14 @@ XBAR_TCDM_BUS s_mperiph_bus();
 // cores & accelerators -> log interconnect
 hci_core_intf #(
   .DW ( Cfg.HwpeNumPorts * DataWidth ),
-  .AW ( AddrWidth               ),
-  .OW ( 1                )
+  .AW ( AddrWidth               )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
 hci_core_intf #(
   .DW ( DataWidth ),
-  .AW ( AddrWidth ),
-  .OW ( 1  )
-) s_hci_core [Cfg.NumCores-1:0] (
+  .AW ( AddrWidth )
+) s_hci_core [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
 
@@ -360,13 +356,11 @@ XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
 /* other interfaces */
 // cores -> DMA ctrl
 // FIXME: iDMA
-// XBAR_TCDM_BUS s_core_dmactrl_bus[NB_CORES-1:0]();
 hci_core_intf #(
   .DW ( DataWidth ),
   .AW ( AddrWidth ),
-  .OW ( 1          ),
   .UW ( 0          )
-) s_core_dmactrl_bus [Cfg.NumCores-1:0] (
+) s_core_dmactrl_bus [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
 
@@ -400,12 +394,12 @@ logic[Cfg.NumCores-1:0]          s_enable_l1_l15_prefetch;
 localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs + 4 + Cfg.HwpeNumPorts;
 
 // log interconnect -> TCDM memory banks (SRAM)
-hci_mem_intf #(
-  .AW ( AddrWidth    ),
-  .DW ( DataWidth    ),
-  .BW ( 8      ),
-  .IW ( TCDM_ID_WIDTH )
-) s_tcdm_bus_sram[Cfg.TcdmNumBank-1:0] (
+hci_core_intf #(
+  .AW ( AddrMemWidth+2 ), // AddrMemWidth is word-wise, +2 for byte-wise
+  .DW ( DataWidth      ),
+  .BW ( 8              ),
+  .IW ( TCDM_ID_WIDTH  )
+) s_tcdm_bus_sram[0:Cfg.TcdmNumBank-1] (
   .clk ( clk_i )
 );
 
@@ -1150,10 +1144,7 @@ generate
       .HWPE_CFG      ( Cfg.HwpeCfg                      ),
       .N_CORES       ( Cfg.NumCores                     ),
       .N_MASTER_PORT ( Cfg.HwpeNumPorts                 ),
-      .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs ),
-      .DW            ( Cfg.HwpeNumPorts * DataWidth     ),
-      .AW            ( AddrWidth                        ),
-      .OW            ( 1                                )
+      .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs )
     ) hwpe_subsystem_i (
       .clk               ( clk_i          ),
       .rst_n             ( rst_ni         ),
