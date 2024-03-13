@@ -53,7 +53,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 7bd4e0bab5282a20aebbe63de6bb94462bdc1231
+NONFREE_COMMIT ?= 99ab7cf5e5c69e134ef84ad3304138f6fa105dd8
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -85,6 +85,10 @@ Bender.lock:
 
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
+	git submodule update --init --recursive $@
+
+## Clone fault injection scripts
+fault_injection_sim:
 	git submodule update --init --recursive $@
 
 ########################
