@@ -217,7 +217,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
 logic [Cfg.NumCores-1:0]                fetch_enable_reg_int;
 logic [Cfg.NumCores-1:0]                fetch_en_int;
-logic [Cfg.NumCores-1:0][31:0]          boot_addr;
+logic [Cfg.NumCores-1:0][AddrWidth-1:0] boot_addr;
 logic [Cfg.NumCores-1:0]                dbg_core_halt;
 logic [Cfg.NumCores-1:0]                dbg_core_resume;
 logic [Cfg.NumCores-1:0]                dbg_core_halted;
@@ -251,7 +251,7 @@ logic [Cfg.NumCores-1:0]               clk_core_en;
 logic                              s_cluster_int_busy;
 logic                              s_fregfile_disable;
 
-logic [Cfg.NumCores-1:0]               core_busy;
+logic [Cfg.NumCores-1:0]           core_busy;
 
 logic                              s_incoming_req;
 logic                              s_isolate_cluster;
@@ -263,7 +263,7 @@ logic [EventWidth-1:0]             s_events_data;
 
 // Signals Between CORE_ISLAND and INSTRUCTION CACHES
 logic [Cfg.NumCores-1:0]                        instr_req;
-logic [Cfg.NumCores-1:0][31:0]                  instr_addr;
+logic [Cfg.NumCores-1:0][AddrWidth-1:0]         instr_addr;
 logic [Cfg.NumCores-1:0]                        instr_gnt;
 logic [Cfg.NumCores-1:0]                        instr_r_valid;
 logic [Cfg.NumCores-1:0][Cfg.iCachePrivateDataWidth-1:0] instr_r_rdata;
@@ -575,7 +575,7 @@ end
 
 per2axi_wrap #(
   .NB_CORES       ( Cfg.NumCores                     ),
-  .PER_ADDR_WIDTH ( 32                               ),
+  .PER_ADDR_WIDTH ( AddrWidth                        ),
   .PER_ID_WIDTH   ( Cfg.NumCores + Cfg.NumMstPeriphs ),
   .AXI_ADDR_WIDTH ( Cfg.AxiAddrWidth                 ),
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth              ),
@@ -801,7 +801,7 @@ cluster_peripherals #(
 //------------------------------------------------------//
 
 /* cluster cores + core-coupled accelerators / shared execution units */
-`REG_BUS_TYPEDEF_ALL(hmr_reg, logic[31:0], logic[31:0], logic[3:0])
+`REG_BUS_TYPEDEF_ALL(hmr_reg, logic[AddrWidth-1:0], logic[DataWidth-1:0], logic[BeWidth-1:0])
 hmr_reg_req_t hmr_reg_req;
 hmr_reg_rsp_t hmr_reg_rsp;
 
@@ -861,8 +861,8 @@ generate
     core_region #(
       .CORE_TYPE_CL        ( Cfg.CoreType               ),
       .N_EXT_PERF_COUNTERS ( 5                          ),
-      .ADDR_WIDTH          ( 32                         ),
-      .DATA_WIDTH          ( 32                         ),
+      .ADDR_WIDTH          ( AddrWidth                  ),
+      .DATA_WIDTH          ( DataWidth                  ),
       .INSTR_RDATA_WIDTH   ( Cfg.iCachePrivateDataWidth ),
       .CLUSTER_ALIAS       ( Cfg.ClusterAlias           ),
       .CLUSTER_ALIAS_BASE  ( Cfg.ClusterAliasBase       ),
@@ -1101,7 +1101,7 @@ generate
       .FP_TYPE_WIDTH    ( FpuTypeWidth      ),
 
       .NB_CORE_ARGS      ( FpuNumArgs       ),
-      .CORE_DATA_WIDTH   ( 32               ),
+      .CORE_DATA_WIDTH   ( DataWidth        ),
       .CORE_OPCODE_WIDTH ( FpuOpCodeWidth   ),
       .CORE_DSFLAGS_CPU  ( FpuInFlagsWidth  ),
       .CORE_USFLAGS_CPU  ( FpuOutFlagsWidth ),
@@ -1196,7 +1196,7 @@ generate
 endgenerate
 
 icache_hier_top #(
-  .FETCH_ADDR_WIDTH     ( 32                         ), //= 32,
+  .FETCH_ADDR_WIDTH     ( AddrWidth                  ), //= 32,
   .PRI_FETCH_DATA_WIDTH ( Cfg.iCachePrivateDataWidth ), //= 128,   // Tested for 32 and 128
   .SH_FETCH_DATA_WIDTH  ( 128                        ), //= 128,
 
@@ -1295,7 +1295,7 @@ icache_hier_top #(
 
 assign s_core_instr_bus.aw_atop = '0;
 
-`REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[31:0], logic[31:0], logic[3:0])
+`REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[AddrWidth-1:0], logic[DataWidth-1:0], logic[BeWidth-1:0])
 
 tcdm_scrubber_reg_req_t tcdm_scrubber_reg_req;
 tcdm_scrubber_reg_rsp_t tcdm_scrubber_reg_rsp;
@@ -1325,12 +1325,12 @@ periph_to_reg #(
   .reg_rsp_i      ( tcdm_scrubber_reg_rsp              )
 );
 
-logic [Cfg.TcdmNumBank] bank_faults;
-logic [Cfg.TcdmNumBank] ecc_single_error;
-logic [Cfg.TcdmNumBank] ecc_multiple_error;
-logic [Cfg.TcdmNumBank] scrubber_fix;
-logic [Cfg.TcdmNumBank] scrubber_uncorrectable;
-logic [Cfg.TcdmNumBank] scrubber_trigger;
+logic [Cfg.TcdmNumBank-1:0] bank_faults;
+logic [Cfg.TcdmNumBank-1:0] ecc_single_error;
+logic [Cfg.TcdmNumBank-1:0] ecc_multiple_error;
+logic [Cfg.TcdmNumBank-1:0] scrubber_fix;
+logic [Cfg.TcdmNumBank-1:0] scrubber_uncorrectable;
+logic [Cfg.TcdmNumBank-1:0] scrubber_trigger;
 
 assign bank_faults = ecc_single_error | ecc_multiple_error; // TODO: check
 
@@ -1513,25 +1513,25 @@ axi_cdc_src  #(
  .LogDepth    ( Cfg.AxiCdcLogDepth   ),
  .SyncStages  ( Cfg.AxiCdcSyncStages )
 ) axi_master_cdc_i (
- .src_rst_ni                       ( pwr_on_rst_ni               ),
- .src_clk_i                        ( clk_i                       ),
- .src_req_i                        ( src_req                     ),
- .src_resp_o                       ( src_resp                    ),
- .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),   
- .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
- .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
- .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
- .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
- .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
- .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
- .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
- .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
- .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
- .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
- .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
- .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
- .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
- .async_data_master_r_data_i       ( async_data_master_r_data_i  )  
+ .src_rst_ni                  ( pwr_on_rst_ni               ),
+ .src_clk_i                   ( clk_i                       ),
+ .src_req_i                   ( src_req                     ),
+ .src_resp_o                  ( src_resp                    ),
+ .async_data_master_aw_wptr_o ( async_data_master_aw_wptr_o ),   
+ .async_data_master_aw_rptr_i ( async_data_master_aw_rptr_i ),
+ .async_data_master_aw_data_o ( async_data_master_aw_data_o ),
+ .async_data_master_w_wptr_o  ( async_data_master_w_wptr_o  ),
+ .async_data_master_w_rptr_i  ( async_data_master_w_rptr_i  ),
+ .async_data_master_w_data_o  ( async_data_master_w_data_o  ),
+ .async_data_master_ar_wptr_o ( async_data_master_ar_wptr_o ),
+ .async_data_master_ar_rptr_i ( async_data_master_ar_rptr_i ),
+ .async_data_master_ar_data_o ( async_data_master_ar_data_o ),
+ .async_data_master_b_wptr_i  ( async_data_master_b_wptr_i  ),
+ .async_data_master_b_rptr_o  ( async_data_master_b_rptr_o  ),
+ .async_data_master_b_data_i  ( async_data_master_b_data_i  ),
+ .async_data_master_r_wptr_i  ( async_data_master_r_wptr_i  ),
+ .async_data_master_r_rptr_o  ( async_data_master_r_rptr_o  ),
+ .async_data_master_r_data_i  ( async_data_master_r_data_i  )  
 );
     
 // SOC TO CLUSTER
@@ -1558,25 +1558,25 @@ axi_cdc_dst   #(
   .LogDepth    ( Cfg.AxiCdcLogDepth   ),
   .SyncStages  ( Cfg.AxiCdcSyncStages )
 ) axi_slave_cdc_i (
-  .dst_rst_ni                       ( pwr_on_rst_ni              ),
-  .dst_clk_i                        ( clk_i                      ),
-  .dst_req_o                        ( dst_req                    ),
-  .dst_resp_i                       ( dst_resp                   ),
-  .async_data_slave_aw_wptr_i       ( async_data_slave_aw_wptr_i ),   
-  .async_data_slave_aw_rptr_o       ( async_data_slave_aw_rptr_o ),
-  .async_data_slave_aw_data_i       ( async_data_slave_aw_data_i ),
-  .async_data_slave_w_wptr_i        ( async_data_slave_w_wptr_i  ),
-  .async_data_slave_w_rptr_o        ( async_data_slave_w_rptr_o  ),
-  .async_data_slave_w_data_i        ( async_data_slave_w_data_i  ),
-  .async_data_slave_ar_wptr_i       ( async_data_slave_ar_wptr_i ),
-  .async_data_slave_ar_rptr_o       ( async_data_slave_ar_rptr_o ),
-  .async_data_slave_ar_data_i       ( async_data_slave_ar_data_i ),
-  .async_data_slave_b_wptr_o        ( async_data_slave_b_wptr_o  ),
-  .async_data_slave_b_rptr_i        ( async_data_slave_b_rptr_i  ),
-  .async_data_slave_b_data_o        ( async_data_slave_b_data_o  ),
-  .async_data_slave_r_wptr_o        ( async_data_slave_r_wptr_o  ),
-  .async_data_slave_r_rptr_i        ( async_data_slave_r_rptr_i  ),
-  .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
+  .dst_rst_ni                 ( pwr_on_rst_ni              ),
+  .dst_clk_i                  ( clk_i                      ),
+  .dst_req_o                  ( dst_req                    ),
+  .dst_resp_i                 ( dst_resp                   ),
+  .async_data_slave_aw_wptr_i ( async_data_slave_aw_wptr_i ),   
+  .async_data_slave_aw_rptr_o ( async_data_slave_aw_rptr_o ),
+  .async_data_slave_aw_data_i ( async_data_slave_aw_data_i ),
+  .async_data_slave_w_wptr_i  ( async_data_slave_w_wptr_i  ),
+  .async_data_slave_w_rptr_o  ( async_data_slave_w_rptr_o  ),
+  .async_data_slave_w_data_i  ( async_data_slave_w_data_i  ),
+  .async_data_slave_ar_wptr_i ( async_data_slave_ar_wptr_i ),
+  .async_data_slave_ar_rptr_o ( async_data_slave_ar_rptr_o ),
+  .async_data_slave_ar_data_i ( async_data_slave_ar_data_i ),
+  .async_data_slave_b_wptr_o  ( async_data_slave_b_wptr_o  ),
+  .async_data_slave_b_rptr_i  ( async_data_slave_b_rptr_i  ),
+  .async_data_slave_b_data_o  ( async_data_slave_b_data_o  ),
+  .async_data_slave_r_wptr_o  ( async_data_slave_r_wptr_o  ),
+  .async_data_slave_r_rptr_i  ( async_data_slave_r_rptr_i  ),
+  .async_data_slave_r_data_o  ( async_data_slave_r_data_o  )  
 );
 
 // If the AXI ID width of the subordinate port does not match the one required, we interpose
@@ -1623,7 +1623,7 @@ if (Cfg.AxiDataInWidth != Cfg.AxiDataOutWidth) begin
   `AXI_ASSIGN_TO_RESP(dst_remap_resp,s_data_slave_ext)
 
   axi_dw_converter_intf #(
-    .AXI_ID_WIDTH            ( pulp_cluster_package::AxiSubordinateIdwidth ),
+    .AXI_ID_WIDTH            ( AxiIdInWidth       ),
     .AXI_ADDR_WIDTH          ( Cfg.AxiAddrWidth   ),
     .AXI_SLV_PORT_DATA_WIDTH ( Cfg.AxiDataInWidth ),
     .AXI_MST_PORT_DATA_WIDTH ( Cfg.AxiDataOutWidth),
