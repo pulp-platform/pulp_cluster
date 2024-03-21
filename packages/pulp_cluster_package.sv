@@ -110,6 +110,10 @@ package pulp_cluster_package;
     byte_t AxiDataOutWidth;
     // AXI user width
     byte_t AxiUserWidth;
+    // AXI maximum subordinate transaction per ID
+    byte_t AxiMaxInTrans;
+    // AXI maximum manager transaction per ID
+    byte_t AxiMaxOutTrans;
     // Log depth of AXI CDC FIFOs
     byte_t AxiCdcLogDepth; // old LOG_DEPTH
     // Sinchronization stages of AXI CDC FIFOs
@@ -192,6 +196,8 @@ package pulp_cluster_package;
     AxiDataInWidth: 32,
     AxiDataOutWidth: 32,
     AxiUserWidth: 10,
+    AxiMaxInTrans: 64,
+    AxiMaxOutTrans: 64,
     AxiCdcLogDepth: 3,
     AxiCdcSyncStages: 3,
     ClusterBaseAddr: 'h10000000,

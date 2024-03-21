@@ -314,6 +314,8 @@ module pulp_cluster_tb;
     AxiDataInWidth: AxiDw,
     AxiDataOutWidth: AxiDw,
     AxiUserWidth: AxiUw,
+    AxiMaxInTrans: 64,
+    AxiMaxOutTrans: 64,
     AxiCdcLogDepth: 3,
     AxiCdcSyncStages: 3,
     SyncStages: 3,
