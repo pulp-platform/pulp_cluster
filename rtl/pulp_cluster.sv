@@ -85,6 +85,8 @@ module pulp_cluster
   parameter AXI_ID_OUT_WIDTH        = AXI_ID_IN_WIDTH + $clog2(NumAxiSlv),
   parameter AXI_STRB_C2S_WIDTH      = AXI_DATA_C2S_WIDTH/8,
   parameter AXI_STRB_S2C_WIDTH      = AXI_DATA_S2C_WIDTH/8,
+  parameter AXI_MAX_IN_TRANS        = 64,
+  parameter AXI_MAX_OUT_TRANS       = 64,
   parameter DC_SLICE_BUFFER_WIDTH   = 8,
   parameter LOG_DEPTH               = 3,
   parameter int unsigned CdcSynchStages = 3,
@@ -115,6 +117,10 @@ module pulp_cluster
   localparam ASYNC_S2C_B_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_B_WIDTH,
   localparam ASYNC_S2C_AR_DATA_WIDTH = (2**LOG_DEPTH)*S2C_AR_WIDTH,
   localparam ASYNC_S2C_R_DATA_WIDTH  = (2**LOG_DEPTH)*S2C_R_WIDTH,
+
+  localparam MAX_UNIQ_ID = 1,
+  localparam LOCAL_AXI_ID_IN_WIDTH = pulp_cluster_package::AxiIdInWidth,
+  localparam LOCAL_AXI_ID_OUT_WIDTH = pulp_cluster_package::AxiIdOutWidth,
  
   // TCDM and log interconnect parameters
   parameter DATA_WIDTH              = 32,
@@ -244,7 +250,7 @@ module pulp_cluster
 
 //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
 if (AXI_ID_IN_WIDTH < 1 + $clog2(NB_CACHE_BANKS))
-         $error("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
+  $info("AXI input ID width must be larger than 1+$clog2(NB_CACHE_BANKS) which is %d but was %d", 1 + $clog2(NB_CACHE_BANKS), AXI_ID_IN_WIDTH);
 
 localparam int unsigned NB_L1_CUTS      = 16;
 localparam int unsigned RW_MARGIN_WIDTH = 4;
@@ -464,28 +470,28 @@ hci_mem_intf #(
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_data_slave_int();
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_S2C_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_data_slave_ext();
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_OUT_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_data_master(); 
 
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_core_instr_bus(); 
 
@@ -503,7 +509,7 @@ AXI_BUS #(
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_core_ext_bus(); 
 
@@ -511,7 +517,7 @@ AXI_BUS #(
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH    ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_dma_ext_bus(); 
 
@@ -519,7 +525,7 @@ AXI_BUS #(
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_OUT_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_ext_tcdm_bus(); 
 
@@ -527,7 +533,7 @@ AXI_BUS #(
 AXI_BUS #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_OUT_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) s_ext_mperiph_bus();
 
@@ -546,8 +552,8 @@ cluster_bus_wrap #(
   .AXI_ADDR_WIDTH         ( AXI_ADDR_WIDTH         ),
   .AXI_DATA_WIDTH         ( AXI_DATA_C2S_WIDTH     ),
   .AXI_USER_WIDTH         ( AXI_USER_WIDTH         ),
-  .AXI_ID_IN_WIDTH        ( AXI_ID_IN_WIDTH        ),
-  .AXI_ID_OUT_WIDTH       ( AXI_ID_OUT_WIDTH       ),
+  .AXI_ID_IN_WIDTH        ( LOCAL_AXI_ID_IN_WIDTH  ),
+  .AXI_ID_OUT_WIDTH       ( LOCAL_AXI_ID_OUT_WIDTH ),
   .BaseAddr               ( BaseAddr               ),
   .ClusterPeripheralsOffs ( ClusterPeripheralsOffs ),
   .ClusterExternalOffs    ( ClusterExternalOffs    )
@@ -570,7 +576,7 @@ axi2mem_wrap #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     ),
-  .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   )
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_OUT_WIDTH )
 ) axi2mem_wrap_i (
   .clk_i       ( clk_i          ),
   .rst_ni      ( rst_ni         ),
@@ -583,7 +589,7 @@ axi2mem_wrap #(
 axi2per_wrap #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH     ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH ),
-  .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_OUT_WIDTH ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
 ) axi2per_wrap_i (
   .clk_i         ( clk_i             ),
@@ -620,7 +626,7 @@ per2axi_wrap #(
   .AXI_ADDR_WIDTH ( AXI_ADDR_WIDTH       ),
   .AXI_DATA_WIDTH ( AXI_DATA_C2S_WIDTH   ),
   .AXI_USER_WIDTH ( AXI_USER_WIDTH       ),
-  .AXI_ID_WIDTH   ( AXI_ID_IN_WIDTH      )
+  .AXI_ID_WIDTH   ( LOCAL_AXI_ID_IN_WIDTH )
 ) per2axi_wrap_i (
   .clk_i          ( clk_i                           ),
   .rst_ni         ( rst_ni                          ),
@@ -689,7 +695,7 @@ cluster_interconnect_wrap #(
     .MCHAN_BURST_LENGTH ( MCHAN_BURST_LENGTH ),
     .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
-    .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
+    .AXI_ID_WIDTH       ( LOCAL_AXI_ID_IN_WIDTH ),
     .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
     .PE_ID_WIDTH        ( NB_CORES + 1       ),
     .TCDM_ADD_WIDTH     ( TCDM_ADD_WIDTH     ),
@@ -719,7 +725,7 @@ cluster_interconnect_wrap #(
     .AXI_ADDR_WIDTH   ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH   ( AXI_DATA_C2S_WIDTH ),
     .AXI_USER_WIDTH   ( AXI_USER_WIDTH     ),
-    .AXI_ID_WIDTH     ( AXI_ID_IN_WIDTH    ),
+    .AXI_ID_WIDTH     ( LOCAL_AXI_ID_IN_WIDTH ),
     .PE_ID_WIDTH      ( NB_CORES + 1       ),
     .NB_PE_PORTS      ( 2                  ),
     .DATA_WIDTH       ( DATA_WIDTH         ),
@@ -1251,7 +1257,7 @@ icache_hier_top #(
   .PRI_CACHE_SIZE       ( 512                 ), //= 512,     // in Byte
   .PRI_CACHE_LINE       ( 1                   ), //= 1,       // in word of [PRI_FETCH_DATA_WIDTH]
 
-  .AXI_ID               ( AXI_ID_IN_WIDTH     ), //= 6,
+  .AXI_ID               ( LOCAL_AXI_ID_IN_WIDTH ), //= 6,
   .AXI_ADDR             ( AXI_ADDR_WIDTH      ), //= 32,
   .AXI_USER             ( AXI_USER_WIDTH      ), //= 6,
   .AXI_DATA             ( AXI_DATA_C2S_WIDTH  ), //= 64,
@@ -1366,9 +1372,44 @@ tcdm_banks_wrap #(
 
 c2s_req_t   src_req, isolate_src_req ;
 c2s_resp_t  src_resp, isolate_src_resp;
- 
-`AXI_ASSIGN_TO_REQ(isolate_src_req,s_data_master)
-`AXI_ASSIGN_FROM_RESP(s_data_master,isolate_src_resp)
+
+`AXI_TYPEDEF_AW_CHAN_T(c2s_remap_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[LOCAL_AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_W_CHAN_T(c2s_remap_w_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[AXI_DATA_C2S_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_B_CHAN_T(c2s_remap_b_chan_t,logic[LOCAL_AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_AR_CHAN_T(c2s_remap_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[LOCAL_AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_R_CHAN_T(c2s_remap_r_chan_t,logic[AXI_DATA_C2S_WIDTH-1:0],logic[LOCAL_AXI_ID_OUT_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+
+`AXI_TYPEDEF_REQ_T(c2s_remap_req_t,c2s_remap_aw_chan_t,c2s_remap_w_chan_t,c2s_remap_ar_chan_t)
+`AXI_TYPEDEF_RESP_T(c2s_remap_resp_t,c2s_remap_b_chan_t,c2s_remap_r_chan_t)
+
+c2s_remap_req_t src_remap_req;
+c2s_remap_resp_t src_remap_resp;
+
+`AXI_ASSIGN_TO_REQ(src_remap_req,s_data_master)
+`AXI_ASSIGN_FROM_RESP(s_data_master,src_remap_resp)
+
+if (AXI_ID_OUT_WIDTH != LOCAL_AXI_ID_OUT_WIDTH) begin : gen_c2s_idwremap
+  axi_id_remap            #(
+    .AxiSlvPortIdWidth     ( LOCAL_AXI_ID_OUT_WIDTH ),
+    .AxiSlvPortMaxUniqIds  ( MAX_UNIQ_ID ),
+    .AxiMaxTxnsPerId       ( AXI_MAX_OUT_TRANS ),
+    .AxiMstPortIdWidth     ( AXI_ID_OUT_WIDTH ),
+    .slv_req_t             ( c2s_remap_req_t ),
+    .slv_resp_t            ( c2s_remap_resp_t ),
+    .mst_req_t             ( c2s_req_t ),
+    .mst_resp_t            ( c2s_resp_t )
+  ) i_axi_out_id_remap (
+    .clk_i       ( clk_i ),
+    .rst_ni      ( rst_ni ),
+    .slv_req_i   ( src_remap_req  ),
+    .slv_resp_o  ( src_remap_resp ),
+    .mst_req_o   ( isolate_src_req ),
+    .mst_resp_i  ( isolate_src_resp )
+  );
+end else begin : gen_no_c2s_idwremap
+  assign isolate_src_req = src_remap_req;
+  assign src_remap_resp = isolate_src_resp;
+end
 
 sync             #(
   .STAGES         ( SynchStages ),
@@ -1483,8 +1524,8 @@ axi_cdc_src  #(
 `AXI_TYPEDEF_REQ_T(s2c_req_t,s2c_aw_chan_t,s2c_w_chan_t,s2c_ar_chan_t)
 `AXI_TYPEDEF_RESP_T(s2c_resp_t,s2c_b_chan_t,s2c_r_chan_t)
 
-s2c_req_t  dst_req , isolate_dst_req;
-s2c_resp_t dst_resp, isolate_dst_resp;
+s2c_req_t  dst_req;
+s2c_resp_t dst_resp;
 
 axi_cdc_dst   #(
   .aw_chan_t   ( s2c_aw_chan_t  ),
@@ -1518,9 +1559,46 @@ axi_cdc_dst   #(
   .async_data_slave_r_data_o        ( async_data_slave_r_data_o  )  
 );
 
+// If the AXI ID width of the subordinate port does not match the one required, we interpose
+// an AXI ID remapper. Otherwise the busses are simply assigned.
+`AXI_TYPEDEF_AW_CHAN_T(s2c_remap_aw_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[LOCAL_AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_W_CHAN_T(s2c_remap_w_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[AXI_DATA_S2C_WIDTH/8-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_B_CHAN_T(s2c_remap_b_chan_t,logic[LOCAL_AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_AR_CHAN_T(s2c_remap_ar_chan_t,logic[AXI_ADDR_WIDTH-1:0],logic[LOCAL_AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+`AXI_TYPEDEF_R_CHAN_T(s2c_remap_r_chan_t,logic[AXI_DATA_S2C_WIDTH-1:0],logic[LOCAL_AXI_ID_IN_WIDTH-1:0],logic[AXI_USER_WIDTH-1:0])
+
+`AXI_TYPEDEF_REQ_T(s2c_remap_req_t,s2c_remap_aw_chan_t,s2c_remap_w_chan_t,s2c_remap_ar_chan_t)
+`AXI_TYPEDEF_RESP_T(s2c_remap_resp_t,s2c_remap_b_chan_t,s2c_remap_r_chan_t)
+
+s2c_remap_req_t dst_remap_req;
+s2c_remap_resp_t dst_remap_resp;
+
+if (AXI_ID_IN_WIDTH != LOCAL_AXI_ID_IN_WIDTH) begin : gen_s2c_idwremap
+  axi_id_remap            #(
+    .AxiSlvPortIdWidth     ( AXI_ID_IN_WIDTH ),
+    .AxiSlvPortMaxUniqIds  ( MAX_UNIQ_ID ),
+    .AxiMaxTxnsPerId       ( AXI_MAX_IN_TRANS ),
+    .AxiMstPortIdWidth     ( LOCAL_AXI_ID_IN_WIDTH ),
+    .slv_req_t             ( s2c_req_t ),
+    .slv_resp_t            ( s2c_resp_t ),
+    .mst_req_t             ( s2c_remap_req_t ),
+    .mst_resp_t            ( s2c_remap_resp_t )
+  ) i_axi_in_id_remap (
+    .clk_i       ( clk_i ),
+    .rst_ni      ( rst_ni ),
+    .slv_req_i   ( dst_req  ),
+    .slv_resp_o  ( dst_resp ),
+    .mst_req_o   ( dst_remap_req ),
+    .mst_resp_i  ( dst_remap_resp )
+  );
+end else begin : gen_no_s2c_idwremap
+  assign dst_remap_req = dst_req;
+  assign dst_resp = dst_remap_resp;
+end
+
 if (AXI_DATA_S2C_WIDTH != AXI_DATA_C2S_WIDTH) begin
-  `AXI_ASSIGN_FROM_REQ(s_data_slave_ext,dst_req)
-  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_ext)
+  `AXI_ASSIGN_FROM_REQ(s_data_slave_ext,dst_remap_req)
+  `AXI_ASSIGN_TO_RESP(dst_remap_resp,s_data_slave_ext)
 
   axi_dw_converter_intf #(
     .AXI_ID_WIDTH            ( AXI_ID_IN_WIDTH    ),
@@ -1536,8 +1614,8 @@ if (AXI_DATA_S2C_WIDTH != AXI_DATA_C2S_WIDTH) begin
     .mst    ( s_data_slave_int )
   );
 end else begin
-  `AXI_ASSIGN_FROM_REQ(s_data_slave_int,dst_req)
-  `AXI_ASSIGN_TO_RESP(dst_resp,s_data_slave_int)
+  `AXI_ASSIGN_FROM_REQ(s_data_slave_int,dst_remap_req)
+  `AXI_ASSIGN_TO_RESP(dst_remap_resp,s_data_slave_int)
 end
 
 /* event synchronizers */

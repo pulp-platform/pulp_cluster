@@ -49,6 +49,12 @@ package pulp_cluster_package;
   // // remember to change the defines in the pulp.h as well to be coherent with this approach
   // parameter DEM_PER_BEFORE_TCDM_TS = 0;
 
+  // The following parameters refer to the cluster AXI crossbar
+  localparam NumAxiInPorts = 4;
+  localparam NumAxiOutPorts = 3;
+  localparam AxiIdInWidth = 4;
+  localparam AxiIdOutWidth = AxiIdInWidth + $clog2(NumAxiInPorts);
+
   typedef struct packed {
     logic gnt;
     logic [31:0] r_data;
