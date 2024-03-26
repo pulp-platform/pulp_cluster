@@ -45,7 +45,7 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: 8a9f62dafb5ec23c6cd361847ff0047e12befca4
+    revision: 0b8e8ab9e6be3a5030a18256bb7e75cf6b6f6cac
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
@@ -97,8 +97,8 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: e47627c20b33bcaf4842c1add81fb888b4f12a9d
-    version: null
+    revision: 33bd45771ad2e2690140cb29cafe0e753065d7aa
+    version: 2.0.0-rc1
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
@@ -168,7 +168,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: 3131e87c40118f75e11a1ff9bae60fe764336a19
+    revision: 60c51c0a5f6b30140ca99cc546ddcfde00af0044
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -184,7 +184,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 68999ccc922b10a5043bb98f67aaf3d8d8d59f3f
+    revision: 7abb25690090c7f5548a8aa905c7bf0440d4ba6b
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git

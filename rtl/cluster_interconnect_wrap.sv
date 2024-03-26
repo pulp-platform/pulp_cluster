@@ -78,13 +78,7 @@ module cluster_interconnect_wrap
         .N_EXT  ( 4                        ),
         .N_MEM  ( NB_TCDM_BANKS            ),
         .IW     ( TCDM_ID_WIDTH            ),
-        .AWC    ( ADDR_WIDTH               ),
-        .DW_LIC ( DATA_WIDTH               ),
-        .DW_SIC ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .TS_BIT ( TEST_SET_BIT             ),
-        .AWH    ( ADDR_WIDTH               ),
-        .DWH    ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .AWM    ( ADDR_MEM_WIDTH+2         )
+        .TS_BIT ( TEST_SET_BIT             )
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),

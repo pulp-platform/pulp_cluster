@@ -4,9 +4,14 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-QUESTA ?= 
+ifneq (,$(wildcard /etc/iis.version))
+    QUESTA ?= questa-2022.3
+	BENDER ?= bender
+else
+    QUESTA ?=
+	BENDER ?= ./bender
+endif
 GIT ?= git
-BENDER ?= ./bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 top_level ?= pulp_cluster_tb
@@ -53,7 +58,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= df4dba5d7c494d2842c2461c1996fa7b4eafff57
+NONFREE_COMMIT ?= ad58d90
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
