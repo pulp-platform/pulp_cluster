@@ -39,6 +39,7 @@ bender_targs += -t rtl
 bender_targs += -t test
 bender_targs += -t mchan
 bender_targs += -t cluster_standalone
+bender_targs += -t pulp
 bender_targs += -t scm_use_fpga_scm
 bender_targs += -t cv32e40p_use_ff_regfile
 
