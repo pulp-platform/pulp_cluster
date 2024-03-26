@@ -247,6 +247,7 @@ if {[catch { vlog -incr -sv \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/mv_filter.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/onehot_to_bin.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/plru_tree.sv" \
+    "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/passthrough_stream_fifo.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/popcount.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/rr_arb_tree.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/src/rstgen_bypass.sv" \
@@ -376,6 +377,7 @@ if {[catch { vlog -incr -sv \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/fifo_tb.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/graycode_tb.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/id_queue_tb.sv" \
+    "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/passthrough_stream_fifo_tb.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/popcount_tb.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/rr_arb_tree_tb.sv" \
     "$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/test/stream_test.sv" \
@@ -810,44 +812,44 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "+incdir+$ROOT/working_dir/hwpe-stream/rtl" \
-    "$ROOT/working_dir/hwpe-stream/rtl/hwpe_stream_interfaces.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/hwpe_stream_package.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_assign.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_buffer.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_demux_static.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_deserialize.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_fence.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_merge.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_mux_static.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_serialize.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/basic/hwpe_stream_split.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_ctrl.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_scm.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_addressgen.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_addressgen_v2.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_addressgen_v3.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_sink_realign.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_source_realign.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_strbgen.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_streamer_queue.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_assign.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_mux.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_mux_static.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_reorder.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_reorder_static.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_earlystall.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_earlystall_sidech.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_scm_test_wrap.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_sidech.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_fifo_load_sidech.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/fifo/hwpe_stream_fifo_passthrough.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_source.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_fifo.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_fifo_load.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/tcdm/hwpe_stream_tcdm_fifo_store.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/streamer/hwpe_stream_sink.sv" \
+    "+incdir+$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/hwpe_stream_interfaces.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/hwpe_stream_package.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_assign.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_demux_static.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_deserialize.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_fence.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_merge.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_mux_static.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_serialize.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/basic/hwpe_stream_split.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_ctrl.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_scm.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_addressgen.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_addressgen_v2.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_addressgen_v3.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_sink_realign.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_source_realign.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_strbgen.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_streamer_queue.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_assign.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_mux.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_mux_static.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_reorder.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_reorder_static.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_earlystall.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_earlystall_sidech.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_scm_test_wrap.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_sidech.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_fifo_load_sidech.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/fifo/hwpe_stream_fifo_passthrough.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_source.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_fifo.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_fifo_load.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/tcdm/hwpe_stream_tcdm_fifo_store.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/streamer/hwpe_stream_sink.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -868,10 +870,10 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "+incdir+$ROOT/working_dir/hwpe-stream/rtl" \
-    "$ROOT/working_dir/hwpe-stream/rtl/verif/hwpe_stream_traffic_gen.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/verif/hwpe_stream_traffic_recv.sv" \
-    "$ROOT/working_dir/hwpe-stream/rtl/verif/tb_fifo.sv" \
+    "+incdir+$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/verif/hwpe_stream_traffic_gen.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/verif/hwpe_stream_traffic_recv.sv" \
+    "$ROOT/.bender/git/checkouts/hwpe-stream-bc1f2d87c271f75a/rtl/verif/tb_fifo.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1074,26 +1076,26 @@ if {[catch { vlog -incr -sv \
     +define+USE_PULP_PARAMETERS \
     "+incdir+$ROOT/.bender/git/checkouts/cluster_interconnect-9a146c2c6998a1b5/rtl/low_latency_interco" \
     "+incdir+$ROOT/.bender/git/checkouts/cluster_interconnect-9a146c2c6998a1b5/rtl/peripheral_interco" \
-    "+incdir+$ROOT/working_dir/hci/rtl/common" \
-    "$ROOT/working_dir/hci/rtl/common/hci_package.sv" \
-    "$ROOT/working_dir/hci/rtl/common/hci_interfaces.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_assign.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_fifo.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_mux_dynamic.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_mux_static.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_mux_ooo.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_r_valid_filter.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_r_id_filter.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_source.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_split.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_log_interconnect.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_log_interconnect_l2.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_new_log_interconnect.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_arbiter.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_router_reorder.sv" \
-    "$ROOT/working_dir/hci/rtl/core/hci_core_sink.sv" \
-    "$ROOT/working_dir/hci/rtl/interco/hci_router.sv" \
-    "$ROOT/working_dir/hci/rtl/hci_interconnect.sv" \
+    "+incdir+$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/common" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/common/hci_package.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/common/hci_interfaces.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_assign.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_fifo.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_mux_dynamic.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_mux_static.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_mux_ooo.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_r_valid_filter.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_r_id_filter.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_source.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_split.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_log_interconnect.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_log_interconnect_l2.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_new_log_interconnect.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_arbiter.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_router_reorder.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/core/hci_core_sink.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/interco/hci_router.sv" \
+    "$ROOT/.bender/git/checkouts/hci-f956ddaaacdaf461/rtl/hci_interconnect.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1366,7 +1368,7 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/working_dir/cluster_peripherals/cluster_control_unit/cluster_control_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/cluster_control_unit/cluster_control_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1387,15 +1389,15 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "+incdir+$ROOT/working_dir/cluster_peripherals/event_unit/include" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/HW_barrier_logic.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_arbiter.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_mux.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_sm.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/interrupt_mask.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/HW_barrier.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_input.sv" \
-    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit.sv" \
+    "+incdir+$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/include" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/HW_barrier_logic.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_arbiter.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_mux.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_sm.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/interrupt_mask.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/HW_barrier.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_input.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1416,15 +1418,15 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/mp_icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/mp_pf_icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/new_icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/pri_icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/sp_icache_ctrl_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/mmu_config_unit/mmu_config_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/perf_counters_unit/perf_counters_unit.sv" \
-    "$ROOT/working_dir/cluster_peripherals/tcdm_pipe_unit/tcdm_pipe_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/mp_icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/mp_pf_icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/new_icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/pri_icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/sp_icache_ctrl_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/mmu_config_unit/mmu_config_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/perf_counters_unit/perf_counters_unit.sv" \
+    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/tcdm_pipe_unit/tcdm_pipe_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1817,28 +1819,28 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/working_dir/neureka/rtl/neureka_package.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_normquant.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_normquant_shifter.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_normquant_bias.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_accumulator_adder.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_normquant_multiplier.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_accumulator_buffer.sv" \
-    "$ROOT/working_dir/neureka/rtl/accumulator/neureka_accumulator_normquant.sv" \
-    "$ROOT/working_dir/neureka/rtl/input_buffer/neureka_input_buffer_scm.sv" \
-    "$ROOT/working_dir/neureka/rtl/input_buffer/neureka_input_buffer_scm_test_wrap.sv" \
-    "$ROOT/working_dir/neureka/rtl/input_buffer/neureka_input_buffer.sv" \
-    "$ROOT/working_dir/neureka/rtl/input_buffer/neureka_double_input_buffer.sv" \
-    "$ROOT/working_dir/neureka/rtl/array/neureka_scale.sv" \
-    "$ROOT/working_dir/neureka/rtl/array/neureka_binconv_col.sv" \
-    "$ROOT/working_dir/neureka/rtl/array/neureka_binconv_pe.sv" \
-    "$ROOT/working_dir/neureka/rtl/array/neureka_binconv_array.sv" \
-    "$ROOT/working_dir/neureka/rtl/ctrl/neureka_ctrl_fsm.sv" \
-    "$ROOT/working_dir/neureka/rtl/ctrl/neureka_ctrl.sv" \
-    "$ROOT/working_dir/neureka/rtl/neureka_engine.sv" \
-    "$ROOT/working_dir/neureka/rtl/neureka_streamer.sv" \
-    "$ROOT/working_dir/neureka/rtl/neureka_top.sv" \
-    "$ROOT/working_dir/neureka/rtl/neureka_top_wrap.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/neureka_package.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_normquant.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_normquant_shifter.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_normquant_bias.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_accumulator_adder.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_normquant_multiplier.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_accumulator_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/accumulator/neureka_accumulator_normquant.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/input_buffer/neureka_input_buffer_scm.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/input_buffer/neureka_input_buffer_scm_test_wrap.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/input_buffer/neureka_input_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/input_buffer/neureka_double_input_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/array/neureka_scale.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/array/neureka_binconv_col.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/array/neureka_binconv_pe.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/array/neureka_binconv_array.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/ctrl/neureka_ctrl_fsm.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/ctrl/neureka_ctrl.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/neureka_engine.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/neureka_streamer.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/neureka_top.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/neureka_top_wrap.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1859,8 +1861,8 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/working_dir/neureka/rtl/verif/tb_dummy_memory.sv" \
-    "$ROOT/working_dir/neureka/rtl/verif/tb_neureka.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/verif/tb_dummy_memory.sv" \
+    "$ROOT/.bender/git/checkouts/neureka-9d242f85cecf0969/rtl/verif/tb_neureka.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1906,22 +1908,22 @@ if {[catch { vlog -incr -sv \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
     "+incdir+$ROOT/.bender/git/checkouts/common_cells-5a98055a67ec8079/include" \
-    "$ROOT/working_dir/redmule/rtl/redmule_pkg.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_ctrl.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_scheduler.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_castin.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_castout.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_streamer.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_x_buffer.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_w_buffer.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_z_buffer.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_fma.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_noncomp.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_ce.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_row.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_engine.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_top.sv" \
-    "$ROOT/working_dir/redmule/rtl/redmule_wrap.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_pkg.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_ctrl.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_scheduler.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_castin.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_castout.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_streamer.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_x_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_w_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_z_buffer.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_fma.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_noncomp.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_ce.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_row.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_engine.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_top.sv" \
+    "$ROOT/.bender/git/checkouts/redmule-8ba8e6c90026f85e/rtl/redmule_wrap.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
