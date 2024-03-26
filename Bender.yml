@@ -83,7 +83,6 @@ sources:
   - target: test
     files:
       - tb/mock_uart.sv
-      - tb/axi2apb_64_32.sv
       - tb/mock_uart_axi.sv
       - tb/pulp_cluster_tb.sv
 
