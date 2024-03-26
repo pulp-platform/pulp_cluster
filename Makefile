@@ -4,7 +4,7 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-ifneq ("$(wildcard $(/etc/iis.version))","")
+ifneq (,$(wildcard /etc/iis.version))
     QUESTA ?= questa-2022.3
 	BENDER ?= bender
 else
