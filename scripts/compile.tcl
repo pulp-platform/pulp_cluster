@@ -1074,7 +1074,7 @@ if {[catch { vlog -incr -sv \
     +define+USE_PULP_PARAMETERS \
     "+incdir+$ROOT/.bender/git/checkouts/cluster_interconnect-9a146c2c6998a1b5/rtl/low_latency_interco" \
     "+incdir+$ROOT/.bender/git/checkouts/cluster_interconnect-9a146c2c6998a1b5/rtl/peripheral_interco" \
-    "+incdir+$ROOT/working_dir/hci/rtl" \
+    "+incdir+$ROOT/working_dir/hci/rtl/common" \
     "$ROOT/working_dir/hci/rtl/common/hci_package.sv" \
     "$ROOT/working_dir/hci/rtl/common/hci_interfaces.sv" \
     "$ROOT/working_dir/hci/rtl/core/hci_core_assign.sv" \
@@ -1366,7 +1366,7 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/cluster_control_unit/cluster_control_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/cluster_control_unit/cluster_control_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1387,15 +1387,15 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "+incdir+$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/include" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/HW_barrier_logic.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_arbiter.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_mux.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_sm.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/interrupt_mask.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/HW_barrier.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit_input.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/event_unit/event_unit.sv" \
+    "+incdir+$ROOT/working_dir/cluster_peripherals/event_unit/include" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/HW_barrier_logic.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_arbiter.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_mux.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_sm.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/interrupt_mask.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/HW_barrier.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit_input.sv" \
+    "$ROOT/working_dir/cluster_peripherals/event_unit/event_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
@@ -1416,15 +1416,15 @@ if {[catch { vlog -incr -sv \
     +define+TRACE_EXECUTION \
     +define+CLUSTER_ALIAS \
     +define+USE_PULP_PARAMETERS \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/mp_icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/mp_pf_icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/new_icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/pri_icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/icache_ctrl_unit/sp_icache_ctrl_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/mmu_config_unit/mmu_config_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/perf_counters_unit/perf_counters_unit.sv" \
-    "$ROOT/.bender/git/checkouts/cluster_peripherals-45e4f8f679514447/tcdm_pipe_unit/tcdm_pipe_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/mp_icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/mp_pf_icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/new_icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/pri_icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/icache_ctrl_unit/sp_icache_ctrl_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/mmu_config_unit/mmu_config_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/perf_counters_unit/perf_counters_unit.sv" \
+    "$ROOT/working_dir/cluster_peripherals/tcdm_pipe_unit/tcdm_pipe_unit.sv" \
 }]} {return 1}
 
 if {[catch { vlog -incr -sv \
