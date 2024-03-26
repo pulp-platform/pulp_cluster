@@ -45,10 +45,10 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: 8a9f62dafb5ec23c6cd361847ff0047e12befca4
+    revision: null
     version: null
     source:
-      Git: https://github.com/pulp-platform/cluster_peripherals.git
+      Path: working_dir/cluster_peripherals
     dependencies:
     - hci
   common_cells:
@@ -97,10 +97,10 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: e47627c20b33bcaf4842c1add81fb888b4f12a9d
+    revision: null
     version: null
     source:
-      Git: https://github.com/pulp-platform/hci.git
+      Path: working_dir/hci
     dependencies:
     - cluster_interconnect
     - hwpe-stream
@@ -124,10 +124,10 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: bcb4435f802add732f557dc7fa1c6b5dd8854458
+    revision: null
     version: null
     source:
-      Git: https://github.com/pulp-platform/hwpe-stream.git
+      Path: working_dir/hwpe-stream
     dependencies:
     - tech_cells_generic
   ibex:
@@ -167,10 +167,10 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: 3131e87c40118f75e11a1ff9bae60fe764336a19
+    revision: null
     version: null
     source:
-      Git: https://github.com/pulp-platform/neureka.git
+      Path: working_dir/neureka
     dependencies:
     - hci
     - hwpe-ctrl
@@ -184,10 +184,10 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 68999ccc922b10a5043bb98f67aaf3d8d8d59f3f
+    revision: null
     version: null
     source:
-      Git: https://github.com/pulp-platform/redmule.git
+      Path: working_dir/redmule
     dependencies:
     - common_cells
     - cv32e40p
