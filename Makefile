@@ -4,9 +4,14 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-QUESTA ?= 
+ifneq ("$(wildcard $(/etc/iis.version))","")
+    QUESTA ?= questa-2022.3
+	BENDER ?= bender
+else
+    QUESTA ?=
+	BENDER ?= ./bender
+endif
 GIT ?= git
-BENDER ?= ./bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 top_level ?= pulp_cluster_tb
