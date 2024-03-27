@@ -8,11 +8,15 @@
 # Description: This file is used to extract specific groups of nets from the
 #              PULP Cluster, so they can be used in the fault injection script
 
+# This file should be sourced with these variables already defined
+if {![info exists fi_common_dir]} {error "Define fi_common_dir"}
+if {![info exists fi_cluster_instance]} {error "Define fi_cluster_instance"}
+
 # Source generic netlist extraction procs
-source [file join $script_base_path extract_nets.tcl]
+source [file join $fi_common_dir extract_nets.tcl]
 
 # == Base Path of a Cluster Core ==
-proc base_path {core} {return "pulp_cluster_tb/cluster_i/CORE\[$core\]/core_region_i"}
+proc base_path {core} {return "$::fi_cluster_instance/CORE\[$core\]/core_region_i"}
 
 # nets that would crash the simulation if flipped
 lappend core_netlist_ignore *clk_i
@@ -262,7 +266,7 @@ proc get_all_core_nets {core} {
 # +----+----+----+----+   v
 
 # == Path to a word in sram signal in tc_sram ==
-proc get_memory_word {bank word} {return "/pulp_cluster_tb/cluster_i/tcdm_banks_i/banks_gen\[$bank\]/gen_ecc_banks/gen_ecc_banks_only/i_ecc_bank/i_bank/sram($word)"}
+proc get_memory_word {bank word} {return "$::fi_cluster_instance/tcdm_banks_i/banks_gen\[$bank\]/gen_ecc_banks/gen_ecc_banks_only/i_ecc_bank/i_bank/sram($word)"}
 
 proc get_memory_slice {bank_range word_range} {
   set mem_slice [list]
