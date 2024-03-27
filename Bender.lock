@@ -176,7 +176,6 @@ packages:
     - hci
     - hwpe-ctrl
     - hwpe-stream
-    - zeroriscy
   per2axi:
     revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
     version: null
@@ -244,10 +243,4 @@ packages:
     version: 1.0.3
     source:
       Git: https://github.com/pulp-platform/timer_unit.git
-    dependencies: []
-  zeroriscy:
-    revision: 8a6c00e899cb6c715dcd5a3a1a92263994fb634b
-    version: null
-    source:
-      Git: git@github.com:yvantor/ibex.git
     dependencies: []
