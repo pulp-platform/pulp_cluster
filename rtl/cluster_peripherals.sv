@@ -22,6 +22,7 @@ import pulp_cluster_package::*;
 module cluster_peripherals
 #(
   parameter NB_CORES       = 8,
+  parameter NB_HWPES       = 8,
   parameter NB_MPERIPHS    = 1,
   parameter NB_CACHE_BANKS = 4,
   parameter NB_SPERIPHS    = 8,
@@ -52,7 +53,7 @@ module cluster_peripherals
 
   output logic                        busy_o,
 
-  XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0], // SPER_EXT_ID NOT PLUGGED HERE 
+  XBAR_PERIPH_BUS.Slave               speriph_slave[NB_SPERIPHS-2:0], // SPER_EXT_ID NOT PLUGGED HERE
   XBAR_PERIPH_BUS.Slave               core_eu_direct_link[NB_CORES-1:0],
 
   input  logic [NB_CORES-1:0]         dma_event_i,
@@ -62,14 +63,14 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              dma_cfg_master[1:0],
   input logic                         dma_cl_event_i,
   input logic                         dma_cl_irq_i,
- 
+
   input logic                         dma_fc_event_i,
   input logic                         dma_fc_irq_i,
-  
+
   output logic                        soc_periph_evt_ready_o,
   input  logic                        soc_periph_evt_valid_i,
   input  logic [EVNT_WIDTH-1:0]       soc_periph_evt_data_i,
-  
+
 
   input  logic [NB_CORES-1:0]         dbg_core_halted_i,
   output logic [NB_CORES-1:0]         dbg_core_halt_o,
@@ -93,12 +94,13 @@ module cluster_peripherals
 
   // SRAM SPEED REGULATION --> TCDM
   output logic [1:0]                  TCDM_arb_policy_o,
-                                    
+
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   XBAR_PERIPH_BUS.Master              hmr_cfg_master,
   XBAR_PERIPH_BUS.Master              tcdm_scrubber_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
+  output logic [$clog2(NB_HWPES)-1:0] hwpe_sel_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
@@ -106,20 +108,20 @@ module cluster_peripherals
   PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES-1:0],
   output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
 );
-   
+
   logic                      s_timer_out_lo_event;
   logic                      s_timer_out_hi_event;
   logic                      s_timer_in_lo_event;
   logic                      s_timer_in_hi_event;
-  
+
   logic [NB_CORES-1:0][31:0] s_cluster_events;
   logic [NB_CORES-1:0][3:0]  s_acc_events;
   logic [NB_CORES-1:0][1:0]  s_timer_events;
   logic [NB_CORES-1:0][1:0]  s_dma_events;
-  
+
   logic [NB_CORES-1:0]  s_fetch_en_cc;
 
-  MESSAGE_BUS eu_message_master(); 
+  MESSAGE_BUS eu_message_master();
 
   logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
   logic [NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_add;
@@ -130,7 +132,7 @@ module cluster_peripherals
 
   logic soc_periph_evt_valid, soc_periph_evt_ready;
   logic [7:0] soc_periph_evt_data;
-   
+
   // internal speriph bus to combine multiple plugs to new event unit
   XBAR_PERIPH_BUS speriph_slave_eu_comb();
 
@@ -139,7 +141,7 @@ module cluster_peripherals
 `else
   localparam bit          FEATURE_STAT    = 1'b0;
 `endif
-  
+
   // decide between common or core-specific event sources
   generate
     for (genvar I=0; I<NB_CORES; I++) begin
@@ -153,7 +155,7 @@ module cluster_peripherals
       assign s_dma_events[I][1] = dma_irq_i[I];
     end
   endgenerate
-  
+
   assign fetch_enable_reg_o = s_fetch_en_cc;
 
   //********************************************************
@@ -162,6 +164,7 @@ module cluster_peripherals
   cluster_control_unit #(
     .PER_ID_WIDTH  ( NB_CORES+NB_MPERIPHS         ),
     .NB_CORES      ( NB_CORES                     ),
+    .NB_HWPES      ( NB_HWPES                     ),
     .ROM_BOOT_ADDR ( ROM_BOOT_ADDR                ),
     .BOOT_ADDR     ( BOOT_ADDR                    )
     //.NB_L1_CUTS      ( NB_L1_CUTS                 ),
@@ -182,6 +185,7 @@ module cluster_peripherals
 
     // SRAM SPEED REGULATION --> TCDM
     .hwpe_en_o      ( hwpe_en_o                    ),
+    .hwpe_sel_o     ( hwpe_sel_o                   ),
     .hci_ctrl_o     ( hci_ctrl_o                   ),
 
     .fregfile_disable_o ( fregfile_disable_o       ),
@@ -199,7 +203,7 @@ module cluster_peripherals
   //********************************************************
   //******************** TIMER *****************************
   //********************************************************
-  
+
   cluster_timer_wrap #(
     .ID_WIDTH     ( NB_CORES+NB_MPERIPHS         )
   ) cluster_timer_wrap_i (
@@ -213,7 +217,7 @@ module cluster_peripherals
     .irq_hi_o     ( s_timer_out_hi_event         ),
     .busy_o       ( busy_o                       )
   );
-   
+
   //********************************************************
   //******************** NEW EVENT UNIT ********************
   //********************************************************
@@ -262,21 +266,21 @@ module cluster_peripherals
     .barrier_matched_o      ( barrier_matched_o      ),
     .core_busy_i            ( core_busy_i            ),
     .core_clock_en_o        ( core_clk_en_o          ),
-    
+
     .speriph_slave          ( speriph_slave[SPER_EVENT_U_ID]  ),
     .eu_direct_link         ( core_eu_direct_link    ),
-    
+
     .soc_periph_evt_valid_i ( soc_periph_evt_valid_i ),
     .soc_periph_evt_ready_o ( soc_periph_evt_ready_o ),
-    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),  
-    
+    .soc_periph_evt_data_i  ( soc_periph_evt_data_i  ),
+
     .message_master         ( eu_message_master      )
   );
-  
+
   //********************************************************
   //******************** icache_ctrl_unit ******************
   //********************************************************
-   
+
   hier_icache_ctrl_unit_wrap #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
     .NB_CORES       ( NB_CORES             ),
@@ -284,7 +288,7 @@ module cluster_peripherals
   ) icache_ctrl_unit_i (
     .clk_i                       (  clk_i                           ),
     .rst_ni                      (  rst_ni                          ),
-    
+
     .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
     .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
     .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
@@ -324,7 +328,7 @@ module cluster_peripherals
   assign dma_cfg_master[1].wdata = speriph_slave[SPER_DMA_FC_ID].wdata;
   assign dma_cfg_master[1].be    = speriph_slave[SPER_DMA_FC_ID].be;
   assign dma_cfg_master[1].id    = speriph_slave[SPER_DMA_FC_ID].id;
-  
+
   //********************************************************
   //******************** HW ACC  ***************************
   //********************************************************
@@ -386,5 +390,5 @@ module cluster_peripherals
       end
     end
   endgenerate
-   
+
 endmodule // cluster_peripherals

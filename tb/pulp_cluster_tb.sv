@@ -33,7 +33,7 @@ module pulp_cluster_tb;
   logic s_clk;
   logic s_rstn;
   logic s_rstn_cl;
-  
+
   localparam time SYS_TCK  = 8ns;
   localparam time SYS_TA   = 2ns;
   localparam time SYS_TT   = SYS_TCK - 2ns;
@@ -45,7 +45,7 @@ module pulp_cluster_tb;
       .clk_o  ( s_clk  ),
       .rst_no ( s_rstn )
   );
-   
+
   localparam AxiAw  = 48;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
@@ -65,7 +65,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] L2Size          = 'h10000000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
   localparam bit[AxiAw-1:0] ClustReturnInt  = 'h50200100;
-   
+
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
   typedef logic [AxiDw/8-1:0]  axi_strb_t;
@@ -86,20 +86,20 @@ module pulp_cluster_tb;
   `AXI_TYPEDEF_AR_CHAN_T(ar_m_chan_t, axi_addr_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_R_CHAN_T(r_m_chan_t, axi_data_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_REQ_T(axi_m_req_t, aw_m_chan_t, w_chan_t, ar_m_chan_t)
-  `AXI_TYPEDEF_RESP_T(axi_m_resp_t, b_m_chan_t, r_m_chan_t)   
+  `AXI_TYPEDEF_RESP_T(axi_m_resp_t, b_m_chan_t, r_m_chan_t)
 
   typedef logic [AxiAw-1:0] addr_t;
-  typedef logic [AxiDw-1:0] data_t;   
+  typedef logic [AxiDw-1:0] data_t;
   data_t memory [bit [31:0]];
   int sections  [bit [31:0]];
-   
+
   string        binary ;
-   
+
   logic s_cluster_en_sa_boot ;
   logic s_cluster_fetch_en   ;
   logic s_cluster_eoc        ;
   logic s_cluster_busy       ;
-   
+
   AXI_BUS #(
       .AXI_ADDR_WIDTH( AxiAw    ),
       .AXI_DATA_WIDTH( AxiDw    ),
@@ -140,10 +140,10 @@ module pulp_cluster_tb;
    // Behavioural slaves
    axi_m_req_t  axi_memreq;
    axi_m_resp_t axi_memrsp;
-   
+
   `AXI_ASSIGN_TO_REQ(axi_memreq, axi_master[1])
   `AXI_ASSIGN_FROM_RESP(axi_master[1], axi_memrsp)
-   
+
   axi_sim_mem #(
     .AddrWidth ( AxiAw        ),
     .DataWidth ( AxiDw        ),
@@ -152,7 +152,7 @@ module pulp_cluster_tb;
     .axi_req_t ( axi_m_req_t  ),
     .axi_rsp_t ( axi_m_resp_t ),
     .ApplDelay ( SYS_TA       ),
-    .AcqDelay  ( SYS_TT       )    
+    .AcqDelay  ( SYS_TT       )
   ) sim_mem (
      .clk_i     ( s_clk      ),
      .rst_ni    ( s_rstn     ),
@@ -171,7 +171,7 @@ module pulp_cluster_tb;
      .test_i ( '0            ),
      .uart   ( axi_master[0] )
   );
-   
+
   // XBAR
   localparam int unsigned NumRules = NSlv+1;
 
@@ -247,7 +247,7 @@ module pulp_cluster_tb;
       .slv    ( axi_master[2]          ),
       .mst    ( soc_to_cluster_axi_bus )
     );
-   
+
   axi_cdc_src_intf   #(
     .AXI_ADDR_WIDTH ( AxiAw   ),
     .AXI_DATA_WIDTH ( AxiDw   ),
@@ -260,7 +260,7 @@ module pulp_cluster_tb;
       .src        ( soc_to_cluster_axi_bus       ),
       .dst        ( async_soc_to_cluster_axi_bus )
       );
-   
+
   axi_cdc_dst_intf   #(
     .AXI_ADDR_WIDTH ( AxiAw ),
     .AXI_DATA_WIDTH ( AxiDw ),
@@ -289,6 +289,7 @@ module pulp_cluster_tb;
     TcdmSize: 256*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
+    HwpeCfg: '{NumHwpes: 2, HwpeList: {NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
@@ -346,7 +347,7 @@ module pulp_cluster_tb;
 
     .dma_pe_evt_ack_i            ( '1                                   ),
     .dma_pe_evt_valid_o          (                                      ),
-                                    
+
     .dma_pe_irq_ack_i            ( 1'b1                                 ),
     .dma_pe_irq_valid_o          (                                      ),
 
@@ -453,10 +454,10 @@ module pulp_cluster_tb;
   initial begin
 
    assign s_cluster_en_sa_boot = 1'b0;
-   assign s_cluster_fetch_en = 1'b0;  
+   assign s_cluster_fetch_en = 1'b0;
    axi_master_drv.reset_master();
    axi_master_drv.reset_slave();
-     
+
    @(posedge s_rstn);
    @(posedge s_clk);
 
@@ -464,40 +465,40 @@ module pulp_cluster_tb;
      $display("[TB] Testing %s", binary);
 
    load_binary(binary);
-     
+
    foreach (sections[addr]) begin
       $display("[TB] Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
       for (int i = 0; i < sections[addr]; i++) begin
-         
+
         aw_beat.ax_addr  = ( addr << 3 ) + ( i * 8 );
         aw_beat.ax_len   = '0;
         aw_beat.ax_burst = axi_pkg::BURST_INCR;
         aw_beat.ax_size  = 4'h3;
-        
+
         w_beat.w_data = memory[addr + i][63:0];
         w_beat.w_strb = '1;
         w_beat.w_last = '1;
- 
+
         axi_master_drv.send_aw(aw_beat);
         axi_master_drv.send_w(w_beat);
         @(posedge s_clk);
         axi_master_drv.recv_b(b_beat);
 
       end // for (int i = 0; i < sections[addr]; i++)
-      $display("[TB] Completed\n");      
-   end 
+      $display("[TB] Completed\n");
+   end
 
    $display("[TB] Initialize ret_val\n");
-     
+
    aw_beat.ax_addr  = 32'h1A10_40A0;
    aw_beat.ax_len   = '0;
    aw_beat.ax_burst = axi_pkg::BURST_INCR;
    aw_beat.ax_size  = 4'h3;
-   
+
    w_beat.w_data = '0;
    w_beat.w_strb = '1;
    w_beat.w_last = '1;
- 
+
    axi_master_drv.send_aw(aw_beat);
    axi_master_drv.send_w(w_beat);
    @(posedge s_clk);
@@ -543,7 +544,7 @@ module pulp_cluster_tb;
    ret_val = r_beat.r_data;
 
    $display("[TB] Received ret_val: %d\n", ret_val[30:0]);
-     
+
    if(ret_val[30:0]==0) begin
      $display("[TB] Test passed\n");
      $finish;
@@ -552,6 +553,6 @@ module pulp_cluster_tb;
    end
 
   end
-   
-   
+
+
 endmodule : pulp_cluster_tb

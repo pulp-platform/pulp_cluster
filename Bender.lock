@@ -45,15 +45,15 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: c9defcfb4f4e8733383b28a451c430783c2febbd
+    revision: 8a9f62dafb5ec23c6cd361847ff0047e12befca4
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
     dependencies:
     - hci
   common_cells:
-    revision: 2bd027cb87eaa9bf7d17196ec5f69864b35b630f
-    version: 1.32.0
+    revision: ad22699793d98ef714f120c6268fe92d096a61e1
+    version: 1.33.1
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -97,7 +97,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 4823e503851eb7e8cc765a58621d767a01d6a77b
+    revision: e47627c20b33bcaf4842c1add81fb888b4f12a9d
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -118,15 +118,15 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: b7857919ea14b586901ff4282ad7749a3d50501e
+    revision: a5966201aeeb988d607accdc55da933a53c6a56e
     version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 4c2ef8c33a6e2a8c88127e2153013d4f2dc3f448
-    version: 1.7.0
+    revision: 65c99a4a2f37a79acee800ab0151f67dfb1edef1
+    version: 1.8.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -167,6 +167,15 @@ packages:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
+  neureka:
+    revision: 3131e87c40118f75e11a1ff9bae60fe764336a19
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/neureka.git
+    dependencies:
+    - hci
+    - hwpe-ctrl
+    - hwpe-stream
   per2axi:
     revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
     version: null
@@ -175,7 +184,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 1b30b0b9a31afa702eb2d166d672ceda2f5d463a
+    revision: 68999ccc922b10a5043bb98f67aaf3d8d8d59f3f
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
