@@ -65,7 +65,8 @@ nonfree-init:
 
 .PHONY: init
 
-init: checkout pulp-runtime regression-tests
+init: checkout
+	git submodule update --init --recursive
 
 .PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
