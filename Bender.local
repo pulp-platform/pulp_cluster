@@ -3,8 +3,7 @@ overrides:
   register_interface  : { git: "https://github.com/pulp-platform/register_interface.git"  , rev: 19163bb5191d2669a8cbc267cdd4ce8e60f20746 } # branch: master
   cluster_interconnect: { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
   cv32e40p            : { git: "https://github.com/pulp-platform/cv32e40p.git"            , rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # branch: michaero/safety-island-clic
-  # WIPs, to be removed
-  cluster_peripherals : { git: "https://github.com/pulp-platform/cluster_peripherals.git" , rev: 8a9f62dafb5ec23c6cd361847ff0047e12befca4 } # branch: rt/neureka-redmule-integration
-  neureka             : { git: "https://github.com/pulp-platform/neureka.git"             , rev: 3131e87c40118f75e11a1ff9bae60fe764336a19 } # branch: astral-4x4
-  hci                 : { git: "https://github.com/pulp-platform/hci.git"                 , rev: e47627c20b33bcaf4842c1add81fb888b4f12a9d } # branch: master
-  hwpe-stream         : { git: "https://github.com/pulp-platform/hwpe-stream.git"         , rev: bcb4435f802add732f557dc7fa1c6b5dd8854458 } # branch: master
+
+  # Temporarily left here to avoid conflicts
+  hwpe-stream         : { git: "https://github.com/pulp-platform/hwpe-stream.git"         , rev: 65c99a4a2f37a79acee800ab0151f67dfb1edef1 } # branch: master
+  hci                 : { git: "https://github.com/pulp-platform/hci.git", rev: e47627c20b33bcaf4842c1add81fb888b4f12a9d }
