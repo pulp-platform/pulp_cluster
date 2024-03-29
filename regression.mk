@@ -20,7 +20,7 @@ test-rt-mchan: pulp-runtime regression-tests
 
 .PHONY: test-rt-$(TARGET)
 ## Run Carfield tests on pulp-runtime
-test-rt-carfield: pulp-runtime regression-tests
+test-rt-$(TARGET): pulp-runtime regression-tests
 	cd $(REGRESSIONS) && $(bwruntest) --proc-verbose -v \
 		-t 3600 --yaml --max-procs 2 \
 		-o $(REGRESSIONS)/$(TARGET)/runtime-mchan.xml $(REGRESSIONS)/$(TARGET).yaml
