@@ -286,7 +286,7 @@ module pulp_cluster_tb;
     ClusterAliasBase: 'h0,
     NumSyncStages: 3,
     UseHci: 1,
-    TcdmSize: 256*1024,
+    TcdmSize: 128*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
     HwpeCfg: '{NumHwpes: 2, HwpeList: {NEUREKA, REDMULE}},
