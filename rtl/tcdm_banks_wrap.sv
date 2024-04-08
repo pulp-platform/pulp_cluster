@@ -37,7 +37,7 @@ module tcdm_banks_wrap #(
   // ECC
   output logic [NbBanks-1:0] ecc_single_error_o,
   output logic [NbBanks-1:0] ecc_multiple_error_o,
-  hci_core_intf.target tcdm_slave[NbBanks-1:0]
+  hci_core_intf.target tcdm_slave[0:NbBanks-1]
 );
    
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
