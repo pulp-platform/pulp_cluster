@@ -61,7 +61,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
   localparam bit[      5:0] ClustIdx        = 'h1;
   localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
-  localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
+  localparam bit[AxiAw-1:0] L2BaseAddr      = 'h10000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h10000000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
   localparam bit[AxiAw-1:0] ClustReturnInt  = 'h50200100;
@@ -286,7 +286,7 @@ module pulp_cluster_tb;
     ClusterAliasBase: 'h0,
     NumSyncStages: 3,
     UseHci: 1,
-    TcdmSize: 256*1024,
+    TcdmSize: 128*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
     HwpeCfg: '{NumHwpes: 2, HwpeList: {NEUREKA, REDMULE}},
@@ -507,12 +507,12 @@ module pulp_cluster_tb;
    $display("[TB] Launch cluster\n");
 
    for (int i = 0; i < `NB_CORES; i++) begin
-     aw_beat.ax_addr  = 32'h50200040 + i*4;
+     aw_beat.ax_addr  = ClustBase + ClustPeriphOffs + 'h40 + i*4;
      aw_beat.ax_len   = '0;
      aw_beat.ax_burst = axi_pkg::BURST_INCR;
      aw_beat.ax_size  = 4'h3;
 
-     w_beat.w_data = 'h78008080;
+     w_beat.w_data = BootAddr;
      w_beat.w_strb = 'h1;
      w_beat.w_last = 'h1;
 
