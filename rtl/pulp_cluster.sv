@@ -519,7 +519,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   cluster_bus_wrap #(
     .NB_CORES             ( NB_CORES           ),
     .DMA_NB_OUTSND_BURSTS ( NB_OUTSND_BURSTS   ),
-    .TCDM_SIZE            ( TCDM_SIZE          ),
+    .TCDM_SIZE            ( TCDM_SIZE*1024     ),
     .AXI_ADDR_WIDTH       ( AXI_ADDR_WIDTH     ),
     .AXI_DATA_WIDTH       ( AXI_DATA_C2S_WIDTH ),
     .AXI_USER_WIDTH       ( AXI_USER_WIDTH     ),
