@@ -63,7 +63,7 @@ module hwpe_subsystem
         .N_CORES ( N_CORES          ),
         .BW      ( N_MASTER_PORT*32 )
       ) hwpe_top_wrap_i (
-        .clk_i       ( clk              ),
+        .clk_i       ( 'b0              ),
         .rst_ni      ( rst_n            ),
         .test_mode_i ( test_mode        ),
         .evt_o       ( evt_o            ),
