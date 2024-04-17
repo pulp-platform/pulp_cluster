@@ -38,8 +38,8 @@ module dmac_wrap #(
   input logic                      rst_ni,
   input logic                      test_mode_i,
   XBAR_PERIPH_BUS.Slave            pe_ctrl_slave[NB_PE_PORTS-1:0],
-  hci_core_intf.slave              ctrl_slave[NB_CORES-1:0],
-  hci_core_intf.master             tcdm_master[3:0],
+  hci_core_intf.target             ctrl_slave[0:NB_CORES-1],
+  hci_core_intf.initiator          tcdm_master[0:3],
   AXI_BUS.Master                   ext_master,
   output logic [NB_CORES-1:0]      term_event_o,
   output logic [NB_CORES-1:0]      term_irq_o,
@@ -438,30 +438,18 @@ module dmac_wrap #(
                         tcdm_master[2].r_data,  tcdm_master[3].r_data  } )
   );
 
-  // tie-off TCDM master port
-  // for (genvar i = 0; i < 4; i++) begin : gen_tie_off_unused_tcdm_master
-  //     assign tcdm_master[i].r_opc   = '0;
-  // end
-
   // flip we polarity
   assign tcdm_master[0].wen = !tcdm_master_we_0;
   assign tcdm_master[1].wen = !tcdm_master_we_1;
   assign tcdm_master[2].wen = !tcdm_master_we_2;
   assign tcdm_master[3].wen = !tcdm_master_we_3;
 
-  assign tcdm_master[0].boffs = '0;
-  assign tcdm_master[1].boffs = '0;
-  assign tcdm_master[2].boffs = '0;
-  assign tcdm_master[3].boffs = '0;
-
-  assign tcdm_master[0].lrdy  = '1;
-  assign tcdm_master[1].lrdy  = '1;
-  assign tcdm_master[2].lrdy  = '1;
-  assign tcdm_master[3].lrdy  = '1;
-
-  assign tcdm_master[0].user  = '0;
-  assign tcdm_master[1].user  = '0;
-  assign tcdm_master[2].user  = '0;
-  assign tcdm_master[3].user  = '0;
+  for (genvar ii=0; ii<4; ii++) begin : gen_tie_unused_tcdm_master
+    assign tcdm_master[i].user     = '0;
+    assign tcdm_master[i].ecc      = '0;
+    assign tcdm_master[i].id       = '0;
+    assign tcdm_master[i].ereq     = '0;
+    assign tcdm_master[i].r_eready = '1;
+  end
 
 endmodule : dmac_wrap

@@ -37,10 +37,21 @@ module tcdm_banks_wrap #(
   // ECC
   output logic [NbBanks-1:0] ecc_single_error_o,
   output logic [NbBanks-1:0] ecc_multiple_error_o,
-  hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
+  hci_core_intf.target tcdm_slave[0:NbBanks-1]
 );
    
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
+
+  // tie r_valid to '1, as HCI interconnect will generate this anyways
+  assign tcdm_slave[i].r_valid = '1;
+
+  // tie r_user, r_ecc signals to 0
+  assign tcdm_slave[i].r_user = '0;
+  assign tcdm_slave[i].r_ecc = '0;
+
+  // tie egnt, r_evalid
+  assign tcdm_slave[i].egnt = '1;
+  assign tcdm_slave[i].r_evalid = '0;
 
   // r_id is same as request id -> Don't know if this is needed, but OBI protocol requires it
   logic [IdWidth-1:0] resp_id_d, resp_id_q;
@@ -59,6 +70,11 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
     if (EccInterco) begin: gen_ecc_banks_and_connection
     /* TODO: blank for the moment */
     end else begin: gen_ecc_banks_only
+
+      // ecc_sram_wrap assumes a 32-bit address
+      logic [31:0] tcdm_slave_add_unroll;
+      assign tcdm_slave_add_unroll = 32'b0 | tcdm_slave[i].add;
+
       ecc_sram_wrap      #(
         .BankSize         ( BankSize       ),
         .InputECC         ( EccInterco     ),
@@ -74,7 +90,7 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         .scrub_uncorrectable_o ( scrub_uncorrectable_o[i] ),
         // TCDM interface
         .tcdm_wdata_i          ( tcdm_slave[i].data     ),
-        .tcdm_add_i            ( tcdm_slave[i].add      ),
+        .tcdm_add_i            ( tcdm_slave_add_unroll  ),
         .tcdm_req_i            ( tcdm_slave[i].req      ),
         .tcdm_wen_i            ( tcdm_slave[i].wen      ),
         .tcdm_be_i             ( tcdm_slave[i].be       ),

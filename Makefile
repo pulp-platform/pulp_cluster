@@ -4,9 +4,14 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-QUESTA ?= questa-2022.3
+ifneq (,$(wildcard /etc/iis.version))
+	QUESTA ?= questa-2022.3
+	BENDER ?= bender
+else
+	QUESTA ?=
+	BENDER ?= ./bender
+endif
 GIT ?= git
-BENDER ?= bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 top_level ?= pulp_cluster_tb
@@ -44,7 +49,7 @@ bender_targs += -t cv32e40p_use_ff_regfile
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
-	bender script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
 	echo >> $1
 endef
 
@@ -53,7 +58,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= df4dba5d7c494d2842c2461c1996fa7b4eafff57
+NONFREE_COMMIT ?= ad58d90
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -71,12 +76,12 @@ init: checkout
 .PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
 checkout:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
 	make scripts/compile.tcl
 
 Bender.lock:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
 
 
@@ -95,6 +100,11 @@ fault_injection_sim:
 ########################
 # Build and simulation #
 ########################
+
+$(BENDER): 
+	curl --proto '=https'  \
+	--tlsv1.2 https://pulp-platform.github.io/bender/init -sSf | sh -s -- 0.24.0
+	mv bender $(BENDER)
 
 sim_clean:
 	rm -rf scripts/compile.tcl
