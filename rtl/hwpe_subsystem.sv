@@ -39,6 +39,7 @@ module hwpe_subsystem
 
   localparam int unsigned DW = hwpe_xbar_master.DW;
   localparam int unsigned AW = hwpe_xbar_master.AW;
+  localparam int unsigned EW = hwpe_xbar_master.EW;
 
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
 
@@ -58,7 +59,8 @@ module hwpe_subsystem
 
   hci_core_intf #(
     .DW ( DW ),
-    .AW ( AW )
+    .AW ( AW ),
+    .EW ( EW )
   ) tcdm [0:N_HWPES-1] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin : gen_hwpe

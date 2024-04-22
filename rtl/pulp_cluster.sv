@@ -101,7 +101,9 @@ module pulp_cluster
   // Number of parity bits for ECC in memory banks
   localparam int unsigned ParityWidth = 7,
   // TCDM banks data width extended with parity for ECCs
-  localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth
+  localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth,
+  // Number of parity bits for ECC in HCI HWPE branch
+  localparam int unsigned HWPEParityWidth = ($clog2(DataWidth)+2)*Cfg.HwpeNumPorts + ($clog2(AddrWidth+(Cfg.HwpeNumPorts*DataWidth)/8+1)+2)
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -337,7 +339,8 @@ XBAR_TCDM_BUS s_mperiph_bus();
 // cores & accelerators -> log interconnect
 hci_core_intf #(
   .DW ( Cfg.HwpeNumPorts * DataWidth ),
-  .AW ( AddrWidth               )
+  .AW ( AddrWidth                    ),
+  .EW ( HWPEParityWidth              )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
