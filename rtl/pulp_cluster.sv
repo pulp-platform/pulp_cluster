@@ -1242,26 +1242,26 @@ generate
 endgenerate
 
 pulp_icache_wrap #(
-  .NumFetchPorts  ( Cfg.NumCores        ),
-  .L0_LINE_COUNT  ( 16                  ),
-  .LINE_WIDTH     ( 256                 ),
-  .LINE_COUNT     ( 32                  ),
-  .SET_COUNT      ( 4                   ),
-  .FetchAddrWidth ( AddrWidth           ),
-  .FetchDataWidth ( DataWidth           ),
-  .AxiAddrWidth   ( AddrWidth           ),
-  .AxiDataWidth   ( Cfg.AxiDataOutWidth ),
-  .axi_req_t      ( instr_axi_req_t     ),
-  .axi_rsp_t      ( instr_axi_resp_t    )
+  .NumFetchPorts  ( Cfg.NumCores                                 ),
+  .L0_LINE_COUNT  ( Cfg.iCachePrivateSize*8/256                  ),
+  .LINE_WIDTH     ( 256                                          ), // Ideally 32*NumCores
+  .LINE_COUNT     ( Cfg.iCacheSharedSize*8/256/Cfg.iCacheNumWays ),
+  .SET_COUNT      ( Cfg.iCacheNumWays                            ),
+  .FetchAddrWidth ( AddrWidth                                    ),
+  .FetchDataWidth ( Cfg.iCachePrivateDataWidth                   ),
+  .AxiAddrWidth   ( AddrWidth                                    ),
+  .AxiDataWidth   ( Cfg.AxiDataOutWidth                          ),
+  .axi_req_t      ( instr_axi_req_t                              ),
+  .axi_rsp_t      ( instr_axi_resp_t                             )
 ) icache_top_i (
-  .clk_i                ( clk_i                    ),
-  .rst_ni               ( rst_ni                   ),
+  .clk_i                ( clk_i                       ),
+  .rst_ni               ( rst_ni                      ),
 
-  .fetch_req_i          ( instr_req                ),
-  .fetch_addr_i         ( instr_addr               ),
-  .fetch_gnt_o          ( instr_gnt                ),
-  .fetch_rvalid_o       ( instr_r_valid            ),
-  .fetch_rdata_o        ( instr_r_rdata            ),
+  .fetch_req_i          ( instr_req                   ),
+  .fetch_addr_i         ( instr_addr                  ),
+  .fetch_gnt_o          ( instr_gnt                   ),
+  .fetch_rvalid_o       ( instr_r_valid               ),
+  .fetch_rdata_o        ( instr_r_rdata               ),
   .fetch_rerror_o       (),
 
   .enable_prefetching_i ( s_enable_l1_l15_prefetch[0] ),
