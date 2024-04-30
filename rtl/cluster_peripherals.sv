@@ -16,11 +16,10 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
-import pulp_cluster_package::*;
-
 `include "common_cells/registers.svh"
 
-module cluster_peripherals
+module cluster_peripherals 
+  import pulp_cluster_package::*;
 #(
   parameter NB_CORES       = 8,
   parameter NB_HWPES       = 8,
