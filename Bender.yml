@@ -15,7 +15,7 @@ dependencies:
   axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git", rev: "b0e963433b2f6a61262b1448031e74eaec57c203" } # branch: yt/astral
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", rev: "4932bd2b88a1c7b5f0bf95411fc512905ed32439" } # branch: yt/astral
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", rev: "95bf23119b47fc171d9ed3734c431f71cffd9350" } # branch: yt/astral
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 1284def6c0b7f7e9355eb093d00883ad9dead1b7 } # branch: michaero/hci-fix
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
