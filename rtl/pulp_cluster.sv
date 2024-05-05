@@ -796,6 +796,56 @@ cluster_peripherals #(
 //         ╚██████╗╚██████╔╝██║  ██║███████╗            //
 //          ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝            //
 //------------------------------------------------------//
+// RISC-V specifies 32 registers should be in the RF as a standard
+// so the address width is calculated on top of that
+localparam int unsigned RegFileAddrWidth = $clog2(32);
+localparam int unsigned NumRfWrPorts = 2;
+localparam int unsigned NumRfRdPorts = 2;
+/* CSRs */
+localparam int unsigned MstatusWidth = 7;
+localparam int unsigned MtvecWidth  = 24;
+localparam int unsigned McauseWidth = 6;
+
+typedef struct packed {
+  logic [MstatusWidth-1:0] csr_mstatus;
+  logic [   DataWidth-1:0] csr_mie;
+  logic [  MtvecWidth-1:0] csr_mtvec;
+  logic [   DataWidth-1:0] csr_mscratch;
+  logic [   DataWidth-1:0] csr_mip;
+  logic [   DataWidth-1:0] csr_mepc;
+  logic [ McauseWidth-1:0] csr_mcause;
+} csrs_intf_t;
+
+typedef struct packed {
+  logic [DataWidth-1:0] program_counter_if;
+  logic [DataWidth-1:0] program_counter;
+  logic                 is_branch;
+  logic [DataWidth-1:0] branch_addr;
+} pc_intf_t;
+
+typedef struct packed {
+  logic we;
+  logic [RegFileAddrWidth-1:0] waddr;
+  logic [DataWidth-1:0] wdata;
+} regfile_write_t;
+
+typedef struct packed {
+  regfile_write_t [NumRfWrPorts-1:0] regfile_backup;
+  csrs_intf_t csr_backup;
+  pc_intf_t pc_backup;
+} core_backup_t;
+
+typedef struct packed {
+  logic instr_lock;
+  logic pc_recovery_en;
+  logic rf_recovery_en;
+  logic debug_req;
+  logic debug_resume;
+  regfile_write_t [NumRfWrPorts-1:0] rf_recovery_wdata;
+  regfile_rdata_t [NumRfRdPorts-1:0] rf_recovery_rdata;
+  csrs_intf_t csr_recovery;
+  pc_intf_t pc_recovery;
+} rapid_recovery_t;
 
 /* cluster cores + core-coupled accelerators / shared execution units */
 `REG_BUS_TYPEDEF_ALL(hmr_reg, logic[31:0], logic[31:0], logic[3:0])
@@ -827,12 +877,12 @@ periph_to_reg #(
   .reg_rsp_i      ( hmr_reg_rsp              )
 );
 
-core_data_req_t [Cfg.NumCores-1:0] core_data_req, demux_data_req;
-core_data_rsp_t [Cfg.NumCores-1:0] core_data_rsp, demux_data_rsp;
-core_inputs_t   [Cfg.NumCores-1:0] sys2hmr, hmr2core;
-core_outputs_t  [Cfg.NumCores-1:0] hmr2sys, core2hmr;
-core_backup_t   [Cfg.NumCores-1:0] backup_bus;
-rapid_recovery_pkg::rapid_recovery_t [Cfg.NumCores-1:0] recovery_bus;
+core_data_req_t  [Cfg.NumCores-1:0] core_data_req, demux_data_req;
+core_data_rsp_t  [Cfg.NumCores-1:0] core_data_rsp, demux_data_rsp;
+core_inputs_t    [Cfg.NumCores-1:0] sys2hmr, hmr2core;
+core_outputs_t   [Cfg.NumCores-1:0] hmr2sys, core2hmr;
+core_backup_t    [Cfg.NumCores-1:0] backup_bus;
+rapid_recovery_t [Cfg.NumCores-1:0] recovery_bus;
 
 logic [Cfg.NumCores-1:0] clk_core;
 logic [Cfg.NumCores-1:0] setback;
@@ -875,7 +925,11 @@ generate
       .SHARED_FP           ( Cfg.EnableSharedFpu        ),
       .SHARED_FP_DIVSQRT   ( Cfg.EnableSharedFpDivSqrt  ),
       .core_data_req_t     ( core_data_req_t            ),
-      .core_data_rsp_t     ( core_data_rsp_t            )
+      .core_data_rsp_t     ( core_data_rsp_t            ),
+      .recovery_bus_t      ( rapid_recovery_t           ),
+      .regfile_write_t     ( regfile_write_t            ),
+      .pc_intf_t           ( pc_intf_t                  ),
+      .csrs_intf_t         ( csrs_intf_t                )
     ) core_region_i        (
       .clk_i               ( clk_core[i]              ),
       .rst_ni              ( rst_ni                   ),
@@ -1030,6 +1084,8 @@ hmr_unit #(
   .RapidRecovery     ( 1                                    ),
   .SeparateData      ( 1                                    ),
   .NumBusVoters      ( 1                                    ),
+  .NumRfRdPorts      ( NumRfRdPorts                         ),
+  .NumRfWrPorts      ( NumRfWrPorts                         ),
   .all_inputs_t      ( core_inputs_t                        ),
   .nominal_outputs_t ( core_outputs_t                       ),
   .core_backup_t     ( core_backup_t                        ),

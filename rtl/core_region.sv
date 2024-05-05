@@ -52,6 +52,10 @@ import rapid_recovery_pkg::*;
 
   parameter type core_data_req_t    = logic,
   parameter type core_data_rsp_t    = logic,
+  parameter type recovery_bus_t     = logic,
+  parameter type regfile_write_t    = logic,
+  parameter type pc_intf_t          = logic,
+  parameter type csrs_intf_t        = logic,
 
   parameter L2_SLM_FILE             = "./slm_files/l2_stim.slm",
   parameter ROM_SLM_FILE            = "../sw/apps/boot/slm_files/l2_stim.slm"
@@ -90,11 +94,11 @@ import rapid_recovery_pkg::*;
   output logic                           debug_running_o,
   output logic                           debug_halted_o,
   // Recovery bus
-  input  rapid_recovery_pkg::rapid_recovery_t recovery_bus_i,
+  input  recovery_bus_t recovery_bus_i,
   // Backup bus
-  output rapid_recovery_pkg::regfile_write_t  regfile_backup_o,
-  output rapid_recovery_pkg::pc_intf_t        pc_backup_o,
-  output rapid_recovery_pkg::csrs_intf_t      csr_backup_o,
+  output regfile_write_t  regfile_backup_o,
+  output pc_intf_t        pc_backup_o,
+  output csrs_intf_t      csr_backup_o,
 
   input logic [N_EXT_PERF_COUNTERS-1:0]  ext_perf_i,
 
@@ -302,22 +306,22 @@ import rapid_recovery_pkg::*;
         // RF recovery ports
         .recover_i         ( recovery_bus_i.rf_recovery_en            ),
         // Write port A
-        .regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata.waddr_a ),
-        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_rdata.rdata_a ),
-        .regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata.we_a    ),
+        .regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata[0].waddr ),
+        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_rdata[0].rdata ),
+        .regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata[0].we    ),
         // Write port B
-        .regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata.waddr_b ),
-        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_rdata.rdata_b ),
-        .regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata.we_b    ),
+        .regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata[1].waddr ),
+        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_rdata[1].rdata ),
+        .regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata[1].we    ),
         // Outputs from RF
         // Port A
-        .regfile_we_a_o    ( regfile_backup_o.we_a    ),
-        .regfile_waddr_a_o ( regfile_backup_o.waddr_a ),
-        .regfile_wdata_a_o ( regfile_backup_o.wdata_a ),
+        .regfile_we_a_o    ( regfile_backup_o[0].we    ),
+        .regfile_waddr_a_o ( regfile_backup_o[0].waddr ),
+        .regfile_wdata_a_o ( regfile_backup_o[0].wdata ),
         // Port B
-        .regfile_we_b_o    ( regfile_backup_o.we_b    ),
-        .regfile_waddr_b_o ( regfile_backup_o.waddr_b ),
-        .regfile_wdata_b_o ( regfile_backup_o.wdata_b ),
+        .regfile_we_b_o    ( regfile_backup_o[1].we    ),
+        .regfile_waddr_b_o ( regfile_backup_o[1].waddr ),
+        .regfile_wdata_b_o ( regfile_backup_o[1].wdata ),
         // Program Counter Backup
         .backup_program_counter_o    ( pc_backup_o.program_counter    ),
         .backup_program_counter_if_o ( pc_backup_o.program_counter_if ),
