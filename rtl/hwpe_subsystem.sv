@@ -124,16 +124,16 @@ module hwpe_subsystem
         .periph      ( periph[i]   )
       );
 
-    end else if (HWPE_CFG.HwpeList[i] == HWSMFX) begin : gen_hwsmfx
+    end else if (HWPE_CFG.HwpeList[i] == SOFTEX) begin : gen_softex
 
       ////////////
-      // HWSMFX //
+      // SOFTEX //
       ////////////
 
-      sfm_top #(
+      softex_top #(
         .DATA_WIDTH ( N_MASTER_PORT*32  ),
         .N_CORES    ( N_CORES           )
-      ) i_hwsmfx (                         
+      ) i_softex (                         
         .clk_i  ( hwpe_clk[i] ),
         .rst_ni ( rst_n       ),
         .busy_o ( busy[i]     ),
