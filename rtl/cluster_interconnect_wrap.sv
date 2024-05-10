@@ -14,6 +14,7 @@
  * University of Bologna.
  */
 
+`include "hci_helpers.svh"
 
 import hci_package::*;
 
@@ -43,7 +44,10 @@ module cluster_interconnect_wrap
   parameter CLUSTER_ALIAS   = 1,
   parameter CLUSTER_ALIAS_BASE = 12'h000,
 
-  parameter USE_HETEROGENEOUS_INTERCONNECT = 1
+  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,
+  parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
+  parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
+  parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
 )
 (
   input logic                          clk_i,
@@ -78,7 +82,17 @@ module cluster_interconnect_wrap
         .N_EXT  ( 4                        ),
         .N_MEM  ( NB_TCDM_BANKS            ),
         .IW     ( TCDM_ID_WIDTH            ),
-        .TS_BIT ( TEST_SET_BIT             )
+        .TS_BIT ( TEST_SET_BIT             ),
+        .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+`ifndef SYNTHESIS
+        ,
+        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
+        .WAIVE_RSP3_ASSERT ( 1'b1 ),
+        .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),
@@ -108,20 +122,21 @@ module cluster_interconnect_wrap
       );
 
       hci_core_split #(
-        .DW          ( NB_HWPE_PORTS*32 ),
-        .NB_OUT_CHAN ( NB_HWPE_PORTS    )
+        .DW                           ( NB_HWPE_PORTS*32 ),
+        .NB_OUT_CHAN                  ( NB_HWPE_PORTS    ),
+        .`HCI_SIZE_PARAM(tcdm_target) ( HCI_HWPE_SIZE    )
       ) i_hwpe_tcdm_splitter (
-        .clk_i       ( clk_i                                                   ),
-        .rst_ni      ( rst_ni                                                  ),
-        .clear_i     ( clear_i                                                 ),
-        .tcdm_slave  ( hwpe_tcdm_slave[0]                                      ),
-        .tcdm_master ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+NB_HWPE_PORTS-1] )
+        .clk_i          ( clk_i                                                   ),
+        .rst_ni         ( rst_ni                                                  ),
+        .clear_i        ( clear_i                                                 ),
+        .tcdm_target    ( hwpe_tcdm_slave[0]                                      ),
+        .tcdm_initiator ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+NB_HWPE_PORTS-1] )
       );
   
       for(genvar ii=0; ii<NB_CORES; ii++) begin : core_tcdm_slave_gen
         hci_core_assign i_assign (
-          .tcdm_slave  ( core_tcdm_slave      [ii] ),
-          .tcdm_master ( core_hwpe_tcdm_slave [ii] )
+          .tcdm_target    ( core_tcdm_slave      [ii] ),
+          .tcdm_initiator ( core_hwpe_tcdm_slave [ii] )
         );
       end
 
@@ -139,7 +154,17 @@ module cluster_interconnect_wrap
         .AWH    ( 32                     ),
         .DWH    ( 288                    ),
         .OWH    ( 1                      ),
-        .AWM    ( ADDR_MEM_WIDTH+2       )
+        .AWM    ( ADDR_MEM_WIDTH+2       ),
+        .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+`ifndef SYNTHESIS
+        ,
+        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
+        .WAIVE_RSP3_ASSERT ( 1'b1 ),
+        .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
       ) i_hci_interconnect (
         .clk_i  ( clk_i                ),
         .rst_ni ( rst_ni               ),
