@@ -354,8 +354,9 @@ XBAR_TCDM_BUS s_mperiph_bus();
 
 // cores & accelerators -> log interconnect
 hci_core_intf #(
-  .DW ( Cfg.HwpeNumPorts * DataWidth ),
-  .AW ( AddrWidth               )
+  .DW   ( Cfg.HwpeNumPorts * DataWidth  ),
+  .AW   ( AddrWidth                     ),
+  .EHW  ( 0                             )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
