@@ -248,5 +248,5 @@ packages:
     revision: 8a6c00e899cb6c715dcd5a3a1a92263994fb634b
     version: null
     source:
-      Git: git@github.com:yvantor/ibex.git
+      Git: https://github.com/yvantor/ibex.git
     dependencies: []
