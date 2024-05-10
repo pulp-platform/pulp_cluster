@@ -13,6 +13,8 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
+`include "hci_helpers.svh"
+
 import hci_package::*;
 import pulp_cluster_package::*;
 
@@ -21,7 +23,8 @@ module hwpe_subsystem
   parameter  hwpe_subsystem_cfg_t HWPE_CFG = '0,
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
-  parameter  int unsigned ID_WIDTH         = 8
+  parameter  int unsigned ID_WIDTH         = 8,
+  parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0
 )
 (
   input  logic                             clk,
@@ -37,8 +40,8 @@ module hwpe_subsystem
   output logic                             busy_o
 );
 
-  localparam int unsigned DW = hwpe_xbar_master.DW;
-  localparam int unsigned AW = hwpe_xbar_master.AW;
+  localparam int unsigned DW = HCI_HWPE_SIZE.DW;
+  localparam int unsigned AW = HCI_HWPE_SIZE.AW;
 
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
 
@@ -105,7 +108,8 @@ module hwpe_subsystem
         .PE_H        ( 4        ),
         .PE_W        ( 4        ),
         .ID          ( ID_WIDTH ),
-        .N_CORES     ( N_CORES  )
+        .N_CORES     ( N_CORES  ),
+        .`HCI_SIZE_PARAM(tcdm) ( HCI_HWPE_SIZE )
       ) i_neureka    (
         // global signals
         .clk_i       ( hwpe_clk[i] ),
@@ -179,7 +183,8 @@ module hwpe_subsystem
   //////////////////////
 
   hci_core_mux_static #(
-    .NB_CHAN ( N_HWPES )
+    .NB_CHAN             ( N_HWPES       ),
+    .`HCI_SIZE_PARAM(in) ( HCI_HWPE_SIZE )
   ) i_hwpe_hci_mux (
 
     /* Internally unused */

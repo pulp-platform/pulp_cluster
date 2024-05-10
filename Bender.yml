@@ -33,8 +33,8 @@ dependencies:
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 7abb256 } # branch: fc/hci-v2
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 60c51c0 } # branch: hci-v2
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: e1858900ed32702862cd1fdfc8957f5566f61ce1 } # branch: fc/hci-v2.1
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 7a63088004aa5528bd715731702e5faf255aafaa } # branch: fc/hci-v2.1
 
 export_include_dirs:
   - include
