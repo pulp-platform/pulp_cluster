@@ -7,8 +7,8 @@ packages:
     dependencies:
     - common_cells
   axi:
-    revision: 9402c8a9ce0a7b5253c3c29e788612d771e8b5d6
-    version: 0.39.3
+    revision: fccffb5953ec8564218ba05e20adbedec845e014
+    version: 0.39.1
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -35,13 +35,6 @@ packages:
     version: 1.1.4
     source:
       Git: https://github.com/pulp-platform/axi_slice.git
-    dependencies:
-    - common_cells
-  axi_stream:
-    revision: 54891ff40455ca94a37641b9da4604647878cc07
-    version: 0.1.1
-    source:
-      Git: https://github.com/pulp-platform/axi_stream.git
     dependencies:
     - common_cells
   cluster_interconnect:
@@ -152,16 +145,14 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 95f366e56f7e772c283fb3c8b343afc4a3978375
-    version: 0.6.2
+    revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
+    version: null
     source:
-      Git: https://github.com/pulp-platform/idma.git
+      Git: https://github.com/pulp-platform/iDMA.git
     dependencies:
     - axi
-    - axi_stream
     - common_cells
     - common_verification
-    - obi
     - register_interface
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
@@ -186,14 +177,6 @@ packages:
     - hwpe-ctrl
     - hwpe-stream
     - zeroriscy
-  obi:
-    revision: 1aa411df145c4ebdd61f8fed4d003c33f7b20636
-    version: 0.1.2
-    source:
-      Git: https://github.com/pulp-platform/obi.git
-    dependencies:
-    - common_cells
-    - common_verification
   per2axi:
     revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
     version: null
@@ -250,8 +233,8 @@ packages:
     dependencies:
     - tech_cells_generic
   tech_cells_generic:
-    revision: 7968dd6e6180df2c644636bc6d2908a49f2190cf
-    version: 0.2.13
+    revision: a9cae21902e75b1434328ecf36f85327ba5717de
+    version: 0.2.11
     source:
       Git: https://github.com/pulp-platform/tech_cells_generic.git
     dependencies:
