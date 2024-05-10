@@ -435,6 +435,11 @@ hci_core_intf #(
   .DW ( DataWidth      ),
   .BW ( 8              ),
   .IW ( TCDM_ID_WIDTH  )
+`ifndef SYNTHESIS
+  ,
+  .WAIVE_RSP3_ASSERT ( 1'b1 ),
+  .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
 ) s_tcdm_bus_sram[0:Cfg.TcdmNumBank-1] (
   .clk ( clk_i )
 );

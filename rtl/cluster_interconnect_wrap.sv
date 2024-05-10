@@ -86,6 +86,11 @@ module cluster_interconnect_wrap
         .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
         .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
         .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+`ifndef SYNTHESIS
+        ,
+        .WAIVE_RSP3_ASSERT ( 1'b1 ),
+        .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),
@@ -151,6 +156,11 @@ module cluster_interconnect_wrap
         .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
         .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
         .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+`ifndef SYNTHESIS
+        ,
+        .WAIVE_RSP3_ASSERT ( 1'b1 ),
+        .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
       ) i_hci_interconnect (
         .clk_i  ( clk_i                ),
         .rst_ni ( rst_ni               ),
