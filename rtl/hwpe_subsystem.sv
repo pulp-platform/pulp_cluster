@@ -60,8 +60,9 @@ module hwpe_subsystem
   ) periph [N_HWPES-1:0] (.clk(clk));
 
   hci_core_intf #(
-    .DW ( DW ),
-    .AW ( AW )
+    .DW   ( DW  ),
+    .AW   ( AW  ),
+    .EHW  ( 0   )
   ) tcdm [0:N_HWPES-1] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin : gen_hwpe
