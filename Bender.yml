@@ -29,11 +29,11 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: e670b1c } # branch: lg/ecc
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: da10311 } # branch: lg/ecc
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 09a73da } # branch: lg/hci-ecc
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: fd242c0 } # branch: astral
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 2575489 } # branch: lg/hci-ecc
 
 export_include_dirs:

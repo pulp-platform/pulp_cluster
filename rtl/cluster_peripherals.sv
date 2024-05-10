@@ -98,6 +98,7 @@ module cluster_peripherals
   XBAR_PERIPH_BUS.Master              hwpe_cfg_master,
   XBAR_PERIPH_BUS.Master              hmr_cfg_master,
   XBAR_PERIPH_BUS.Master              tcdm_scrubber_cfg_master,
+  XBAR_PERIPH_BUS.Master              hwpe_hci_ecc_cfg_master,
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
   output logic [$clog2(NB_HWPES)-1:0] hwpe_sel_o,
@@ -379,6 +380,23 @@ module cluster_peripherals
   assign tcdm_scrubber_cfg_master.wdata = speriph_slave[SPER_TCDM_SCRUBBER_ID].wdata;
   assign tcdm_scrubber_cfg_master.be    = speriph_slave[SPER_TCDM_SCRUBBER_ID].be;
   assign tcdm_scrubber_cfg_master.id    = speriph_slave[SPER_TCDM_SCRUBBER_ID].id;
+
+  //********************************************************
+  //******************** HWPE HCI with ECC *********************
+  //********************************************************
+
+  assign speriph_slave[SPER_HWPE_HCI_ECC_ID].gnt     = hwpe_hci_ecc_cfg_master.gnt;
+  assign speriph_slave[SPER_HWPE_HCI_ECC_ID].r_rdata = hwpe_hci_ecc_cfg_master.r_rdata;
+  assign speriph_slave[SPER_HWPE_HCI_ECC_ID].r_opc   = hwpe_hci_ecc_cfg_master.r_opc;
+  assign speriph_slave[SPER_HWPE_HCI_ECC_ID].r_id    = hwpe_hci_ecc_cfg_master.r_id;
+  assign speriph_slave[SPER_HWPE_HCI_ECC_ID].r_valid = hwpe_hci_ecc_cfg_master.r_valid;
+
+  assign hwpe_hci_ecc_cfg_master.req   = speriph_slave[SPER_HWPE_HCI_ECC_ID].req;
+  assign hwpe_hci_ecc_cfg_master.add   = speriph_slave[SPER_HWPE_HCI_ECC_ID].add;
+  assign hwpe_hci_ecc_cfg_master.wen   = speriph_slave[SPER_HWPE_HCI_ECC_ID].wen;
+  assign hwpe_hci_ecc_cfg_master.wdata = speriph_slave[SPER_HWPE_HCI_ECC_ID].wdata;
+  assign hwpe_hci_ecc_cfg_master.be    = speriph_slave[SPER_HWPE_HCI_ECC_ID].be;
+  assign hwpe_hci_ecc_cfg_master.id    = speriph_slave[SPER_HWPE_HCI_ECC_ID].id;
 
   generate
     if(FEATURE_DEMUX_MAPPED == 0) begin : eu_not_demux_mapped_gen

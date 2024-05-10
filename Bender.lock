@@ -52,8 +52,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: ad22699793d98ef714f120c6268fe92d096a61e1
-    version: 1.33.1
+    revision: 0d67563b6b592549542544f1abc0f43e5d4ee8b4
+    version: 1.35.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -97,15 +97,17 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: e670b1c5ce53eecebec43befaba0e7bfd81044e5
+    revision: da103114a1925f4d21410898e8329f3b39770e92
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
     - cluster_interconnect
+    - common_cells
     - hwpe-stream
     - l2_tcdm_hybrid_interco
     - redundancy_cells
+    - register_interface
   hier-icache:
     revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
     version: null
@@ -185,7 +187,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 09a73da1db2f83462833005d766fe7b35021a750
+    revision: fd242c0f4df04ab487617515244f363df381d391
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
