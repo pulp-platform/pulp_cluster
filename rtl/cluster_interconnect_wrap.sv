@@ -47,7 +47,7 @@ module cluster_interconnect_wrap
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,
   parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
-  parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0,
+  parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
 )
 (
   input logic                          clk_i,

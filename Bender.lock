@@ -168,7 +168,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: 2dfde5070accb32aa4aa94b026fdb07488ae430c
+    revision: 9d61b67c02e262c272cd434a3982b5bbd8660afd
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
