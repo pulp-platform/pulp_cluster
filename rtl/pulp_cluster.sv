@@ -829,7 +829,7 @@ cluster_peripherals #(
   .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
   .flush_valid_o            ( s_icache_flush_valid              ),
   .flush_ready_i            ( s_icache_flush_ready              ),
-  .l0_events_i              ( s_icache_l0_events                ),
+  // .l0_events_i              ( s_icache_l0_events                ),
   .l1_events_i              ( s_icache_l1_events                )
 );
 
@@ -905,7 +905,7 @@ generate
 
     core_region #(
       .CORE_TYPE_CL        ( Cfg.CoreType               ),
-      .N_EXT_PERF_COUNTERS ( 5                          ),
+      .N_EXT_PERF_COUNTERS ( 5 + $bits(snitch_icache_pkg::icache_l0_events_t )                          ),
       .ADDR_WIDTH          ( AddrWidth                  ),
       .DATA_WIDTH          ( DataWidth                  ),
       .INSTR_RDATA_WIDTH   ( Cfg.iCachePrivateDataWidth ),
@@ -950,7 +950,7 @@ generate
       .debug_halted_o      ( core2hmr[i].debug_halted  ),
       .debug_havereset_o   ( dbg_core_havereset[i]     ),
       .debug_running_o     ( dbg_core_running[i]       ),
-      .ext_perf_i          ( ext_perf[i]               ),
+      .ext_perf_i          ( {s_icache_l0_events[i], ext_perf[i]} ),
       .core_data_req_o     ( core_data_req[i]          ),
       .core_data_rsp_i     ( core_data_rsp[i]          ),
       //HMR Recovery Bus

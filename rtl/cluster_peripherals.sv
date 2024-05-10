@@ -108,7 +108,7 @@ module cluster_peripherals
   output logic                         enable_l1_l15_prefetch_o,
   output logic [NB_CORES-1:0]          flush_valid_o,
   input  logic [NB_CORES-1:0]          flush_ready_i,
-  input  snitch_icache_pkg::icache_l0_events_t [NB_CORES-1:0] l0_events_i,
+  // input  snitch_icache_pkg::icache_l0_events_t [NB_CORES-1:0] l0_events_i,
   input  snitch_icache_pkg::icache_l1_events_t l1_events_i
 );
 
@@ -315,7 +315,7 @@ module cluster_peripherals
     .reg_rsp_i ( icache_rsp )
   );
 
-  cluster_icache_ctrl_unit #(
+  cluster_icache_ctrl_perfctr_unit #(
     .NR_FETCH_PORTS ( NB_CORES ),
     .reg_req_t ( icache_req_t ),
     .reg_rsp_t ( icache_rsp_t )
@@ -330,7 +330,7 @@ module cluster_peripherals
     .flush_valid_o,
     .flush_ready_i,
 
-    .l0_events_i,
+    // .l0_events_i,
     .l1_events_i
   );
 
