@@ -29,12 +29,12 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 54cf241c99015a515ad3235fc00abeba832f29fd } # branch: remove-automatic-parameter-prop
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: eaf82507bfdea772cd91b320eb2cc997d6909a7f } # branch: remove-automatic-parameter-prop
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  } # branch: master
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: aa9f84aa7703802cf5e2549a4af6410a8c9e22bd } # branch: fc/hci-v2.1
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: dd1a82c78a4da0d9b5bb95e23a0edfe95a071de5 } # branch: fc/hci-v2.1
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: e0c39f5c13220474dafb29794b9e66fc94139727 } # branch: fc/hci-v2.1
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 4e82661acfeec8a4adac2ff49f23b6173f24e486 } # branch: fc/hci-v2.1
 
 export_include_dirs:
   - include

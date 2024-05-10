@@ -88,6 +88,8 @@ module cluster_interconnect_wrap
         .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
 `ifndef SYNTHESIS
         ,
+        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
         .WAIVE_RSP3_ASSERT ( 1'b1 ),
         .WAIVE_RSP5_ASSERT ( 1'b1 )
 `endif
@@ -158,6 +160,8 @@ module cluster_interconnect_wrap
         .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
 `ifndef SYNTHESIS
         ,
+        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
         .WAIVE_RSP3_ASSERT ( 1'b1 ),
         .WAIVE_RSP5_ASSERT ( 1'b1 )
 `endif
