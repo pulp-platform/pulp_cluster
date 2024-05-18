@@ -18,6 +18,7 @@
 
 import pulp_cluster_package::*;
 
+`include "common_cells/registers.svh"
 
 module cluster_peripherals
 #(
@@ -280,20 +281,29 @@ module cluster_peripherals
   //********************************************************
   //******************** icache_ctrl_unit ******************
   //********************************************************
+  
+  assign enable_l1_l15_prefetch_o = '1;
+  assign speriph_slave[SPER_ICACHE_CTRL].gnt = '1;
+  assign speriph_slave[SPER_ICACHE_CTRL].r_rdata = '0;
+  assign speriph_slave[SPER_ICACHE_CTRL].r_opc = '0;
 
-  hier_icache_ctrl_unit_wrap #(
-    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-    .NB_CORES       ( NB_CORES             ),
-    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
-  ) icache_ctrl_unit_i (
-    .clk_i                       (  clk_i                           ),
-    .rst_ni                      (  rst_ni                          ),
+  `FF(speriph_slave[SPER_ICACHE_CTRL].r_valid, speriph_slave[SPER_ICACHE_CTRL].req, '0);
+  `FF(speriph_slave[SPER_ICACHE_CTRL].r_id, speriph_slave[SPER_ICACHE_CTRL].id, '0);
 
-    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-    .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
-    .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
-    .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
-  );
+   
+  // hier_icache_ctrl_unit_wrap #(
+  //   .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+  //   .NB_CORES       ( NB_CORES             ),
+  //   .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
+  // ) icache_ctrl_unit_i (
+  //   .clk_i                       (  clk_i                           ),
+  //   .rst_ni                      (  rst_ni                          ),
+    
+  //   .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+  //   .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
+  //   .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
+  //   .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
+  // );
 
   //********************************************************
   //******************** DMA CL CONFIG PORT ****************
