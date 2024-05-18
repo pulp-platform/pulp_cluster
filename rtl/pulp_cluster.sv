@@ -412,10 +412,10 @@ logic [Cfg.NumCores-1:0][FpuOutFlagsWidth-1:0] s_apu_master_rflags;
 //----------------------------------------------------------------------//
 // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
 //                                                                      //
-SP_ICACHE_CTRL_UNIT_BUS      IC_ctrl_unit_bus_main[Cfg.iCacheNumBanks]();
-PRI_ICACHE_CTRL_UNIT_BUS     IC_ctrl_unit_bus_pri[Cfg.NumCores]();
-logic                        s_special_core_icache_cfg;
-logic[Cfg.NumCores-1:0]          s_enable_l1_l15_prefetch;
+logic                                                    s_enable_l1_l15_prefetch;
+logic                                 [Cfg.NumCores-1:0] s_icache_flush_valid, s_icache_flush_ready;
+snitch_icache_pkg::icache_l0_events_t [Cfg.NumCores-1:0] s_icache_l0_events;
+snitch_icache_pkg::icache_l1_events_t                    s_icache_l1_events;
 //----------------------------------------------------------------------//
 
 localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs + 4 + Cfg.HwpeNumPorts;
@@ -826,9 +826,11 @@ cluster_peripherals #(
   .hwpe_en_o                ( s_hwpe_en                         ),
   .hwpe_sel_o               ( s_hwpe_sel                        ),
   .hci_ctrl_o               ( s_hci_ctrl                        ),
-  .IC_ctrl_unit_bus_main    (  IC_ctrl_unit_bus_main            ),
-  .IC_ctrl_unit_bus_pri     (  IC_ctrl_unit_bus_pri             ),
-  .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         )
+  .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
+  .flush_valid_o            ( s_icache_flush_valid              ),
+  .flush_ready_i            ( s_icache_flush_ready              ),
+  .l0_events_i              ( s_icache_l0_events                ),
+  .l1_events_i              ( s_icache_l1_events                )
 );
 
 //********************************************************
@@ -1247,6 +1249,7 @@ pulp_icache_wrap #(
   .LINE_WIDTH     ( 256                                          ), // Ideally 32*NumCores
   .LINE_COUNT     ( Cfg.iCacheSharedSize*8/256/Cfg.iCacheNumWays ),
   .SET_COUNT      ( Cfg.iCacheNumWays                            ),
+  .L1DataParityWidth ( 8 ),
   .FetchAddrWidth ( AddrWidth                                    ),
   .FetchDataWidth ( Cfg.iCachePrivateDataWidth                   ),
   .AxiAddrWidth   ( AddrWidth                                    ),
@@ -1264,11 +1267,11 @@ pulp_icache_wrap #(
   .fetch_rdata_o        ( instr_r_rdata               ),
   .fetch_rerror_o       (),
 
-  .enable_prefetching_i ( s_enable_l1_l15_prefetch[0] ),
-  .icache_l0_events_o   (),
-  .icache_l1_events_o   (),
-  .flush_valid_i        ('0),
-  .flush_ready_o        (),
+  .enable_prefetching_i ( s_enable_l1_l15_prefetch ),
+  .icache_l0_events_o   ( s_icache_l0_events ),
+  .icache_l1_events_o   ( s_icache_l1_events ),
+  .flush_valid_i        ( s_icache_flush_valid ),
+  .flush_ready_o        ( s_icache_flush_ready ),
 
   .sram_cfg_data_i      ('0),
   .sram_cfg_tag_i       ('0),

@@ -16,6 +16,7 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
+`include "register_interface/typedef.svh"
 `include "common_cells/registers.svh"
 
 module cluster_peripherals 
@@ -104,9 +105,11 @@ module cluster_peripherals
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
-  SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS-1:0],
-  PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES-1:0],
-  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o
+  output logic                         enable_l1_l15_prefetch_o,
+  output logic [NB_CORES-1:0]          flush_valid_o,
+  input  logic [NB_CORES-1:0]          flush_ready_i,
+  input  snitch_icache_pkg::icache_l0_events_t [NB_CORES-1:0] l0_events_i,
+  input  snitch_icache_pkg::icache_l1_events_t l1_events_i
 );
 
   logic                      s_timer_out_lo_event;
@@ -280,29 +283,56 @@ module cluster_peripherals
   //********************************************************
   //******************** icache_ctrl_unit ******************
   //********************************************************
-  
-  assign enable_l1_l15_prefetch_o = '1;
-  assign speriph_slave[SPER_ICACHE_CTRL].gnt = '1;
-  assign speriph_slave[SPER_ICACHE_CTRL].r_rdata = '0;
-  assign speriph_slave[SPER_ICACHE_CTRL].r_opc = '0;
 
-  `FF(speriph_slave[SPER_ICACHE_CTRL].r_valid, speriph_slave[SPER_ICACHE_CTRL].req, '0);
-  `FF(speriph_slave[SPER_ICACHE_CTRL].r_id, speriph_slave[SPER_ICACHE_CTRL].id, '0);
+  `REG_BUS_TYPEDEF_ALL(icache, logic[31:0], logic[31:0], logic[3:0])
+  icache_req_t icache_req;
+  icache_rsp_t icache_rsp;
 
-   
-  // hier_icache_ctrl_unit_wrap #(
-  //   .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
-  //   .NB_CORES       ( NB_CORES             ),
-  //   .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
-  // ) icache_ctrl_unit_i (
-  //   .clk_i                       (  clk_i                           ),
-  //   .rst_ni                      (  rst_ni                          ),
-    
-  //   .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
-  //   .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
-  //   .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
-  //   .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
-  // );
+  periph_to_reg #(
+    .AW    ( 32 ),
+    .DW    ( 32 ),
+    .BW    (  8 ),
+    .IW    ( NB_CORES+1 ),
+    .req_t ( icache_req_t ),
+    .rsp_t ( icache_rsp_t )
+  ) i_icache_bus_converter (
+    .clk_i,
+    .rst_ni,
+
+    .req_i     ( speriph_slave[SPER_ICACHE_CTRL].req     ),
+    .add_i     ( speriph_slave[SPER_ICACHE_CTRL].add     ),
+    .wen_i     ( speriph_slave[SPER_ICACHE_CTRL].wen     ),
+    .wdata_i   ( speriph_slave[SPER_ICACHE_CTRL].wdata   ),
+    .be_i      ( speriph_slave[SPER_ICACHE_CTRL].be      ),
+    .id_i      ( speriph_slave[SPER_ICACHE_CTRL].id      ),
+    .gnt_o     ( speriph_slave[SPER_ICACHE_CTRL].gnt     ),
+    .r_rdata_o ( speriph_slave[SPER_ICACHE_CTRL].r_rdata ),
+    .r_opc_o   ( speriph_slave[SPER_ICACHE_CTRL].r_opc   ),
+    .r_id_o    ( speriph_slave[SPER_ICACHE_CTRL].r_id    ),
+    .r_valid_o ( speriph_slave[SPER_ICACHE_CTRL].r_valid ),
+
+    .reg_req_o ( icache_req ),
+    .reg_rsp_i ( icache_rsp )
+  );
+
+  cluster_icache_ctrl_unit #(
+    .NR_FETCH_PORTS ( NB_CORES ),
+    .reg_req_t ( icache_req_t ),
+    .reg_rsp_t ( icache_rsp_t )
+  ) i_icache_ctrl_unit (
+    .clk_i,
+    .rst_ni,
+
+    .reg_req_i            ( icache_req ),
+    .reg_rsp_o            ( icache_rsp ),
+
+    .enable_prefetching_o ( enable_l1_l15_prefetch_o),
+    .flush_valid_o,
+    .flush_ready_i,
+
+    .l0_events_i,
+    .l1_events_i
+  );
 
   //********************************************************
   //******************** DMA CL CONFIG PORT ****************

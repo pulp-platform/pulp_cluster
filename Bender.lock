@@ -38,13 +38,14 @@ packages:
     dependencies:
     - common_cells
   cluster_icache:
-    revision: 229ed4ff412024a8c41cc8817e532f92beeb2c4a
+    revision: 269f6fd23aeaeb9cd18f16377ca1095688aa337d
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_icache.git
     dependencies:
     - axi
     - common_cells
+    - register_interface
     - scm
     - tech_cells_generic
   cluster_interconnect:
@@ -200,8 +201,8 @@ packages:
     - register_interface
     - tech_cells_generic
   register_interface:
-    revision: 19163bb5191d2669a8cbc267cdd4ce8e60f20746
-    version: null
+    revision: ae616e5a1ec2b41e72d200e5ab09c65e94aebd3d
+    version: 0.4.4
     source:
       Git: https://github.com/pulp-platform/register_interface.git
     dependencies:
