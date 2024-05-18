@@ -151,6 +151,7 @@ module pulp_cluster_tb;
     .UserWidth ( AxiUw        ),
     .axi_req_t ( axi_m_req_t  ),
     .axi_rsp_t ( axi_m_resp_t ),
+    .UninitializedData ( "random" ),
     .ApplDelay ( SYS_TA       ),
     .AcqDelay  ( SYS_TT       )
   ) sim_mem (
