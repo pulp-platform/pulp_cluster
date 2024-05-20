@@ -1229,9 +1229,12 @@ generate
     assign s_hci_hwpe[0].wen   = '0;
     assign s_hci_hwpe[0].data  = '0;
     assign s_hci_hwpe[0].be    = '0;
-    assign s_hci_hwpe[0].boffs = '0;
-    assign s_hci_hwpe[0].lrdy  = '1;
     assign s_hci_hwpe[0].user  = '0;
+    assign s_hci_hwpe[0].r_ready = '0;
+    assign s_hci_hwpe[0].id = '0;
+    assign s_hci_hwpe[0].ecc = '0;
+    assign s_hci_hwpe[0].ereq = '0;
+    assign s_hci_hwpe[0].r_eready = '0;
     assign s_hwpe_busy = '0;
     assign s_hwpe_evt  = '0;
   end

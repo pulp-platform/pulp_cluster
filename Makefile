@@ -42,7 +42,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 636b212e # branch: yt/standalone-synth
+NONFREE_COMMIT ?= c8593493 # branch: yt/standalone-synth
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
