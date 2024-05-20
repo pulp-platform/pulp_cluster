@@ -31,22 +31,6 @@ dpi := $(patsubst tb/dpi/%.cc, ${dpi-library}/%.o, $(wildcard tb/dpi/*.cc))
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
 XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
 
-bender_defs += -D FEATURE_ICACHE_STAT
-bender_defs += -D PRIVATE_ICACHE
-bender_defs += -D HIERARCHY_ICACHE_32BIT
-bender_defs += -D ICAHE_USE_FF
-bender_defs += -D NO_FPU
-bender_defs += -D TRACE_EXECUTION
-bender_defs += -D CLUSTER_ALIAS
-bender_defs += -D USE_PULP_PARAMETERS
-
-bender_targs += -t rtl
-bender_targs += -t test
-bender_targs += -t mchan
-bender_targs += -t cluster_standalone
-bender_targs += -t scm_use_fpga_scm
-bender_targs += -t cv32e40p_use_ff_regfile
-
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
 	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
@@ -110,10 +94,16 @@ sim_clean:
 	rm -rf scripts/compile.tcl
 	rm -rf work
 
+include bender-common.mk
+include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, $(bender_defs) $(bender_targs),..)
+	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
 	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized'
+
+include bender-synth.mk
+scripts/synth-compile.tcl: | Bender.lock
+	$(BENDER) script synopsys $(common_targs) $(common_defs) $(synth_targs) $(synth_defs)	> $@
 
 $(library):
 	$(QUESTA) vlib $(library)
