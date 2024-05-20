@@ -90,3 +90,8 @@ sources:
     files:
       - include/pulp_interfaces.sv
 
+  - target: pulp_standalone_synth
+    files:
+    - pulp-cluster-nonfree/gf12/sourcecode/tc_sram.sv
+    - pulp-cluster-nonfree/gf12/sourcecode/tc_clk.sv
+
