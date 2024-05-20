@@ -8,6 +8,7 @@ common_defs += -D HIERARCHY_ICACHE_32BIT
 common_defs += -D ICAHE_USE_FF
 common_defs += -D NO_FPU
 common_defs += -D CLUSTER_ALIAS
+common_defs += -D USE_PULP_PARAMETERS
 
 common_targs += -t rtl
 common_targs += -t mchan
