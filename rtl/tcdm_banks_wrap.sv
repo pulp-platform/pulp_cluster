@@ -39,24 +39,10 @@ module tcdm_banks_wrap #(
   output logic [NbBanks-1:0] ecc_multiple_error_o,
   hci_core_intf.target tcdm_slave[0:NbBanks-1]
 );
-   
+
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
-  // tie r_valid to '1, as HCI interconnect will generate this anyways
-  assign tcdm_slave[i].r_valid = '1;
-
-  // tie r_user, r_ecc signals to 0
-  assign tcdm_slave[i].r_user = '0;
-  assign tcdm_slave[i].r_ecc = '0;
-
-  // tie egnt, r_evalid
-  assign tcdm_slave[i].egnt = '1;
-  assign tcdm_slave[i].r_evalid = '0;
-
-  // r_id is same as request id -> Don't know if this is needed, but OBI protocol requires it
   logic [IdWidth-1:0] resp_id_d, resp_id_q;
-  assign resp_id_d = tcdm_slave[i].id;
-  assign tcdm_slave[i].r_id = resp_id_q;
 
   always_ff @(posedge clk_i or negedge rst_ni) begin : proc_resp_id
     if(~rst_ni) begin
@@ -68,8 +54,92 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
   if (EnableEcc) begin: gen_ecc_banks
     if (EccInterco) begin: gen_ecc_banks_and_connection
-    /* TODO: blank for the moment */
+
+      localparam int unsigned AWS = tcdm_slave[0].AW;
+      localparam int unsigned UWS = tcdm_slave[0].UW;
+      localparam int unsigned EWS = tcdm_slave[0].EW;
+
+      // tie r_valid to '1, as HCI interconnect will generate this anyways
+      assign tcdm_slave_dec.r_valid = '1;
+
+      // tie r_user to 0
+      assign tcdm_slave_dec.r_user = '0;
+
+      // tie egnt, r_evalid
+      assign tcdm_slave_dec.egnt = '1;
+      assign tcdm_slave_dec.r_evalid = '0;
+
+      assign resp_id_d = tcdm_slave_dec.id;
+      assign tcdm_slave_dec.r_id = resp_id_q;
+
+      hci_core_intf #(
+        .DW ( DataWidth ),
+        .AW ( AWS       ),
+        .BW ( 8         ),
+        .UW ( UWS       ),
+        .EW ( 7         )
+      ) tcdm_slave_dec (
+        .clk( clk_i )
+      );
+
+      hci_ecc_dec #(
+        .DW         ( DataWidth ),
+        .EnableData ( 0 )
+      ) i_ecc_dec_meta (
+        .data_single_err_o (  ),
+        .data_multi_err_o  (  ),
+        .meta_single_err_o ( ecc_single_error_o[i] ),
+        .meta_multi_err_o  ( ecc_multiple_error_o[i] ),
+        .tcdm_target       ( tcdm_slave[i]     ),
+        .tcdm_initiator    ( tcdm_slave_dec )
+      );
+
+      // ecc_sram_wrap assumes a 32-bit address
+      logic [31:0] tcdm_slave_dec_add_unroll;
+      assign tcdm_slave_dec_add_unroll = 32'b0 | tcdm_slave_dec.add;
+
+      ecc_sram_wrap      #(
+        .BankSize         ( BankSize       ),
+        .InputECC         ( EccInterco     ),
+        .UnprotectedWidth ( DataWidth      ),
+        .ProtectedWidth   ( ProtectedWidth )
+      ) i_ecc_bank             (
+        .clk_i                 ( clk_i                  ),
+        .rst_ni                ( rst_ni                 ),
+        .test_enable_i         ( test_mode_i            ),
+        // Scrubber
+        .scrub_trigger_i       ( scrub_trigger_i[i]       ),
+        .scrubber_fix_o        ( scrub_fix_o[i]           ),
+        .scrub_uncorrectable_o ( scrub_uncorrectable_o[i] ),
+        // TCDM interface
+        .tcdm_wdata_i          ( {tcdm_slave_dec.ecc, tcdm_slave_dec.data} ),
+        .tcdm_add_i            ( tcdm_slave_dec_add_unroll  ),
+        .tcdm_req_i            ( tcdm_slave_dec.req      ),
+        .tcdm_wen_i            ( tcdm_slave_dec.wen      ),
+        .tcdm_be_i             ( tcdm_slave_dec.be       ),
+        .tcdm_rdata_o          ( {tcdm_slave_dec.r_ecc, tcdm_slave_dec.r_data} ),
+        .tcdm_gnt_o            ( tcdm_slave_dec.gnt      ),
+        // ECC
+        .single_error_o        (  ),
+        .multi_error_o         (  ),
+        .test_write_mask_ni    ( '0                      )
+      );
+
     end else begin: gen_ecc_banks_only
+
+      // tie r_valid to '1, as HCI interconnect will generate this anyways
+      assign tcdm_slave[i].r_valid = '1;
+
+      // tie r_user, r_ecc signals to 0
+      assign tcdm_slave[i].r_user = '0;
+      assign tcdm_slave[i].r_ecc = '0;
+
+      // tie egnt, r_evalid
+      assign tcdm_slave[i].egnt = '1;
+      assign tcdm_slave[i].r_evalid = '0;
+
+      assign resp_id_d = tcdm_slave[i].id;
+      assign tcdm_slave[i].r_id = resp_id_q;
 
       // ecc_sram_wrap assumes a 32-bit address
       logic [31:0] tcdm_slave_add_unroll;

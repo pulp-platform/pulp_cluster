@@ -100,9 +100,11 @@ module pulp_cluster
   localparam int unsigned FpuOutFlagsWidth = 5,
   // Number of parity bits for ECC in memory banks
   localparam int unsigned ParityWidth = 7,
+  // Number of parity bits for metadata in ECC-extended HCI
+  localparam int unsigned MetaParityWidth = $clog2( AddrMemWidth+2 + BeWidth +1 ) + 2,
   // TCDM banks data width extended with parity for ECCs
   localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth,
-  // Number of parity bits for ECC in HCI HWPE branch
+  // Number of parity bits for ECC-extended HCI HWPE branch
   localparam int unsigned HWPEParityWidth = ($clog2(DataWidth)+2)*Cfg.HwpeNumPorts + ($clog2(AddrWidth+(Cfg.HwpeNumPorts*DataWidth)/8+1)+2)
 )(
   input logic                                    clk_i,
@@ -414,7 +416,8 @@ hci_core_intf #(
   .AW ( AddrMemWidth+2 ), // AddrMemWidth is word-wise, +2 for byte-wise
   .DW ( DataWidth      ),
   .BW ( 8              ),
-  .IW ( TCDM_ID_WIDTH  )
+  .IW ( TCDM_ID_WIDTH  ),
+  .EW ( ParityWidth + MetaParityWidth )
 ) s_tcdm_bus_sram[0:Cfg.TcdmNumBank-1] (
   .clk ( clk_i )
 );
@@ -1367,7 +1370,7 @@ tcdm_banks_wrap  #(
   .BeWidth        ( BeWidth            ),
   .IdWidth        ( TCDM_ID_WIDTH      ),
   .EnableEcc      (  1                 ),
-  .EccInterco     (  0                 ), // Not supported at the moment
+  .EccInterco     (  1                 ),
   .ProtectedWidth ( ProtectedTcdmWidth )
 ) tcdm_banks_i (
   .clk_i                 ( clk_i                    ),
