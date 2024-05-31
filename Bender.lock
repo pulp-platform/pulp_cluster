@@ -63,8 +63,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 2bd027cb87eaa9bf7d17196ec5f69864b35b630f
-    version: 1.32.0
+    revision: 0d67563b6b592549542544f1abc0f43e5d4ee8b4
+    version: 1.35.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -178,7 +178,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 7abb25690090c7f5548a8aa905c7bf0440d4ba6b
+    revision: 60ba008c339ec70b5ffa7120bec2cbf5a8f53c99
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
@@ -225,18 +225,6 @@ packages:
       Git: https://github.com/pulp-platform/scm.git
     dependencies:
     - tech_cells_generic
-  softex:
-    revision: 0fe8b1349ce6f4f05aa63ce65961a87b9c133ae5
-    version: null
-    source:
-      Git: https://github.com/belanoa/softex.git
-    dependencies:
-    - common_cells
-    - fpnew
-    - hci
-    - hwpe-ctrl
-    - hwpe-stream
-    - ibex
   tech_cells_generic:
     revision: a9cae21902e75b1434328ecf36f85327ba5717de
     version: 0.2.11
@@ -254,5 +242,5 @@ packages:
     revision: cc4068a0ccb7691cd062b809c34b2304e7fbfa36
     version: null
     source:
-      Git: git@github.com:yvantor/ibex.git
+      Git: https://github.com/yvantor/ibex.git
     dependencies: []
