@@ -325,8 +325,8 @@ localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
 hci_core_intf #(
-  .DW ( DataWidth ),
-  .AW ( AddrWidth )
+  .DW ( HciCoreSizeParam.DW ),
+  .AW ( HciCoreSizeParam.AW )
 ) s_hci_ext[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
@@ -339,8 +339,8 @@ XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 
 // DMA -> log interconnect
 hci_core_intf #(
-  .DW ( DataWidth ),
-  .AW ( AddrWidth )
+  .DW ( HciCoreSizeParam.DW ),
+  .AW ( HciCoreSizeParam.AW )
 ) s_hci_dma[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
@@ -354,15 +354,15 @@ XBAR_TCDM_BUS s_mperiph_bus();
 
 // cores & accelerators -> log interconnect
 hci_core_intf #(
-  .DW   ( Cfg.HwpeNumPorts * DataWidth  ),
-  .AW   ( AddrWidth                     ),
-  .EHW  ( 0                             )
+  .DW   ( HciHwpeSizeParam.DW  ),
+  .AW   ( HciHwpeSizeParam.AW  ),
+  .EHW  ( HciHwpeSizeParam.EHW )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
 hci_core_intf #(
-  .DW ( DataWidth ),
-  .AW ( AddrWidth )
+  .DW ( HciCoreSizeParam.DW ),
+  .AW ( HciCoreSizeParam.AW )
 ) s_hci_core [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
@@ -386,8 +386,8 @@ XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
 // cores -> DMA ctrl
 // FIXME: iDMA
 hci_core_intf #(
-  .DW ( DataWidth ),
-  .AW ( AddrWidth )
+  .DW ( HciCoreSizeParam.DW ),
+  .AW ( HciCoreSizeParam.AW )
 ) s_core_dmactrl_bus [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
