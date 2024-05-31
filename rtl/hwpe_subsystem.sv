@@ -135,7 +135,7 @@ module hwpe_subsystem
       softex_top #(
         .DATA_WIDTH ( N_MASTER_PORT*32  ),
         .N_CORES    ( N_CORES           )
-      ) i_softex (                         
+      ) i_softex (
         .clk_i  ( hwpe_clk[i] ),
         .rst_ni ( rst_n       ),
         .busy_o ( busy[i]     ),
