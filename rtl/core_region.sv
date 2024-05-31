@@ -114,7 +114,7 @@ import rapid_recovery_pkg::*;
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
 );
 
-  localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
+  // localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
   localparam USE_IBEX   = CORE_TYPE_CL == 1 || CORE_TYPE_CL == 2;
   localparam IBEX_RV32M = CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
   localparam IBEX_RV32E = CORE_TYPE_CL == 2;
@@ -237,7 +237,7 @@ import rapid_recovery_pkg::*;
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH           ),
         .PULP_CLUSTER        ( 1                           ),
         .FPU                 ( FPU                         ),
-        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS_ACTUAL  ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS  ),
         .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),
         .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
@@ -455,7 +455,7 @@ import rapid_recovery_pkg::*;
         .irq_x_ack_o           ( irq_ack_o          ),
         .irq_x_ack_id_o        ( irq_ack_id_o       ),
 
-        .external_perf_i       ( {{{16- N_EXT_PERF_COUNTERS_ACTUAL}{'0}}, perf_counters} ),
+        .external_perf_i       ( {{{16- N_EXT_PERF_COUNTERS}{'0}}, ext_perf_i} ),
 
         .debug_req_i           ( debug_req_i        ),
 

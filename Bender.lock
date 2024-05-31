@@ -7,8 +7,8 @@ packages:
     dependencies:
     - common_cells
   axi:
-    revision: fccffb5953ec8564218ba05e20adbedec845e014
-    version: 0.39.1
+    revision: 9402c8a9ce0a7b5253c3c29e788612d771e8b5d6
+    version: 0.39.3
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -37,8 +37,19 @@ packages:
       Git: https://github.com/pulp-platform/axi_slice.git
     dependencies:
     - common_cells
+  cluster_icache:
+    revision: b3b0c474eb5baa2fdeece65369805206398ab63b
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/cluster_icache.git
+    dependencies:
+    - axi
+    - common_cells
+    - register_interface
+    - scm
+    - tech_cells_generic
   cluster_interconnect:
-    revision: 89e1019d64a86425211be6200770576cbdf3e8b3
+    revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_interconnect.git
@@ -97,7 +108,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: d31af36ebcaf2196fb51676b40782aa8cbd9cc69
+    revision: 4ea0f83a0657fa24514b7fc8981cfb4acf2ccb3b
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -105,18 +116,6 @@ packages:
     - cluster_interconnect
     - hwpe-stream
     - l2_tcdm_hybrid_interco
-  hier-icache:
-    revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
-    version: null
-    source:
-      Git: https://github.com/pulp-platform/hier-icache.git
-    dependencies:
-    - axi
-    - axi_slice
-    - common_cells
-    - icache-intc
-    - scm
-    - tech_cells_generic
   hwpe-ctrl:
     revision: a5966201aeeb988d607accdc55da933a53c6a56e
     version: null
@@ -138,12 +137,6 @@ packages:
       Git: https://github.com/pulp-platform/ibex.git
     dependencies:
     - tech_cells_generic
-  icache-intc:
-    revision: 663c3b6d3c2bf63ff25cda46f33c799c647b3985
-    version: 1.0.1
-    source:
-      Git: https://github.com/pulp-platform/icache-intc.git
-    dependencies: []
   idma:
     revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
     version: null
@@ -208,8 +201,8 @@ packages:
     - register_interface
     - tech_cells_generic
   register_interface:
-    revision: 19163bb5191d2669a8cbc267cdd4ce8e60f20746
-    version: null
+    revision: ae616e5a1ec2b41e72d200e5ab09c65e94aebd3d
+    version: 0.4.4
     source:
       Git: https://github.com/pulp-platform/register_interface.git
     dependencies:

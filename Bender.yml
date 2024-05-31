@@ -15,23 +15,22 @@ dependencies:
   axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git", rev: "b0e963433b2f6a61262b1448031e74eaec57c203" } # branch: yt/astral
   axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", rev: "4932bd2b88a1c7b5f0bf95411fc512905ed32439" } # branch: yt/astral
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", rev: "95bf23119b47fc171d9ed3734c431f71cffd9350" } # branch: yt/astral
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 89e1019d64a86425211be6200770576cbdf3e8b3 } # branch: assertion-fix
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 1284def6c0b7f7e9355eb093d00883ad9dead1b7 } # branch: michaero/hci-fix
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "2886cb2a46cea3e2bd2d979b505d88fadfbe150c" } # branch: astral
+  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "b3b0c474eb5baa2fdeece65369805206398ab63b" }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: 0b8e8ab } # branch: fc/hci-v2
-  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.1-beta  }
+  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
-  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
+  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
   riscv:                  { git: "https://github.com/AlSaqr-platform/riscv_nn.git", rev: astral-v1.0 }
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: d31af36ebcaf2196fb51676b40782aa8cbd9cc69 } # branch: remove-automatic-parameter-prop
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 4ea0f83a0657fa24514b7fc8981cfb4acf2ccb3b } # branch: fix on top of remove-automatic-parameter-prop
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  } # branch: master
-  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git",  version: 1.29.0 }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 60ba008c339ec70b5ffa7120bec2cbf5a8f53c99 } # branch: fc/hci-v2.1
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 6221fd4d17809166333ace71aec37b58ac28ce72 } # branch: hci-v2
@@ -83,7 +82,6 @@ sources:
   - target: test
     files:
       - tb/mock_uart.sv
-      - tb/axi2apb_64_32.sv
       - tb/mock_uart_axi.sv
       - tb/pulp_cluster_tb.sv
 
