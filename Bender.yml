@@ -34,7 +34,7 @@ dependencies:
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: c37bdb47339bf70e8323de8df14ea8bbeafb6583 } # branch: astral_rebase
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 60ba008c339ec70b5ffa7120bec2cbf5a8f53c99 } # branch: fc/hci-v2.1
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", version: 1.0.0 }
-  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: 7b6621c6a5a92775a56229dce9a57d1de8e95863 } # branch: yt/fix-assertions
+  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: eb6866e72f905847a3f3bdac25c57a8986026f17 } # branch: yt/fix-assertions
 
 export_include_dirs:
   - include

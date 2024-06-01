@@ -226,7 +226,7 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 7b6621c6a5a92775a56229dce9a57d1de8e95863
+    revision: eb6866e72f905847a3f3bdac25c57a8986026f17
     version: null
     source:
       Git: https://github.com/belanoa/softex.git
