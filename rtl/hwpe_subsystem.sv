@@ -133,8 +133,8 @@ module hwpe_subsystem
       ////////////
 
       softex_top #(
-        .DATA_WIDTH ( N_MASTER_PORT*32  ),
-        .N_CORES    ( N_CORES           )
+        .N_CORES    ( N_CORES           ),
+        .`HCI_SIZE_PARAM(Tcdm) ( HCI_HWPE_SIZE )
       ) i_softex (                         
         .clk_i  ( hwpe_clk[i] ),
         .rst_ni ( rst_n       ),
