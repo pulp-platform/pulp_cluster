@@ -126,6 +126,24 @@ module hwpe_subsystem
         .periph      ( periph[i]   )
       );
 
+    end else if (HWPE_CFG.HwpeList[i] == SOFTEX) begin : gen_softex
+
+      ////////////
+      // SOFTEX //
+      ////////////
+
+      softex_top #(
+        .N_CORES    ( N_CORES           ),
+        .`HCI_SIZE_PARAM(Tcdm) ( HCI_HWPE_SIZE )
+      ) i_softex (                         
+        .clk_i  ( hwpe_clk[i] ),
+        .rst_ni ( rst_n       ),
+        .busy_o ( busy[i]     ),
+        .evt_o  ( evt[i]      ),
+        .tcdm   ( tcdm[i]     ),
+        .periph ( periph[i]   )
+      );
+
     end
   end
 

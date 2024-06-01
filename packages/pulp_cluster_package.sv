@@ -33,7 +33,8 @@ package pulp_cluster_package;
   // HWPE type
   typedef enum byte_t {
     REDMULE,
-    NEUREKA
+    NEUREKA,
+    SOFTEX
   } hwpe_type_e;
 
   parameter MAX_NUM_HWPES = 8;
