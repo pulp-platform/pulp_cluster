@@ -113,7 +113,7 @@ sim_clean:
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, $(bender_defs) $(bender_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
-	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized'
+	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized' >> $@
 
 $(library):
 	$(QUESTA) vlib $(library)
