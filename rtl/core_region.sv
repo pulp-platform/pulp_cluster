@@ -225,7 +225,8 @@ module core_region
         .SHARED_INT_DIV      ( 0                 ),
         .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT ),
         .WAPUTYPE            ( WAPUTYPE          ),
-        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
+        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 ),
+        .Zfinx               (0                  )
 
       ) RISCV_CORE (
         .clk_i                 ( clk_i             ),
@@ -233,6 +234,7 @@ module core_region
 
         .clock_en_i            ( clock_en_i        ),
         .test_en_i             ( test_mode_i       ),
+
 
         .boot_addr_i           ( boot_addr         ),
         .core_id_i             ( CORE_ID[3:0]      ),

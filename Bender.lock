@@ -1,7 +1,7 @@
 packages:
   axi:
-    revision: fccffb5953ec8564218ba05e20adbedec845e014
-    version: 0.39.1
+    revision: 9402c8a9ce0a7b5253c3c29e788612d771e8b5d6
+    version: 0.39.3
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -45,8 +45,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 2bd027cb87eaa9bf7d17196ec5f69864b35b630f
-    version: 1.32.0
+    revision: 0d67563b6b592549542544f1abc0f43e5d4ee8b4
+    version: 1.35.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -59,7 +59,7 @@ packages:
       Git: https://github.com/pulp-platform/common_verification.git
     dependencies: []
   cv32e40p:
-    revision: 8d58109ab61e1fb6c9dcbafefb8f3a56ee596427
+    revision: 4c9a3ad07da429c7b9e7f325732e545a7dffecd6
     version: null
     source:
       Git: https://github.com/pulp-platform/cv32e40p.git
@@ -97,8 +97,8 @@ packages:
     - cv32e40p
     - fpnew
   hci:
-    revision: 8fb848e8f6722c1c21b44533535f430960c31b0b
-    version: 1.0.8
+    revision: 2691f8e1e6c77558f581a25aeb8849e21517bb1c
+    version: 1.0.9
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
@@ -134,8 +134,8 @@ packages:
     - hwpe-ctrl
     - hwpe-stream
   hwpe-stream:
-    revision: 389bd7fb1975d2df1546910c5f220c668122e646
-    version: 1.6.5
+    revision: 65c99a4a2f37a79acee800ab0151f67dfb1edef1
+    version: 1.8.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -173,6 +173,14 @@ packages:
       Git: https://github.com/pulp-platform/per2axi.git
     dependencies:
     - axi_slice
+  riscv-nn:
+    revision: e8f2ddadb1fcdc591d861014843818c07c09b733
+    version: null
+    source:
+      Git: git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git
+    dependencies:
+    - fpnew
+    - tech_cells_generic
   scm:
     revision: 998466d2a3c2d7d572e43d2666d93c4f767d8d60
     version: 1.1.1
