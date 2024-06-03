@@ -132,34 +132,26 @@ module pulp_cluster_wrap (
   output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]   async_data_master_b_rptr_o
 );
 
-  pulp_cluster  #( .Cfg(pulp_cluster_wrap_package::Cfg) ) pulp_cluster (
+  pulp_cluster #( .Cfg(pulp_cluster_wrap_package::Cfg) ) pulp_cluster_i (
     .clk_i,
     .rst_ni,
     .pwr_on_rst_ni,
     .ref_clk_i,
     .axi_isolate_i ( '0 ),
     .axi_isolated_o,
-
     .pmu_mem_pwdn_i ( 1'b0 ),
-
     .base_addr_i,
-
     .dma_pe_evt_ack_i ( '1 ),
     .dma_pe_evt_valid_o,
-
     .dma_pe_irq_ack_i ( 1'b1 ),
     .dma_pe_irq_valid_o,
-
     .dbg_irq_valid_i ( '0 ),
     .mbox_irq_i ( '0  ),
-
     .pf_evt_ack_i ( 1'b1 ),
     .pf_evt_valid_o,
-
     .async_cluster_events_wptr_i ( '0 ),
     .async_cluster_events_rptr_o,
     .async_cluster_events_data_i ( '0 ),
-
     .en_sa_boot_i,
     .test_mode_i,
     .fetch_en_i,
