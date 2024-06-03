@@ -79,6 +79,7 @@ sources:
       TRACE_EXECUTION: ~
     # Level 3
   - rtl/pulp_cluster.sv
+  - rtl/pulp_cluster_wrap.sv
 
   - target: test
     files:
