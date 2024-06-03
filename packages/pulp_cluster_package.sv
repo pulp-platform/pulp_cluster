@@ -14,6 +14,8 @@
  * Michael Gautschi <gautschi@iis.ee.ethz.ch>
  */
 
+`include "pulp_soc_defines.sv"
+
 package pulp_cluster_package;
 
   import rapid_recovery_pkg::*;
@@ -148,8 +150,8 @@ package pulp_cluster_package;
   parameter int unsigned NB_SPERIPH_PLUGS_EU = 2;
 
   // number of master and slave cluster periphs
-  parameter int unsigned NB_MPERIPHS =  1;
-  parameter int unsigned NB_SPERIPHS = 11;
+  parameter int unsigned NB_MPERIPHS = `NB_MPERIPHS;
+  parameter int unsigned NB_SPERIPHS = `NB_SPERIPHS;
 
   // position of peripherals on slave port of periph interconnect
   parameter int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
@@ -170,11 +172,13 @@ package pulp_cluster_package;
   localparam byte_t NumAxiManagerPorts = 3;
   localparam byte_t AxiSubordinateIdwidth = 4;
   localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
+  localparam int unsigned NumCores = `NB_CORES;
+  localparam int unsigned NumDmas = `NB_DMAS;
 
   localparam pulp_cluster_cfg_t PulpClusterDefaultCfg = '{
     CoreType: pulp_cluster_package::RISCY,
-    NumCores: 8,
-    DmaNumPlugs: 4,
+    NumCores: NumCores,
+    DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
     NumMstPeriphs: NB_MPERIPHS,
@@ -196,8 +200,8 @@ package pulp_cluster_package;
     iCachePrivateDataWidth: 32,
     EnableReducedTag: 1,
     L2Size: 1000*1024,
-    DmBaseAddr: 'h1A110000,
-    BootRomBaseAddr: 'h1A000000,
+    DmBaseAddr: 'h60203000,
+    BootRomBaseAddr: 'h78000000,
     BootAddr: 'h78000000,
     EnablePrivateFpu: 1,
     EnablePrivateFpDivSqrt: 0,
