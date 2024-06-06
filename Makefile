@@ -54,12 +54,15 @@ nonfree-init:
 
 .PHONY: init
 
+bender:
+	curl --proto '=https' --tlsv1.2 https://pulp-platform.github.io/bender/init -sSf | sh
+
 init: checkout
 	git submodule update --init --recursive
 
 .PHONY: checkout scripts/compile.tcl
 ## Checkout/update dependencies using Bender
-checkout:
+checkout: bender
 	$(BENDER) checkout
 	touch Bender.lock
 	make scripts/compile.tcl
