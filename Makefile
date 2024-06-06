@@ -41,8 +41,8 @@ endef
 # Nonfree components #
 ######################
 
-NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 4ea8c35d # branch: yt/standalone-synth-v1
+NONFREE_REMOTE ?= git@gitlab.esa.int:Yvan.Tortorella/pulp-cluster-7n.git
+NONFREE_COMMIT ?= 192e1bdfb58c8681eea0cbf55cd1bf9ea290a39af # branch: yt/7nm
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
