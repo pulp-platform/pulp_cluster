@@ -11,7 +11,7 @@
 // Author: Florian Zaruba, ETH Zurich
 // Date: 28/09/2018
 // Description: Mock replacement for UART in testbench (not synthesiesable!)
-   
+
 module mock_uart  #(
   parameter int  UART_IDX = 0
  )(
@@ -60,7 +60,7 @@ module mock_uart  #(
 
     function void uart_tx(byte ch);
         if(ch==8'h0A) begin
-          $display("[TB UART] %s", stringa);        
+          $display("[TB UART %2d] %s", UART_IDX, stringa);
           charnum = 0;
           stringa = '0;
         end else begin
