@@ -60,7 +60,7 @@ module mock_uart  #(
 
     function void uart_tx(byte ch);
         if(ch==8'h0A) begin
-          $display("[TB UART %2d] %s", UART_IDX, stringa);
+          $display("[TB UART %2d] %s", UART_IDX, stringa);        
           charnum = 0;
           stringa = '0;
         end else begin

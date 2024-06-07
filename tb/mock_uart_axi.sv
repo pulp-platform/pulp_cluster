@@ -19,6 +19,7 @@ module mock_uart_axi #(
   parameter int unsigned AxiUw = 0,
   parameter logic [AxiAw-1:0] BaseAddr = 0,
   parameter int unsigned N_CORES = 8
+
   )(
     input logic      clk_i,
     input logic      rst_ni,
@@ -26,14 +27,14 @@ module mock_uart_axi #(
     AXI_BUS.Slave    uart
  );
 
-  logic                     uart_penable;
-  logic                     uart_pwrite;
-  logic         [AxiAw-1:0] uart_paddr;
-  logic [N_CORES-1:0]       uart_psel;
-  logic              [31:0] uart_pwdata;
-  logic [N_CORES-1:0][31:0] uart_prdata ;
-  logic [N_CORES-1:0]       uart_pready;
-  logic [N_CORES-1:0]       uart_pslverr;
+  logic                      uart_penable;
+  logic                      uart_pwrite;
+  logic [AxiAw-1:0]          uart_paddr;
+  logic [N_CORES-1:0]        uart_psel;
+  logic               [31:0] uart_pwdata;
+  logic [N_CORES-1:0] [31:0] uart_prdata;
+  logic [N_CORES-1:0]        uart_pready;
+  logic [N_CORES-1:0]        uart_pslverr;
 
   AXI_LITE #(
     .AXI_DATA_WIDTH(AxiDw),
@@ -81,9 +82,9 @@ module mock_uart_axi #(
 
   rule_t [0:N_CORES-1] rule;
   // each mock UART only has 2 words of address space
-  for (genvar g = 0; g < N_CORES; g++) begin: gen_rule
+  for (genvar g=0; g<N_CORES; g++) begin
     assign rule[g] = '{g, BaseAddr + 8*g, BaseAddr + 8*(g+1)-1};
-  end // gen_rule
+  end
 
   axi_lite_to_apb_intf #(
     .NoApbSlaves     (N_CORES),
@@ -111,23 +112,22 @@ module mock_uart_axi #(
   );
 
   /* pragma translate_off */
-
-  for (genvar g = 0; g < N_CORES; g++) begin: gen_mock_uart
+  for (genvar g=0; g<N_CORES; g++) begin
     // one mock UART per core
     mock_uart #(
-      .UART_IDX ( g )
-    ) i_mock_uart (
-      .clk_i     ( clk_i            ),
-      .rst_ni    ( rst_ni           ),
-      .penable_i ( uart_penable     ),
-      .pwrite_i  ( uart_pwrite      ),
-      .paddr_i   ( uart_paddr - g*8 ), // Mock UART expects to be addressed starting at 0
-      .psel_i    ( uart_psel[g]     ),
-      .pwdata_i  ( uart_pwdata      ),
-      .prdata_o  ( uart_prdata[g]   ),
-      .pready_o  ( uart_pready[g]   ),
-      .pslverr_o ( uart_pslverr[g]  )
-  );
-  end // gen_mock_uart
+      .UART_IDX( g )
+    ) i_mock_uart0 (
+      .clk_i    ( clk_i                  ),
+      .rst_ni   ( rst_ni                 ),
+      .penable_i( uart_penable           ),
+      .pwrite_i ( uart_pwrite            ),
+      .paddr_i  ( uart_paddr[31:0] - g*8 ), // Mock UART expects to be addressed starting at 0
+      .psel_i   ( uart_psel[g]           ),
+      .pwdata_i ( uart_pwdata            ),
+      .prdata_o ( uart_prdata[g]         ),
+      .pready_o ( uart_pready[g]         ),
+      .pslverr_o( uart_pslverr[g]        )
+    );
+  end
 
 endmodule
