@@ -19,7 +19,7 @@ dependencies:
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
   idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
-  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "b3b0c474eb5baa2fdeece65369805206398ab63b" }
+  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "4cffcf37724704ab27d483338804a1981f5c4497" } # branch: astral-synth
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: 0b8e8ab } # branch: fc/hci-v2
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
