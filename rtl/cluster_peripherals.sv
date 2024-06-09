@@ -105,7 +105,9 @@ module cluster_peripherals
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
-  output logic                         enable_l1_l15_prefetch_o,
+  SP_ICACHE_CTRL_UNIT_BUS.Master       IC_ctrl_unit_bus_main[NB_CACHE_BANKS-1:0],
+  PRI_ICACHE_CTRL_UNIT_BUS.Master      IC_ctrl_unit_bus_pri[NB_CORES-1:0],
+  output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o,
   output logic [NB_CORES-1:0]          flush_valid_o,
   input  logic [NB_CORES-1:0]          flush_ready_i,
   // input  snitch_icache_pkg::icache_l0_events_t [NB_CORES-1:0] l0_events_i,
@@ -284,6 +286,7 @@ module cluster_peripherals
   //******************** icache_ctrl_unit ******************
   //********************************************************
 
+`ifdef SNITCH_ICACHE
   `REG_BUS_TYPEDEF_ALL(icache, logic[31:0], logic[31:0], logic[3:0])
   icache_req_t icache_req;
   icache_rsp_t icache_rsp;
@@ -326,13 +329,55 @@ module cluster_peripherals
     .reg_req_i            ( icache_req ),
     .reg_rsp_o            ( icache_rsp ),
 
-    .enable_prefetching_o ( enable_l1_l15_prefetch_o),
+    .enable_prefetching_o ( enable_l1_l15_prefetch_o[0]),
     .flush_valid_o,
     .flush_ready_i,
 
     // .l0_events_i,
     .l1_events_i
   );
+
+  assign enable_l1_l15_prefetch_o[NB_CORES:1] = '0;
+
+  for (genvar i = 0; i < NB_CORES; i++) begin
+    assign IC_ctrl_unit_bus_pri[i].bypass_req     = '0;
+    assign IC_ctrl_unit_bus_pri[i].flush_req      = '0;
+    assign IC_ctrl_unit_bus_pri[i].sel_flush_req  = '0;
+    assign IC_ctrl_unit_bus_pri[i].sel_flush_addr = '0;
+    `ifdef FEATURE_ICACHE_STAT
+      assign IC_ctrl_unit_bus_pri[i].ctrl_clear_regs  = '0;
+      assign IC_ctrl_unit_bus_pri[i].ctrl_enable_regs = '0;
+    `endif
+  end
+
+  for (genvar i = 0; i < NB_CACHE_BANKS; i++) begin
+    assign IC_ctrl_unit_bus_main[i].ctrl_req_enable   = '0;
+    assign IC_ctrl_unit_bus_main[i].ctrl_req_disable  = '0;
+    assign IC_ctrl_unit_bus_main[i].ctrl_flush_req    = '0;
+    assign IC_ctrl_unit_bus_main[i].icache_is_private = '0;
+    assign IC_ctrl_unit_bus_main[i].sel_flush_req     = '0;
+    assign IC_ctrl_unit_bus_main[i].sel_flush_addr    = '0;
+    `ifdef FEATURE_ICACHE_STAT
+      assign IC_ctrl_unit_bus_main[i].ctrl_clear_regs  = '0;
+      assign IC_ctrl_unit_bus_main[i].ctrl_enable_regs = '0;
+    `endif
+  end
+`else
+  assign flush_valid_o = '0;
+  hier_icache_ctrl_unit_wrap #(
+    .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
+    .NB_CORES       ( NB_CORES             ),
+    .ID_WIDTH       ( NB_CORES+NB_MPERIPHS )
+  ) icache_ctrl_unit_i (
+    .clk_i                       (  clk_i                           ),
+    .rst_ni                      (  rst_ni                          ),
+
+    .speriph_slave               (  speriph_slave[SPER_ICACHE_CTRL] ),
+    .IC_ctrl_unit_bus_pri        (  IC_ctrl_unit_bus_pri            ),
+    .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
+    .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
+  );
+`endif
 
   //********************************************************
   //******************** DMA CL CONFIG PORT ****************

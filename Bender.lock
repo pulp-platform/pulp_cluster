@@ -116,6 +116,18 @@ packages:
     - cluster_interconnect
     - hwpe-stream
     - l2_tcdm_hybrid_interco
+  hier-icache:
+    revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/hier-icache.git
+    dependencies:
+    - axi
+    - axi_slice
+    - common_cells
+    - icache-intc
+    - scm
+    - tech_cells_generic
   hwpe-ctrl:
     revision: a5966201aeeb988d607accdc55da933a53c6a56e
     version: null
@@ -137,6 +149,12 @@ packages:
       Git: https://github.com/pulp-platform/ibex.git
     dependencies:
     - tech_cells_generic
+  icache-intc:
+    revision: 663c3b6d3c2bf63ff25cda46f33c799c647b3985
+    version: 1.0.1
+    source:
+      Git: https://github.com/pulp-platform/icache-intc.git
+    dependencies: []
   idma:
     revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
     version: null
