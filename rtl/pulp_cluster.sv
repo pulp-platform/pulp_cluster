@@ -1078,6 +1078,7 @@ hmr_unit #(
   .InterleaveGrps    ( 1                                    ),
   .RapidRecovery     ( 1                                    ),
   .SeparateData      ( 1                                    ),
+  .SeparateAxiBus    ( 0                                    ),
   .NumBusVoters      ( 1                                    ),
   .all_inputs_t      ( core_inputs_t                        ),
   .nominal_outputs_t ( core_outputs_t                       ),
@@ -1114,7 +1115,8 @@ hmr_unit #(
   .core_setback_o         ( setback      ),
   .core_inputs_o          ( hmr2core     ),
   .core_nominal_outputs_i ( core2hmr     ),
-  .core_bus_outputs_i     ( '0           )
+  .core_bus_outputs_i     ( '0           ),
+  .core_axi_outputs_i     ( '0           )
 );
 
 //****************************************************
