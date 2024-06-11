@@ -16,7 +16,7 @@ if test -f /etc/iis.version; then
   export VSIM="$QUESTA vsim"
   export QUESTA_HOME=/usr/pack/${QUESTA}/questasim
   export QUESTASIM_HOME=/usr/pack/${QUESTA}/questasim
-  export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
+  export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/scratch2/fenga6/georgr/riscv-tnn-toolchain-7.2
 fi
 
 source "$ROOTD/pulp-runtime/configs/pulp_cluster.sh"
