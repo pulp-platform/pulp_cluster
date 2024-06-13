@@ -174,7 +174,7 @@ packages:
     dependencies:
     - axi_slice
   riscv-nn:
-    revision: 85946533abb9dce156130b07804bed91d853f5dc
+    revision: 0dfabc78b04173b24d9bf698e00b5192d1285773
     version: null
     source:
       Git: git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git
