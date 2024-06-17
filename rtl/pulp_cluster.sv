@@ -1241,8 +1241,8 @@ generate
 endgenerate
 
 `ifdef SNITCH_ICACHE
-  instr_axi_req_t s_core_instr_bus_req, s_core_instr_bus_req_cut;
-  instr_axi_resp_t s_core_instr_bus_resp, s_core_instr_bus_resp_cut;
+  instr_axi_req_t s_core_instr_bus_req;
+  instr_axi_resp_t s_core_instr_bus_resp;
 
   always_comb begin
     s_core_instr_bus.aw_addr = '0;
@@ -1284,26 +1284,8 @@ endgenerate
     .sram_cfg_data_i      ('0),
     .sram_cfg_tag_i       ('0),
 
-    .axi_req_o            ( s_core_instr_bus_req_cut  ),
-    .axi_rsp_i            ( s_core_instr_bus_resp_cut )
-  );
-
-  axi_cut #(
-    .Bypass     (0),
-    .aw_chan_t  (instr_axi_aw_chan_t),
-    .w_chan_t   (instr_axi_w_chan_t),
-    .b_chan_t   (instr_axi_b_chan_t),
-    .ar_chan_t  (instr_axi_ar_chan_t),
-    .r_chan_t   (instr_axi_r_chan_t),
-    .axi_req_t  (instr_axi_req_t),
-    .axi_resp_t (instr_axi_resp_t)
-  ) icache_cut_i (
-    .clk_i      ( clk_i  ),
-    .rst_ni     ( rst_ni ),
-    .slv_req_i  ( s_core_instr_bus_req_cut ),
-    .slv_resp_o ( s_core_instr_bus_resp_cut ),
-    .mst_req_o  ( s_core_instr_bus_req ),
-    .mst_resp_i ( s_core_instr_bus_resp )
+    .axi_req_o            ( s_core_instr_bus_req  ),
+    .axi_rsp_i            ( s_core_instr_bus_resp )
   );
 
   for (genvar i = 0; i < Cfg.NumCores; i++) begin
