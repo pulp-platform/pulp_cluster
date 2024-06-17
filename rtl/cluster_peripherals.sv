@@ -337,7 +337,7 @@ module cluster_peripherals
     .l1_events_i
   );
 
-  assign enable_l1_l15_prefetch_o[NB_CORES:1] = '0;
+  assign enable_l1_l15_prefetch_o[NB_CORES-1:1] = '0;
 
   for (genvar i = 0; i < NB_CORES; i++) begin
     assign IC_ctrl_unit_bus_pri[i].bypass_req     = '0;
