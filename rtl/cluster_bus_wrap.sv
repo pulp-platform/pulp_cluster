@@ -161,7 +161,7 @@ module cluster_bus_wrap
     MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
     //per slave port
     FallThrough: 1'b0,       //Use the reccomended default config 
-    LatencyMode: axi_pkg::CUT_MST_AX, // axi_pkg::CUT_ALL_AX | axi_pkg::DemuxW,
+    LatencyMode: axi_pkg::CUT_ALL_AX, // CUT_ALL_AX | axi_pkg::DemuxW,
     PipelineStages: 0,
     AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
     AxiIdUsedSlvPorts: AXI_ID_IN_WIDTH,
