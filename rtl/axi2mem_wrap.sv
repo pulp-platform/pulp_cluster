@@ -32,7 +32,7 @@ module axi2mem_wrap
   input  logic          test_en_i,
   input axi_req_t      axi_slave_req_i,
   output axi_resp_t    axi_slave_resp_o,
-  hci_core_intf.master tcdm_master[NB_DMAS-1:0],
+  hci_core_intf.initiator tcdm_master[NB_DMAS-1:0],
   output logic         busy_o
 );
 
@@ -52,8 +52,8 @@ module axi2mem_wrap
       assign tcdm_master[i].data   = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen    = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be     = s_tcdm_bus_be[i];
-      assign tcdm_master[i].boffs  = '0;
-      assign tcdm_master[i].lrdy   = '1;
+      // assign tcdm_master[i].boffs  = '0;
+      // assign tcdm_master[i].lrdy   = '1;
 
       assign s_tcdm_bus_gnt[i]     = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i] = tcdm_master[i].r_valid;

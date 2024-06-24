@@ -113,12 +113,12 @@ module cluster_peripherals
 
   MESSAGE_BUS eu_message_master(); 
 
-  logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_add;
-  logic [NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_wen;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_wdata;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][3:0]        eu_speriph_plug_be;
-  logic [NB_SPERIPH_PLUGS_EU-1:0][NB_CORES:0] eu_speriph_plug_id;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_req;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_add;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0]             eu_speriph_plug_wen;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0][31:0]       eu_speriph_plug_wdata;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0][3:0]        eu_speriph_plug_be;
+  logic [pulp_cluster_package::NB_SPERIPH_PLUGS_EU-1:0][NB_CORES:0] eu_speriph_plug_id;
 
   logic soc_periph_evt_valid, soc_periph_evt_ready;
   logic [7:0] soc_periph_evt_data;
@@ -216,7 +216,7 @@ module cluster_peripherals
 
   // With new interconnect xbar_pe, all requests to EU pass through SPER_EVENT_U_ID speriph_slave. The other plugs are tied to 0.
   generate
-    for (genvar I = 1; I < NB_SPERIPH_PLUGS_EU; I++ ) begin
+    for (genvar I = 1; I < pulp_cluster_package::NB_SPERIPH_PLUGS_EU; I++ ) begin
       assign speriph_slave[SPER_EVENT_U_ID+I].gnt     =  '0;
       assign speriph_slave[SPER_EVENT_U_ID+I].r_valid =  '0;
       assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   =  '0;

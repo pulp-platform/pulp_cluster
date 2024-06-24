@@ -15,7 +15,7 @@
  */
  
 `include "pulp_soc_defines.sv"
-
+`include "hci_helpers.svh"
 import hci_package::*;
 
 module cluster_interconnect_wrap
@@ -40,18 +40,21 @@ module cluster_interconnect_wrap
   parameter int unsigned PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
   parameter bit [11:0]   CLUSTER_ALIAS_BASE = 12'h000,
 
-  parameter bit          USE_HETEROGENEOUS_INTERCONNECT = 1
+  parameter bit          USE_HETEROGENEOUS_INTERCONNECT = 1,
+  parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
+  parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
+  parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
 )
 (
   input logic                          clk_i,
   input logic                          rst_ni,
-  hci_core_intf.slave                  core_tcdm_slave [NB_CORES-1:0],
-  hci_core_intf.slave                  hwpe_tcdm_slave [0:0],
+  hci_core_intf.target                 core_tcdm_slave [NB_CORES-1:0],
+  hci_core_intf.target                 hwpe_tcdm_slave [0:0],
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
-  hci_core_intf.slave                  ext_slave [3:0],
-  hci_core_intf.slave                  dma_slave [NB_DMAS-1:0], //FIXME IGOR --> check NB_CORES depend ASK DAVIDE
+  hci_core_intf.target                 ext_slave [3:0],
+  hci_core_intf.target                 dma_slave [NB_DMAS-1:0], //FIXME IGOR --> check NB_CORES depend ASK DAVIDE
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0],
-  hci_mem_intf.master                  tcdm_sram_master[NB_TCDM_BANKS-1:0],
+  hci_core_intf.initiator              tcdm_sram_master[NB_TCDM_BANKS-1:0],
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
   input hci_interconnect_ctrl_t        hci_ctrl_i,
   input logic [1:0]                    TCDM_arb_policy_i
@@ -74,14 +77,17 @@ module cluster_interconnect_wrap
         .N_EXT  ( 4                        ),
         .N_MEM  ( NB_TCDM_BANKS            ),
         .IW     ( TCDM_ID_WIDTH            ),
-        .AWC    ( ADDR_WIDTH               ),
-        .DW_LIC ( DATA_WIDTH               ),
-        .DW_SIC ( NB_HWPE_PORTS*DATA_WIDTH ),
         .TS_BIT ( TEST_SET_BIT             ),
-        .AWH    ( ADDR_WIDTH               ),
-        .DWH    ( NB_HWPE_PORTS*DATA_WIDTH ),
-        .OWH    ( 1                        ),
-        .AWM    ( ADDR_MEM_WIDTH+2         )
+        .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+`ifndef SYNTHESIS
+        ,
+        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
+        .WAIVE_RSP3_ASSERT ( 1'b1 ),
+        .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),
@@ -131,7 +137,7 @@ module cluster_interconnect_wrap
       end
 
       hci_interconnect #(
-        .N_HWPE ( 0                      ),
+       .N_HWPE ( 0                      ),
         .N_CORE ( NB_CORES+NB_HWPE_PORTS ),
         .N_DMA  ( NB_DMAS                ),
         .N_EXT  ( 4                      ),
@@ -144,7 +150,10 @@ module cluster_interconnect_wrap
         .AWH    ( 32                     ),
         .DWH    ( 288                    ),
         .OWH    ( 1                      ),
-        .AWM    ( ADDR_MEM_WIDTH+2       )
+        .AWM    ( ADDR_MEM_WIDTH+2       ),
+        .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
       ) i_hci_interconnect (
         .clk_i  ( clk_i                ),
         .rst_ni ( rst_ni               ),

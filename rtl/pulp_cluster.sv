@@ -324,17 +324,36 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   logic                                       s_decompr_done_evt;
 
   assign s_dma_fc_irq = s_decompr_done_evt;
-
-
+  localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
+    DW:  DATA_WIDTH,
+    AW:  ADDR_WIDTH,
+    BW:  DEFAULT_BW,
+    UW:  DEFAULT_UW,
+    IW:  DEFAULT_IW,
+    EW:  DEFAULT_EW,
+    EHW: DEFAULT_EHW
+  };
+  localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
+    DW:  NB_HWPE_PORTS * DATA_WIDTH,
+    AW:  ADDR_WIDTH,
+    BW:  DEFAULT_BW,
+    UW:  DEFAULT_UW,
+    IW:  DEFAULT_IW,
+    EW:  DEFAULT_EW,
+    EHW: DEFAULT_EHW
+  };
 
   /* logarithmic and peripheral interconnect interfaces */
   // ext -> log interconnect
   hci_core_intf #(
-    .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH )
+    .DW ( HciCoreSizeParam.DW ),
+    .AW ( HciCoreSizeParam.AW )
   ) s_hci_ext[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
+
+
+
 
   // periph interconnect -> slave peripherals
   XBAR_PERIPH_BUS s_xbar_speriph_bus[NB_SPERIPHS-1:0]();
@@ -344,8 +363,8 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
   // DMA -> log interconnect
   hci_core_intf #(
-    .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH )
+    .DW ( HciCoreSizeParam.DW ),
+    .AW ( HciCoreSizeParam.AW )
   ) s_hci_dma[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
@@ -360,14 +379,15 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
   // cores & accelerators -> log interconnect
   hci_core_intf #(
-    .DW ( NB_HWPE_PORTS*DATA_WIDTH ),
-    .AW ( ADDR_WIDTH               )
+    .DW   ( HciHwpeSizeParam.DW  ),
+    .AW   ( HciHwpeSizeParam.AW  ),
+    .EHW  ( HciHwpeSizeParam.EHW )
   ) s_hci_hwpe [0:0] (
     .clk ( clk_cluster )
   );
   hci_core_intf #(
-    .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH )
+  .DW ( HciCoreSizeParam.DW ),
+  .AW ( HciCoreSizeParam.AW )
   ) s_hci_core [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
@@ -417,12 +437,28 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
   localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
 
+  localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
+    DW:  DATA_WIDTH,
+    AW:  ADDR_MEM_WIDTH + 2, // ADDR_MEM_WIDTH is word wise, additional 2bits for byte wise access
+    BW:  8,
+    UW:  DEFAULT_UW,
+    IW:  TCDM_ID_WIDTH,
+    EW:  DEFAULT_EW,
+    EHW: DEFAULT_EHW
+  };
+
+
   // log interconnect -> TCDM memory banks (SRAM)
-  hci_mem_intf #(
-    .AW (ADDR_WIDTH     ),
-    .DW ( DATA_WIDTH    ),
-    .BW ( 8      ),
-    .IW ( TCDM_ID_WIDTH )
+  hci_core_intf #(
+    .AW ( ADDR_MEM_WIDTH + 2 ),
+    .DW ( DATA_WIDTH         ),
+    .BW ( 8                  ),
+    .IW ( TCDM_ID_WIDTH      )
+`ifndef SYNTHESIS
+  ,
+  .WAIVE_RSP3_ASSERT ( 1'b1 ),
+  .WAIVE_RSP5_ASSERT ( 1'b1 )
+`endif
   ) s_tcdm_bus_sram[NB_TCDM_BANKS-1:0] (
     .clk ( clk_cluster )
   );
@@ -668,7 +704,10 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
 
     .LOG_CLUSTER        ( LOG_CLUSTER        ),
     .PE_ROUTING_LSB     ( PE_ROUTING_LSB     ),
-    .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT )
+    .USE_HETEROGENEOUS_INTERCONNECT ( USE_HETEROGENEOUS_INTERCONNECT ),
+    .HCI_CORE_SIZE          ( HciCoreSizeParam       ),
+    .HCI_HWPE_SIZE          ( HciHwpeSizeParam       ),
+    .HCI_MEM_SIZE           ( HciMemSizeParam        )
 
   ) cluster_interconnect_wrap_i (
     .clk_i              ( clk_cluster                         ),
@@ -1038,8 +1077,8 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
       assign s_hci_hwpe[0].wen   = '0;
       assign s_hci_hwpe[0].data  = '0;
       assign s_hci_hwpe[0].be    = '0;
-      assign s_hci_hwpe[0].boffs = '0;
-      assign s_hci_hwpe[0].lrdy  = '1;
+      // assign s_hci_hwpe[0].boffs = '0;
+      // assign s_hci_hwpe[0].lrdy  = '1;
       assign s_hwpe_busy = '0;
       assign s_hwpe_evt  = '0;
     end

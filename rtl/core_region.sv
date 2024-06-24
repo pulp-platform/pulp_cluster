@@ -495,8 +495,8 @@ module core_region
     .CLUSTER_ID         (  cluster_id_i               )
   );
 
-  assign tcdm_data_master.boffs = '0;
-  assign tcdm_data_master.lrdy  = '1;
+  // assign tcdm_data_master.boffs = '0;
+  // assign tcdm_data_master.lrdy  = '1;
 
    periph_demux periph_demux_i (
      .clk               ( clk_int                  ),
