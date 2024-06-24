@@ -331,8 +331,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   // ext -> log interconnect
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH ),
-    .OW ( 1  )
+    .AW ( ADDR_WIDTH )
   ) s_hci_ext[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
@@ -346,8 +345,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   // DMA -> log interconnect
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH ),
-    .OW ( 1  )
+    .AW ( ADDR_WIDTH )
   ) s_hci_dma[NB_DMAS-1:0] (
     .clk ( clk_cluster )
   );
@@ -363,15 +361,13 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
   // cores & accelerators -> log interconnect
   hci_core_intf #(
     .DW ( NB_HWPE_PORTS*DATA_WIDTH ),
-    .AW ( ADDR_WIDTH               ),
-    .OW ( 1                )
+    .AW ( ADDR_WIDTH               )
   ) s_hci_hwpe [0:0] (
     .clk ( clk_cluster )
   );
   hci_core_intf #(
     .DW ( DATA_WIDTH ),
-    .AW ( ADDR_WIDTH ),
-    .OW ( 1  )
+    .AW ( ADDR_WIDTH )
   ) s_hci_core [NB_CORES-1:0] (
     .clk ( clk_cluster )
   );
