@@ -71,35 +71,29 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
     /* TODO: blank for the moment */
     end else begin: gen_ecc_banks_only
 
-      // ecc_sram_wrap assumes a 32-bit address
-      logic [31:0] tcdm_slave_add_unroll;
-      assign tcdm_slave_add_unroll = 32'b0 | tcdm_slave[i].add;
-
-      ecc_sram_wrap      #(
-        .BankSize         ( BankSize       ),
+      ecc_sram           #(
+        .NumWords         ( BankSize       ),
         .InputECC         ( EccInterco     ),
         .UnprotectedWidth ( DataWidth      ),
         .ProtectedWidth   ( ProtectedWidth )
       ) i_ecc_bank             (
         .clk_i                 ( clk_i                  ),
         .rst_ni                ( rst_ni                 ),
-        .test_enable_i         ( test_mode_i            ),
         // Scrubber
         .scrub_trigger_i       ( scrub_trigger_i[i]       ),
         .scrubber_fix_o        ( scrub_fix_o[i]           ),
         .scrub_uncorrectable_o ( scrub_uncorrectable_o[i] ),
         // TCDM interface
-        .tcdm_wdata_i          ( tcdm_slave[i].data     ),
-        .tcdm_add_i            ( tcdm_slave_add_unroll  ),
-        .tcdm_req_i            ( tcdm_slave[i].req      ),
-        .tcdm_wen_i            ( tcdm_slave[i].wen      ),
-        .tcdm_be_i             ( tcdm_slave[i].be       ),
-        .tcdm_rdata_o          ( tcdm_slave[i].r_data   ),
-        .tcdm_gnt_o            ( tcdm_slave[i].gnt      ),
+        .wdata_i               ( tcdm_slave[i].data     ),
+        .addr_i                ( tcdm_slave[i].add[$clog2(BankSize)+2-1:2]  ),
+        .req_i                 ( tcdm_slave[i].req      ),
+        .we_i                  ( ~tcdm_slave[i].wen     ),
+        .be_i                  ( tcdm_slave[i].be       ),
+        .rdata_o               ( tcdm_slave[i].r_data   ),
+        .gnt_o                 ( tcdm_slave[i].gnt      ),
         // ECC
         .single_error_o        ( ecc_single_error_o[i]   ),
-        .multi_error_o         ( ecc_multiple_error_o[i] ),
-        .test_write_mask_ni    ( '0                      )
+        .multi_error_o         ( ecc_multiple_error_o[i] )
       );
     end
   end else begin: gen_standard_banks

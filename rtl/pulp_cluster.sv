@@ -413,7 +413,9 @@ logic [Cfg.NumCores-1:0][FpuOutFlagsWidth-1:0] s_apu_master_rflags;
 //----------------------------------------------------------------------//
 // Interfaces between ICache - L0 - Icache_Interco and Icache_ctrl_unit //
 //                                                                      //
-logic                                                    s_enable_l1_l15_prefetch;
+SP_ICACHE_CTRL_UNIT_BUS                                  IC_ctrl_unit_bus_main[Cfg.iCacheNumBanks]();
+PRI_ICACHE_CTRL_UNIT_BUS                                 IC_ctrl_unit_bus_pri[Cfg.NumCores]();;
+logic                                 [Cfg.NumCores-1:0] s_enable_l1_l15_prefetch;
 logic                                 [Cfg.NumCores-1:0] s_icache_flush_valid, s_icache_flush_ready;
 snitch_icache_pkg::icache_l0_events_t [Cfg.NumCores-1:0] s_icache_l0_events;
 snitch_icache_pkg::icache_l1_events_t                    s_icache_l1_events;
@@ -477,16 +479,6 @@ AXI_BUS #(
 ) s_core_instr_bus();
 
 `AXI_TYPEDEF_ALL(instr_axi, logic[AddrWidth-1:0], logic[AxiIdInWidth-1:0], logic[Cfg.AxiDataOutWidth-1:0], logic[Cfg.AxiDataOutWidth/8-1:0], logic[Cfg.AxiUserWidth-1:0])
-
-instr_axi_req_t s_core_instr_bus_req;
-instr_axi_resp_t s_core_instr_bus_resp;
-
-always_comb begin
-  s_core_instr_bus.aw_addr = '0;
-  s_core_instr_bus.ar_addr = '0;
-  `AXI_SET_FROM_REQ(s_core_instr_bus, s_core_instr_bus_req)
-end
-`AXI_ASSIGN_TO_RESP(s_core_instr_bus_resp, s_core_instr_bus)
 
 // ***********************************************************************************************+
 // ***********************************************************************************************+
@@ -830,6 +822,8 @@ cluster_peripherals #(
   .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
   .flush_valid_o            ( s_icache_flush_valid              ),
   .flush_ready_i            ( s_icache_flush_ready              ),
+  .IC_ctrl_unit_bus_main    (  IC_ctrl_unit_bus_main            ),
+  .IC_ctrl_unit_bus_pri     (  IC_ctrl_unit_bus_pri             ),
   // .l0_events_i              ( s_icache_l0_events                ),
   .l1_events_i              ( s_icache_l1_events                )
 );
@@ -1078,6 +1072,7 @@ hmr_unit #(
   .InterleaveGrps    ( 1                                    ),
   .RapidRecovery     ( 1                                    ),
   .SeparateData      ( 1                                    ),
+  .SeparateAxiBus    ( 0                                    ),
   .NumBusVoters      ( 1                                    ),
   .all_inputs_t      ( core_inputs_t                        ),
   .nominal_outputs_t ( core_outputs_t                       ),
@@ -1114,7 +1109,8 @@ hmr_unit #(
   .core_setback_o         ( setback      ),
   .core_inputs_o          ( hmr2core     ),
   .core_nominal_outputs_i ( core2hmr     ),
-  .core_bus_outputs_i     ( '0           )
+  .core_bus_outputs_i     ( '0           ),
+  .core_axi_outputs_i     ( '0           )
 );
 
 //****************************************************
@@ -1244,42 +1240,183 @@ generate
   end
 endgenerate
 
-pulp_icache_wrap #(
-  .NumFetchPorts  ( Cfg.NumCores                                 ),
-  .L0_LINE_COUNT  ( Cfg.iCachePrivateSize*8/256                  ),
-  .LINE_WIDTH     ( 256                                          ), // Ideally 32*NumCores
-  .LINE_COUNT     ( Cfg.iCacheSharedSize*8/256/Cfg.iCacheNumWays ),
-  .SET_COUNT      ( Cfg.iCacheNumWays                            ),
-  .L1DataParityWidth ( 8 ),
-  .FetchAddrWidth ( AddrWidth                                    ),
-  .FetchDataWidth ( Cfg.iCachePrivateDataWidth                   ),
-  .AxiAddrWidth   ( AddrWidth                                    ),
-  .AxiDataWidth   ( Cfg.AxiDataOutWidth                          ),
-  .axi_req_t      ( instr_axi_req_t                              ),
-  .axi_rsp_t      ( instr_axi_resp_t                             )
-) icache_top_i (
-  .clk_i                ( clk_i                       ),
-  .rst_ni               ( rst_ni                      ),
+`ifdef SNITCH_ICACHE
+  instr_axi_req_t s_core_instr_bus_req;
+  instr_axi_resp_t s_core_instr_bus_resp;
 
-  .fetch_req_i          ( instr_req                   ),
-  .fetch_addr_i         ( instr_addr                  ),
-  .fetch_gnt_o          ( instr_gnt                   ),
-  .fetch_rvalid_o       ( instr_r_valid               ),
-  .fetch_rdata_o        ( instr_r_rdata               ),
-  .fetch_rerror_o       (),
+  always_comb begin
+    s_core_instr_bus.aw_addr = '0;
+    s_core_instr_bus.ar_addr = '0;
+    `AXI_SET_FROM_REQ(s_core_instr_bus, s_core_instr_bus_req)
+  end
+  `AXI_ASSIGN_TO_RESP(s_core_instr_bus_resp, s_core_instr_bus)
 
-  .enable_prefetching_i ( s_enable_l1_l15_prefetch ),
-  .icache_l0_events_o   ( s_icache_l0_events ),
-  .icache_l1_events_o   ( s_icache_l1_events ),
-  .flush_valid_i        ( s_icache_flush_valid ),
-  .flush_ready_o        ( s_icache_flush_ready ),
+  pulp_icache_wrap #(
+    .NumFetchPorts  ( Cfg.NumCores                                 ),
+    .L0_LINE_COUNT  ( Cfg.iCachePrivateSize*8/256                  ),
+    .LINE_WIDTH     ( 256                                          ), // Ideally 32*NumCores
+    .LINE_COUNT     ( Cfg.iCacheSharedSize*8/256/Cfg.iCacheNumWays ),
+    .SET_COUNT      ( Cfg.iCacheNumWays                            ),
+    .L1DataParityWidth ( 8 ),
+    .FetchAddrWidth ( AddrWidth                                    ),
+    .FetchDataWidth ( Cfg.iCachePrivateDataWidth                   ),
+    .AxiAddrWidth   ( AddrWidth                                    ),
+    .AxiDataWidth   ( Cfg.AxiDataOutWidth                          ),
+    .axi_req_t      ( instr_axi_req_t                              ),
+    .axi_rsp_t      ( instr_axi_resp_t                             )
+  ) icache_top_i (
+    .clk_i                ( clk_i                       ),
+    .rst_ni               ( rst_ni                      ),
 
-  .sram_cfg_data_i      ('0),
-  .sram_cfg_tag_i       ('0),
+    .fetch_req_i          ( instr_req                   ),
+    .fetch_addr_i         ( instr_addr                  ),
+    .fetch_gnt_o          ( instr_gnt                   ),
+    .fetch_rvalid_o       ( instr_r_valid               ),
+    .fetch_rdata_o        ( instr_r_rdata               ),
+    .fetch_rerror_o       (),
 
-  .axi_req_o            ( s_core_instr_bus_req  ),
-  .axi_rsp_i            ( s_core_instr_bus_resp )
-);
+    .enable_prefetching_i ( s_enable_l1_l15_prefetch[0] ),
+    .icache_l0_events_o   ( s_icache_l0_events ),
+    .icache_l1_events_o   ( s_icache_l1_events ),
+    .flush_valid_i        ( s_icache_flush_valid ),
+    .flush_ready_o        ( s_icache_flush_ready ),
+
+    .sram_cfg_data_i      ('0),
+    .sram_cfg_tag_i       ('0),
+
+    .axi_req_o            ( s_core_instr_bus_req  ),
+    .axi_rsp_i            ( s_core_instr_bus_resp )
+  );
+
+  for (genvar i = 0; i < Cfg.NumCores; i++) begin
+    assign IC_ctrl_unit_bus_pri[i].bypass_ack     = '0;
+    assign IC_ctrl_unit_bus_pri[i].flush_ack      = '0;
+    assign IC_ctrl_unit_bus_pri[i].sel_flush_ack  = '0;
+    `ifdef FEATURE_ICACHE_STAT
+      assign IC_ctrl_unit_bus_pri[i].ctrl_hit_count   = '0;
+      assign IC_ctrl_unit_bus_pri[i].ctrl_trans_count = '0;
+      assign IC_ctrl_unit_bus_pri[i].ctrl_miss_count  = '0;
+      assign IC_ctrl_unit_bus_pri[i].ctrl_cong_count  = '0;
+    `endif
+  end
+
+  for (genvar i = 0; i < Cfg.iCacheNumBanks; i++) begin
+    assign IC_ctrl_unit_bus_main[i].ctrl_flush_ack     = '0;
+    assign IC_ctrl_unit_bus_main[i].ctrl_ack_enable    = '0;
+    assign IC_ctrl_unit_bus_main[i].ctrl_ack_disable   = '0;
+    assign IC_ctrl_unit_bus_main[i].ctrl_pending_trans = '0;
+    assign IC_ctrl_unit_bus_main[i].sel_flush_ack      = '0;
+    `ifdef FEATURE_ICACHE_STAT
+      assign IC_ctrl_unit_bus_main[i].ctrl_hit_count   = '0;
+      assign IC_ctrl_unit_bus_main[i].ctrl_trans_count = '0;
+      assign IC_ctrl_unit_bus_main[i].ctrl_miss_count  = '0;
+    `endif
+  end
+`else
+  assign s_icache_flush_ready = '0;
+  assign s_icache_l0_events = '0;
+  assign s_icache_l1_events = '0;
+
+  icache_hier_top #(
+    .FETCH_ADDR_WIDTH     ( AddrWidth                  ), //= 32,
+    .PRI_FETCH_DATA_WIDTH ( Cfg.iCachePrivateDataWidth ), //= 128,   // Tested for 32 and 128
+    .SH_FETCH_DATA_WIDTH  ( 128                        ), //= 128,
+
+    .NB_CORES             ( Cfg.NumCores        ), //= 8,
+
+    .SH_NB_BANKS          ( Cfg.iCacheNumBanks  ), //= 1,
+    .SH_NB_WAYS           ( Cfg.iCacheNumWays   ), //= 4,
+    .SH_CACHE_SIZE        ( Cfg.iCacheSharedSize), //= 4*1024,  // in Byte
+    .SH_CACHE_LINE        ( Cfg.iCacheNumLines  ), //= 1,       // in word of [SH_FETCH_DATA_WIDTH]
+
+    .PRI_NB_WAYS          ( Cfg.iCacheNumWays   ), //= 4,
+    .PRI_CACHE_SIZE       ( Cfg.iCachePrivateSize), //= 512,     // in Byte
+    .PRI_CACHE_LINE       ( Cfg.iCacheNumLines  ), //= 1,       // in word of [PRI_FETCH_DATA_WIDTH]
+
+    .AXI_ID               ( AxiIdInWidth ), //= 6,
+    .AXI_ADDR             ( Cfg.AxiAddrWidth     ), //= 32,
+    .AXI_USER             ( Cfg.AxiUserWidth     ), //= 6,
+    .AXI_DATA             ( Cfg.AxiDataOutWidth  ), //= 64,
+
+    .USE_REDUCED_TAG      ( Cfg.EnableReducedTag ), //= "TRUE",  // TRUE | FALSE
+    .L2_SIZE              ( Cfg.L2Size            )  //= 512*1024 // Size of max(L2 ,ROM) program memory in Byte
+  ) icache_top_i (
+    .clk                       ( clk_i           ),
+    .rst_n                     ( rst_ni          ),
+    .test_en_i                 ( test_mode_i     ),
+
+    .fetch_req_i               ( instr_req       ),
+    .fetch_addr_i              ( instr_addr      ),
+    .fetch_gnt_o               ( instr_gnt       ),
+
+    .fetch_rvalid_o            ( instr_r_valid   ),
+    .fetch_rdata_o             ( instr_r_rdata   ),
+
+    .enable_l1_l15_prefetch_i  ( s_enable_l1_l15_prefetch ), // set it to 1 to use prefetch feature
+
+    //AXI read address bus -------------------------------------------
+    .axi_master_arid_o      ( s_core_instr_bus.ar_id     ),
+    .axi_master_araddr_o    ( s_core_instr_bus.ar_addr   ),
+    .axi_master_arlen_o     ( s_core_instr_bus.ar_len    ),  //burst length - 1 to 16
+    .axi_master_arsize_o    ( s_core_instr_bus.ar_size   ),  //size of each transfer in burst
+    .axi_master_arburst_o   ( s_core_instr_bus.ar_burst  ),  //accept only incr burst=01
+    .axi_master_arlock_o    ( s_core_instr_bus.ar_lock   ),  //only normal access supported axs_awlock=00
+    .axi_master_arcache_o   ( s_core_instr_bus.ar_cache  ),
+    .axi_master_arprot_o    ( s_core_instr_bus.ar_prot   ),
+    .axi_master_arregion_o  ( s_core_instr_bus.ar_region ), //
+    .axi_master_aruser_o    ( s_core_instr_bus.ar_user   ),  //
+    .axi_master_arqos_o     ( s_core_instr_bus.ar_qos    ),  //
+    .axi_master_arvalid_o   ( s_core_instr_bus.ar_valid  ),  //master addr valid
+    .axi_master_arready_i   ( s_core_instr_bus.ar_ready  ),  //slave ready to accept
+    // ---------------------------------------------------------------
+
+    //AXI BACKWARD read data bus ----------------------------------------------
+    .axi_master_rid_i       ( s_core_instr_bus.r_id     ),
+    .axi_master_rdata_i     ( s_core_instr_bus.r_data   ),
+    .axi_master_rresp_i     ( s_core_instr_bus.r_resp   ),
+    .axi_master_rlast_i     ( s_core_instr_bus.r_last   ), //last transfer in burst
+    .axi_master_ruser_i     ( s_core_instr_bus.r_user   ),
+    .axi_master_rvalid_i    ( s_core_instr_bus.r_valid  ), //slave data valid
+    .axi_master_rready_o    ( s_core_instr_bus.r_ready  ), //master ready to accept
+
+    // NOT USED ----------------------------------------------
+    .axi_master_awid_o      ( s_core_instr_bus.aw_id     ),
+    .axi_master_awaddr_o    ( s_core_instr_bus.aw_addr   ),
+    .axi_master_awlen_o     ( s_core_instr_bus.aw_len    ),
+    .axi_master_awsize_o    ( s_core_instr_bus.aw_size   ),
+    .axi_master_awburst_o   ( s_core_instr_bus.aw_burst  ),
+    .axi_master_awlock_o    ( s_core_instr_bus.aw_lock   ),
+    .axi_master_awcache_o   ( s_core_instr_bus.aw_cache  ),
+    .axi_master_awprot_o    ( s_core_instr_bus.aw_prot   ),
+    .axi_master_awregion_o  ( s_core_instr_bus.aw_region ),
+    .axi_master_awuser_o    ( s_core_instr_bus.aw_user   ),
+    .axi_master_awqos_o     ( s_core_instr_bus.aw_qos    ),
+    .axi_master_awvalid_o   ( s_core_instr_bus.aw_valid  ),
+    .axi_master_awready_i   ( s_core_instr_bus.aw_ready  ),
+
+    // NOT USED ----------------------------------------------
+    .axi_master_wdata_o     ( s_core_instr_bus.w_data   ),
+    .axi_master_wstrb_o     ( s_core_instr_bus.w_strb   ),
+    .axi_master_wlast_o     ( s_core_instr_bus.w_last   ),
+    .axi_master_wuser_o     ( s_core_instr_bus.w_user   ),
+    .axi_master_wvalid_o    ( s_core_instr_bus.w_valid  ),
+    .axi_master_wready_i    ( s_core_instr_bus.w_ready  ),
+    // ---------------------------------------------------------------
+
+    // NOT USED ----------------------------------------------
+    .axi_master_bid_i       ( s_core_instr_bus.b_id     ),
+    .axi_master_bresp_i     ( s_core_instr_bus.b_resp   ),
+    .axi_master_buser_i     ( s_core_instr_bus.b_user   ),
+    .axi_master_bvalid_i    ( s_core_instr_bus.b_valid  ),
+    .axi_master_bready_o    ( s_core_instr_bus.b_ready  ),
+    // ---------------------------------------------------------------
+
+    .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
+    .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
+  );
+
+  assign s_core_instr_bus.aw_atop = '0;
+`endif
 
 `REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[AddrWidth-1:0], logic[DataWidth-1:0], logic[BeWidth-1:0])
 
