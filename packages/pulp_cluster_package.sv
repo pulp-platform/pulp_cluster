@@ -150,7 +150,7 @@ package pulp_cluster_package;
 
   // number of master and slave cluster periphs
   parameter int unsigned NB_MPERIPHS =  1;
-  parameter int unsigned NB_SPERIPHS = 11;
+  parameter int unsigned NB_SPERIPHS = 12;
 
   // position of peripherals on slave port of periph interconnect
   parameter int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
@@ -163,8 +163,9 @@ package pulp_cluster_package;
   parameter int unsigned SPER_DMA_FC_ID        = 7;  // 0x1C00 - 0x2000
   parameter int unsigned SPER_HMR_UNIT_ID      = 8;  // 0x2000 - 0x2400
   parameter int unsigned SPER_TCDM_SCRUBBER_ID = 9;  // 0x2400 - 0x2800
-  parameter int unsigned SPER_EXT_ID           = 10; // -> unmapped, directed to error
-  parameter int unsigned SPER_ERROR_ID         = 11; // -> unmapped, directed to error
+  parameter int unsigned SPER_HWPE_HCI_ECC_ID  = 10; // 0x2800 - 0x3200
+  parameter int unsigned SPER_EXT_ID           = 11; // -> unmapped, directed to error
+  parameter int unsigned SPER_ERROR_ID         = 12; // -> unmapped, directed to error
 
   // The following parameters refer to the cluster AXI crossbar
   localparam byte_t NumAxiSubordinatePorts = 4;

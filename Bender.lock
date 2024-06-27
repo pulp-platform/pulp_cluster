@@ -108,15 +108,17 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 95636da243bc7a7d4777db8ea537899445145788
+    revision: e04701b05305cfdfa8a2fcac51c820c14bcfa07b
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
     - cluster_interconnect
+    - common_cells
     - hwpe-stream
     - l2_tcdm_hybrid_interco
     - redundancy_cells
+    - register_interface
   hier-icache:
     revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
     version: null

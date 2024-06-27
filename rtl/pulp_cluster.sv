@@ -382,6 +382,9 @@ XBAR_PERIPH_BUS s_periph_hmr_bus ();
 // periph interconnect -> TCDM scrubber
 XBAR_PERIPH_BUS s_periph_tcdm_scrubber_bus ();
 
+// periph interconnect -> HCI with ECC
+XBAR_PERIPH_BUS s_periph_hwpe_hci_ecc_bus ();
+
 // debug
 XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
 
@@ -659,6 +662,8 @@ cluster_interconnect_wrap #(
   .rst_ni             ( rst_ni                                    ),
   .cluster_id_i       ( '0                                        ),
 
+  .hci_ecc_periph_slave ( s_periph_hwpe_hci_ecc_bus               ),
+
   .core_tcdm_slave    ( s_hci_core                                ),
   .hwpe_tcdm_slave    ( s_hci_hwpe                                ),
   .ext_slave          ( s_hci_ext                                 ),
@@ -778,6 +783,7 @@ cluster_peripherals #(
   .dma_cfg_master         ( s_periph_dma_bus                   ),
   .hmr_cfg_master         ( s_periph_hmr_bus                   ),
   .tcdm_scrubber_cfg_master ( s_periph_tcdm_scrubber_bus       ),
+  .hwpe_hci_ecc_cfg_master ( s_periph_hwpe_hci_ecc_bus         ),
 
   .dma_cl_event_i         ( s_dma_cl_event                     ),
   .dma_cl_irq_i           ( s_dma_cl_irq                       ),
