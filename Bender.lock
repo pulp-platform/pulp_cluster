@@ -1,4 +1,11 @@
 packages:
+  apb:
+    revision: 77ddf073f194d44b9119949d2421be59789e69ae
+    version: 0.2.4
+    source:
+      Git: https://github.com/pulp-platform/apb.git
+    dependencies:
+    - common_cells
   axi:
     revision: 9402c8a9ce0a7b5253c3c29e788612d771e8b5d6
     version: 0.39.3
@@ -28,6 +35,13 @@ packages:
     version: 1.1.4
     source:
       Git: https://github.com/pulp-platform/axi_slice.git
+    dependencies:
+    - common_cells
+  axi_stream:
+    revision: 54891ff40455ca94a37641b9da4604647878cc07
+    version: 0.1.1
+    source:
+      Git: https://github.com/pulp-platform/axi_stream.git
     dependencies:
     - common_cells
   cluster_interconnect:
@@ -153,6 +167,18 @@ packages:
     source:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
+  idma:
+    revision: d6d7d99b67648e9b02e081c1504f8dd108a8d99b
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/iDMA.git
+    dependencies:
+    - axi
+    - axi_stream
+    - common_cells
+    - common_verification
+    - obi
+    - register_interface
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
     version: 1.0.0
@@ -166,6 +192,14 @@ packages:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
+  obi:
+    revision: 2ee698211db5c007bd0d207ebd646ce79f0472ec
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
   per2axi:
     revision: 892fcad60b6374fe558cbde76f4a529d473ba5ca
     version: 1.0.4
@@ -173,8 +207,18 @@ packages:
       Git: https://github.com/pulp-platform/per2axi.git
     dependencies:
     - axi_slice
+  register_interface:
+    revision: ae616e5a1ec2b41e72d200e5ab09c65e94aebd3d
+    version: 0.4.4
+    source:
+      Git: https://github.com/pulp-platform/register_interface.git
+    dependencies:
+    - apb
+    - axi
+    - common_cells
+    - common_verification
   riscv-nn:
-    revision: 0dfabc78b04173b24d9bf698e00b5192d1285773
+    revision: d0eefce98e259ad678d4863e2a8d8adc1fb4c4ea
     version: null
     source:
       Git: git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git

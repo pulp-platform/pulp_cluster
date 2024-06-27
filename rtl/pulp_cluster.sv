@@ -115,6 +115,7 @@ module pulp_cluster
   parameter int unsigned ADDR_MEM_WIDTH          = $clog2(TCDM_BANK_SIZE/4), // WORD address width per TCDM bank (the word width is 32 bits)
 
   // DMA parameters
+  parameter bit          IDMA                     = 1'b1,
   parameter int unsigned TCDM_ADD_WIDTH          = ADDR_MEM_WIDTH + $clog2(NB_TCDM_BANKS) + 2, // BYTE address width TCDM
   parameter int unsigned NB_OUTSND_BURSTS        = 8,
   parameter int unsigned MCHAN_BURST_LENGTH      = 256,
@@ -693,6 +694,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .TCDM_arb_policy_i  ( s_TCDM_arb_policy                   )
   );
 
+  if (!IDMA) begin
   //***************************************************
   //*********************DMAC WRAP*********************
   //***************************************************
@@ -731,6 +733,43 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .term_irq_o        ( s_dma_irq          ),
     .busy_o            ( s_dmac_busy        )
   );
+  end else begin // if (!IDMA)
+    
+    pulp_idma_wrap #(
+                .NB_CORES           ( NB_CORES           ),
+                .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),
+                .AXI_DATA_WIDTH     ( AXI_DATA_C2S_WIDTH ),
+                .AXI_USER_WIDTH     ( AXI_USER_WIDTH     ),
+                .AXI_ID_WIDTH       ( AXI_ID_IN_WIDTH    ),
+                .PE_ID_WIDTH        ( NB_CORES + 1       ),
+                .NB_PE_PORTS        ( 2                  ),
+                .NB_OUTSND_BURSTS   ( NB_OUTSND_BURSTS   ),
+                .DATA_WIDTH         ( DATA_WIDTH         ),
+                .ADDR_WIDTH         ( ADDR_WIDTH         ),
+                .NUM_BIDIR_STREAMS  ( 1                  ),
+                .BE_WIDTH           ( BE_WIDTH           ),
+                .GLOBAL_QUEUE_DEPTH ( 2                  ),
+                .MUX_READ           ( 1'b1               ),
+                .axi_req_t          ( c2s_in_req_t       ),
+                .axi_resp_t         ( c2s_in_resp_t      )
+  ) dmac_wrap_i (
+    .clk_i             ( clk_cluster        ),
+    .rst_ni            ( s_rst_n            ),
+    .test_mode_i       ( test_mode_i        ),
+    .ctrl_slave        ( s_core_dmactrl_bus ),
+    .pe_ctrl_slave     ( s_periph_dma_bus   ),
+    .tcdm_master       ( s_hci_dma          ),
+    .ext_master_req_o  ( {s_dma_ext_bus_req}  ),
+    .ext_master_resp_i ( {s_dma_ext_bus_resp} ),
+    .term_event_pe_o   ( {s_dma_cl_event, s_dma_fc_event} ),
+    .term_irq_pe_o     ( {s_dma_cl_irq, s_dma_pe_irq} ),
+    .term_event_o      ( s_dma_event        ),
+    .term_irq_o        ( s_dma_irq          ),
+    .busy_o            ( s_dmac_busy        )
+  );
+    
+  end // else: !if(!IDMA)
+  
 
   //***************************************************
   //**************CLUSTER PERIPHERALS******************

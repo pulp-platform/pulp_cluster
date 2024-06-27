@@ -38,7 +38,7 @@ module axi2per_wrap
   XBAR_TCDM_BUS.Master periph_master,
   output logic         busy_o
 );
-  
+
   axi2per #(
     .PER_ADDR_WIDTH        ( PER_ADDR_WIDTH        ),
     .PER_ID_WIDTH          ( PER_ID_WIDTH          ),

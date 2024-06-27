@@ -32,7 +32,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= b769aa3a146e8de295382f4b877b0e58c5b68a91
+NONFREE_COMMIT ?= 3dec8d43468e72584ff59c39d6572d7b1d40f89b
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -56,8 +56,8 @@ Bender.lock:
 ######
 # SW #
 ######
-RT_REV ?= 2a505d42ae246a414fbe2d088928fade83794de9
-TESTS_REV ?= 24957a36ec3b7dd6969106699e0bd983e6291c37
+RT_REV ?= 667eb3af971d75d1bbcd52ca1acb532756338c15
+TESTS_REV ?= fd111dc999ed33a61546f8f93ac7786b53517ab2
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
 	git clone https://github.com/pulp-platform/pulp-runtime.git $@
@@ -89,7 +89,7 @@ compile: $(library) scripts/compile.tcl
 	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
 
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized -debug
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc=nprt -debug
 
 
 run:
