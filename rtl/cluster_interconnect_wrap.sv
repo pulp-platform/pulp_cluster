@@ -75,7 +75,7 @@ module cluster_interconnect_wrap
   generate
     if( USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT ) begin : hci_gen
 
-      hci_interconnect #(
+      hci_ecc_interconnect #(
         .N_HWPE ( HWPE_PRESENT             ),
         .N_CORE ( NB_CORES                 ),
         .N_DMA  ( NB_DMAS                  ),
