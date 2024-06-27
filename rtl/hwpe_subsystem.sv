@@ -161,8 +161,14 @@ module hwpe_subsystem
 
       // TEMP: softex doesn't yet support ECC-HCI internally
       hci_ecc_enc #(
-        .`HCI_SIZE_PARAM(tcdm_target) ( `HCI_SIZE_PARAM(tcdm_softex) )
+        .DW ( DW ),
+        .`HCI_SIZE_PARAM(tcdm_target)    ( `HCI_SIZE_PARAM(tcdm_softex) ),
+        .`HCI_SIZE_PARAM(tcdm_initiator) ( HCI_HWPE_SIZE )
       ) i_ecc_softex_enc (
+        .r_data_single_err_o (  ),
+        .r_data_multi_err_o  (  ),
+        .r_meta_single_err_o (  ),
+        .r_meta_multi_err_o  (  ),
         .tcdm_target         ( tcdm_softex ),
         .tcdm_initiator      ( tcdm[i]     )
       );
