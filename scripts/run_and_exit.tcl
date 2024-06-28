@@ -11,7 +11,13 @@ if {![info exists VSIM]} {
     set VSIM vsim
 }
 
-$VSIM +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify -t 1ps pulp_cluster_tb_optimized +permissive-off ++./build/test/test
+if {[info exists ::env(VSIM_RUNNER_FLAGS)]} {
+    set VSIM_RUNNER_FLAGS_TCL $::env(VSIM_RUNNER_FLAGS)
+} else {
+    set VSIM_RUNNER_FLAGS_TCL ""
+}
+
+$VSIM $VSIM_RUNNER_FLAGS_TCL +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify -t 1ps pulp_cluster_tb_optimized +permissive-off ++./build/test/test
 
 add log -r /*
 

@@ -17,6 +17,9 @@ bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 CFLAGS ?= -I$(QUESTASIM_HOME)/include \
 					-I$(RISCV)/include/ \
 					-I/include -std=c++11 -I../tb/dpi -O3
+ifeq ($(LEGACY_DMA), 1)
+compile_flag = -gIDMA=0
+endif
 
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
 XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
@@ -56,8 +59,8 @@ Bender.lock:
 ######
 # SW #
 ######
-RT_REV ?= 667eb3af971d75d1bbcd52ca1acb532756338c15
-TESTS_REV ?= fd111dc999ed33a61546f8f93ac7786b53517ab2
+RT_REV ?= fc79aa1006a1f0b0d47c7cd4d2fd3b0db05ca659
+TESTS_REV ?= 2011bae9d43af1566c97dd78a094329983031e55
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
 	git clone https://github.com/pulp-platform/pulp-runtime.git $@

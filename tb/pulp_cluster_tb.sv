@@ -24,7 +24,9 @@ import "DPI-C" function read_elf(input string filename);
 import "DPI-C" function byte get_section(output longint address, output longint len);
 import "DPI-C" context function byte read_section(input longint address, inout byte buffer[], input longint len);
 
-module pulp_cluster_tb;
+module pulp_cluster_tb #(
+                         parameter bit IDMA=1'b1
+                         );
    
   import uvm_pkg::*;
   import axi_pkg::*;
@@ -306,7 +308,8 @@ module pulp_cluster_tb;
     .ADDR_WIDTH                   ( 32                       ),
     .LOG_CLUSTER                  ( 3                        ),
     .PE_ROUTING_LSB               ( 10                       ),
-    .EVNT_WIDTH                   ( 8                        )
+    .EVNT_WIDTH                   ( 8                        ),
+    .IDMA                         ( IDMA                     )
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
@@ -397,7 +400,7 @@ module pulp_cluster_tb;
       end
     end
 
-  endtask // load_binary
+  endtask : load_binary
 
   AXI_BUS_DV #(
       .AXI_ADDR_WIDTH(AxiAw ),
@@ -510,4 +513,4 @@ module pulp_cluster_tb;
   end // initial begin
    
    
-endmodule // pulp_cluster_tb
+endmodule : pulp_cluster_tb
