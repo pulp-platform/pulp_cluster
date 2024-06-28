@@ -59,8 +59,8 @@ Bender.lock:
 ######
 # SW #
 ######
-RT_REV ?= fc79aa1006a1f0b0d47c7cd4d2fd3b0db05ca659
-TESTS_REV ?= 2011bae9d43af1566c97dd78a094329983031e55
+RT_REV ?= 33bef97df3ef0845d60bfbd63a57035044240979
+TESTS_REV ?= 0104286089b07dd8c8ff0cee72b520945792179c
 ## Clone pulp-runtime as SW stack
 pulp-runtime:
 	git clone https://github.com/pulp-platform/pulp-runtime.git $@
