@@ -1258,6 +1258,7 @@ endgenerate
     .LINE_COUNT     ( Cfg.iCacheSharedSize*8/256/Cfg.iCacheNumWays ),
     .SET_COUNT      ( Cfg.iCacheNumWays                            ),
     .L1DataParityWidth ( 8 ),
+    .L0DataParityWidth ( 8 ),
     .FetchAddrWidth ( AddrWidth                                    ),
     .FetchDataWidth ( Cfg.iCachePrivateDataWidth                   ),
     .AxiAddrWidth   ( AddrWidth                                    ),
