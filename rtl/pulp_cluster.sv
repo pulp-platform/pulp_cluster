@@ -1079,6 +1079,9 @@ hmr_unit #(
   .core_backup_t     ( core_backup_t                        ),
   .reg_req_t         ( hmr_reg_req_t                        ),
   .reg_rsp_t         ( hmr_reg_rsp_t                        ),
+  // We use any axi_req_t to just let the unit not complain about
+  // undeclared r_ready and b_ready signals.
+  .axi_req_t         ( instr_axi_req_t                      ),
   .rapid_recovery_t  ( rapid_recovery_pkg::rapid_recovery_t )
 ) i_hmr_unit         (
   .clk_i                  ( clk_i        ),
