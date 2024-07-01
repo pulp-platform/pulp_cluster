@@ -59,7 +59,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= ad58d90
+NONFREE_COMMIT ?= 06cb2203
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
