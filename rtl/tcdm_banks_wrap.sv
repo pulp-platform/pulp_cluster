@@ -70,7 +70,8 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         .clk( clk_i )
       );
 
-      logic meta_single_err, meta_multi_err;
+      logic meta_single_err_d, meta_single_err_q;
+      logic meta_multi_err_d, meta_multi_err_q;
       logic valid_handshake;
 
       assign valid_handshake = tcdm_slave[i].req & tcdm_slave[i].gnt;
@@ -89,17 +90,26 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
       assign tcdm_slave_dec.r_id = resp_id_q;
 
       hci_ecc_dec #(
-        .DW                           ( DataWidth    ),
         .`HCI_SIZE_PARAM(tcdm_target) ( HCI_MEM_SIZE ),
         .EnableData                   ( 0            )
       ) i_ecc_dec_meta (
         .data_single_err_o (  ),
         .data_multi_err_o  (  ),
-        .meta_single_err_o ( meta_single_err ),
-        .meta_multi_err_o  ( meta_multi_err  ),
-        .tcdm_target       ( tcdm_slave[i]   ),
-        .tcdm_initiator    ( tcdm_slave_dec  )
+        .meta_single_err_o ( meta_single_err_d ),
+        .meta_multi_err_o  ( meta_multi_err_d  ),
+        .tcdm_target       ( tcdm_slave[i]     ),
+        .tcdm_initiator    ( tcdm_slave_dec    )
       );
+
+      always_ff @(posedge clk_i or negedge rst_ni) begin : ecc_error_pipe
+        if(~rst_ni) begin
+          meta_single_err_q <= '0;
+          meta_multi_err_q  <= '0;
+        end else begin
+          meta_single_err_q <= meta_single_err_d;
+          meta_multi_err_q  <= meta_multi_err_d;
+        end
+      end
 
       ecc_sram      #(
         .NumWords         ( BankSize       ),
@@ -126,8 +136,8 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         .multi_error_o         (  )
       );
 
-      assign ecc_single_error_o[i]   = meta_single_err & valid_handshake;
-      assign ecc_multiple_error_o[i] = meta_multi_err & valid_handshake;
+      assign ecc_single_error_o[i]   = meta_single_err_q & valid_handshake;
+      assign ecc_multiple_error_o[i] = meta_multi_err_q & valid_handshake;
 
     end else begin: gen_ecc_banks_only
 
