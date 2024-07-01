@@ -694,7 +694,7 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .TCDM_arb_policy_i  ( s_TCDM_arb_policy                   )
   );
 
-  if (!IDMA) begin
+  if (!IDMA) begin : inst_mchan
   //***************************************************
   //*********************DMAC WRAP*********************
   //***************************************************
@@ -733,8 +733,9 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
     .term_irq_o        ( s_dma_irq          ),
     .busy_o            ( s_dmac_busy        )
   );
-  end else begin // if (!IDMA)
-    
+
+  end else begin : inst_idma // if (!IDMA)
+
     pulp_idma_wrap #(
                 .NB_CORES           ( NB_CORES           ),
                 .AXI_ADDR_WIDTH     ( AXI_ADDR_WIDTH     ),

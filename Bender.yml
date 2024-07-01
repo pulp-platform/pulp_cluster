@@ -32,7 +32,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
   hwpe-datamover-example: { git: "https://github.com/pulp-platform/hwpe-datamover-example.git", version: 1.0.1 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", version: 1.0.8 }
-  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "d6d7d99b67648e9b02e081c1504f8dd108a8d99b" }
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "e411fe736803a89c53a68f8c5975a37f29ffce1b" }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: "2ee698211db5c007bd0d207ebd646ce79f0472ec" }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git",  version: 0.4.3  }
 
