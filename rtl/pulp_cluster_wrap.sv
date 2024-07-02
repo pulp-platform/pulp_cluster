@@ -19,7 +19,7 @@ package pulp_cluster_wrap_package;
 
   localparam int unsigned AxiIdInWidth = pulp_cluster_package::AxiSubordinateIdwidth;
   localparam int unsigned AxiIdOutWidth = pulp_cluster_package::AxiManagerIdwidth;
-  // CDC AXI parameters (external to cluster)
+  // CDC AXI parameters (external to cluster, narrow)
   localparam int unsigned AwInWidth = axi_pkg::aw_width(Cfg.AxiAddrWidth,
                                                         Cfg.AxiIdInWidth,
                                                         Cfg.AxiUserWidth);
@@ -38,7 +38,7 @@ package pulp_cluster_wrap_package;
   localparam int unsigned AsyncInBDataWidth  = (2**Cfg.AxiCdcLogDepth)*BInWidth;
   localparam int unsigned AsyncInArDatawidth = (2**Cfg.AxiCdcLogDepth)*ArInWidth;
   localparam int unsigned AsyncInRDataWidth  = (2**Cfg.AxiCdcLogDepth)*RInWidth;
-  // CDC AXI parameters (cluster to external)
+  // CDC AXI parameters (cluster to external, narrow)
   localparam int unsigned AwOutWidth = axi_pkg::aw_width(Cfg.AxiAddrWidth,
                                                          Cfg.AxiIdOutWidth,
                                                          Cfg.AxiUserWidth);
@@ -58,6 +58,25 @@ package pulp_cluster_wrap_package;
   localparam int unsigned AsyncOutArDataWidth = (2**Cfg.AxiCdcLogDepth)*ArOutWidth;
   localparam int unsigned AsyncOutRDataWidth  = (2**Cfg.AxiCdcLogDepth)*ROutWidth;
   localparam int unsigned AsyncEventDataWidth = (2**Cfg.AxiCdcLogDepth)*EventWidth;
+  // CDC AXI parameters (cluster to external, wide)
+  localparam int unsigned AwOutWideWidth = axi_pkg::aw_width(Cfg.AxiAddrWidth,
+                                                             Cfg.AxiIdOutWideWidth,
+                                                             Cfg.AxiUserWidth);
+  localparam int unsigned WOutWideWidth = axi_pkg::w_width(Cfg.AxiDataOutWideWidth,
+                                                           Cfg.AxiUserWidth);
+  localparam int unsigned BOutWideWidth = axi_pkg::b_width(Cfg.AxiIdOutWideWidth,
+                                                           Cfg.AxiUserWidth);
+  localparam int unsigned ArOutWideWidth = axi_pkg::ar_width(Cfg.AxiAddrWidth,
+                                                             Cfg.AxiIdOutWideWidth,
+                                                             Cfg.AxiUserWidth);
+  localparam int unsigned ROutWideWidth = axi_pkg::r_width(Cfg.AxiDataOutWideWidth,
+                                                           Cfg.AxiIdOutWideWidth,
+                                                           Cfg.AxiUserWidth);
+  localparam int unsigned AsyncOutAwWideDataWidth = (2**Cfg.AxiCdcLogDepth)*AwOutWideWidth;
+  localparam int unsigned AsyncOutWWideDataWidth  = (2**Cfg.AxiCdcLogDepth)*WOutWideWidth;
+  localparam int unsigned AsyncOutBWideDataWidth  = (2**Cfg.AxiCdcLogDepth)*BOutWideWidth;
+  localparam int unsigned AsyncOutArWideDataWidth = (2**Cfg.AxiCdcLogDepth)*ArOutWideWidth;
+  localparam int unsigned AsyncOutRWideDataWidth  = (2**Cfg.AxiCdcLogDepth)*ROutWideWidth;
 endpackage
 
 module pulp_cluster_wrap (
@@ -75,6 +94,7 @@ module pulp_cluster_wrap (
   output logic                                                      busy_o,
   input  logic                                                      axi_isolate_i,
   output logic                                                      axi_isolated_o,
+  output logic                                                      axi_isolated_wide_o,
   input  logic                                                      dma_pe_evt_ack_i,
   output logic                                                      dma_pe_evt_valid_o,
   input  logic                                                      dma_pe_irq_ack_i,
@@ -86,7 +106,7 @@ module pulp_cluster_wrap (
   input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]    async_cluster_events_wptr_i,
   output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]    async_cluster_events_rptr_o,
   input  logic [pulp_cluster_wrap_package::AsyncEventDataWidth-1:0] async_cluster_events_data_i,
-  // AXI4 SLAVE
+  // AXI4 SLAVE Narrow
   //***************************************
   // WRITE ADDRESS CHANNEL
   input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]   async_data_slave_aw_wptr_i,
@@ -108,7 +128,7 @@ module pulp_cluster_wrap (
   output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]  async_data_slave_b_wptr_o,
   output logic [pulp_cluster_wrap_package::AsyncInBDataWidth-1:0] async_data_slave_b_data_o,
   input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]  async_data_slave_b_rptr_i,
-  // AXI4 MASTER
+  // AXI4 MASTER Narrow
   //***************************************
   // WRITE ADDRESS CHANNEL
   output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]    async_data_master_aw_wptr_o,
@@ -129,7 +149,33 @@ module pulp_cluster_wrap (
   // WRITE RESPONSE CHANNEL
   input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]   async_data_master_b_wptr_i,
   input  logic [pulp_cluster_wrap_package::AsyncOutBDataWidth-1:0] async_data_master_b_data_i,
-  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]   async_data_master_b_rptr_o
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]   async_data_master_b_rptr_o,
+ // AXI4 MASTER Wide
+ //**************************************
+ // WRITE ADDRESS CHANNEL
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_aw_wptr_o,
+  output logic [pulp_cluster_wrap_package::AsyncOutAwWideDataWidth-1:0] async_wide_master_aw_data_o,
+  input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_aw_rptr_i,
+
+  // READ ADDRESS CHANNEL
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_ar_wptr_o,
+  output logic [pulp_cluster_wrap_package::AsyncOutArWideDataWidth-1:0] async_wide_master_ar_data_o,
+  input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_ar_rptr_i,
+
+  // WRITE DATA CHANNEL
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_w_wptr_o,
+  output logic [pulp_cluster_wrap_package::AsyncOutWWideDataWidth-1:0]  async_wide_master_w_data_o,
+  input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_w_rptr_i,
+
+  // READ DATA CHANNEL
+  input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_r_wptr_i,
+  input  logic [pulp_cluster_wrap_package::AsyncOutRWideDataWidth-1:0]  async_wide_master_r_data_i,
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_r_rptr_o,
+
+  // WRITE RESPONSE CHANNEL
+  input  logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_b_wptr_i,
+  input  logic [pulp_cluster_wrap_package::AsyncOutBWideDataWidth-1:0]  async_wide_master_b_data_i,
+  output logic [pulp_cluster_wrap_package::Cfg.AxiCdcLogDepth:0]        async_wide_master_b_rptr_o
 );
 
   pulp_cluster #( .Cfg(pulp_cluster_wrap_package::Cfg) ) pulp_cluster_i (
@@ -139,6 +185,7 @@ module pulp_cluster_wrap (
     .ref_clk_i,
     .axi_isolate_i ( '0 ),
     .axi_isolated_o,
+    .axi_isolated_wide_o,
     .pmu_mem_pwdn_i ( 1'b0 ),
     .base_addr_i,
     .dma_pe_evt_ack_i ( '1 ),
@@ -189,6 +236,21 @@ module pulp_cluster_wrap (
     .async_data_slave_r_data_o,
     .async_data_slave_b_wptr_o,
     .async_data_slave_b_rptr_i,
-    .async_data_slave_b_data_o
+    .async_data_slave_b_data_o,
+    .async_wide_master_aw_wptr_o,
+    .async_wide_master_aw_data_o,
+    .async_wide_master_aw_rptr_i,
+    .async_wide_master_ar_wptr_o,
+    .async_wide_master_ar_data_o,
+    .async_wide_master_ar_rptr_i,
+    .async_wide_master_w_wptr_o,
+    .async_wide_master_w_data_o,
+    .async_wide_master_w_rptr_i,
+    .async_wide_master_r_wptr_i,
+    .async_wide_master_r_data_i,
+    .async_wide_master_r_rptr_o,
+    .async_wide_master_b_wptr_i,
+    .async_wide_master_b_data_i,
+    .async_wide_master_b_rptr_o
   );
 endmodule

@@ -31,7 +31,6 @@ module cluster_bus_wrap
   parameter int unsigned                AXI_ID_IN_WIDTH        = 4 ,
   parameter int unsigned                AXI_ID_OUT_WIDTH       = 6 ,
   parameter int unsigned                AXI_USER_WIDTH         = 6 ,
-  parameter int unsigned                DMA_NB_OUTSND_BURSTS   = 8 ,
   parameter int unsigned                TCDM_SIZE              = 0,
   parameter logic [AXI_ADDR_WIDTH-1:0]  BaseAddr               = 'h10000000,
   parameter logic [AXI_ADDR_WIDTH-1:0]  ClusterPeripheralsOffs = 'h00200000,
@@ -59,8 +58,6 @@ module cluster_bus_wrap
   output slave_resp_t  data_slave_resp_o,
   input  slave_req_t   instr_slave_req_i,
   output slave_resp_t  instr_slave_resp_o,
-  input  slave_req_t   dma_slave_req_i,
-  output slave_resp_t  dma_slave_resp_o,
   input  slave_req_t   ext_slave_req_i,
   output slave_resp_t  ext_slave_resp_o,
   //INITIATOR
@@ -92,10 +89,8 @@ module cluster_bus_wrap
   `AXI_ASSIGN_RESP_STRUCT(data_slave_resp_o, axi_slave_resps[0])
   `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[1], instr_slave_req_i)
   `AXI_ASSIGN_RESP_STRUCT(instr_slave_resp_o, axi_slave_resps[1])
-  `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[2], dma_slave_req_i)
-  `AXI_ASSIGN_RESP_STRUCT(dma_slave_resp_o, axi_slave_resps[2])
-  `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[3], ext_slave_req_i)
-  `AXI_ASSIGN_RESP_STRUCT(ext_slave_resp_o, axi_slave_resps[3])
+  `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[2], ext_slave_req_i)
+  `AXI_ASSIGN_RESP_STRUCT(ext_slave_resp_o, axi_slave_resps[2])
 
   master_req_t [NB_MASTER-1:0] axi_master_reqs;
   master_resp_t [NB_MASTER-1:0] axi_master_resps;
@@ -142,15 +137,14 @@ module cluster_bus_wrap
     end_addr:   cluster_base_addr
   };
     
-  localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
-                                                    DMA_NB_OUTSND_BURSTS : NB_CORES;
+  localparam int unsigned MAX_TXNS_PER_SLV_PORT = NB_CORES;
 
   localparam xbar_cfg_t AXI_XBAR_CFG = '{
                                           NoSlvPorts: NB_SLAVE,
                                           NoMstPorts: NB_MASTER,
                                           MaxMstTrans: MAX_TXNS_PER_SLV_PORT,       //The TCDM ports do not support
                                           //outstanding transactiions anyways
-                                          MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
+                                          MaxSlvTrans: NB_CORES,       //Allow up to 4 in-flight transactions
                                           //per slave port
                                           FallThrough: 1'b0,       //Use the reccomended default config 
                                           LatencyMode: axi_pkg::NO_LATENCY, // CUT_ALL_AX | axi_pkg::DemuxW,
