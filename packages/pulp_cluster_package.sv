@@ -144,12 +144,16 @@ package pulp_cluster_package;
     byte_t AxiIdInWidth;
     // AXI ID width of crossbar manager ports
     byte_t AxiIdOutWidth;
+    // AXI ID width of wide external to cluster port
+    byte_t AxiIdOutWideWidth;
     // AXI address width
     byte_t AxiAddrWidth;
-    // AXI data width from external to cluster
+    // AXI data width from external to cluster (narrow)
     byte_t AxiDataInWidth;
-    // AXI data width from cluster to external
+    // AXI data width from cluster to external (narrow)
     byte_t AxiDataOutWidth;
+    // AXI data width from cluster to external (wide)
+    word_t AxiDataOutWideWidth;
     // AXI user width
     byte_t AxiUserWidth;
     // AXI maximum subordinate transaction per ID
@@ -196,7 +200,7 @@ package pulp_cluster_package;
   localparam int unsigned SPER_ERROR_ID         = 12; // -> unmapped, directed to error
 
   // The following parameters refer to the cluster AXI crossbar
-  localparam byte_t NumAxiSubordinatePorts = 4;
+  localparam byte_t NumAxiSubordinatePorts = 3;
   localparam byte_t NumAxiManagerPorts = 3;
   localparam byte_t AxiSubordinateIdwidth = 4;
   localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
@@ -251,10 +255,12 @@ package pulp_cluster_package;
     NumAxiIn: NumAxiSubordinatePorts,
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiSubordinateIdwidth,
-    AxiIdOutWidth:AxiManagerIdwidth,
+    AxiIdOutWidth: AxiManagerIdwidth,
+    AxiIdOutWideWidth: 1,
     AxiAddrWidth: 48,
     AxiDataInWidth: 64,
     AxiDataOutWidth: 64,
+    AxiDataOutWideWidth: 128,
     AxiUserWidth: 10,
     AxiMaxInTrans: 64,
     AxiMaxOutTrans: 64,
