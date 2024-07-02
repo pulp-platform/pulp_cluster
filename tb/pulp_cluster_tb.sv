@@ -49,12 +49,15 @@ module pulp_cluster_tb;
   localparam AxiAw  = 32;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
-  localparam NMst   = 2;
+  localparam NMst   = 3;
   localparam NSlv   = 3;
   localparam AxiIwMst = AxiIw + $clog2(NMst);
   localparam AxiWideBeWidth = AxiDw/8;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
   localparam AxiUw = 10;
+
+  localparam DmaAxiDw = 64;
+  localparam DmaAxiIw = 1;
 
   localparam bit[AxiAw-1:0] ClustBase       = 'h10000000;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
@@ -73,23 +76,42 @@ module pulp_cluster_tb;
   typedef logic [AxiIw-1:0]    axi_id_t;
   typedef logic [AxiIwMst-1:0] axi_m_id_t;
 
+  typedef logic [DmaAxiDw-1:0]   dma_axi_data_t;
+  typedef logic [DmaAxiDw/8-1:0] dma_axi_strb_t;
+  typedef logic [DmaAxiIw-1:0]   dma_axi_id_t;
+
+  // Narrow AXI port type
   `AXI_TYPEDEF_W_CHAN_T(w_chan_t, axi_data_t, axi_strb_t, axi_user_t)
   `AXI_TYPEDEF_AW_CHAN_T(aw_chan_t, axi_addr_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_B_CHAN_T(b_chan_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_AR_CHAN_T(ar_chan_t, axi_addr_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_R_CHAN_T(r_chan_t, axi_data_t, axi_id_t, axi_user_t)
+
   `AXI_TYPEDEF_REQ_T(axi_req_t, aw_chan_t, w_chan_t, ar_chan_t)
   `AXI_TYPEDEF_RESP_T(axi_resp_t, b_chan_t, r_chan_t)
 
+  // Wide AXI port type
+  `AXI_TYPEDEF_W_CHAN_T(dma_w_chan_t, dma_axi_data_t, dma_axi_strb_t, axi_user_t)
+  `AXI_TYPEDEF_AW_CHAN_T(dma_aw_chan_t, axi_addr_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_B_CHAN_T(dma_b_chan_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_AR_CHAN_T(dma_ar_chan_t, axi_addr_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_R_CHAN_T(dma_r_chan_t, dma_axi_data_t, dma_axi_id_t, axi_user_t)
+
+  `AXI_TYPEDEF_REQ_T(dma_axi_req_t, aw_chan_t, dma_w_chan_t, ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(dma_axi_resp_t, b_chan_t, dma_r_chan_t)
+
+  // Memory-side AXI port type
   `AXI_TYPEDEF_AW_CHAN_T(aw_m_chan_t, axi_addr_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_B_CHAN_T(b_m_chan_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_AR_CHAN_T(ar_m_chan_t, axi_addr_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_R_CHAN_T(r_m_chan_t, axi_data_t, axi_m_id_t, axi_user_t)
+
   `AXI_TYPEDEF_REQ_T(axi_m_req_t, aw_m_chan_t, w_chan_t, ar_m_chan_t)
   `AXI_TYPEDEF_RESP_T(axi_m_resp_t, b_m_chan_t, r_m_chan_t)
 
   typedef logic [AxiAw-1:0] addr_t;
   typedef logic [AxiDw-1:0] data_t;
+  typedef logic [DmaAxiDw-1:0] dma_data_t;
   data_t memory [bit [31:0]];
   int sections  [bit [31:0]];
 
@@ -112,13 +134,27 @@ module pulp_cluster_tb;
       .AXI_DATA_WIDTH( AxiDw ),
       .AXI_ID_WIDTH  ( AxiIw ),
       .AXI_USER_WIDTH( AxiUw )
-  ) axi_slave[NMst-1:0]();
+    ) axi_slave[NMst-1:0]();
 
   AXI_BUS #(
-      .AXI_ADDR_WIDTH( AxiAw   ),
-      .AXI_DATA_WIDTH( AxiDw   ),
-      .AXI_ID_WIDTH  ( AxiIw-2 ),
-      .AXI_USER_WIDTH( AxiUw   )
+    .AXI_ADDR_WIDTH( AxiAw    ),
+    .AXI_DATA_WIDTH( DmaAxiDw ),
+    .AXI_ID_WIDTH  ( DmaAxiIw ),
+    .AXI_USER_WIDTH( AxiUw )
+  ) dma_slave();
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH( AxiAw ),
+    .AXI_DATA_WIDTH( DmaAxiDw ),
+    .AXI_ID_WIDTH  ( AxiIw ),
+    .AXI_USER_WIDTH( AxiUw )
+  ) dma_slave_iw();
+
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH( AxiAw   ),
+    .AXI_DATA_WIDTH( AxiDw   ),
+    .AXI_ID_WIDTH  ( AxiIw-2 ),
+    .AXI_USER_WIDTH( AxiUw   )
   ) soc_to_cluster_axi_bus();
 
   AXI_BUS_ASYNC_GRAY #(
@@ -130,12 +166,20 @@ module pulp_cluster_tb;
   ) async_soc_to_cluster_axi_bus();
 
   AXI_BUS_ASYNC_GRAY #(
-     .AXI_ADDR_WIDTH ( AxiAw ),
-     .AXI_DATA_WIDTH ( AxiDw ),
-     .AXI_ID_WIDTH   ( AxiIw ),
-     .AXI_USER_WIDTH ( AxiUw ),
-     .LOG_DEPTH      ( 3     )
+    .AXI_ADDR_WIDTH ( AxiAw ),
+    .AXI_DATA_WIDTH ( AxiDw ),
+    .AXI_ID_WIDTH   ( AxiIw ),
+    .AXI_USER_WIDTH ( AxiUw ),
+    .LOG_DEPTH      ( 3     )
   ) async_cluster_to_soc_axi_bus();
+  
+  AXI_BUS_ASYNC_GRAY #(
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_ID_WIDTH   ( DmaAxiIw ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .LOG_DEPTH      ( 3        )
+  ) async_dma_axi_bus();
 
    // Behavioural slaves
    axi_m_req_t  axi_memreq;
@@ -143,6 +187,38 @@ module pulp_cluster_tb;
 
   `AXI_ASSIGN_TO_REQ(axi_memreq, axi_master[1])
   `AXI_ASSIGN_FROM_RESP(axi_master[1], axi_memrsp)
+
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AxiIw    ),
+    .AXI_ADDR_WIDTH          ( AxiAw    ),
+    .AXI_SLV_PORT_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_MST_PORT_DATA_WIDTH ( AxiDw    ),
+    .AXI_USER_WIDTH          ( AxiUw    ),
+    .AXI_MAX_READS           ( 3        )
+  ) i_dma_dw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave_iw ),
+    .mst    ( axi_slave[2] )
+  );
+
+  axi_iw_converter_intf #(
+    .AXI_SLV_PORT_ID_WIDTH        ( DmaAxiIw ),
+    .AXI_MST_PORT_ID_WIDTH        ( AxiIw    ),
+    .AXI_SLV_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS        ( 5        ),
+    .AXI_MST_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_MST_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_ADDR_WIDTH               ( AxiAw    ),
+    .AXI_DATA_WIDTH               ( DmaAxiDw ),
+    .AXI_USER_WIDTH               ( AxiUw    )
+  ) i_dma_iw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave    ),
+    .mst    ( dma_slave_iw )
+  );
 
   axi_sim_mem #(
     .AddrWidth ( AxiAw        ),
@@ -279,11 +355,24 @@ module pulp_cluster_tb;
     .AXI_ID_WIDTH   ( AxiIw ),
     .AXI_USER_WIDTH ( AxiUw ),
     .LOG_DEPTH      ( 3     )
-    ) cluster_to_soc_dst_cdc_fifo_i (
+  ) cluster_to_soc_dst_cdc_fifo_i (
       .dst_clk_i  ( s_clk                        ),
       .dst_rst_ni ( s_rstn                       ),
       .src        ( async_cluster_to_soc_axi_bus ),
       .dst        ( axi_slave[1]                 )
+      );
+
+  axi_cdc_dst_intf   #(
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_ID_WIDTH   ( DmaAxiIw ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .LOG_DEPTH      ( 3        )
+  ) cluster_to_soc_dma_dst_cdc_fifo_i (
+      .dst_clk_i  ( s_clk             ),
+      .dst_rst_ni ( s_rstn            ),
+      .src        ( async_dma_axi_bus ),
+      .dst        ( dma_slave         )
       );
 
   localparam pulp_cluster_cfg_t PulpClusterCfg = '{
@@ -331,10 +420,12 @@ module pulp_cluster_tb;
     NumAxiIn: NumAxiSubordinatePorts,
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiIw-2,
-    AxiIdOutWidth:AxiIw,
+    AxiIdOutWidth: AxiIw,
+    AxiIdOutWideWidth: 1,
     AxiAddrWidth: AxiAw,
     AxiDataInWidth: AxiDw,
     AxiDataOutWidth: AxiDw,
+    AxiDataOutWideWidth: DmaAxiDw,
     AxiUserWidth: AxiUw,
     AxiMaxInTrans: 64,
     AxiMaxOutTrans: 64,
@@ -362,6 +453,7 @@ module pulp_cluster_tb;
     .ref_clk_i                   ( s_clk                                ),
     .axi_isolate_i               ( '0                                   ),
     .axi_isolated_o              (                                      ),
+    .axi_isolated_wide_o         (                                      ),
 
     .pmu_mem_pwdn_i              ( 1'b0                                 ),
 
@@ -405,6 +497,22 @@ module pulp_cluster_tb;
     .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
     .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
     .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
+
+    .async_wide_master_aw_wptr_o ( async_dma_axi_bus.aw_wptr ),
+    .async_wide_master_aw_rptr_i ( async_dma_axi_bus.aw_rptr ),
+    .async_wide_master_aw_data_o ( async_dma_axi_bus.aw_data ),
+    .async_wide_master_ar_wptr_o ( async_dma_axi_bus.ar_wptr ),
+    .async_wide_master_ar_rptr_i ( async_dma_axi_bus.ar_rptr ),
+    .async_wide_master_ar_data_o ( async_dma_axi_bus.ar_data ),
+    .async_wide_master_w_data_o  ( async_dma_axi_bus.w_data  ),
+    .async_wide_master_w_wptr_o  ( async_dma_axi_bus.w_wptr  ),
+    .async_wide_master_w_rptr_i  ( async_dma_axi_bus.w_rptr  ),
+    .async_wide_master_r_wptr_i  ( async_dma_axi_bus.r_wptr  ),
+    .async_wide_master_r_rptr_o  ( async_dma_axi_bus.r_rptr  ),
+    .async_wide_master_r_data_i  ( async_dma_axi_bus.r_data  ),
+    .async_wide_master_b_wptr_i  ( async_dma_axi_bus.b_wptr  ),
+    .async_wide_master_b_rptr_o  ( async_dma_axi_bus.b_rptr  ),
+    .async_wide_master_b_data_i  ( async_dma_axi_bus.b_data  ),
 
     .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
     .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
