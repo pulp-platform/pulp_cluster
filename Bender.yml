@@ -32,7 +32,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: "8e0883bd0c19c6844122456c749c2bdfde18011f" }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: "afe0220f9a2f132dc8655c48da05aae5121a570b" }
-  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "17b2816422b9d18fccbf4434bb9cf5af75cb052e" }
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "73084350a2a4d939954d2887f68f479384c8ed5c" }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: "2ee698211db5c007bd0d207ebd646ce79f0472ec" }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git",  version: 0.4.3  }
 
