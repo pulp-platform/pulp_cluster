@@ -43,7 +43,7 @@ module dmac_wrap
   XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
   XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
    
-  hci_core_intf.master tcdm_master[3:0],
+  hci_core_intf.initiator tcdm_master[3:0],
   output axi_req_t ext_master_req_o,
   input  axi_resp_t ext_master_resp_i,
   output logic term_event_cl_o,
@@ -132,8 +132,8 @@ module dmac_wrap
       assign tcdm_master[i].data     = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen      = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be       = s_tcdm_bus_be[i];
-      assign tcdm_master[i].boffs    = '0;
-      assign tcdm_master[i].lrdy     = '1;
+      // assign tcdm_master[i].boffs    = '0;
+      // assign tcdm_master[i].lrdy     = '1;
 
       assign s_tcdm_bus_gnt[i]       = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i]   = tcdm_master[i].r_valid;

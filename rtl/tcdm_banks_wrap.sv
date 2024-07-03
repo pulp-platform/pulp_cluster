@@ -28,7 +28,7 @@ module tcdm_banks_wrap #(
   input logic        rst_ni,
   input logic        test_mode_i,
 
-  hci_mem_intf.slave tcdm_slave[NbBanks-1:0]
+  hci_core_intf.target tcdm_slave[NbBanks-1:0]
 );
    
   for(genvar i=0; i<NbBanks; i++) begin : banks_gen
