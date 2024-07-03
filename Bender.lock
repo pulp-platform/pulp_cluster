@@ -31,15 +31,15 @@ packages:
     dependencies:
     - common_cells
   cluster_interconnect:
-    revision: 7d0a4f8acae71a583a6713cab5554e60b9bb8d27
-    version: 1.2.1
+    revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
+    version: null
     source:
       Git: https://github.com/pulp-platform/cluster_interconnect.git
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: d388a790d9e1129e3ec57b2e0075ee21e454c3b1
-    version: 2.1.0
+    revision: bd662f72d98b5f567967f51494472ee8472b07f7
+    version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
     dependencies:
@@ -97,8 +97,8 @@ packages:
     - cv32e40p
     - fpnew
   hci:
-    revision: 2691f8e1e6c77558f581a25aeb8849e21517bb1c
-    version: 1.0.9
+    revision: afe0220f9a2f132dc8655c48da05aae5121a570b
+    version: 2.1.1
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
@@ -118,21 +118,12 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: 1916c72f024175f1fe351acc3db3c6e9925a117d
-    version: 1.7.3
+    revision: a5966201aeeb988d607accdc55da933a53c6a56e
+    version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
     - tech_cells_generic
-  hwpe-datamover-example:
-    revision: 47e7fe8a38331b123d763ecab11be4058d425021
-    version: 1.0.1
-    source:
-      Git: https://github.com/pulp-platform/hwpe-datamover-example.git
-    dependencies:
-    - hci
-    - hwpe-ctrl
-    - hwpe-stream
   hwpe-stream:
     revision: 65c99a4a2f37a79acee800ab0151f67dfb1edef1
     version: 1.8.0
@@ -166,6 +157,16 @@ packages:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
+  neureka:
+    revision: 8e0883bd0c19c6844122456c749c2bdfde18011f
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/neureka.git
+    dependencies:
+    - hci
+    - hwpe-ctrl
+    - hwpe-stream
+    - zeroriscy
   per2axi:
     revision: 892fcad60b6374fe558cbde76f4a529d473ba5ca
     version: 1.0.4
@@ -199,4 +200,10 @@ packages:
     version: 1.0.3
     source:
       Git: https://github.com/pulp-platform/timer_unit.git
+    dependencies: []
+  zeroriscy:
+    revision: cc4068a0ccb7691cd062b809c34b2304e7fbfa36
+    version: null
+    source:
+      Git: https://github.com/yvantor/ibex.git
     dependencies: []

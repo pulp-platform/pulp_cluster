@@ -11,28 +11,35 @@
 /*
  * hwpe_subsystem.sv
  * Francesco Conti <fconti@iis.ee.ethz.ch>
+ * Arpan Suravi Prasad <prasadar@iis.ee.ethz.ch>
  */
 
 import hci_package::*;
+`include "hci_helpers.svh"
 
 module hwpe_subsystem
 #(
   parameter int unsigned N_CORES       = 8,
   parameter int unsigned N_MASTER_PORT = 9,
   parameter int unsigned ID_WIDTH      = 8,
-  parameter bit          USE_RBE       = 0
+  parameter bit          USE_NEUREKA   = 1,
+  parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0
 )
 (
   input  logic                    clk,
   input  logic                    rst_n,
   input  logic                    test_mode,
   
-  hci_core_intf.master            hwpe_xbar_master,
+  hci_core_intf.initiator         hwpe_xbar_master,
   XBAR_PERIPH_BUS.Slave           hwpe_cfg_slave,
 
   output logic [N_CORES-1:0][1:0] evt_o,
   output logic                    busy_o
 );
+
+  localparam int unsigned DW = DEFAULT_DW;
+  localparam int unsigned AW = DEFAULT_AW;
+  localparam int unsigned EHW = DEFAULT_EHW;
 
   hwpe_ctrl_intf_periph #(
     .ID_WIDTH ( ID_WIDTH )
@@ -41,21 +48,26 @@ module hwpe_subsystem
   );
 
   generate
-    if(USE_RBE) begin : rbe_gen
-      rbe_top #(
-        .ID      ( ID_WIDTH         ),
-        .N_CORES ( N_CORES          ),
-        .BW      ( N_MASTER_PORT*32 )
-      ) hwpe_top_wrap_i (
-        .clk_i       ( clk              ),
-        .rst_ni      ( rst_n            ),
-        .test_mode_i ( test_mode        ),
-        .evt_o       ( evt_o            ),
-        .tcdm        ( hwpe_xbar_master ),
-        .hci_ctrl_o  (                  ),
-        .periph      ( periph           )
-      );
-      assign busy_o = 1'b1;
+    if(USE_NEUREKA) begin : neureka_gen
+      neureka_top   #(
+          .PE_H        ( 4        ),
+          .PE_W        ( 4        ),
+          .ID          ( ID_WIDTH ),
+          .N_CORES     ( N_CORES  ),
+          .`HCI_SIZE_PARAM(tcdm) ( HCI_HWPE_SIZE )
+        ) i_neureka    (
+          // global signals
+          .clk_i       ( clk         ),
+          .rst_ni      ( rst_n       ),
+          .test_mode_i ( test_mode   ),
+          // events
+          .evt_o       ( evt_o       ),
+          .busy_o      ( busy_o      ),
+          // tcdm master ports
+          .tcdm        ( hwpe_xbar_master ),
+          // periph slave port
+          .periph      ( periph      )
+        );
     end
     else begin : datamover_gen
       datamover_top #(

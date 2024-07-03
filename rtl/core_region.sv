@@ -98,7 +98,7 @@ module core_region
   //input logic             debug_core_resume_i,
 
   // Interface for DEMUX to TCDM INTERCONNECT ,PERIPHERAL INTERCONNECT and DMA CONTROLLER
-  hci_core_intf.master tcdm_data_master,
+  hci_core_intf.initiator tcdm_data_master,
   XBAR_TCDM_BUS.Master dma_ctrl_master,
   XBAR_PERIPH_BUS.Master eu_ctrl_master,
   XBAR_PERIPH_BUS.Master periph_data_master

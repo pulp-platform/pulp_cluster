@@ -1056,7 +1056,8 @@ localparam int unsigned RW_MARGIN_WIDTH = 4;
       hwpe_subsystem #(
         .N_CORES       ( NB_CORES             ),
         .N_MASTER_PORT ( NB_HWPE_PORTS        ),
-        .ID_WIDTH      ( NB_CORES+NB_MPERIPHS )
+        .ID_WIDTH      ( NB_CORES+NB_MPERIPHS ),
+        .HCI_HWPE_SIZE ( HciHwpeSizeParam     )
       ) hwpe_subsystem_i (
         .clk               ( clk_cluster    ),
         .rst_n             ( s_rst_n        ),
