@@ -497,6 +497,10 @@ module core_region
 
   // assign tcdm_data_master.boffs = '0;
   // assign tcdm_data_master.lrdy  = '1;
+  assign tcdm_data_master.r_ready = 1'b1;
+  assign tcdm_data_master.id = CORE_ID;
+  assign tcdm_data_master.user = '0;
+  assign tcdm_data_master.ecc = '0;
 
    periph_demux periph_demux_i (
      .clk               ( clk_int                  ),

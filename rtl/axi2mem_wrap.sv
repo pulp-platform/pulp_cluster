@@ -52,6 +52,7 @@ module axi2mem_wrap
       assign tcdm_master[i].data   = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen    = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be     = s_tcdm_bus_be[i];
+      assign tcdm_master[i].r_ready = 1'b1;
       // assign tcdm_master[i].boffs  = '0;
       // assign tcdm_master[i].lrdy   = '1;
 
