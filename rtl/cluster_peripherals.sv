@@ -217,11 +217,11 @@ module cluster_peripherals
   // With new interconnect xbar_pe, all requests to EU pass through SPER_EVENT_U_ID speriph_slave. The other plugs are tied to 0.
   generate
     for (genvar I = 1; I < pulp_cluster_package::NB_SPERIPH_PLUGS_EU; I++ ) begin
-      assign speriph_slave[SPER_EVENT_U_ID+I].gnt     =  '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_valid =  '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_opc   =  '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_id    =  '0;
-      assign speriph_slave[SPER_EVENT_U_ID+I].r_rdata =  32'hDEADB33F;
+      assign speriph_slave[pulp_cluster_package::SPER_EVENT_U_ID+I].gnt     =  '0;
+      assign speriph_slave[pulp_cluster_package::SPER_EVENT_U_ID+I].r_valid =  '0;
+      assign speriph_slave[pulp_cluster_package::SPER_EVENT_U_ID+I].r_opc   =  '0;
+      assign speriph_slave[pulp_cluster_package::SPER_EVENT_U_ID+I].r_id    =  '0;
+      assign speriph_slave[pulp_cluster_package::SPER_EVENT_U_ID+I].r_rdata =  32'hDEADB33F;
     end
   endgenerate
 
@@ -349,4 +349,4 @@ module cluster_peripherals
     end
   endgenerate
    
-endmodule // cluster_peripherals
+endmodule : cluster_peripherals
