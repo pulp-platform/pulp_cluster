@@ -111,7 +111,7 @@ packages:
     - cv32e40p
     - fpnew
   hci:
-    revision: 8604c8445569df11904f2b022cb998dbcce0e6e3
+    revision: c717c632cf12fd754de42fe87e89c93a84c44ced
     version: 2.1.1
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -183,14 +183,6 @@ packages:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
-  obi:
-    revision: 2ee698211db5c007bd0d207ebd646ce79f0472ec
-    version: null
-    source:
-      Git: https://github.com/pulp-platform/obi.git
-    dependencies:
-    - common_cells
-    - common_verification
   neureka:
     revision: 8e0883bd0c19c6844122456c749c2bdfde18011f
     version: null
@@ -201,6 +193,14 @@ packages:
     - hwpe-ctrl
     - hwpe-stream
     - zeroriscy
+  obi:
+    revision: 2ee698211db5c007bd0d207ebd646ce79f0472ec
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
   per2axi:
     revision: 892fcad60b6374fe558cbde76f4a529d473ba5ca
     version: 1.0.4

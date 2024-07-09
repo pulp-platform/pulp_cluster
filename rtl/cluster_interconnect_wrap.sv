@@ -131,6 +131,7 @@ module cluster_interconnect_wrap
         .N_MEM  ( NB_TCDM_BANKS            ),
         .IW     ( TCDM_ID_WIDTH            ),
         .TS_BIT ( TEST_SET_BIT             ),
+        .EXPFIFO( 2                        ),// MUST BE A MULTIPLE OF 2!!!
         .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
           .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
           .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
