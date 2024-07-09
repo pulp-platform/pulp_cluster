@@ -33,6 +33,7 @@ module cluster_interconnect_wrap
   parameter int unsigned DATA_WIDTH        = 32,
   parameter int unsigned ADDR_WIDTH        = 32,
   parameter int unsigned BE_WIDTH          = DATA_WIDTH/8,
+  parameter int unsigned TCDM_ID_WIDTH     = NB_DMAS + NB_CORES + 4 + HWPE_WIDTH_FAC,
 
   //TCDM PARAMETERS
   parameter int unsigned TEST_SET_BIT      = 20,
@@ -64,7 +65,6 @@ module cluster_interconnect_wrap
   );
 
   // if DMA uses HWPE ports, ID width must be increased correspondingly
-  localparam TCDM_ID_WIDTH = NB_CORES+ NB_DMAS*(1+DMA_USE_HWPE_PORT*(HWPE_WIDTH_FAC-1)) +4+HWPE_WIDTH_FAC*N_HWPE;
   localparam N_HCI_DMA_PORTS = DMA_USE_HWPE_PORT ? 0 : NB_DMAS;
   localparam N_HCI_HWPE_PORTS = DMA_USE_HWPE_PORT ? N_HWPE + NB_DMAS : N_HWPE;
 
@@ -80,7 +80,7 @@ module cluster_interconnect_wrap
         .AW(HCI_HWPE_SIZE.AW),
         .BW(HCI_HWPE_SIZE.BW),
         .UW(HCI_HWPE_SIZE.UW),
-        .IW(TCDM_ID_WIDTH),
+        .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
         .EHW(HCI_HWPE_SIZE.EHW)
       )
@@ -92,7 +92,7 @@ module cluster_interconnect_wrap
         .AW(HCI_CORE_SIZE.AW),
         .BW(HCI_HWPE_SIZE.BW),
         .UW(HCI_HWPE_SIZE.UW),
-        .IW(TCDM_ID_WIDTH),
+        .IW(HCI_DMA_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
         .EHW(HCI_CORE_SIZE.EHW)
       )

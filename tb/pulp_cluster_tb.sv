@@ -50,7 +50,6 @@ module pulp_cluster_tb #(
   localparam AxiAw  = 32;
   localparam AxiDw  = 64;
   localparam DmaAxiDw = 256;
-  localparam DmaTcdmDw = 256;
   localparam AxiIw  = 6;
   localparam NMst   = 3;
   localparam NSlv   = 3;
@@ -364,9 +363,7 @@ module pulp_cluster_tb #(
     .PE_ROUTING_LSB               ( 10                       ),
     .EVNT_WIDTH                   ( 8                        ),
     .IDMA                         ( IDMA                     ),
-    .DMA_USE_HWPE_PORT            ( 1'b1                     ),
-    .IDMA_MEM2BANKS               ( 1'b0                     ),
-    .DMA_TCDM_DATA_WIDTH          ( DmaTcdmDw                )
+    .DMA_USE_HWPE_PORT            ( 1'b1                     )
   ) cluster_i (
       .clk_i                       ( s_clk                                ),
       .rst_ni                      ( s_rstn                               ),
