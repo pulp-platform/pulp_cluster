@@ -53,6 +53,7 @@ module cluster_interconnect_wrap
   input logic                          clk_i,
   input logic                          rst_ni,
   input logic                    [5:0] cluster_id_i,
+  XBAR_PERIPH_BUS.Slave                hci_ecc_periph_slave,
   hci_core_intf.target                 core_tcdm_slave   [0             : NB_CORES-1     ],
   hci_core_intf.target                 hwpe_tcdm_slave   [0             : 0              ],
   XBAR_PERIPH_BUS.Slave                core_periph_slave [NB_CORES-1    : 0              ],
@@ -75,7 +76,7 @@ module cluster_interconnect_wrap
   generate
     if( USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT ) begin : hci_gen
 
-      hci_interconnect #(
+      hci_ecc_interconnect #(
         .N_HWPE ( HWPE_PRESENT             ),
         .N_CORE ( NB_CORES                 ),
         .N_DMA  ( NB_DMAS                  ),
@@ -94,15 +95,16 @@ module cluster_interconnect_wrap
         .WAIVE_RSP5_ASSERT ( 1'b1 )
 `endif
       ) i_hci_interconnect (
-        .clk_i  ( clk_i               ),
-        .rst_ni ( rst_ni              ),
-        .clear_i( 1'b0                ),
-        .ctrl_i ( hci_ctrl_i          ),
-        .cores  ( core_tcdm_slave     ),
-        .hwpe   ( hwpe_tcdm_slave [0] ),
-        .dma    ( dma_slave           ),
-        .ext    ( ext_slave           ),
-        .mems   ( tcdm_sram_master    )
+        .clk_i          ( clk_i                ),
+        .rst_ni         ( rst_ni               ),
+        .clear_i        ( 1'b0                 ),
+        .ctrl_i         ( hci_ctrl_i           ),
+        .periph_hci_ecc ( hci_ecc_periph_slave ),
+        .cores          ( core_tcdm_slave      ),
+        .hwpe           ( hwpe_tcdm_slave [0]  ),
+        .dma            ( dma_slave            ),
+        .ext            ( ext_slave            ),
+        .mems           ( tcdm_sram_master     )
       );
 
     end else begin : no_hci_gen

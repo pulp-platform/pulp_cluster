@@ -50,4 +50,4 @@
 `define NB_CORES      8
 `define NB_DMAS       4
 `define NB_MPERIPHS   1
-`define NB_SPERIPHS   11
+`define NB_SPERIPHS   12

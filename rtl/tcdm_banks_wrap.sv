@@ -16,6 +16,8 @@
  * Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
+`include "hci_helpers.svh"
+
 module tcdm_banks_wrap #(
   parameter int unsigned BankSize    = 256,         //- -> OVERRIDE
   parameter int unsigned NbBanks     = 1,           // --> OVERRIDE
@@ -25,7 +27,8 @@ module tcdm_banks_wrap #(
   parameter int unsigned IdWidth     = 1,
   parameter bit          EnableEcc   = 1,
   parameter bit          EccInterco  = 0,
-  parameter int unsigned ProtectedWidth = DataWidth + 7
+  parameter int unsigned ProtectedWidth = DataWidth + 7,
+  parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
 ) (
   input  logic clk_i,
   input  logic rst_ni,
@@ -42,21 +45,7 @@ module tcdm_banks_wrap #(
    
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
-  // tie r_valid to '1, as HCI interconnect will generate this anyways
-  assign tcdm_slave[i].r_valid = '1;
-
-  // tie r_user, r_ecc signals to 0
-  assign tcdm_slave[i].r_user = '0;
-  assign tcdm_slave[i].r_ecc = '0;
-
-  // tie egnt, r_evalid
-  assign tcdm_slave[i].egnt = '1;
-  assign tcdm_slave[i].r_evalid = '0;
-
-  // r_id is same as request id -> Don't know if this is needed, but OBI protocol requires it
   logic [IdWidth-1:0] resp_id_d, resp_id_q;
-  assign resp_id_d = tcdm_slave[i].id;
-  assign tcdm_slave[i].r_id = resp_id_q;
 
   always_ff @(posedge clk_i or negedge rst_ni) begin : proc_resp_id
     if(~rst_ni) begin
@@ -68,8 +57,103 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
   if (EnableEcc) begin: gen_ecc_banks
     if (EccInterco) begin: gen_ecc_banks_and_connection
-    /* TODO: blank for the moment */
+
+      localparam int unsigned AWS = HCI_MEM_SIZE.AW;
+      localparam int unsigned UWS = HCI_MEM_SIZE.UW;
+
+      hci_core_intf #(
+        .DW ( DataWidth                  ),
+        .AW ( AWS                        ),
+        .UW ( UWS                        ),
+        .EW ( ProtectedWidth - DataWidth )
+      ) tcdm_slave_dec (
+        .clk( clk_i )
+      );
+
+      logic meta_single_err_d, meta_single_err_q;
+      logic meta_multi_err_d, meta_multi_err_q;
+      logic valid_handshake;
+
+      assign valid_handshake = tcdm_slave[i].req & tcdm_slave[i].gnt;
+
+      // tie r_valid to '1, as HCI interconnect will generate this anyways
+      assign tcdm_slave_dec.r_valid = '1;
+
+      // tie r_user to 0
+      assign tcdm_slave_dec.r_user = '0;
+
+      // tie egnt, r_evalid
+      assign tcdm_slave_dec.egnt = '1;
+      assign tcdm_slave_dec.r_evalid = '0;
+
+      assign resp_id_d = tcdm_slave_dec.id;
+      assign tcdm_slave_dec.r_id = resp_id_q;
+
+      hci_ecc_dec #(
+        .`HCI_SIZE_PARAM(tcdm_target) ( HCI_MEM_SIZE ),
+        .EnableData                   ( 0            )
+      ) i_ecc_dec_meta (
+        .data_single_err_o (  ),
+        .data_multi_err_o  (  ),
+        .meta_single_err_o ( meta_single_err_d ),
+        .meta_multi_err_o  ( meta_multi_err_d  ),
+        .tcdm_target       ( tcdm_slave[i]     ),
+        .tcdm_initiator    ( tcdm_slave_dec    )
+      );
+
+      always_ff @(posedge clk_i or negedge rst_ni) begin : ecc_error_pipe
+        if(~rst_ni) begin
+          meta_single_err_q <= '0;
+          meta_multi_err_q  <= '0;
+        end else begin
+          meta_single_err_q <= meta_single_err_d;
+          meta_multi_err_q  <= meta_multi_err_d;
+        end
+      end
+
+      ecc_sram      #(
+        .NumWords         ( BankSize       ),
+        .InputECC         ( EccInterco     ),
+        .UnprotectedWidth ( DataWidth      ),
+        .ProtectedWidth   ( ProtectedWidth )
+      ) i_ecc_bank             (
+        .clk_i                 ( clk_i                  ),
+        .rst_ni                ( rst_ni                 ),
+        // Scrubber
+        .scrub_trigger_i       ( scrub_trigger_i[i]       ),
+        .scrubber_fix_o        ( scrub_fix_o[i]           ),
+        .scrub_uncorrectable_o ( scrub_uncorrectable_o[i] ),
+        // TCDM interface
+        .wdata_i               ( {tcdm_slave_dec.ecc, tcdm_slave_dec.data}     ),
+        .addr_i                ( tcdm_slave_dec.add[$clog2(BankSize)+2-1:2]    ),
+        .req_i                 ( tcdm_slave_dec.req                            ),
+        .we_i                  ( ~tcdm_slave_dec.wen                           ),
+        .be_i                  ( tcdm_slave_dec.be                             ),
+        .rdata_o               ( {tcdm_slave_dec.r_ecc, tcdm_slave_dec.r_data} ),
+        .gnt_o                 ( tcdm_slave_dec.gnt                            ),
+        // ECC
+        .single_error_o        (  ),
+        .multi_error_o         (  )
+      );
+
+      assign ecc_single_error_o[i]   = meta_single_err_q & valid_handshake;
+      assign ecc_multiple_error_o[i] = meta_multi_err_q & valid_handshake;
+
     end else begin: gen_ecc_banks_only
+
+      // tie r_valid to '1, as HCI interconnect will generate this anyways
+      assign tcdm_slave[i].r_valid = '1;
+
+      // tie r_user, r_ecc signals to 0
+      assign tcdm_slave[i].r_user = '0;
+      assign tcdm_slave[i].r_ecc = '0;
+
+      // tie egnt, r_evalid
+      assign tcdm_slave[i].egnt = '1;
+      assign tcdm_slave[i].r_evalid = '0;
+
+      assign resp_id_d = tcdm_slave[i].id;
+      assign tcdm_slave[i].r_id = resp_id_q;
 
       ecc_sram           #(
         .NumWords         ( BankSize       ),

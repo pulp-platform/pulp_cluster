@@ -262,7 +262,7 @@ proc get_all_core_nets {core} {
 # +----+----+----+----+   v
 
 # == Path to a word in sram signal in tc_sram ==
-proc get_memory_word {bank word} {return "/pulp_cluster_tb/cluster_i/tcdm_banks_i/banks_gen\[$bank\]/gen_ecc_banks/gen_ecc_banks_only/i_ecc_bank/i_bank/sram($word)"}
+proc get_memory_word {bank word} {return "/pulp_cluster_tb/cluster_i/tcdm_banks_i/banks_gen\[$bank\]/gen_ecc_banks/gen_ecc_banks_and_connection/i_ecc_bank/i_bank/sram($word)"}
 
 proc get_memory_slice {bank_range word_range} {
   set mem_slice [list]

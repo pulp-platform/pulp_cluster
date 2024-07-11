@@ -100,8 +100,12 @@ module pulp_cluster
   localparam int unsigned FpuOutFlagsWidth = 5,
   // Number of parity bits for ECC in memory banks
   localparam int unsigned ParityWidth = 7,
+  // Number of parity bits for metadata in ECC-extended HCI
+  localparam int unsigned MetaParityWidth = $clog2( AddrMemWidth+2 + BeWidth +1 ) + 2,
   // TCDM banks data width extended with parity for ECCs
-  localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth
+  localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth,
+  // Number of parity bits for ECC-extended HCI HWPE branch
+  localparam int unsigned HWPEParityWidth = ($clog2(DataWidth)+2)*Cfg.HwpeNumPorts + ($clog2(AddrWidth+(Cfg.HwpeNumPorts*DataWidth)/8+1)+2)
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -319,7 +323,7 @@ localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
   BW:  DEFAULT_BW,
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
-  EW:  DEFAULT_EW,
+  EW:  HWPEParityWidth,
   EHW: DEFAULT_EHW
 };
 /* logarithmic and peripheral interconnect interfaces */
@@ -356,6 +360,7 @@ XBAR_TCDM_BUS s_mperiph_bus();
 hci_core_intf #(
   .DW   ( HciHwpeSizeParam.DW  ),
   .AW   ( HciHwpeSizeParam.AW  ),
+  .EW   ( HciHwpeSizeParam.EW  ),
   .EHW  ( HciHwpeSizeParam.EHW )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
@@ -378,6 +383,9 @@ XBAR_PERIPH_BUS s_periph_hmr_bus ();
 
 // periph interconnect -> TCDM scrubber
 XBAR_PERIPH_BUS s_periph_tcdm_scrubber_bus ();
+
+// periph interconnect -> HCI with ECC
+XBAR_PERIPH_BUS s_periph_hwpe_hci_ecc_bus ();
 
 // debug
 XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
@@ -428,7 +436,7 @@ localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   BW:  8,
   UW:  DEFAULT_UW,
   IW:  TCDM_ID_WIDTH,
-  EW:  DEFAULT_EW,
+  EW:  ParityWidth+MetaParityWidth,
   EHW: DEFAULT_EHW
 };
 
@@ -437,7 +445,8 @@ hci_core_intf #(
   .AW ( AddrMemWidth+2 ), // AddrMemWidth is word-wise, +2 for byte-wise
   .DW ( DataWidth      ),
   .BW ( 8              ),
-  .IW ( TCDM_ID_WIDTH  )
+  .IW ( TCDM_ID_WIDTH  ),
+  .EW ( ParityWidth+MetaParityWidth )
 `ifndef SYNTHESIS
   ,
   .WAIVE_RSP3_ASSERT ( 1'b1 ),
@@ -656,6 +665,8 @@ cluster_interconnect_wrap #(
   .rst_ni             ( rst_ni                                    ),
   .cluster_id_i       ( '0                                        ),
 
+  .hci_ecc_periph_slave ( s_periph_hwpe_hci_ecc_bus               ),
+
   .core_tcdm_slave    ( s_hci_core                                ),
   .hwpe_tcdm_slave    ( s_hci_hwpe                                ),
   .ext_slave          ( s_hci_ext                                 ),
@@ -775,6 +786,7 @@ cluster_peripherals #(
   .dma_cfg_master         ( s_periph_dma_bus                   ),
   .hmr_cfg_master         ( s_periph_hmr_bus                   ),
   .tcdm_scrubber_cfg_master ( s_periph_tcdm_scrubber_bus       ),
+  .hwpe_hci_ecc_cfg_master ( s_periph_hwpe_hci_ecc_bus         ),
 
   .dma_cl_event_i         ( s_dma_cl_event                     ),
   .dma_cl_irq_i           ( s_dma_cl_irq                       ),
@@ -1486,8 +1498,9 @@ tcdm_banks_wrap  #(
   .BeWidth        ( BeWidth            ),
   .IdWidth        ( TCDM_ID_WIDTH      ),
   .EnableEcc      (  1                 ),
-  .EccInterco     (  0                 ), // Not supported at the moment
-  .ProtectedWidth ( ProtectedTcdmWidth )
+  .EccInterco     (  1                 ),
+  .ProtectedWidth ( ProtectedTcdmWidth ),
+  .HCI_MEM_SIZE   ( HciMemSizeParam    )
 ) tcdm_banks_i (
   .clk_i                 ( clk_i                    ),
   .rst_ni                ( rst_ni                   ),
