@@ -31,7 +31,7 @@ dependencies:
   ibex:                   { git: "https://github.com/lowRISC/ibex.git", rev: "pulpissimo-v6.1.1" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", version: 1.1.0}
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: "8e0883bd0c19c6844122456c749c2bdfde18011f" }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: "afe0220f9a2f132dc8655c48da05aae5121a570b" }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: "0c23ef9f9bfe68b2fc4c37aa73ca3ffc3be0c824" }
   idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "ab41a50b2e6dfbfbff9a20537030f6fcfb9cde15" }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: "2ee698211db5c007bd0d207ebd646ce79f0472ec" }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git",  version: 0.4.3  }

@@ -45,8 +45,8 @@ packages:
     dependencies:
     - common_cells
   cluster_interconnect:
-    revision: 7d0a4f8acae71a583a6713cab5554e60b9bb8d27
-    version: 1.2.1
+    revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
+    version: null
     source:
       Git: https://github.com/pulp-platform/cluster_interconnect.git
     dependencies:
@@ -59,8 +59,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 0d67563b6b592549542544f1abc0f43e5d4ee8b4
-    version: 1.35.0
+    revision: be3866eb3ed5b8ac7bc9a9ec9f8ae86137cd0a45
+    version: 1.36.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -111,12 +111,13 @@ packages:
     - cv32e40p
     - fpnew
   hci:
-    revision: c717c632cf12fd754de42fe87e89c93a84c44ced
-    version: 2.1.1
+    revision: 0c23ef9f9bfe68b2fc4c37aa73ca3ffc3be0c824
+    version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
     dependencies:
     - cluster_interconnect
+    - common_cells
     - hwpe-stream
     - l2_tcdm_hybrid_interco
   hier-icache:
@@ -162,7 +163,7 @@ packages:
     revision: ab41a50b2e6dfbfbff9a20537030f6fcfb9cde15
     version: null
     source:
-      Git: https://github.com/pulp-platform/iDMA.git
+      Git: https://github.com/pulp-platform/idma.git
     dependencies:
     - axi
     - axi_stream
