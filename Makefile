@@ -46,6 +46,7 @@ bender_targs += -t mchan
 bender_targs += -t cluster_standalone
 bender_targs += -t scm_use_fpga_scm
 bender_targs += -t cv32e40p_use_ff_regfile
+bender_targs += -t redmule_hwpe
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
