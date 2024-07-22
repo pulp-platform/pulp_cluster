@@ -59,8 +59,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: be3866eb3ed5b8ac7bc9a9ec9f8ae86137cd0a45
-    version: 1.36.0
+    revision: c27bce39ebb2e6bae52f60960814a2afca7bd4cb
+    version: 1.37.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -111,7 +111,7 @@ packages:
     - cv32e40p
     - fpnew
   hci:
-    revision: 065540a2827b67b4bffe3af889bada2b5660eaa6
+    revision: 5a4a689d24120aec2d394fe20c99a35cf525828e
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git

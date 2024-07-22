@@ -67,6 +67,8 @@ module cluster_interconnect_wrap
   // if DMA uses HWPE ports, ID width must be increased correspondingly
   localparam N_HCI_DMA_PORTS = DMA_USE_HWPE_PORT ? 0 : NB_DMAS;
   localparam N_HCI_HWPE_PORTS = DMA_USE_HWPE_PORT ? N_HWPE + NB_DMAS : N_HWPE;
+  localparam int unsigned HCI_FILTER_WRITE_R_VALID[0:N_HCI_HWPE_PORTS-1] = {1, 0, 0};
+
 
 
     //-********************************************************
@@ -131,17 +133,21 @@ module cluster_interconnect_wrap
         .N_MEM  ( NB_TCDM_BANKS            ),
         .IW     ( TCDM_ID_WIDTH            ),
         .TS_BIT ( TEST_SET_BIT             ),
-        .EXPFIFO( 2                        ),// MUST BE A MULTIPLE OF 2!!!
+        .EXPFIFO( 0                        ),// MUST BE A MULTIPLE OF 2!!!
+
+        .FILTER_WRITE_R_VALID   ( HCI_FILTER_WRITE_R_VALID ),
+        
         .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
-          .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
-          .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
-            `ifndef SYNTHESIS
+        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+        `ifndef SYNTHESIS
           ,
           .WAIVE_RQ3_ASSERT  ( 1'b1 ),
           .WAIVE_RQ4_ASSERT  ( 1'b1 ),
           .WAIVE_RSP3_ASSERT ( 1'b1 ),
           .WAIVE_RSP5_ASSERT ( 1'b1 )
         `endif
+        
       ) i_hci_interconnect (
         .clk_i  ( clk_i               ),
         .rst_ni ( rst_ni              ),
