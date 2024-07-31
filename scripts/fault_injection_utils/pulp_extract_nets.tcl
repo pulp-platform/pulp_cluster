@@ -245,6 +245,42 @@ proc get_all_core_nets {core} {
   return $all_signals
 }
 
+##########################
+#  Get all icache state  #
+##########################
+
+proc get_all_icache_state {} {
+  set icache_base /pulp_cluster_tb/cluster_i/icache_top_i/i_snitch_icache
+
+  set l1_data_base $icache_base/gen_serial_lookup/i_lookup/i_data/i_tc_sram
+  set l1_tag_base $icache_base/gen_serial_lookup/i_lookup/gen_scm
+
+  set l1_data [list]
+  for {set i 0} {$i < [examine -radix dec $l1_data_base/NumWords]} {incr i} {
+    lappend l1_data $l1_data_base/sram\[$i\]
+  }
+  set l1_tag [list]
+  for {set i 0} {$i < [examine -radix dec $icache_base/SET_COUNT]} {incr i} {
+    for {set j 0} {$j < [examine -radix dec $l1_tag_base/g_sets\[$i\]/i_tag/N_SCM_REGISTERS]} {incr j} {
+      lappend l1_tag $l1_tag_base/g_sets\[$i\]/i_tag/block_ram_gen/MemContent_int\[$j\]
+    }
+  }
+
+  set l0_data [list]
+  set l0_tag  [list]
+  for {set i 0} {$i < [examine -radix dec $icache_base/NR_FETCH_PORTS]} {incr i} {
+    for {set j 0} {$j < [examine -radix dec $icache_base/L0_LINE_COUNT]} {incr j} {
+      lappend l0_data $icache_base/gen_prefetcher\[$i\]/i_snitch_icache_l0/data\[$j\]
+    }
+    # Questa force does not work properly on arrays of structs, always forcing the first element instead of the one specified.
+    # Therefore, we limit our injections as well.
+    lappend l0_tag  $icache_base/gen_prefetcher\[$i\]/i_snitch_icache_l0/tag\[0\].tag
+    lappend l0_tag  $icache_base/gen_prefetcher\[$i\]/i_snitch_icache_l0/tag\[0\].vld
+  }
+
+  return [concat $l1_data $l1_tag $l0_data $l0_tag]
+}
+
 ##################
 # Memory signals #
 ##################
