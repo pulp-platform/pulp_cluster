@@ -34,7 +34,7 @@ dependencies:
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 60ba008c339ec70b5ffa7120bec2cbf5a8f53c99 } # branch: fc/hci-v2.1
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", version: 1.0.0 }
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 97be61c6305d6959b7fb70d1d3cfc87cb93556d1 } # branch: yt/temp
   softex:                 { git: "https://github.com/belanoa/softex.git"       , version: 1.0.0 }
 
 export_include_dirs:
