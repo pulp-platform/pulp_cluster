@@ -16,9 +16,8 @@
 
 `include "hci_helpers.svh"
 
-import hci_package::*;
-
 module cluster_interconnect_wrap
+import hci_package::*;
 #(
   parameter NB_CORES        = 12,
   parameter HWPE_PRESENT    = 1,

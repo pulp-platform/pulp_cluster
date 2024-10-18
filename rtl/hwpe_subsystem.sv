@@ -15,10 +15,9 @@
 
 `include "hci_helpers.svh"
 
+module hwpe_subsystem
 import hci_package::*;
 import pulp_cluster_package::*;
-
-module hwpe_subsystem
 #(
   parameter  hwpe_subsystem_cfg_t HWPE_CFG = '0,
   parameter  int unsigned N_CORES          = 8,
