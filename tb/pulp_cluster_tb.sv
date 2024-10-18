@@ -16,7 +16,7 @@
 
 `timescale 1ps/1ps
 
-`include "pulp_soc_defines.sv"
+`include "pulp_cluster/pulp_soc_defines.sv"
 `include "axi/assign.svh"
 `include "axi/typedef.svh"
 
