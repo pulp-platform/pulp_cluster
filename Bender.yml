@@ -87,7 +87,3 @@ sources:
       - tb/mock_uart_axi.sv
       - tb/pulp_cluster_tb.sv
 
-  - target: cluster_standalone
-    files:
-      - include/pulp_interfaces.sv
-

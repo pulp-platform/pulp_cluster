@@ -19,8 +19,8 @@
 
 `include "axi/typedef.svh"
 `include "axi/assign.svh"
-`include "cluster_bus_defines.sv"
-`include "pulp_interfaces.sv"
+`include "pulp_cluster/cluster_bus_defines.sv"
+`include "pulp_cluster/pulp_interfaces.sv"
 `include "register_interface/typedef.svh"
 
 module pulp_cluster
