@@ -22,7 +22,6 @@
 `define CLUSTER_ALIAS
 `define PRIVATE_ICACHE
 `define HIERARCHY_ICACHE_32BIT
-`define SHARED_FPU_CLUSTER
 `define FEATURE_ICACHE_STAT
 
 `define FC_FPU 1
@@ -30,6 +29,11 @@
 
 // Remove the FPUs in the cluster for FPGA SYNTHESIS
 `ifdef FPGA_TARGET_XILINX
+  `define CLUST_FPU 0
+  `define CLUST_FP_DIVSQRT 0
+  `define CLUST_SHARED_FP 0
+  `define CLUST_SHARED_FP_DIVSQRT 0
+`elsif NO_FPU
   `define CLUST_FPU 0
   `define CLUST_FP_DIVSQRT 0
   `define CLUST_SHARED_FP 0
@@ -46,4 +50,4 @@
 `define NB_CORES      8
 `define NB_DMAS       4
 `define NB_MPERIPHS   1
-`define NB_SPERIPHS   10
+`define NB_SPERIPHS   12

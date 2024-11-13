@@ -1,0 +1,11 @@
+[submodule "pulp-runtime"]
+	path = pulp-runtime
+	url = https://github.com/pulp-platform/pulp-runtime.git
+  	branch = astral
+[submodule "regression-tests"]
+	path = regression-tests
+	url = https://github.com/pulp-platform/regression_tests.git
+	branch = astral
+[submodule "fault_injection_sim"]
+	path = fault_injection_sim
+	url = https://github.com/pulp-platform/InjectaFault.git

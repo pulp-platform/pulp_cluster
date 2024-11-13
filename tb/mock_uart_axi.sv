@@ -26,7 +26,7 @@ module mock_uart_axi #(
    
   logic         uart_penable;
   logic         uart_pwrite;
-  logic [31:0]  uart_paddr;
+  logic [AxiAw-1:0]  uart_paddr;
   logic         uart_psel;
   logic [31:0]  uart_pwdata;
   logic [31:0]  uart_prdata;
@@ -111,7 +111,7 @@ module mock_uart_axi #(
       .rst_ni    ( rst_ni       ),
       .penable_i ( uart_penable ),
       .pwrite_i  ( uart_pwrite  ),
-      .paddr_i   ( uart_paddr   ),
+      .paddr_i   ( uart_paddr[31:0]   ),
       .psel_i    ( uart_psel    ),
       .pwdata_i  ( uart_pwdata  ),
       .prdata_o  ( uart_prdata  ),

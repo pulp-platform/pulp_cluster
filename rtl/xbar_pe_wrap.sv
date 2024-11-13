@@ -22,38 +22,49 @@
  Each rr_arb_tree performes arbitration using an internal round robin counter.
  For each Slave Port, there is a stream_mux to  multiplex the NB_SPERIPH responses. 
 */
-`include "pulp_soc_defines.sv"
 
 module xbar_pe_wrap
   import pulp_cluster_package::*;
   #(
-  parameter int unsigned NB_CORES           = 8,
-  parameter int unsigned NB_MPERIPHS        = 1,
-  parameter int unsigned NB_SPERIPHS        = 10,   
-  parameter int unsigned ADDR_WIDTH         = 32,
-  parameter int unsigned DATA_WIDTH         = 32,
-  parameter int unsigned BE_WIDTH           = 0,
-  parameter int unsigned PE_ROUTING_LSB     = 10,
-  parameter int unsigned PE_ROUTING_MSB     = 13,
-  parameter bit          HWPE_PRESENT       = 1'b1,
-  parameter bit [11:0]   CLUSTER_ALIAS_BASE =  12'h000,
-  parameter bit          ADDREXT            = 1'b0
+  parameter NB_CORES           = 12,
+  parameter NB_MPERIPHS        = 1,
+  parameter NB_SPERIPHS        = 10,   
+  parameter ADDR_WIDTH         = 32,
+  parameter DATA_WIDTH         = 32,
+  parameter BE_WIDTH           = 0,
+  parameter PE_ROUTING_LSB     = 10,
+  parameter PE_ROUTING_MSB     = 13,
+  parameter bit HWPE_PRESENT   = 1'b1,
+  parameter CLUSTER_ALIAS      = 1,
+  parameter CLUSTER_ALIAS_BASE =  12'h000,
+  parameter ADDREXT         = 1'b0,
+  parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
+  parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000
 )
 (
   input logic                          clk_i,
   input logic                          rst_ni,
+  input logic                    [5:0] cluster_id_i,
   XBAR_PERIPH_BUS.Slave                core_periph_slave[NB_CORES-1:0],
   XBAR_PERIPH_BUS.Master               speriph_master[NB_SPERIPHS-1:0],
   XBAR_TCDM_BUS.Slave                  mperiph_slave[NB_MPERIPHS-1:0]
  );
 
-   logic                               cluster_alias;
-   
-`ifdef CLUSTER_ALIAS
-   assign                              cluster_alias=1'b1;
-`else
-   assign                              cluster_alias=1'b0;
-`endif   
+  logic                               cluster_alias;
+  logic              [ADDR_WIDTH-1:0] cluster_base_addr       ,
+                                      cluster_peripherals_base,
+                                      cluster_peripherals_end ;
+
+  assign cluster_base_addr = ClusterBaseAddr + (cluster_id_i << 22);            // same as in the cluster_bus_wrap
+  assign cluster_peripherals_base = cluster_base_addr + ClusterPeripheralsOffs; // same as in the cluster_bus_wrap
+  assign cluster_peripherals_end  = cluster_base_addr + ClusterExternalOffs;    // same as in the cluster_bus_wrap
+  
+  if (CLUSTER_ALIAS == 1)
+    assign cluster_alias = 1'b1;
+  else 
+    assign cluster_alias = 1'b0;
+
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;
   typedef logic [ADDR_WIDTH-1:0]              pe_addr_t;
@@ -89,13 +100,17 @@ module xbar_pe_wrap
     end else begin
       if (
         // if the access is to this cluster ..
-        (addr[31:24] == 8'h10 || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
+        (addr[31:24] == cluster_base_addr[31:24] || (cluster_alias && addr[31:24] == CLUSTER_ALIAS_BASE[11:4]))
         // .. and the peripherals
-        && (addr[23:20] >= 4'h2 && addr[23:20] <= 4'h3)
+        && (addr >= cluster_peripherals_base
+        && addr <= cluster_peripherals_end)
       ) begin
         // decode peripheral to access
         pe_idx = addr[PE_ROUTING_MSB:PE_ROUTING_LSB];
-        if (addr[23:20] == 4'h2 && addr[19:PE_ROUTING_MSB+1] == '0 && pe_idx < NB_SPERIPHS) begin
+        if (addr[31:20] == cluster_peripherals_base[31:20] &&
+            addr[19:PE_ROUTING_MSB+1] == '0 &&
+            pe_idx < NB_SPERIPHS)
+        begin
           if (pe_idx >= pulp_cluster_package::SPER_EVENT_U_ID &&
               pe_idx < pulp_cluster_package::SPER_EVENT_U_ID
                         + pulp_cluster_package::NB_SPERIPH_PLUGS_EU

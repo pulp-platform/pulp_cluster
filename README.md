@@ -28,26 +28,31 @@ Warning: requires QuestaSim 2022.3 or newer.
    RISCV GCC toolchain](https://github.com/pulp-platform/pulp-riscv-gcc) to use
    a pre-built release. (At IIS, this is set up by the env script in step 4.)
 
-2. Compile the hw:
+2. We need RV64 toolchain to compile DPI libraries. To this purpose, export the
+   RV64 toolchain to a `RISCV` env variable and also export your questa
+   installation path to a `QUESTA_HOME` env variable. Please refer to [RISC-V GNU
+   toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain/) to use a
+   pre-built RV64 toolchain release.
+
+3. Compile the hw:
    ```
    make checkout
    make scripts/compile.tcl
    make build
    ```
 
-3. Download the sw stack and bare-metal tests:
+4. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
 	make regression-tests
 	```
 
-4. Source the environment:
+5. Source the environment:
    ```
    source env/env.sh
    ```
-   (At IIS, this sets up a proper QuestaSim environment, and links the toolchain.)
 
-5. Run the tests. Choose any test among the `parallel_bare_tests` and the
+6. Run the tests. Choose any test among the `parallel_bare_tests` and the
    `mchan_tests`, move into the related folder and do:
 
    ```

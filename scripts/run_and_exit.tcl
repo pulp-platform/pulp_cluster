@@ -20,4 +20,11 @@ proc run_and_exit {} {
     quit -code [examine -radix decimal sim:/pulp_cluster_tb/ret_val(30:0)]
 }
 
+if {[info exists ::env(FAULT_INJECTION)]} {
+    if {![info exists ::env(FAULT_INJECTION_SCRIPT)]} {
+        error "Error: Missing FAULT_INJECTION_SCRIPT to source!"
+    }
+    source $::env(FAULT_INJECTION_SCRIPT)
+}
+
 run_and_exit
