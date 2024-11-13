@@ -1,5 +1,5 @@
 ## Clone regression tests for bare-metal verification
-TARGET ?= astral
+TARGET ?= pulp_cluster
 
 regression-tests:
 	git submodule update --init --recursive $@
