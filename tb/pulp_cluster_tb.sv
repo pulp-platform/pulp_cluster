@@ -122,6 +122,13 @@ module pulp_cluster_tb #(
             ) dma_slave();
 
   AXI_BUS #(
+            .AXI_ADDR_WIDTH( AxiAw ),
+            .AXI_DATA_WIDTH( DmaAxiDw ),
+            .AXI_ID_WIDTH  ( AxiIw ),
+            .AXI_USER_WIDTH( AxiUw )
+            ) dma_slave2narrow();
+  
+  AXI_BUS #(
       .AXI_ADDR_WIDTH( AxiAw   ),
       .AXI_DATA_WIDTH( AxiDw   ),
       .AXI_ID_WIDTH  ( AxiIw-2 ),
@@ -158,50 +165,127 @@ module pulp_cluster_tb #(
   `AXI_ASSIGN_TO_REQ(axi_memreq, axi_master[1])
   `AXI_ASSIGN_FROM_RESP(axi_master[1], axi_memrsp)
 
+  // MEMORY ISLAND integration
+  dma_axi_req_t  dma_demux_slv_req;
+  dma_axi_resp_t dma_demux_slv_resp;
+
+  `AXI_ASSIGN_TO_REQ(dma_demux_slv_req, dma_slave)
+  `AXI_ASSIGN_FROM_RESP(dma_slave, dma_demux_slv_resp)
+
+  dma_axi_req_t  dma_demux_memisl_req, dma_demux_wide2narrow_req;
+  dma_axi_resp_t dma_demux_memisl_resp, dma_demux_wide2narrow_resp;
+
+  `AXI_ASSIGN_FROM_REQ(dma_slave2narrow, dma_demux_wide2narrow_req)
+  `AXI_ASSIGN_TO_RESP(dma_demux_wide2narrow_resp, dma_slave2narrow)
+
+  logic ar_wide_sel, aw_wide_sel;
+
+  always_comb begin
+      ar_wide_sel = (dma_demux_slv_req.ar.addr >= addr_map[1].start_addr) &&
+                    (dma_demux_slv_req.ar.addr < addr_map[1].end_addr);
+      aw_wide_sel = (dma_demux_slv_req.aw.addr >= addr_map[1].start_addr) &&
+                    (dma_demux_slv_req.aw.addr < addr_map[1].end_addr);
+  end
+
+
+  // TODO: missing verification
+  // localparam logic [8:0] ADDR_MATCH = 9'd56; // Upper 9 bits of the start address
+
+  // always_comb begin
+  //     ar_wide_sel = (dma_demux_slv_req.ar.addr[31:23] == ADDR_MATCH);
+  //     aw_wide_sel = (dma_demux_slv_req.aw.addr[31:23] == ADDR_MATCH);
+  // end
+
+
+  axi_demux_simple #(
+    .AxiIdWidth ( DmaAxiDw ),
+    .AtopSupport( 0 ),
+    .axi_req_t  ( dma_axi_req_t ),
+    .axi_resp_t ( dma_axi_resp_t ),
+    .NoMstPorts ( 2 ),
+    .MaxTrans   ( 16 ), // TODO: Check this value
+    .AxiLookBits( DmaAxiDw ),
+    .UniqueIds  ( 0 )
+    ) i_wide_demux (
+      .clk_i          ( s_clk ),
+      .rst_ni         ( s_rstn ),
+      .test_i         ( 1'b0 ),
+      .slv_req_i      ( dma_demux_slv_req ),
+      .slv_aw_select_i( aw_wide_sel ),
+      .slv_ar_select_i( ar_wide_sel ),
+      .slv_resp_o     ( dma_demux_slv_resp ),
+      .mst_reqs_o     ( {dma_demux_memisl_req, dma_demux_wide2narrow_req} ),
+      .mst_resps_i    ( {dma_demux_memisl_resp, dma_demux_wide2narrow_resp} )
+  );
+
   axi_dw_converter_intf #(
-                          .AXI_ID_WIDTH(AxiIw),
-                          .AXI_ADDR_WIDTH(AxiAw),
-                          .AXI_SLV_PORT_DATA_WIDTH(DmaAxiDw),
-                          .AXI_MST_PORT_DATA_WIDTH(AxiDw),
-                          .AXI_USER_WIDTH(AxiUw),
-                          .AXI_MAX_READS(3)
+                          .AXI_ID_WIDTH( AxiIw ),
+                          .AXI_ADDR_WIDTH( AxiAw ),
+                          .AXI_SLV_PORT_DATA_WIDTH( DmaAxiDw ),
+                          .AXI_MST_PORT_DATA_WIDTH( AxiDw ),
+                          .AXI_USER_WIDTH( AxiUw ),
+                          .AXI_MAX_READS( 3 )
                           )
   i_dma_dw_conv (
-                 .clk_i(s_clk),
-                 .rst_ni(s_rstn),
-                 .slv(dma_slave),
-                 .mst(axi_slave[2])
+                 .clk_i( s_clk ),
+                 .rst_ni( s_rstn ),
+                 .slv( dma_slave2narrow ),
+                 .mst( axi_slave[2] )
                  );
 
-  axi_sim_mem #(
-    .AddrWidth ( AxiAw        ),
-    .DataWidth ( AxiDw        ),
-    .IdWidth   ( AxiIwMst     ),
-    .UserWidth ( AxiUw        ),
-    .axi_req_t ( axi_m_req_t  ),
-    .axi_rsp_t ( axi_m_resp_t ),
-    .ApplDelay ( SYS_TA       ),
-    .AcqDelay  ( SYS_TT       )
-  ) sim_mem (
-     .clk_i     ( s_clk      ),
-     .rst_ni    ( s_rstn     ),
-     .axi_req_i ( axi_memreq ),
-     .axi_rsp_o ( axi_memrsp ),
-     .mon_w_valid_o     (),
-     .mon_w_addr_o      (),
-     .mon_w_data_o      (),
-     .mon_w_id_o        (),
-     .mon_w_user_o      (),
-     .mon_w_beat_count_o(),
-     .mon_w_last_o      (),
-     .mon_r_valid_o     (),
-     .mon_r_addr_o      (),
-     .mon_r_data_o      (),
-     .mon_r_id_o        (),
-     .mon_r_user_o      (),
-     .mon_r_beat_count_o(),
-     .mon_r_last_o      ()
+  axi_memory_island_wrap #(
+    .AddrWidth       ( AxiAw ),
+    .NarrowDataWidth ( AxiDw ),
+    .WideDataWidth   ( DmaAxiDw ),
+    .AxiNarrowIdWidth( AxiIw ),
+    .AxiWideIdWidth  ( AxiIwMst ),
+    .axi_narrow_req_t( axi_m_req_t ),
+    .axi_narrow_rsp_t( axi_m_resp_t ),
+    .axi_wide_req_t  ( dma_axi_req_t ),
+    .axi_wide_rsp_t  ( dma_axi_resp_t ),
+    .NumNarrowReq    ( 1 ),
+    .NumWideReq      ( 1 ),
+    .NumWideBanks    ( 2 ),
+    .NarrowExtraBF   ( 1 ),
+    .WordsPerBank    ( 1024 )
+  ) i_memory_island (
+    .clk_i           ( s_clk ),
+    .rst_ni          ( s_rstn ),
+    .axi_narrow_req_i( axi_memreq ),
+    .axi_narrow_rsp_o( axi_memrsp ),
+    .axi_wide_req_i  ( dma_demux_memisl_req ),
+    .axi_wide_rsp_o  ( dma_demux_memisl_resp )
   );
+
+  // axi_sim_mem #(
+  //   .AddrWidth ( AxiAw        ),
+  //   .DataWidth ( AxiDw        ),
+  //   .IdWidth   ( AxiIwMst     ),
+  //   .UserWidth ( AxiUw        ),
+  //   .axi_req_t ( axi_m_req_t  ),
+  //   .axi_rsp_t ( axi_m_resp_t ),
+  //   .ApplDelay ( SYS_TA       ),
+  //   .AcqDelay  ( SYS_TT       )
+  // ) sim_mem (
+  //    .clk_i     ( s_clk      ),
+  //    .rst_ni    ( s_rstn     ),
+  //    .axi_req_i ( axi_memreq ),
+  //    .axi_rsp_o ( axi_memrsp ),
+  //    .mon_w_valid_o     (),
+  //    .mon_w_addr_o      (),
+  //    .mon_w_data_o      (),
+  //    .mon_w_id_o        (),
+  //    .mon_w_user_o      (),
+  //    .mon_w_beat_count_o(),
+  //    .mon_w_last_o      (),
+  //    .mon_r_valid_o     (),
+  //    .mon_r_addr_o      (),
+  //    .mon_r_data_o      (),
+  //    .mon_r_id_o        (),
+  //    .mon_r_user_o      (),
+  //    .mon_r_beat_count_o(),
+  //    .mon_r_last_o      ()
+  // );
 
   mock_uart_axi #(
    .AxiIw   ( AxiIwMst      ),

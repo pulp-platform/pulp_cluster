@@ -35,6 +35,7 @@ dependencies:
   idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "ab41a50b2e6dfbfbff9a20537030f6fcfb9cde15" }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: "2ee698211db5c007bd0d207ebd646ce79f0472ec" }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git",  version: 0.4.3  }
+  memory_island:          { git: "https://github.com/pulp-platform/memory_island.git", rev: 64828cb7a9ccc1f1656ec92d06129072f445c319 }
 
 sources:
     # Source files grouped in levels. Files in level 0 have no dependencies on files in this
