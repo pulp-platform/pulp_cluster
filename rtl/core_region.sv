@@ -236,8 +236,11 @@ import rapid_recovery_pkg::*;
       riscv_core #(
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH           ),
         .PULP_CLUSTER        ( 1                           ),
-        .FPU                 ( FPU                         ),
-        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS  ),
+        .FPU                 ( FPU | SHARED_FP             ),
+        .FP_DIVSQRT          ( FP_DIVSQRT                  ),
+        .SHARED_FP           ( SHARED_FP                   ),
+        .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT           ),
+        .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS         ),
         .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),
         .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )

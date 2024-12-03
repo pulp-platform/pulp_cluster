@@ -22,6 +22,7 @@ dependencies:
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "2886cb2a46cea3e2bd2d979b505d88fadfbe150c" } # branch: astral
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "8114ab36fd446f76cd1e9f139f12a62ab1fb9a6a" } # michaero/branch: astral_cut_path
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: 0b8e8ab } # branch: fc/hci-v2
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "b5f7a315929308823cacd81e1e4898f1eeecfc64" } # branch: astral
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
