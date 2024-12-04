@@ -115,6 +115,13 @@ module pulp_cluster_tb #(
     ) axi_slave[NMst-1:0]();
 
   AXI_BUS #(
+      .AXI_ADDR_WIDTH( AxiAw ),
+      .AXI_DATA_WIDTH( AxiDw ),
+      .AXI_ID_WIDTH  ( AxiIw ),
+      .AXI_USER_WIDTH( AxiUw )
+    ) axi_loader_slave();
+
+  AXI_BUS #(
             .AXI_ADDR_WIDTH( AxiAw ),
             .AXI_DATA_WIDTH( DmaAxiDw ),
             .AXI_ID_WIDTH  ( AxiIw ),
@@ -200,13 +207,13 @@ module pulp_cluster_tb #(
 
   axi_demux_simple #(
     .AxiIdWidth ( DmaAxiDw ),
-    .AtopSupport( 0 ),
+    .AtopSupport( 1 ),
     .axi_req_t  ( dma_axi_req_t ),
     .axi_resp_t ( dma_axi_resp_t ),
     .NoMstPorts ( 2 ),
-    .MaxTrans   ( 2 ), // TODO: Check this value
+    .MaxTrans   ( 16 ), // TODO: Check this value
     .AxiLookBits( DmaAxiDw ),
-    .UniqueIds  ( 0 )
+    .UniqueIds  ( 1 )
     ) i_wide_demux (
       .clk_i          ( s_clk ),
       .rst_ni         ( s_rstn ),
@@ -567,6 +574,33 @@ module pulp_cluster_tb #(
 
   endtask : load_binary
 
+  axi_m_req_t axi_loader_req;
+  axi_m_resp_t axi_loader_resp;
+  `AXI_ASSIGN_TO_REQ(axi_loader_req, axi_loader_slave)
+  `AXI_ASSIGN_FROM_RESP(axi_loader_slave, axi_loader_resp)
+
+  axi_m_req_t axi_loader_req_cut;
+  axi_m_resp_t axi_loader_resp_cut;
+  `AXI_ASSIGN_FROM_REQ(axi_slave[0], axi_loader_req_cut)
+  `AXI_ASSIGN_TO_RESP(axi_loader_resp_cut, axi_slave[0])
+
+  axi_cut #(
+    .aw_chan_t ( aw_m_chan_t     ),
+    .w_chan_t  ( w_chan_t        ),
+    .b_chan_t  ( b_m_chan_t      ),
+    .ar_chan_t ( ar_m_chan_t     ),
+    .r_chan_t  ( r_m_chan_t      ),
+    .axi_req_t ( axi_m_req_t     ),
+    .axi_resp_t( axi_m_resp_t    )
+  ) i_cut_filtered_narrow (
+    .clk_i     (s_clk),
+    .rst_ni    (s_rstn),
+    .slv_req_i ( axi_loader_req ),
+    .slv_resp_o( axi_loader_resp ),
+    .mst_req_o ( axi_loader_req_cut ),
+    .mst_resp_i( axi_loader_resp_cut )
+  );
+
   AXI_BUS_DV #(
       .AXI_ADDR_WIDTH(AxiAw ),
       .AXI_DATA_WIDTH(AxiDw ),
@@ -580,7 +614,7 @@ module pulp_cluster_tb #(
   axi_test::axi_w_beat  #(.DW(AxiDw ), .UW(AxiUw))              w_beat  = new();
   axi_test::axi_b_beat  #(.IW(AxiIw ), .UW(AxiUw))              b_beat  = new();
 
-  `AXI_ASSIGN(axi_slave[0], axi_dv)
+  `AXI_ASSIGN(axi_loader_slave, axi_dv)
 
   typedef axi_test::axi_driver #(.AW(AxiAw ), .DW(AxiDw ), .IW(AxiIw ), .UW(AxiUw), .TA(SYS_TA), .TT(SYS_TT)) axi_drv_t;
   axi_drv_t axi_master_drv = new(axi_dv);
