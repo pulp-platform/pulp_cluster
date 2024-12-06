@@ -69,9 +69,8 @@ nonfree-init:
 .PHONY: init
 
 init: checkout
-	git submodule update --init --recursive
 
-.PHONY: checkout scripts/compile.tcl
+.PHONY: checkout
 ## Checkout/update dependencies using Bender
 checkout:
 	$(BENDER) checkout
@@ -87,17 +86,42 @@ Bender.lock:
 # SW #
 ######
 
+.PHONY: sw-init sw-clean
+
+sw-init: pulp-runtime fault_injection_sim regression_tests
+sw-clean:
+	@rm -rf pulp-runtime fault_injection_sim regression_test
+
 ## Clone pulp-runtime as SW stack
+PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
+PULP_RUNTIME_COMMIT ?= 5a063a8 # branch: astral
+
 pulp-runtime:
-	git submodule update --init --recursive $@
+	git clone $(PULP_RUNTIME_REMOTE) $@
+	cd $@ && git checkout $(PULP_RUNTIME_COMMIT)
 
 ## Clone fault injection scripts
+FAULT_SIM_REMOTE ?= https://github.com/pulp-platform/InjectaFault.git
+FAULT_SIM_COMMIT ?= 84ddcff # branch: rt/rename-var
+
 fault_injection_sim:
-	git submodule update --init --recursive $@
+	git clone $(FAULT_SIM_REMOTE) $@
+	cd $@ && git checkout $(FAULT_SIM_COMMIT)
+
+## Clone regression tests
+REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= b1c3f82 # branch: astral
+
+regression_tests:
+	git clone $(REGRESSION_TESTS_REMOTE) $@
+	cd $@ && git checkout $(REGRESSION_TESTS_COMMIT)
+	cd $@ && git submodule update --init --recursive
 
 ########################
 # Build and simulation #
 ########################
+
+.PHONY: sim_clean compile build run
 
 $(BENDER): 
 	curl --proto '=https'  \
