@@ -30,8 +30,8 @@ Warning: requires QuestaSim 2022.3 or newer.
 
 2. We need RV64 toolchain to compile DPI libraries. To this purpose, export the
    RV64 toolchain to a `RISCV` env variable and also export your questa
-   installation path to a `QUESTA_HOME` env variable. Please refer to [RISC-V GNU
-   toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain/) to use a
+   installation path to a `QUESTASIM_HOME` env variable. Please refer to [RISC-V
+   GNU toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain/) to use a
    pre-built RV64 toolchain release.
 
 3. Compile the hw:
@@ -44,7 +44,7 @@ Warning: requires QuestaSim 2022.3 or newer.
 4. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
-	make regression-tests
+	make regression_tests
 	```
 
 5. Source the environment:
