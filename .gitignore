@@ -1,1 +1,5 @@
 scripts/compile.tcl
+regression-tests/
+pulp-runtime/
+fault_injection_sim/
+
