@@ -4,29 +4,20 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-ifneq (,$(wildcard /etc/iis.version))
-	QUESTA ?= questa-2022.3
-	BENDER ?= bender
-else
-	QUESTA ?=
-	BENDER ?= ./bender
-endif
-GIT ?= git
+QUESTA ?=
+BENDER ?= bender
+
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
+VLIB ?= $(QUESTA) vlib
 top_level ?= pulp_cluster_tb
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
-REGRESSIONS := $(ROOT_DIR)/regression-tests
-
-CFLAGS ?= -I$(QUESTASIM_HOME)/include \
-					-I$(RISCV)/include/ \
-					-I/include -std=c++11 -I../tb/dpi -O3
+REGRESSIONS := $(ROOT_DIR)/regression_tests
 
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
-XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
 
 bender_defs += -D FEATURE_ICACHE_STAT
 bender_defs += -D PRIVATE_ICACHE
