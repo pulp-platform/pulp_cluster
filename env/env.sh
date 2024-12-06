@@ -7,14 +7,7 @@ ROOTD=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)
 
 # If at IIS, set up appropriate questa version.
 if test -f /etc/iis.version; then
-  export QUESTA=questa-2023.4-zr
-  export VLOG="$QUESTA vlog"
-  export VLIB="$QUESTA vlib"
-  export VMAP="$QUESTA vmap"
-  export VCOM="$QUESTA vcom"
-  export VOPT="$QUESTA vopt"
-  export VSIM="$QUESTA vsim"
-  export QUESTA_HOME=/usr/pack/${QUESTA}/questasim
+  export QUESTA=questa-2023.4
   export QUESTASIM_HOME=/usr/pack/${QUESTA}/questasim
   export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
 fi
