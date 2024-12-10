@@ -101,7 +101,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= b1c3f82 # branch: astral
+REGRESSION_TESTS_COMMIT ?= c8ac022 # branch: upstream-features
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
