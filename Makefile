@@ -47,7 +47,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 9fc1aee
+NONFREE_COMMIT ?= 67079fe
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -101,7 +101,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= c8ac022 # branch: upstream-features
+REGRESSION_TESTS_COMMIT ?= a61fc85 # branch: upstream-features
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
