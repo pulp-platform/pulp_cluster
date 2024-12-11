@@ -78,6 +78,10 @@ package pulp_cluster_package;
     hwpe_subsystem_cfg_t HwpeCfg;
     // Number of memory ports available for HWPEs
     byte_t HwpeNumPorts;
+    // Enable the HMR Unit
+    bit HMRPresent;
+    // Enable triple modular redundancy
+    bit HMRTmrEnabled;
     // Number if I$ banks
     byte_t iCacheNumBanks;
     // Number of I$ lines
@@ -190,6 +194,8 @@ package pulp_cluster_package;
     HwpePresent: 0,
     HwpeCfg: '0,
     HwpeNumPorts: 0,
+    HMRPresent: 0,
+    HMRTmrEnabled: 0,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,

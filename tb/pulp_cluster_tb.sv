@@ -301,6 +301,8 @@ module pulp_cluster_tb;
     HwpePresent: 1,
     HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
+    HMRPresent: 1,
+    HMRTmrEnabled: 1,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,

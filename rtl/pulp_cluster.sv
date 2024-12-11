@@ -1117,58 +1117,97 @@ always_comb begin
   end
 end
 
-hmr_unit #(
-  .NumCores          ( Cfg.NumCores                         ),
-  .DMRSupported      ( 1                                    ),
-  .DMRFixed          ( 0                                    ),
-  .TMRSupported      ( 1                                    ),
-  .TMRFixed          ( 0                                    ),
-  .InterleaveGrps    ( 1                                    ),
-  .RapidRecovery     ( 1                                    ),
-  .SeparateData      ( 1                                    ),
-  .SeparateAxiBus    ( 0                                    ),
-  .NumBusVoters      ( 1                                    ),
-  .all_inputs_t      ( core_inputs_t                        ),
-  .nominal_outputs_t ( core_outputs_t                       ),
-  .core_backup_t     ( core_backup_t                        ),
-  .reg_req_t         ( hmr_reg_req_t                        ),
-  .reg_rsp_t         ( hmr_reg_rsp_t                        ),
-  // We use any axi_req_t to just let the unit not complain about
-  // undeclared r_ready and b_ready signals.
-  .axi_req_t         ( c2s_in_req_t                         ),
-  .rapid_recovery_t  ( rapid_recovery_pkg::rapid_recovery_t )
-) i_hmr_unit         (
-  .clk_i                  ( clk_i        ),
-  .rst_ni                 ( rst_ni       ),
-  // Port to configuration unit
-  .reg_request_i          ( hmr_reg_req  ),
-  .reg_response_o         ( hmr_reg_rsp  ),
-  // TMR signals
-  .tmr_failure_o          (               ),
-  .tmr_error_o            (               ), // Should this not be NumTMRCores? or NumCores?
-  .tmr_resynch_req_o      ( hmr_tmr_sw_resynch_req_short ),
-  .tmr_sw_synch_req_o     ( hmr_tmr_sw_synch_req         ),
-  .tmr_cores_synch_i      ( hmr_tmr_synch                ),
-  // DMR signals
-  .dmr_failure_o          (              ),
-  .dmr_error_o            (              ), // Should this not be NumDMRCores? or NumCores?
-  .dmr_resynch_req_o      ( hmr_dmr_sw_resynch_req_short      ),
-  .dmr_sw_synch_req_o     ( hmr_dmr_sw_synch_req              ),
-  .dmr_cores_synch_i      ( hmr_barrier_matched[Cfg.NumCores/2:1] ),
-  // Rapid recovery output bus
-  .rapid_recovery_o       ( recovery_bus ),
-  .core_backup_i          ( backup_bus   ),
-  .sys_inputs_i           ( sys2hmr      ),
-  .sys_nominal_outputs_o  ( hmr2sys      ),
-  .sys_bus_outputs_o      (              ),
-  .sys_fetch_en_i         ( fetch_en_int ),
-  .enable_bus_vote_i      ( '0           ),
-  .core_setback_o         ( setback      ),
-  .core_inputs_o          ( hmr2core     ),
-  .core_nominal_outputs_i ( core2hmr     ),
-  .core_bus_outputs_i     ( '0           ),
-  .core_axi_outputs_i     ( '0           )
-);
+generate
+  if (Cfg.HMRPresent) begin : gen_hmr_unit
+    hmr_unit #(
+      .NumCores          ( Cfg.NumCores                         ),
+      .DMRSupported      ( 1                                    ),
+      .DMRFixed          ( 0                                    ),
+      .TMRSupported      ( Cfg.HMRTmrEnabled                    ),
+      .TMRFixed          ( 0                                    ),
+      .InterleaveGrps    ( 1                                    ),
+      .RapidRecovery     ( 1                                    ),
+      .SeparateData      ( 1                                    ),
+      .SeparateAxiBus    ( 0                                    ),
+      .NumBusVoters      ( 1                                    ),
+      .all_inputs_t      ( core_inputs_t                        ),
+      .nominal_outputs_t ( core_outputs_t                       ),
+      .core_backup_t     ( core_backup_t                        ),
+      .reg_req_t         ( hmr_reg_req_t                        ),
+      .reg_rsp_t         ( hmr_reg_rsp_t                        ),
+      // We use any axi_req_t to just let the unit not complain about
+      // undeclared r_ready and b_ready signals.
+      .axi_req_t         ( c2s_in_req_t                         ),
+      .rapid_recovery_t  ( rapid_recovery_pkg::rapid_recovery_t )
+    ) i_hmr_unit         (
+      .clk_i                  ( clk_i        ),
+      .rst_ni                 ( rst_ni       ),
+      // Port to configuration unit
+      .reg_request_i          ( hmr_reg_req  ),
+      .reg_response_o         ( hmr_reg_rsp  ),
+      // TMR signals
+      .tmr_failure_o          (               ),
+      .tmr_error_o            (               ), // Should this not be NumTMRCores? or NumCores?
+      .tmr_resynch_req_o      ( hmr_tmr_sw_resynch_req_short ),
+      .tmr_sw_synch_req_o     ( hmr_tmr_sw_synch_req         ),
+      .tmr_cores_synch_i      ( hmr_tmr_synch                ),
+      // DMR signals
+      .dmr_failure_o          (              ),
+      .dmr_error_o            (              ), // Should this not be NumDMRCores? or NumCores?
+      .dmr_resynch_req_o      ( hmr_dmr_sw_resynch_req_short      ),
+      .dmr_sw_synch_req_o     ( hmr_dmr_sw_synch_req              ),
+      .dmr_cores_synch_i      ( hmr_barrier_matched[Cfg.NumCores/2:1] ),
+      // Rapid recovery output bus
+      .rapid_recovery_o       ( recovery_bus ),
+      .core_backup_i          ( backup_bus   ),
+      .sys_inputs_i           ( sys2hmr      ),
+      .sys_nominal_outputs_o  ( hmr2sys      ),
+      .sys_bus_outputs_o      (              ),
+      .sys_fetch_en_i         ( fetch_en_int ),
+      .enable_bus_vote_i      ( '0           ),
+      .core_setback_o         ( setback      ),
+      .core_inputs_o          ( hmr2core     ),
+      .core_nominal_outputs_i ( core2hmr     ),
+      .core_bus_outputs_i     ( '0           ),
+      .core_axi_outputs_i     ( '0           )
+    );
+  end else begin : gen_no_hmr_unit
+    assign hmr_reg_rsp                  = '0;
+    assign hmr_tmr_sw_resynch_req_short = '0;
+    assign hmr_tmr_sw_synch_req         = '0;
+    assign hmr_dmr_sw_resynch_req_short = '0;
+    assign hmr_dmr_sw_synch_req         = '0;
+    assign recovery_bus                 = '0;
+    assign setback                      = '0;
+
+    for (genvar i = 0; i < Cfg.NumCores; i++) begin
+      assign hmr2core[i].clock_en     = sys2hmr[i].clock_en;     
+      assign hmr2core[i].boot_addr    = sys2hmr[i].boot_addr;    
+      assign hmr2core[i].core_id      = sys2hmr[i].core_id;      
+      assign hmr2core[i].cluster_id   = sys2hmr[i].cluster_id;   
+      assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;    
+      assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid; 
+      assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;  
+      assign hmr2core[i].data_gnt     = sys2hmr[i].data_gnt;     
+      assign hmr2core[i].data_rvalid  = sys2hmr[i].data_rvalid;  
+      assign hmr2core[i].data_rdata   = sys2hmr[i].data_rdata;   
+      assign hmr2core[i].irq_req      = sys2hmr[i].irq_req;      
+      assign hmr2core[i].irq_id       = sys2hmr[i].irq_id;       
+
+      assign hmr2sys[i].instr_req     = core2hmr[i].instr_req;
+      assign hmr2sys[i].instr_addr    = core2hmr[i].instr_addr;
+      assign hmr2sys[i].data_req      = core2hmr[i].data_req;
+      assign hmr2sys[i].data_we       = core2hmr[i].data_we;
+      assign hmr2sys[i].data_be       = core2hmr[i].data_be;
+      assign hmr2sys[i].data_add      = core2hmr[i].data_add;
+      assign hmr2sys[i].data_wdata    = core2hmr[i].data_wdata;
+      assign hmr2sys[i].irq_ack       = core2hmr[i].irq_ack;
+      assign hmr2sys[i].irq_ack_id    = core2hmr[i].irq_ack_id;
+      assign hmr2sys[i].core_busy     = core2hmr[i].core_busy;
+      assign hmr2sys[i].debug_halted  = core2hmr[i].debug_halted;
+    end
+  end
+endgenerate
 
 //****************************************************
 //**** Shared FPU cluster - Shared execution units ***
