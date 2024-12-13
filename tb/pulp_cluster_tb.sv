@@ -303,6 +303,8 @@ module pulp_cluster_tb;
     HwpeNumPorts: 9,
     HMRPresent: 1,
     HMRTmrEnabled: 1,
+    EnableECC: 1,
+    ECCInterco: 1,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,

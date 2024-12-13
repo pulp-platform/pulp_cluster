@@ -45,6 +45,7 @@ module cluster_interconnect_wrap
   parameter CLUSTER_ALIAS_BASE = 12'h000,
 
   parameter USE_HETEROGENEOUS_INTERCONNECT = 1,
+  parameter USE_ECC_INTERCONNECT           = 0,
   parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
@@ -75,37 +76,74 @@ module cluster_interconnect_wrap
   // Wraps the Logarithmic Interconnect + a HWPE Interconnect
   generate
     if( USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT ) begin : hci_gen
+      if (USE_ECC_INTERCONNECT) begin : gen_ecc_interco
+        hci_ecc_interconnect #(
+          .N_HWPE ( HWPE_PRESENT             ),
+          .N_CORE ( NB_CORES                 ),
+          .N_DMA  ( NB_DMAS                  ),
+          .N_EXT  ( 4                        ),
+          .N_MEM  ( NB_TCDM_BANKS            ),
+          .IW     ( TCDM_ID_WIDTH            ),
+          .TS_BIT ( TEST_SET_BIT             ),
+          .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+          .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+          .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+  `ifndef SYNTHESIS
+          ,
+          .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+          .WAIVE_RQ4_ASSERT  ( 1'b1 ),
+          .WAIVE_RSP3_ASSERT ( 1'b1 ),
+          .WAIVE_RSP5_ASSERT ( 1'b1 )
+  `endif
+        ) i_hci_interconnect (
+          .clk_i          ( clk_i                ),
+          .rst_ni         ( rst_ni               ),
+          .clear_i        ( 1'b0                 ),
+          .ctrl_i         ( hci_ctrl_i           ),
+          .periph_hci_ecc ( hci_ecc_periph_slave ),
+          .cores          ( core_tcdm_slave      ),
+          .hwpe           ( hwpe_tcdm_slave [0]  ),
+          .dma            ( dma_slave            ),
+          .ext            ( ext_slave            ),
+          .mems           ( tcdm_sram_master     )
+        );
+      end else begin : gen_standard_interco
+        hci_interconnect #(
+          .N_HWPE ( HWPE_PRESENT             ),
+          .N_CORE ( NB_CORES                 ),
+          .N_DMA  ( NB_DMAS                  ),
+          .N_EXT  ( 4                        ),
+          .N_MEM  ( NB_TCDM_BANKS            ),
+          .IW     ( TCDM_ID_WIDTH            ),
+          .TS_BIT ( TEST_SET_BIT             ),
+          .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
+          .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
+          .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
+  `ifndef SYNTHESIS
+          ,
+          .WAIVE_RQ3_ASSERT  ( 1'b1 ),
+          .WAIVE_RQ4_ASSERT  ( 1'b1 ),
+          .WAIVE_RSP3_ASSERT ( 1'b1 ),
+          .WAIVE_RSP5_ASSERT ( 1'b1 )
+  `endif
+        ) i_hci_interconnect (
+          .clk_i          ( clk_i                ),
+          .rst_ni         ( rst_ni               ),
+          .clear_i        ( 1'b0                 ),
+          .ctrl_i         ( hci_ctrl_i           ),
+          .cores          ( core_tcdm_slave      ),
+          .hwpe           ( hwpe_tcdm_slave [0]  ),
+          .dma            ( dma_slave            ),
+          .ext            ( ext_slave            ),
+          .mems           ( tcdm_sram_master     )
+        );
 
-      hci_ecc_interconnect #(
-        .N_HWPE ( HWPE_PRESENT             ),
-        .N_CORE ( NB_CORES                 ),
-        .N_DMA  ( NB_DMAS                  ),
-        .N_EXT  ( 4                        ),
-        .N_MEM  ( NB_TCDM_BANKS            ),
-        .IW     ( TCDM_ID_WIDTH            ),
-        .TS_BIT ( TEST_SET_BIT             ),
-        .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
-        .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
-        .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
-`ifndef SYNTHESIS
-        ,
-        .WAIVE_RQ3_ASSERT  ( 1'b1 ),
-        .WAIVE_RQ4_ASSERT  ( 1'b1 ),
-        .WAIVE_RSP3_ASSERT ( 1'b1 ),
-        .WAIVE_RSP5_ASSERT ( 1'b1 )
-`endif
-      ) i_hci_interconnect (
-        .clk_i          ( clk_i                ),
-        .rst_ni         ( rst_ni               ),
-        .clear_i        ( 1'b0                 ),
-        .ctrl_i         ( hci_ctrl_i           ),
-        .periph_hci_ecc ( hci_ecc_periph_slave ),
-        .cores          ( core_tcdm_slave      ),
-        .hwpe           ( hwpe_tcdm_slave [0]  ),
-        .dma            ( dma_slave            ),
-        .ext            ( ext_slave            ),
-        .mems           ( tcdm_sram_master     )
-      );
+        assign hci_ecc_periph_slave.gnt     = '0;
+        assign hci_ecc_periph_slave.r_rdata = '0;
+        assign hci_ecc_periph_slave.r_opc   = '0;
+        assign hci_ecc_periph_slave.r_id    = '0;
+        assign hci_ecc_periph_slave.r_valid = '0;
+      end
 
     end else begin : no_hci_gen
 

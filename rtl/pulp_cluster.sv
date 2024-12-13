@@ -669,30 +669,31 @@ per2axi_wrap #(
 //***************************************************
 
 cluster_interconnect_wrap #(
-  .NB_CORES               ( Cfg.NumCores           ),
-  .HWPE_PRESENT           ( Cfg.HwpePresent        ),
-  .NB_HWPE_PORTS          ( Cfg.HwpeNumPorts       ),
-  .NB_DMAS                ( Cfg.DmaNumPlugs        ),
-  .NB_MPERIPHS            ( Cfg.NumMstPeriphs      ),
-  .NB_TCDM_BANKS          ( Cfg.TcdmNumBank        ),
-  .NB_SPERIPHS            ( Cfg.NumSlvPeriphs      ),
+  .NB_CORES               ( Cfg.NumCores                    ),
+  .HWPE_PRESENT           ( Cfg.HwpePresent                 ),
+  .NB_HWPE_PORTS          ( Cfg.HwpeNumPorts                ),
+  .NB_DMAS                ( Cfg.DmaNumPlugs                 ),
+  .NB_MPERIPHS            ( Cfg.NumMstPeriphs               ),
+  .NB_TCDM_BANKS          ( Cfg.TcdmNumBank                 ),
+  .NB_SPERIPHS            ( Cfg.NumSlvPeriphs               ),
 
-  .DATA_WIDTH             ( DataWidth              ),
-  .ADDR_WIDTH             ( AddrWidth              ),
-  .BE_WIDTH               ( BeWidth                ),
-  .ClusterBaseAddr        ( Cfg.ClusterBaseAddr    ),
-  .ClusterPeripheralsOffs ( Cfg.ClusterPeriphOffs  ),
-  .ClusterExternalOffs    ( Cfg.ClusterExternalOffs),
+  .DATA_WIDTH             ( DataWidth                       ),
+  .ADDR_WIDTH             ( AddrWidth                       ),
+  .BE_WIDTH               ( BeWidth                         ),
+  .ClusterBaseAddr        ( Cfg.ClusterBaseAddr             ),
+  .ClusterPeripheralsOffs ( Cfg.ClusterPeriphOffs           ),
+  .ClusterExternalOffs    ( Cfg.ClusterExternalOffs         ),
 
-  .TEST_SET_BIT           ( TestSetBit             ),
-  .ADDR_MEM_WIDTH         ( AddrMemWidth           ),
+  .TEST_SET_BIT           ( TestSetBit                      ),
+  .ADDR_MEM_WIDTH         ( AddrMemWidth                    ),
 
-  .PE_ROUTING_LSB         ( PeRoutingLsb           ),
-  .CLUSTER_ALIAS          ( Cfg.ClusterAlias       ),
-  .USE_HETEROGENEOUS_INTERCONNECT ( Cfg.UseHci     ),
-  .HCI_CORE_SIZE          ( HciCoreSizeParam       ),
-  .HCI_HWPE_SIZE          ( HciHwpeSizeParam       ),
-  .HCI_MEM_SIZE           ( HciMemSizeParam        )
+  .PE_ROUTING_LSB         ( PeRoutingLsb                    ),
+  .CLUSTER_ALIAS          ( Cfg.ClusterAlias                ),
+  .USE_HETEROGENEOUS_INTERCONNECT ( Cfg.UseHci              ),
+  .USE_ECC_INTERCONNECT   ( Cfg.EnableECC && Cfg.ECCInterco ),
+  .HCI_CORE_SIZE          ( HciCoreSizeParam                ),
+  .HCI_HWPE_SIZE          ( HciHwpeSizeParam                ),
+  .HCI_MEM_SIZE           ( HciMemSizeParam                 )
 
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                                     ),
@@ -1543,23 +1544,31 @@ logic [Cfg.TcdmNumBank-1:0] scrubber_fix;
 logic [Cfg.TcdmNumBank-1:0] scrubber_uncorrectable;
 logic [Cfg.TcdmNumBank-1:0] scrubber_trigger;
 
-assign bank_faults = ecc_single_error | ecc_multiple_error; // TODO: check
+generate
+  if (Cfg.EnableECC) begin : gen_tcdm_scrubber
+    assign bank_faults = ecc_single_error | ecc_multiple_error; // TODO: check
 
-ecc_manager      #(
-  .NumBanks       ( Cfg.TcdmNumBank         ),
-  .ecc_mgr_req_t  ( tcdm_scrubber_reg_req_t ),
-  .ecc_mgr_rsp_t  ( tcdm_scrubber_reg_rsp_t )
-) i_tcdm_scrubber (
-  .clk_i                ( clk_i                  ),
-  .rst_ni               ( rst_ni                 ),
-  .ecc_mgr_req_i        ( tcdm_scrubber_reg_req  ),
-  .ecc_mgr_rsp_o        ( tcdm_scrubber_reg_rsp  ),
-  .bank_faults_i        ( bank_faults            ),
-  .scrub_fix_i          ( scrubber_fix           ),
-  .scrub_uncorrectable_i( scrubber_uncorrectable ),
-  .scrub_trigger_o      ( scrubber_trigger       ),
-  .test_write_mask_no   ( /* not used */         )
-);
+    ecc_manager      #(
+      .NumBanks       ( Cfg.TcdmNumBank         ),
+      .ecc_mgr_req_t  ( tcdm_scrubber_reg_req_t ),
+      .ecc_mgr_rsp_t  ( tcdm_scrubber_reg_rsp_t )
+    ) i_tcdm_scrubber (
+      .clk_i                ( clk_i                  ),
+      .rst_ni               ( rst_ni                 ),
+      .ecc_mgr_req_i        ( tcdm_scrubber_reg_req  ),
+      .ecc_mgr_rsp_o        ( tcdm_scrubber_reg_rsp  ),
+      .bank_faults_i        ( bank_faults            ),
+      .scrub_fix_i          ( scrubber_fix           ),
+      .scrub_uncorrectable_i( scrubber_uncorrectable ),
+      .scrub_trigger_o      ( scrubber_trigger       ),
+      .test_write_mask_no   ( /* not used */         )
+    );
+  end else begin : gen_no_tcdm_scrubber
+    assign bank_faults            = '0;
+    assign scrubber_trigger       = '0;
+    assign tcdm_scrubber_reg_rsp  = '0;
+  end
+endgenerate
 
 /* TCDM banks */
 tcdm_banks_wrap  #(
@@ -1569,8 +1578,8 @@ tcdm_banks_wrap  #(
   .AddrWidth      ( AddrWidth          ),
   .BeWidth        ( BeWidth            ),
   .IdWidth        ( TCDM_ID_WIDTH      ),
-  .EnableEcc      (  1                 ),
-  .EccInterco     (  1                 ),
+  .EnableEcc      (  Cfg.EnableECC     ),
+  .EccInterco     (  Cfg.ECCInterco    ),
   .ProtectedWidth ( ProtectedTcdmWidth ),
   .HCI_MEM_SIZE   ( HciMemSizeParam    )
 ) tcdm_banks_i (

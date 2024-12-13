@@ -82,6 +82,10 @@ package pulp_cluster_package;
     bit HMRPresent;
     // Enable triple modular redundancy
     bit HMRTmrEnabled;
+    // Enable ECC
+    bit EnableECC;
+    // Enable ECC on the hci interconnect
+    bit ECCInterco;
     // Number if I$ banks
     byte_t iCacheNumBanks;
     // Number of I$ lines
@@ -196,6 +200,8 @@ package pulp_cluster_package;
     HwpeNumPorts: 0,
     HMRPresent: 0,
     HMRTmrEnabled: 0,
+    EnableECC: 0,
+    ECCInterco: 0,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,
