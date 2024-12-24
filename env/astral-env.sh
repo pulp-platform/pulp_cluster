@@ -14,8 +14,6 @@ if test -f /etc/iis.version; then
   export VCOM="$QUESTA vcom"
   export VOPT="$QUESTA vopt"
   export VSIM="$QUESTA vsim"
-  export QUESTA_HOME=/usr/pack/${QUESTA}/questasim
-  export QUESTASIM_HOME=/usr/pack/${QUESTA}/questasim
   export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
 fi
 
