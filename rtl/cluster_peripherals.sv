@@ -17,7 +17,6 @@
  */
 
 `include "register_interface/typedef.svh"
-`include "common_cells/registers.svh"
 
 module cluster_peripherals 
   import pulp_cluster_package::*;
