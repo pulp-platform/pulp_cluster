@@ -113,7 +113,6 @@ include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
-	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized' >> $@
 
 include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
