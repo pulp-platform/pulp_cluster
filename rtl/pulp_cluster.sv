@@ -276,11 +276,6 @@ logic [Cfg.NumCores-1:0][Cfg.iCachePrivateDataWidth-1:0] instr_r_rdata;
 logic [1:0]                                 s_TCDM_arb_policy;
 logic                                       tcdm_sleep;
 
-// FIXME: iDMA
-// logic               s_dma_pe_event;
-// logic               s_dma_pe_irq;
-// logic               s_pf_event;
-
 logic[Cfg.NumCores-1:0][4:0] irq_id;
 logic[Cfg.NumCores-1:0][4:0] irq_ack_id;
 logic[Cfg.NumCores-1:0]      irq_req;
@@ -299,14 +294,6 @@ logic                                       s_dma_fc_irq;
 logic [Cfg.NumCores-1:0] hmr_barrier_matched;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_resynch_req, hmr_tmr_sw_resynch_req;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
-
-// FIXME: iDMA
-// logic                                       s_dma_decompr_event;
-// logic                                       s_dma_decompr_irq;
-
-// logic                                       s_decompr_done_evt;
-
-// assign s_dma_fc_irq = s_decompr_done_evt;
 
 localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   DW:  DataWidth,
@@ -879,7 +866,6 @@ cluster_peripherals #(
   .flush_ready_i            ( s_icache_flush_ready              ),
   .IC_ctrl_unit_bus_main    (  IC_ctrl_unit_bus_main            ),
   .IC_ctrl_unit_bus_pri     (  IC_ctrl_unit_bus_pri             ),
-  // .l0_events_i              ( s_icache_l0_events                ),
   .l1_events_i              ( s_icache_l1_events                )
 );
 
@@ -1587,8 +1573,7 @@ tcdm_banks_wrap  #(
   .rst_ni                ( rst_ni                   ),
   .test_mode_i           ( test_mode_i              ),
   // Scrubber
-  .scrub_trigger_i       ( scrubber_trigger         ),
-                                                       // in the cluster control unit.
+  .scrub_trigger_i       ( scrubber_trigger         ), // in the cluster control unit.
   .scrub_fix_o           ( scrubber_fix             ),
   .scrub_uncorrectable_o ( scrubber_uncorrectable   ),
   // ECC

@@ -15,16 +15,15 @@
 
 `include "hci_helpers.svh"
 
-import hci_package::*;
-import pulp_cluster_package::*;
-
 module hwpe_subsystem
+  import hci_package::*;
+  import pulp_cluster_package::*;
 #(
   parameter  hwpe_subsystem_cfg_t HWPE_CFG = '0,
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
   parameter  int unsigned ID_WIDTH         = 8,
-  parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0
+  parameter  hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0
 )
 (
   input  logic                             clk,

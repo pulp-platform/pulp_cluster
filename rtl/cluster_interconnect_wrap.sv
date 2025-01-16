@@ -20,32 +20,32 @@ import hci_package::*;
 
 module cluster_interconnect_wrap
 #(
-  parameter NB_CORES        = 8,
-  parameter HWPE_PRESENT    = 1,
-  parameter NB_HWPE_PORTS   = 9,
-  parameter NB_DMAS         = 4,
-  parameter NB_MPERIPHS     = 1,
-  parameter NB_TCDM_BANKS   = 16,
-  parameter NB_SPERIPHS     = 10, //differ
+  parameter int unsigned  NB_CORES        = 8,
+  parameter int unsigned  HWPE_PRESENT    = 1,
+  parameter int unsigned  NB_HWPE_PORTS   = 9,
+  parameter int unsigned  NB_DMAS         = 4,
+  parameter int unsigned  NB_MPERIPHS     = 1,
+  parameter int unsigned  NB_TCDM_BANKS   = 16,
+  parameter int unsigned  NB_SPERIPHS     = 10, //differ
 
-  parameter DATA_WIDTH      = 32,
-  parameter ADDR_WIDTH      = 32,
-  parameter BE_WIDTH        = DATA_WIDTH/8,
+  parameter int unsigned  DATA_WIDTH      = 32,
+  parameter int unsigned  ADDR_WIDTH      = 32,
+  parameter int unsigned  BE_WIDTH        = DATA_WIDTH/8,
   parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
   parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
 
   //TCDM PARAMETERS
-  parameter TEST_SET_BIT    = 20,
-  parameter ADDR_MEM_WIDTH  = 11,
-  parameter LOG_CLUSTER     = 5,
-  parameter PE_ROUTING_LSB  = 10,
-  parameter PE_ROUTING_MSB  = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
-  parameter CLUSTER_ALIAS   = 1,
-  parameter CLUSTER_ALIAS_BASE = 12'h000,
+  parameter int unsigned  TEST_SET_BIT        = 20,
+  parameter int unsigned  ADDR_MEM_WIDTH      = 11,
+  parameter int unsigned  LOG_CLUSTER         = 5,
+  parameter int unsigned  PE_ROUTING_LSB      = 10,
+  parameter int unsigned  PE_ROUTING_MSB      = PE_ROUTING_LSB+$clog2(NB_SPERIPHS)-1, //differ
+  parameter int unsigned  CLUSTER_ALIAS       = 1,
+  parameter int unsigned  CLUSTER_ALIAS_BASE  = 12'h000,
 
-  parameter USE_HETEROGENEOUS_INTERCONNECT = 1,
-  parameter USE_ECC_INTERCONNECT           = 0,
+  parameter int unsigned  USE_HETEROGENEOUS_INTERCONNECT = 1,
+  parameter int unsigned  USE_ECC_INTERCONNECT           = 0,
   parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
@@ -85,6 +85,7 @@ module cluster_interconnect_wrap
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
+          //For an explanation of these macros refer to https://github.com/pulp-platform/hci/blob/v2.1.1/rtl/common/hci_helpers.svh
           .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
           .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
           .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )

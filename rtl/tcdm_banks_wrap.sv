@@ -90,6 +90,7 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
       assign tcdm_slave_dec.r_id = resp_id_q;
 
       hci_ecc_dec #(
+        //For an explanation of these macros refer to https://github.com/pulp-platform/hci/blob/v2.1.1/rtl/common/hci_helpers.svh
         .`HCI_SIZE_PARAM(tcdm_target) ( HCI_MEM_SIZE ),
         .EnableData                   ( 0            )
       ) i_ecc_dec_meta (

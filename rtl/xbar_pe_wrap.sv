@@ -26,18 +26,18 @@
 module xbar_pe_wrap
   import pulp_cluster_package::*;
   #(
-  parameter NB_CORES           = 12,
-  parameter NB_MPERIPHS        = 1,
-  parameter NB_SPERIPHS        = 10,   
-  parameter ADDR_WIDTH         = 32,
-  parameter DATA_WIDTH         = 32,
-  parameter BE_WIDTH           = 0,
-  parameter PE_ROUTING_LSB     = 10,
-  parameter PE_ROUTING_MSB     = 13,
-  parameter bit HWPE_PRESENT   = 1'b1,
-  parameter CLUSTER_ALIAS      = 1,
-  parameter CLUSTER_ALIAS_BASE =  12'h000,
-  parameter ADDREXT         = 1'b0,
+  parameter int unsigned  NB_CORES           = 12,
+  parameter int unsigned  NB_MPERIPHS        = 1,
+  parameter int unsigned  NB_SPERIPHS        = 10,   
+  parameter int unsigned  ADDR_WIDTH         = 32,
+  parameter int unsigned  DATA_WIDTH         = 32,
+  parameter int unsigned  BE_WIDTH           = 0,
+  parameter int unsigned  PE_ROUTING_LSB     = 10,
+  parameter int unsigned  PE_ROUTING_MSB     = 13,
+  parameter bit           HWPE_PRESENT       = 1'b1,
+  parameter int unsigned  CLUSTER_ALIAS      = 1,
+  parameter int unsigned  CLUSTER_ALIAS_BASE =  12'h000,
+  parameter int unsigned  ADDREXT            = 1'b0,
   parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
   parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000
@@ -59,11 +59,8 @@ module xbar_pe_wrap
   assign cluster_base_addr = ClusterBaseAddr + (cluster_id_i << 22);            // same as in the cluster_bus_wrap
   assign cluster_peripherals_base = cluster_base_addr + ClusterPeripheralsOffs; // same as in the cluster_bus_wrap
   assign cluster_peripherals_end  = cluster_base_addr + ClusterExternalOffs;    // same as in the cluster_bus_wrap
-  
-  if (CLUSTER_ALIAS == 1)
-    assign cluster_alias = 1'b1;
-  else 
-    assign cluster_alias = 1'b0;
+
+  assign cluster_alias = CLUSTER_ALIAS;
 
   localparam int unsigned PE_XBAR_N_INPS = NB_CORES + NB_MPERIPHS;
   localparam int unsigned PE_XBAR_N_OUPS = NB_SPERIPHS;

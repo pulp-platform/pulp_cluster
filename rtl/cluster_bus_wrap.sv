@@ -72,17 +72,12 @@ module cluster_bus_wrap
   input  master_resp_t ext_master_resp_i
 );
 
-  //`AXI_TYPEDEF_ALL_CT(xbar_slv, xbar_slv_req_t, xbar_slv_rsp_t, axi_aw_t, axi_slv_iw_t, axi_dw_t, axi_strbw_t, axi_uw_t)
-  //`AXI_TYPEDEF_ALL_CT(xbar_mst, xbar_mst_req_t, xbar_mst_rsp_t, axi_aw_t, axi_mst_iw_t, axi_dw_t, axi_strbw_t, axi_uw_t)
-
   //Ensure that AXI_ID out width has the correct size with an elaboration system task
   if (AXI_ID_OUT_WIDTH < AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
     $error("ID width of AXI output ports is to small. The output id width must be input ID width + clog2(<nr slave ports>) which is %d but it was %d", AXI_ID_IN_WIDTH + $clog2(NB_SLAVE), AXI_ID_OUT_WIDTH);
   else if (AXI_ID_OUT_WIDTH > AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
     $warning("ID width of the AXI output port has the wrong length. It is larger than the required value. Trim it to the right length to get rid of this warning.");
 
-  // if (AXI_ADDR_WIDTH != 48)
-  //   $fatal(1,"Address map is only defined for 48-bit addresses!");
   if (TCDM_SIZE == 0)
     $fatal(1,"TCDM size must be non-zero!");
   if (TCDM_SIZE >2048*1024) // Periph start address is at offset 0x0020_0000, which actually allows for up to 2 MiB of TCDM,
@@ -93,7 +88,7 @@ module cluster_bus_wrap
   slave_req_t [NB_SLAVE-1:0] axi_slave_reqs;
   slave_resp_t [NB_SLAVE-1:0] axi_slave_resps;
 
-  // assign here your axi slaves  
+  // assign here your axi slaves
   `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[0], data_slave_req_i)
   `AXI_ASSIGN_RESP_STRUCT(data_slave_resp_o, axi_slave_resps[0])
   `AXI_ASSIGN_REQ_STRUCT(axi_slave_reqs[1], instr_slave_req_i)
@@ -106,7 +101,7 @@ module cluster_bus_wrap
   master_req_t [NB_MASTER-1:0] axi_master_reqs;
   master_resp_t [NB_MASTER-1:0] axi_master_resps;
 
-  // assign here your axi masters       
+  // assign here your axi masters
   `AXI_ASSIGN_REQ_STRUCT(tcdm_master_req_o, axi_master_reqs[0])
   `AXI_ASSIGN_RESP_STRUCT(axi_master_resps[0], tcdm_master_resp_i)
   `AXI_ASSIGN_REQ_STRUCT(periph_master_req_o, axi_master_reqs[1])

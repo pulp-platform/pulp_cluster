@@ -27,28 +27,28 @@ module core_region
 import rapid_recovery_pkg::*;
 #(
   // CORE PARAMETERS
-  parameter CORE_TYPE_CL            = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
-  parameter N_EXT_PERF_COUNTERS     = 1,
-  parameter NUM_INTERRUPTS          = 32,
-  parameter ADDR_WIDTH              = 32,
-  parameter DATA_WIDTH              = 32,
-  parameter INSTR_RDATA_WIDTH       = 32,
-  parameter CLUSTER_ALIAS           = 1,
-  parameter CLUSTER_ALIAS_BASE      = 12'h000,
-  parameter REMAP_ADDRESS           = 0,
+  parameter int unsigned  CORE_TYPE_CL            = 0,  // 0 for CV32, 1 RI5CY, 2 for IBEX RV32IMC
+  parameter int unsigned  N_EXT_PERF_COUNTERS     = 1,
+  parameter int unsigned  NUM_INTERRUPTS          = 32,
+  parameter int unsigned  ADDR_WIDTH              = 32,
+  parameter int unsigned  DATA_WIDTH              = 32,
+  parameter int unsigned  INSTR_RDATA_WIDTH       = 32,
+  parameter int unsigned  CLUSTER_ALIAS           = 1,
+  parameter int unsigned  CLUSTER_ALIAS_BASE      = 12'h000,
+  parameter int unsigned  REMAP_ADDRESS           = 0,
 
-  parameter APU_NARGS_CPU           = 2,
-  parameter APU_WOP_CPU             = 1,
-  parameter WAPUTYPE                = 3,
-  parameter APU_NDSFLAGS_CPU        = 3,
-  parameter APU_NUSFLAGS_CPU        = 5,
+  parameter int unsigned  APU_NARGS_CPU           = 2,
+  parameter int unsigned  APU_WOP_CPU             = 1,
+  parameter int unsigned  WAPUTYPE                = 3,
+  parameter int unsigned  APU_NDSFLAGS_CPU        = 3,
+  parameter int unsigned  APU_NUSFLAGS_CPU        = 5,
 
-  parameter FPU                     =  0,
-  parameter FP_DIVSQRT              =  0,
-  parameter SHARED_FP               =  0,
-  parameter SHARED_FP_DIVSQRT       =  0,
+  parameter int unsigned  FPU                     =  0,
+  parameter int unsigned  FP_DIVSQRT              =  0,
+  parameter int unsigned  SHARED_FP               =  0,
+  parameter int unsigned  SHARED_FP_DIVSQRT       =  0,
 
-  parameter DEBUG_START_ADDR        = 32'h1A110000,
+  parameter int unsigned  DEBUG_START_ADDR        = 32'h1A110000,
 
   parameter type core_data_req_t    = logic,
   parameter type core_data_rsp_t    = logic,
@@ -114,7 +114,6 @@ import rapid_recovery_pkg::*;
   input logic [APU_NUSFLAGS_CPU-1:0]     apu_master_flags_i
 );
 
-  // localparam N_EXT_PERF_COUNTERS_ACTUAL = 5;
   localparam USE_IBEX   = CORE_TYPE_CL == 1 || CORE_TYPE_CL == 2;
   localparam IBEX_RV32M = CORE_TYPE_CL == 1 ? ibex_pkg::RV32MSingleCycle : ibex_pkg::RV32MNone;
   localparam IBEX_RV32E = CORE_TYPE_CL == 2;

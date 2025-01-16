@@ -21,19 +21,19 @@
 module cluster_peripherals 
   import pulp_cluster_package::*;
 #(
-  parameter NB_CORES       = 8,
-  parameter NB_HWPES       = 8,
-  parameter NB_MPERIPHS    = 1,
-  parameter NB_CACHE_BANKS = 4,
-  parameter NB_SPERIPHS    = 8,
-  parameter NB_TCDM_BANKS  = 8,
-  parameter ROM_BOOT_ADDR  = 32'h1A000000,
-  parameter BOOT_ADDR      = 32'h1C000000,
-  parameter EVNT_WIDTH     = 8,
-  parameter FEATURE_DEMUX_MAPPED = 1,
-  parameter int unsigned  NB_L1_CUTS      = 16,
-  parameter int unsigned  RW_MARGIN_WIDTH = 4,
-  parameter int unsigned  NB_BARRIERS = NB_CORES
+  parameter int unsigned  NB_CORES              = 8,
+  parameter int unsigned  NB_HWPES              = 8,
+  parameter int unsigned  NB_MPERIPHS           = 1,
+  parameter int unsigned  NB_CACHE_BANKS        = 4,
+  parameter int unsigned  NB_SPERIPHS           = 8,
+  parameter int unsigned  NB_TCDM_BANKS         = 8,
+  parameter int unsigned  ROM_BOOT_ADDR         = 32'h1A000000,
+  parameter int unsigned  BOOT_ADDR             = 32'h1C000000,
+  parameter int unsigned  EVNT_WIDTH            = 8,
+  parameter int unsigned  FEATURE_DEMUX_MAPPED  = 1,
+  parameter int unsigned  NB_L1_CUTS            = 16,
+  parameter int unsigned  RW_MARGIN_WIDTH       = 4,
+  parameter int unsigned  NB_BARRIERS           = NB_CORES
 )
 (
   input  logic                        clk_i,
@@ -109,7 +109,6 @@ module cluster_peripherals
   output logic [NB_CORES-1:0]          enable_l1_l15_prefetch_o,
   output logic [NB_CORES-1:0]          flush_valid_o,
   input  logic [NB_CORES-1:0]          flush_ready_i,
-  // input  snitch_icache_pkg::icache_l0_events_t [NB_CORES-1:0] l0_events_i,
   input  snitch_icache_pkg::icache_l1_events_t l1_events_i
 );
 
@@ -286,6 +285,7 @@ module cluster_peripherals
   //********************************************************
 
 `ifdef SNITCH_ICACHE
+  //For an explanation of this macro refer to https://github.com/pulp-platform/register_interface/blob/master/include/register_interface/typedef.svh#L34
   `REG_BUS_TYPEDEF_ALL(icache, logic[31:0], logic[31:0], logic[3:0])
   icache_req_t icache_req;
   icache_rsp_t icache_rsp;

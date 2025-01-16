@@ -17,12 +17,12 @@
 
 module data_periph_demux
 #(
-    parameter ADDR_WIDTH = 32,
-    parameter DATA_WIDTH = 32,
-    parameter BYTE_ENABLE_BIT = DATA_WIDTH/8,
-    parameter REMAP_ADDRESS = 0,
-    parameter CLUSTER_ALIAS = 1,
-    parameter CLUSTER_ALIAS_BASE = 12'h000
+    parameter int unsigned ADDR_WIDTH = 32,
+    parameter int unsigned DATA_WIDTH = 32,
+    parameter int unsigned BYTE_ENABLE_BIT = DATA_WIDTH/8,
+    parameter int unsigned REMAP_ADDRESS = 0,
+    parameter int unsigned CLUSTER_ALIAS = 1,
+    parameter int unsigned CLUSTER_ALIAS_BASE = 12'h000
 )
 (
     input logic                          clk,

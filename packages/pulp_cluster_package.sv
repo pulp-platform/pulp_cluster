@@ -37,7 +37,7 @@ package pulp_cluster_package;
     SOFTEX
   } hwpe_type_e;
 
-  parameter MAX_NUM_HWPES = 8;
+  localparam int unsigned MAX_NUM_HWPES = 8;
 
   typedef struct packed {
     hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
@@ -154,26 +154,26 @@ package pulp_cluster_package;
     bit EnableRemapAddress;
   } pulp_cluster_cfg_t;
 
-  parameter int unsigned NB_SPERIPH_PLUGS_EU = 2;
+  localparam int unsigned NB_SPERIPH_PLUGS_EU = 2;
 
   // number of master and slave cluster periphs
-  parameter int unsigned NB_MPERIPHS =  1;
-  parameter int unsigned NB_SPERIPHS = 12;
+  localparam int unsigned NB_MPERIPHS =  1;
+  localparam int unsigned NB_SPERIPHS = 12;
 
   // position of peripherals on slave port of periph interconnect
-  parameter int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
-  parameter int unsigned SPER_TIMER_ID         = 1;  // 0x0400 - 0x0800
-  parameter int unsigned SPER_EVENT_U_ID       = 2;  // 0x0800 - 0x1000
+  localparam int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
+  localparam int unsigned SPER_TIMER_ID         = 1;  // 0x0400 - 0x0800
+  localparam int unsigned SPER_EVENT_U_ID       = 2;  // 0x0800 - 0x1000
                                                      // 3 also used for Event Unit
-  parameter int unsigned SPER_HWPE_ID          = 4;  // 0x1000 - 0x1400
-  parameter int unsigned SPER_ICACHE_CTRL      = 5;  // 0x1400 - 0x1800
-  parameter int unsigned SPER_DMA_CL_ID        = 6;  // 0x1800 - 0x1C00
-  parameter int unsigned SPER_DMA_FC_ID        = 7;  // 0x1C00 - 0x2000
-  parameter int unsigned SPER_HMR_UNIT_ID      = 8;  // 0x2000 - 0x2400
-  parameter int unsigned SPER_TCDM_SCRUBBER_ID = 9;  // 0x2400 - 0x2800
-  parameter int unsigned SPER_HWPE_HCI_ECC_ID  = 10; // 0x2800 - 0x3200
-  parameter int unsigned SPER_EXT_ID           = 11; // -> unmapped, directed to error
-  parameter int unsigned SPER_ERROR_ID         = 12; // -> unmapped, directed to error
+  localparam int unsigned SPER_HWPE_ID          = 4;  // 0x1000 - 0x1400
+  localparam int unsigned SPER_ICACHE_CTRL      = 5;  // 0x1400 - 0x1800
+  localparam int unsigned SPER_DMA_CL_ID        = 6;  // 0x1800 - 0x1C00
+  localparam int unsigned SPER_DMA_FC_ID        = 7;  // 0x1C00 - 0x2000
+  localparam int unsigned SPER_HMR_UNIT_ID      = 8;  // 0x2000 - 0x2400
+  localparam int unsigned SPER_TCDM_SCRUBBER_ID = 9;  // 0x2400 - 0x2800
+  localparam int unsigned SPER_HWPE_HCI_ECC_ID  = 10; // 0x2800 - 0x3200
+  localparam int unsigned SPER_EXT_ID           = 11; // -> unmapped, directed to error
+  localparam int unsigned SPER_ERROR_ID         = 12; // -> unmapped, directed to error
 
   // The following parameters refer to the cluster AXI crossbar
   localparam byte_t NumAxiSubordinatePorts = 4;
