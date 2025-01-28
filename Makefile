@@ -4,7 +4,14 @@
 
 ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
+HOSTNAME := $(shell hostname)
+ETH_HOST = $(shell echo $(HOSTNAME) | grep -q "\.ee\.ethz\.ch$$" && echo 1 || echo 0)
+ifeq ($(ETH_HOST),1)
+QUESTA ?= questa-2023.4-zr
+else
 QUESTA ?=
+endif
+
 BENDER ?= bender
 
 VSIM ?= $(QUESTA) vsim
@@ -74,7 +81,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= a5bc02e # branch: upstream-features
+PULP_RUNTIME_COMMIT ?= 272b0da # branch: upstream-features
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
