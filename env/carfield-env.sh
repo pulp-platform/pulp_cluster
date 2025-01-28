@@ -5,7 +5,9 @@
 # set up environment variables for rtl simulation, pulp-runtime and freertos
 ROOTD=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)
 
-export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
+if (hostname | grep -qE "\.ee\.ethz\.ch$") ;  then
+  export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
+fi
 
 source "$ROOTD/pulp-runtime/configs/carfield-cluster.sh"
 source "$ROOTD/scripts/vsim.sh"
