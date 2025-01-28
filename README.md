@@ -13,6 +13,21 @@ not a complete overview of all signals, this is meant as a slightly more
 detailed overview that can assist in development. Please be aware that the
 schematic may not be 100% accurate.
 
+## Dependencies
+
+To *build* the cluster, you will need:
+
+   - Bender `>= 0.24.0`
+   - GNU Make `>= 3.82`
+   - Python `>= 3.9`
+   - RISCV GCC `>= 11.2.0`
+
+We use [Bender](https://github.com/pulp-platform/bender) for hardware IP and dependency management; for more information on using Bender, please see its documentation. You can install Bender directly through the Rust package manager Cargo:
+
+```
+cargo install bender
+```
+
 ## Simulation
 
 It is possible to run benchmarks on the cluster, either within
@@ -28,31 +43,25 @@ Warning: requires QuestaSim 2022.3 or newer.
    RISCV GCC toolchain](https://github.com/pulp-platform/pulp-riscv-gcc) to use
    a pre-built release. (At IIS, this is set up by the env script in step 4.)
 
-2. We need RV64 toolchain to compile DPI libraries. To this purpose, export the
-   RV64 toolchain to a `RISCV` env variable and also export your questa
-   installation path to a `QUESTASIM_HOME` env variable. Please refer to [RISC-V
-   GNU toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain/) to use a
-   pre-built RV64 toolchain release.
-
-3. Compile the hw:
+2. Compile the hw:
    ```
    make checkout
    make scripts/compile.tcl
    make build
    ```
 
-4. Download the sw stack and bare-metal tests:
+3. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
 	make regression_tests
 	```
 
-5. Source the environment:
+4. Source the environment:
    ```
    source env/env.sh
    ```
 
-6. Run the tests. Choose any test among the `parallel_bare_tests` and the
+5. Run the tests. Choose any test among the `parallel_bare_tests` and the
    `mchan_tests`, move into the related folder and do:
 
    ```

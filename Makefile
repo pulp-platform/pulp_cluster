@@ -110,11 +110,6 @@ regression_tests:
 
 .PHONY: sim-clean compile build run
 
-$(BENDER): 
-	curl --proto '=https'  \
-	--tlsv1.2 https://pulp-platform.github.io/bender/init -sSf | sh -s -- 0.24.0
-	mv bender $(BENDER)
-
 sim-clean:
 	rm -rf scripts/compile.tcl
 	rm -rf work
