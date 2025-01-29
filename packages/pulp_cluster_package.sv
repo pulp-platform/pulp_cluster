@@ -186,7 +186,7 @@ package pulp_cluster_package;
   localparam int unsigned NumDmas = `NB_DMAS;
 
   localparam pulp_cluster_cfg_t PulpClusterDefaultCfg = '{
-    CoreType: RISCY,
+    CoreType: RI5CY,
     NumCores: NumCores,
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
