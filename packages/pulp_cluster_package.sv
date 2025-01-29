@@ -14,6 +14,8 @@
  * Michael Gautschi <gautschi@iis.ee.ethz.ch>
  */
 
+`include "pulp_soc_defines.sv"
+
 package pulp_cluster_package;
 
   import rapid_recovery_pkg::*;
@@ -157,8 +159,8 @@ package pulp_cluster_package;
   localparam int unsigned NB_SPERIPH_PLUGS_EU = 2;
 
   // number of master and slave cluster periphs
-  localparam int unsigned NB_MPERIPHS =  1;
-  localparam int unsigned NB_SPERIPHS = 12;
+  parameter int unsigned NB_MPERIPHS = `NB_MPERIPHS;
+  parameter int unsigned NB_SPERIPHS = `NB_SPERIPHS;
 
   // position of peripherals on slave port of periph interconnect
   localparam int unsigned SPER_EOC_ID           = 0;  // 0x0000 - 0x0400
@@ -180,11 +182,13 @@ package pulp_cluster_package;
   localparam byte_t NumAxiManagerPorts = 3;
   localparam byte_t AxiSubordinateIdwidth = 4;
   localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
+  localparam int unsigned NumCores = `NB_CORES;
+  localparam int unsigned NumDmas = `NB_DMAS;
 
   localparam pulp_cluster_cfg_t PulpClusterDefaultCfg = '{
-    CoreType: CV32,
-    NumCores: 8,
-    DmaNumPlugs: 4,
+    CoreType: RISCY,
+    NumCores: NumCores,
+    DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
     NumMstPeriphs: NB_MPERIPHS,
@@ -193,15 +197,15 @@ package pulp_cluster_package;
     ClusterAliasBase: 'h0,
     NumSyncStages: 3,
     UseHci: 1,
-    TcdmSize: 64*1024,
+    TcdmSize: 128*1024,
     TcdmNumBank: 16,
-    HwpePresent: 0,
-    HwpeCfg: hwpe_subsystem_cfg_t'{'0, '0},
-    HwpeNumPorts: 0,
-    HMRPresent: 0,
-    HMRTmrEnabled: 0,
-    EnableECC: 0,
-    ECCInterco: 0,
+    HwpePresent: 1,
+    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
+    HwpeNumPorts: 9,
+    HMRPresent: 1,
+    HMRTmrEnabled: 1,
+    EnableECC: 1,
+    ECCInterco: 1,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,
@@ -222,14 +226,15 @@ package pulp_cluster_package;
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiSubordinateIdwidth,
     AxiIdOutWidth:AxiManagerIdwidth,
-    AxiAddrWidth: 32,
-    AxiDataInWidth: 32,
-    AxiDataOutWidth: 32,
+    AxiAddrWidth: 48,
+    AxiDataInWidth: 64,
+    AxiDataOutWidth: 64,
     AxiUserWidth: 10,
     AxiMaxInTrans: 64,
     AxiMaxOutTrans: 64,
     AxiCdcLogDepth: 3,
     AxiCdcSyncStages: 3,
+    SyncStages: 3,
     ClusterBaseAddr: 'h10000000,
     ClusterPeriphOffs: 'h00200000,
     ClusterExternalOffs: 'h00400000,

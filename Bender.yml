@@ -80,6 +80,7 @@ sources:
       TRACE_EXECUTION: ~
     # Level 3
   - rtl/pulp_cluster.sv
+  - rtl/pulp_cluster_wrap.sv
 
   - target: test
     files:
@@ -90,4 +91,9 @@ sources:
   - target: cluster_standalone
     files:
       - include/pulp_interfaces.sv
+
+  - target: pulp_standalone_synth
+    files:
+    - nonfree/gf12/sourcecode/tc_sram.sv
+    - nonfree/gf12/sourcecode/tc_clk.sv
 
