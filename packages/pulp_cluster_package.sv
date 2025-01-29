@@ -82,8 +82,24 @@ package pulp_cluster_package;
     byte_t HwpeNumPorts;
     // Enable the HMR Unit
     bit HMRPresent;
+    // Enable double modular redundancy
+    bit HMRDmrEnabled;
     // Enable triple modular redundancy
     bit HMRTmrEnabled;
+    // Lock HMR into permanent DMR mode
+    bit HMRDmrFIxed;
+    // Lock HMR into permanent TMR mode
+    bit HMRTmrFIxed;
+    // Interleave DMR/TMR cores
+    bit HMRInterleaveGrps;
+    // Enable rapid recovery
+    bit HMREnableRapidRecovery;
+    // Separates voters and checkers for data
+    bit HMRSeparateDataVoters;
+    // Separates voters and checkers for AXI buses
+    bit HMRSeparateAxiBus;
+    // Number of separate voters/checkers for individual buses
+    bit HMRNumBusVoters;
     // Enable ECC
     bit EnableECC;
     // Enable ECC on the hci interconnect
@@ -203,7 +219,15 @@ package pulp_cluster_package;
     HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
     HMRPresent: 1,
+    HMRDmrEnabled: 1,
     HMRTmrEnabled: 1,
+    HMRDmrFIxed: 0,
+    HMRTmrFIxed: 0,
+    HMRInterleaveGrps: 1,
+    HMREnableRapidRecovery: 1,
+    HMRSeparateDataVoters:1,
+    HMRSeparateAxiBus:0,
+    HMRNumBusVoters:1,
     EnableECC: 1,
     ECCInterco: 1,
     iCacheNumBanks: 2,
