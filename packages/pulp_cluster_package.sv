@@ -26,7 +26,7 @@ package pulp_cluster_package;
   // Core type
   typedef enum logic[1:0] {
     CV32,
-    RISCY,
+    RI5CY,
     IBEX
   } core_type_e;
 
@@ -39,13 +39,13 @@ package pulp_cluster_package;
 
   localparam int unsigned MAX_NUM_HWPES = 8;
 
-  typedef struct packed {
+  typedef struct {
     hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
     byte_t NumHwpes;
   } hwpe_subsystem_cfg_t;
 
   // PULP cluster configuration
-  typedef struct packed {
+  typedef struct {
     // Type of core in the cluster
     core_type_e CoreType;
     // Number of cores in the cluster
@@ -196,7 +196,7 @@ package pulp_cluster_package;
     TcdmSize: 64*1024,
     TcdmNumBank: 16,
     HwpePresent: 0,
-    HwpeCfg: '0,
+    HwpeCfg: hwpe_subsystem_cfg_t'{'0, '0},
     HwpeNumPorts: 0,
     HMRPresent: 0,
     HMRTmrEnabled: 0,

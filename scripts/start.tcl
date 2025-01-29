@@ -16,5 +16,7 @@ if {[info exists ::env(FAULT_INJECTION)]} {
     source $::env(FAULT_INJECTION_SCRIPT)
 }
 
+source $VSIM_PATH/scripts/wave.tcl
+
 add log -r /*
 run -all

@@ -484,8 +484,8 @@ hci_core_intf #(
   c2s_req_t s_data_master_req;
   c2s_resp_t s_data_master_resp;
 
-  c2s_in_req_t s_core_instr_bus_req;    
-  c2s_in_resp_t s_core_instr_bus_resp;  
+  c2s_in_req_t s_core_instr_bus_req;
+  c2s_in_resp_t s_core_instr_bus_resp;
 
   // ***********************************************************************************************+
   // ***********************************************************************************************+
@@ -616,7 +616,7 @@ if (Cfg.NumMstPeriphs > 1) begin
   XBAR_TCDM_BUS s_mperiph_demux_bus[Cfg.NumMstPeriphs-1:0]();
   per_demux_wrap #(
     .NB_MASTERS  ( Cfg.NumMstPeriphs ),
-    .ADDR_OFFSET ( 20          )
+    .ADDR_OFFSET ( 20                )
   ) per_demux_wrap_i (
     .clk_i   ( clk_i               ),
     .rst_ni  ( rst_ni              ),

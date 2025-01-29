@@ -285,7 +285,7 @@ module pulp_cluster_tb;
       );
 
   localparam pulp_cluster_cfg_t PulpClusterCfg = '{
-    CoreType: pulp_cluster_package::RISCY,
+    CoreType: pulp_cluster_package::RI5CY,
     NumCores: `NB_CORES,
     DmaNumPlugs: `NB_DMAS,
     DmaNumOutstandingBursts: 8,
@@ -537,9 +537,9 @@ module pulp_cluster_tb;
    end
 
    @(negedge s_clk);
-     assign s_cluster_en_sa_boot = 1'b1;
+   assign s_cluster_en_sa_boot = 1'b1;
    @(negedge s_clk);
-     assign s_cluster_fetch_en = 1'b1;
+   assign s_cluster_fetch_en = 1'b1;
 
    ret_val = '0;
    while(~s_cluster_eoc) begin

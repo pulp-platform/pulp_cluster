@@ -19,7 +19,7 @@ module hwpe_subsystem
   import hci_package::*;
   import pulp_cluster_package::*;
 #(
-  parameter  hwpe_subsystem_cfg_t HWPE_CFG = '0,
+  parameter  hwpe_subsystem_cfg_t HWPE_CFG = hwpe_subsystem_cfg_t'{'0, '0},
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
   parameter  int unsigned ID_WIDTH         = 8,
