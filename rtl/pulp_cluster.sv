@@ -1492,8 +1492,6 @@ endgenerate
     .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
     .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
   );
-
-  assign s_core_instr_bus.aw_atop = '0;
 `endif
 
 `REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[AddrWidth-1:0], logic[DataWidth-1:0], logic[BeWidth-1:0])
