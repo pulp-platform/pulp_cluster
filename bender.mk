@@ -9,7 +9,6 @@ bender_defs += -D ICAHE_USE_FF
 bender_defs += -D TRACE_EXECUTION
 bender_defs += -D CLUSTER_ALIAS
 bender_defs += -D USE_PULP_PARAMETERS
-bender_defs += -D SNITCH_ICACHE
 
 bender_targs += -t rtl
 bender_targs += -t test
