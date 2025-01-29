@@ -23,32 +23,32 @@
 module cluster_bus_wrap
     import axi_pkg::xbar_cfg_t;
 #(
-  parameter int unsigned                NB_MASTER             = 3 ,
-  parameter int unsigned                NB_SLAVE              = 4 ,
-  parameter int unsigned                NB_CORES              = 4 ,
-  parameter int unsigned                AXI_ADDR_WIDTH        = 32,
-  parameter int unsigned                AXI_DATA_WIDTH        = 64,
-  parameter int unsigned                AXI_ID_IN_WIDTH       = 4 ,
-  parameter int unsigned                AXI_ID_OUT_WIDTH      = 6 ,
-  parameter int unsigned                AXI_USER_WIDTH        = 6 ,
-  parameter int unsigned                DMA_NB_OUTSND_BURSTS  = 8 ,
-  parameter int unsigned                TCDM_SIZE             = 0,
+  parameter int unsigned                NB_MASTER              = 3 ,
+  parameter int unsigned                NB_SLAVE               = 4 ,
+  parameter int unsigned                NB_CORES               = 4 ,
+  parameter int unsigned                AXI_ADDR_WIDTH         = 32,
+  parameter int unsigned                AXI_DATA_WIDTH         = 64,
+  parameter int unsigned                AXI_ID_IN_WIDTH        = 4 ,
+  parameter int unsigned                AXI_ID_OUT_WIDTH       = 6 ,
+  parameter int unsigned                AXI_USER_WIDTH         = 6 ,
+  parameter int unsigned                DMA_NB_OUTSND_BURSTS   = 8 ,
+  parameter int unsigned                TCDM_SIZE              = 0,
   parameter logic [AXI_ADDR_WIDTH-1:0]  BaseAddr               = 'h10000000,
   parameter logic [AXI_ADDR_WIDTH-1:0]  ClusterPeripheralsOffs = 'h00200000,
   parameter logic [AXI_ADDR_WIDTH-1:0]  ClusterExternalOffs    = 'h00400000,
-  parameter type                        slave_req_t           = logic,
-  parameter type                        slave_resp_t          = logic,
-  parameter type                        master_req_t          = logic,
-  parameter type                        master_resp_t         = logic,
-  parameter type                        slave_aw_chan_t       = logic,
-  parameter type                        master_aw_chan_t      = logic,
-  parameter type                        w_chan_t              = logic,
-  parameter type                        slave_b_chan_t        = logic,
-  parameter type                        master_b_chan_t       = logic,
-  parameter type                        slave_ar_chan_t       = logic,
-  parameter type                        master_ar_chan_t      = logic,
-  parameter type                        slave_r_chan_t        = logic,
-  parameter type                        master_r_chan_t       = logic
+  parameter type                        slave_req_t            = logic,
+  parameter type                        slave_resp_t           = logic,
+  parameter type                        master_req_t           = logic,
+  parameter type                        master_resp_t          = logic,
+  parameter type                        slave_aw_chan_t        = logic,
+  parameter type                        master_aw_chan_t       = logic,
+  parameter type                        w_chan_t               = logic,
+  parameter type                        slave_b_chan_t         = logic,
+  parameter type                        master_b_chan_t        = logic,
+  parameter type                        slave_ar_chan_t        = logic,
+  parameter type                        master_ar_chan_t       = logic,
+  parameter type                        slave_r_chan_t         = logic,
+  parameter type                        master_r_chan_t        = logic
 )
 (
   input  logic         clk_i,
@@ -80,8 +80,7 @@ module cluster_bus_wrap
 
   if (TCDM_SIZE == 0)
     $fatal(1,"TCDM size must be non-zero!");
-  if (TCDM_SIZE >2048*1024) // Periph start address is at offset 0x0020_0000, which actually allows for up to 2 MiB of TCDM,
-                            // do not know why to trigger te assertion for more than 128 KiB TCDM size...
+  if (TCDM_SIZE>ClusterPeripheralsOffs) // The TCDM must be entirely addressable
     $fatal(1,"TCDM size exceeds available address space in cluster bus!");
 
   // Crossbar
