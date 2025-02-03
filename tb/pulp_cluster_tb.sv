@@ -168,7 +168,7 @@ module pulp_cluster_tb #(
    // Behavioural slaves
    axi_m_req_t  axi_memreq;
    axi_m_resp_t axi_memrsp;
-   axi_m_resp_t axi_simmemrsp;
+  //  axi_m_resp_t axi_simmemrsp;
 
   `AXI_ASSIGN_TO_REQ(axi_memreq, axi_master[1])
   `AXI_ASSIGN_FROM_RESP(axi_master[1], axi_memrsp)
@@ -265,35 +265,65 @@ module pulp_cluster_tb #(
     .axi_wide_rsp_o  ( dma_demux_memisl_resp )
   );
 
-  axi_sim_mem #(
-    .AddrWidth ( AxiAw        ),
-    .DataWidth ( AxiDw        ),
-    .IdWidth   ( AxiIwMst     ),
-    .UserWidth ( AxiUw        ),
-    .axi_req_t ( axi_m_req_t  ),
-    .axi_rsp_t ( axi_m_resp_t ),
-    .ApplDelay ( SYS_TA       ),
-    .AcqDelay  ( SYS_TT       )
-  ) sim_mem (
-     .clk_i     ( s_clk      ),
-     .rst_ni    ( s_rstn     ),
-     .axi_req_i ( axi_memreq ),
-     .axi_rsp_o ( axi_simmemrsp ),
-     .mon_w_valid_o     (),
-     .mon_w_addr_o      (),
-     .mon_w_data_o      (),
-     .mon_w_id_o        (),
-     .mon_w_user_o      (),
-     .mon_w_beat_count_o(),
-     .mon_w_last_o      (),
-     .mon_r_valid_o     (),
-     .mon_r_addr_o      (),
-     .mon_r_data_o      (),
-     .mon_r_id_o        (),
-     .mon_r_user_o      (),
-     .mon_r_beat_count_o(),
-     .mon_r_last_o      ()
-  );
+  // axi_sim_mem #(
+  //   .AddrWidth ( AxiAw        ),
+  //   .DataWidth ( AxiDw        ),
+  //   .IdWidth   ( AxiIwMst     ),
+  //   .UserWidth ( AxiUw        ),
+  //   .axi_req_t ( axi_m_req_t  ),
+  //   .axi_rsp_t ( axi_m_resp_t ),
+  //   .ApplDelay ( SYS_TA       ),
+  //   .AcqDelay  ( SYS_TT       )
+  // ) sim_mem (
+  //    .clk_i     ( s_clk      ),
+  //    .rst_ni    ( s_rstn     ),
+  //    .axi_req_i ( axi_memreq ),
+  //    .axi_rsp_o ( axi_memrsp ),
+  //    .mon_w_valid_o     (),
+  //    .mon_w_addr_o      (),
+  //    .mon_w_data_o      (),
+  //    .mon_w_id_o        (),
+  //    .mon_w_user_o      (),
+  //    .mon_w_beat_count_o(),
+  //    .mon_w_last_o      (),
+  //    .mon_r_valid_o     (),
+  //    .mon_r_addr_o      (),
+  //    .mon_r_data_o      (),
+  //    .mon_r_id_o        (),
+  //    .mon_r_user_o      (),
+  //    .mon_r_beat_count_o(),
+  //    .mon_r_last_o      ()
+  // );
+
+  // axi_sim_mem #(
+  //   .AddrWidth ( AxiAw          ),
+  //   .DataWidth ( DmaAxiDw       ),
+  //   .IdWidth   ( AxiIwMst       ),
+  //   .UserWidth ( AxiUw          ),
+  //   .axi_req_t ( dma_axi_req_t  ),
+  //   .axi_rsp_t ( dma_axi_resp_t ),
+  //   .ApplDelay ( SYS_TA         ),
+  //   .AcqDelay  ( SYS_TT         )
+  //   ) sim_wide_mem (
+  //    .clk_i     ( s_clk      ),
+  //    .rst_ni    ( s_rstn     ),
+  //    .axi_req_i ( dma_demux_memisl_req  ),
+  //    .axi_rsp_o ( dma_demux_memisl_resp ),
+  //    .mon_w_valid_o     (),
+  //    .mon_w_addr_o      (),
+  //    .mon_w_data_o      (),
+  //    .mon_w_id_o        (),
+  //    .mon_w_user_o      (),
+  //    .mon_w_beat_count_o(),
+  //    .mon_w_last_o      (),
+  //    .mon_r_valid_o     (),
+  //    .mon_r_addr_o      (),
+  //    .mon_r_data_o      (),
+  //    .mon_r_id_o        (),
+  //    .mon_r_user_o      (),
+  //    .mon_r_beat_count_o(),
+  //    .mon_r_last_o      ()
+  // );
 
   mock_uart_axi #(
    .AxiIw   ( AxiIwMst      ),
