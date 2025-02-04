@@ -707,77 +707,46 @@ cluster_interconnect_wrap #(
 //***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
+dmac_wrap #(
+  .NB_CORES           ( Cfg.NumCores                ),
+  .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
+  .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
+  .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWidth         ),
+  .AXI_ID_WIDTH       ( AxiIdInWidth                ),
+  .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
+  .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
+  .DATA_WIDTH         ( DataWidth                   ),
+  .ADDR_WIDTH         ( AddrWidth                   ),
+  .BE_WIDTH           ( BeWidth                     ),
+  .axi_req_t          ( c2s_in_req_t                ),
+  .axi_resp_t         ( c2s_in_resp_t               ),
 `ifdef TARGET_MCHAN
-  dmac_wrap #(
-    .NB_CTRLS           ( Cfg.NumCores + 2            ),
-    .NB_CORES           ( Cfg.NumCores                ),
-    .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
-    .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
-    .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
-    .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWidth         ),
-    .AXI_ID_WIDTH       ( AxiIdInWidth                ),
-    .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
-    .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
-    .TCDM_ADD_WIDTH     ( TcdmAddrWidth               ),
-    .DATA_WIDTH         ( DataWidth                   ),
-    .ADDR_WIDTH         ( AddrWidth                   ),
-    .BE_WIDTH           ( BeWidth                     ),
-    .axi_req_t          ( c2s_in_req_t                ),
-    .axi_resp_t         ( c2s_in_resp_t               )
-  ) dmac_wrap_i        (
-    .clk_i             ( clk_i              ),
-    .rst_ni            ( rst_ni             ),
-    .test_mode_i       ( test_mode_i        ),
-    .ctrl_slave        ( s_core_dmactrl_bus ),
-    .cl_ctrl_slave     ( s_periph_dma_bus[0]),
-    .fc_ctrl_slave     ( s_periph_dma_bus[1]),
-    .tcdm_master       ( s_hci_dma          ),
-    .ext_master_req_o  ( s_dma_ext_bus_req  ),
-    .ext_master_resp_i ( s_dma_ext_bus_resp ),
-    .term_event_cl_o   ( s_dma_cl_event     ),
-    .term_irq_cl_o     ( s_dma_cl_irq       ),
-    .term_event_pe_o   ( s_dma_fc_event     ),
-    .term_irq_pe_o     ( s_dma_fc_irq       ),
-    .term_event_o      ( s_dma_event        ),
-    .term_irq_o        ( s_dma_irq          ),
-    .busy_o            ( s_dmac_busy        )
-  );
+  .NB_CTRLS           ( Cfg.NumCores + 2            ),
+  .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
+  .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
 `else
-  dmac_wrap #(
-    .NB_CORES         ( Cfg.NumCores                ),
-    .AXI_ADDR_WIDTH   ( Cfg.AxiAddrWidth            ),
-    .AXI_DATA_WIDTH   ( Cfg.AxiDataOutWidth         ),
-    .AXI_USER_WIDTH   ( Cfg.AxiUserWidth            ),
-    .AXI_ID_WIDTH     ( AxiIdInWidth                ),
-    .PE_ID_WIDTH      ( Cfg.NumCores + 1            ),
-    .NB_PE_PORTS      ( 2                           ),
-    .DATA_WIDTH       ( DataWidth                   ),
-    .ADDR_WIDTH       ( AddrWidth                   ),
-    .BE_WIDTH         ( BeWidth                     ),
-    .NUM_STREAMS      ( 4                           ),
-    .TCDM_SIZE        ( Cfg.TcdmSize                ),
-    .NB_OUTSND_BURSTS ( Cfg.DmaNumOutstandingBursts ),
-    .ClusterBaseAddr  ( Cfg.ClusterBaseAddr         ),
-    .axi_req_t        ( c2s_in_req_t                ),
-    .axi_resp_t       ( c2s_in_resp_t               )
-  ) dmac_wrap_i     (
-    .clk_i              ( clk_i                            ),
-    .rst_ni             ( rst_ni                           ),
-    .test_mode_i        ( test_mode_i                      ),
-    .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
-    .ctrl_slave         ( s_core_dmactrl_bus               ),
-    .tcdm_master        ( s_hci_dma                        ),
-
-    .ext_master_req_o   ( s_dma_ext_bus_req                ),
-    .ext_master_resp_i  ( s_dma_ext_bus_resp               ),
-
-    .term_event_o       ( s_dma_event                      ),
-    .term_irq_o         ( s_dma_irq                        ),
-    .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
-    .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
-    .busy_o             ( s_dmac_busy                      )
-  );
+  .NB_PE_PORTS        ( 2                           ),
+  .NUM_STREAMS        ( 4                           ),
+  .TCDM_SIZE          ( Cfg.TcdmSize                ),
+  .ClusterBaseAddr    ( Cfg.ClusterBaseAddr         )
 `endif
+) dmac_wrap_i     (
+  .clk_i              ( clk_i                            ),
+  .rst_ni             ( rst_ni                           ),
+  .test_mode_i        ( test_mode_i                      ),
+  .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
+  .ctrl_slave         ( s_core_dmactrl_bus               ),
+  .tcdm_master        ( s_hci_dma                        ),
+
+  .ext_master_req_o   ( s_dma_ext_bus_req                ),
+  .ext_master_resp_i  ( s_dma_ext_bus_resp               ),
+
+  .term_event_o       ( s_dma_event                      ),
+  .term_irq_o         ( s_dma_irq                        ),
+  .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
+  .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
+  .busy_o             ( s_dmac_busy                      )
+);
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************

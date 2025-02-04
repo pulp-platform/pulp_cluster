@@ -38,21 +38,18 @@ module dmac_wrap
   input logic  clk_i,
   input logic  rst_ni,
   input logic  test_mode_i,
-  
-  hci_core_intf.target   ctrl_slave[0:NB_CORES-1],
-  XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
-  XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
-   
-  hci_core_intf.initiator tcdm_master[3:0],
-  output axi_req_t ext_master_req_o,
-  input  axi_resp_t ext_master_resp_i,
-  output logic term_event_cl_o,
-  output logic term_irq_cl_o,
-  output logic term_event_pe_o,
-  output logic term_irq_pe_o,
+
+  hci_core_intf.target        ctrl_slave[0:NB_CORES-1],
+  XBAR_PERIPH_BUS.Slave       pe_ctrl_slave[1:0],
+
+  hci_core_intf.initiator     tcdm_master[3:0],
+  output axi_req_t            ext_master_req_o,
+  input  axi_resp_t           ext_master_resp_i,
+  output logic [1:0]          term_event_pe_o,
+  output logic [1:0]          term_irq_pe_o,
   output logic [NB_CORES-1:0] term_event_o,
   output logic [NB_CORES-1:0] term_irq_o,
-  output logic busy_o
+  output logic                busy_o
 );
 
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
@@ -100,30 +97,30 @@ module dmac_wrap
   endgenerate
 
   // // CL CTRL PORT BINDING
-  assign s_ctrl_bus_add[NB_CORES]     = cl_ctrl_slave.add;
-  assign s_ctrl_bus_req[NB_CORES]     = cl_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[NB_CORES]   = cl_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[NB_CORES]     = cl_ctrl_slave.wen;
-  assign s_ctrl_bus_be[NB_CORES]      = cl_ctrl_slave.be;
-  assign s_ctrl_bus_id[NB_CORES]      = cl_ctrl_slave.id;
-  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES];
-  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES];
-  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES];
-  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES];
-  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES];
+  assign s_ctrl_bus_add[NB_CORES]     = pe_ctrl_slave[0].add;
+  assign s_ctrl_bus_req[NB_CORES]     = pe_ctrl_slave[0].req;
+  assign s_ctrl_bus_wdata[NB_CORES]   = pe_ctrl_slave[0].wdata;
+  assign s_ctrl_bus_wen[NB_CORES]     = pe_ctrl_slave[0].wen;
+  assign s_ctrl_bus_be[NB_CORES]      = pe_ctrl_slave[0].be;
+  assign s_ctrl_bus_id[NB_CORES]      = pe_ctrl_slave[0].id;
+  assign pe_ctrl_slave[0].gnt     = s_ctrl_bus_gnt[NB_CORES];
+  assign pe_ctrl_slave[0].r_opc   = s_ctrl_bus_r_opc[NB_CORES];
+  assign pe_ctrl_slave[0].r_valid = s_ctrl_bus_r_valid[NB_CORES];
+  assign pe_ctrl_slave[0].r_rdata = s_ctrl_bus_r_rdata[NB_CORES];
+  assign pe_ctrl_slave[0].r_id    = s_ctrl_bus_r_id[NB_CORES];
 
   // FC CTRL PORT BINDING
-  assign s_ctrl_bus_add[NB_CORES+1]     = fc_ctrl_slave.add;
-  assign s_ctrl_bus_req[NB_CORES+1]     = fc_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[NB_CORES+1]   = fc_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[NB_CORES+1]     = fc_ctrl_slave.wen;
-  assign s_ctrl_bus_be[NB_CORES+1]      = fc_ctrl_slave.be;
-  assign s_ctrl_bus_id[NB_CORES+1]      = fc_ctrl_slave.id;
-  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES+1];
-  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES+1];
-  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES+1];
-  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES+1];
-  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES+1];
+  assign s_ctrl_bus_add[NB_CORES+1]     = pe_ctrl_slave[1].add;
+  assign s_ctrl_bus_req[NB_CORES+1]     = pe_ctrl_slave[1].req;
+  assign s_ctrl_bus_wdata[NB_CORES+1]   = pe_ctrl_slave[1].wdata;
+  assign s_ctrl_bus_wen[NB_CORES+1]     = pe_ctrl_slave[1].wen;
+  assign s_ctrl_bus_be[NB_CORES+1]      = pe_ctrl_slave[1].be;
+  assign s_ctrl_bus_id[NB_CORES+1]      = pe_ctrl_slave[1].id;
+  assign pe_ctrl_slave[1].gnt     = s_ctrl_bus_gnt[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_opc   = s_ctrl_bus_r_opc[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_valid = s_ctrl_bus_r_valid[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_rdata = s_ctrl_bus_r_rdata[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_id    = s_ctrl_bus_r_id[NB_CORES+1];
 
   generate
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND
@@ -242,8 +239,8 @@ module dmac_wrap
     .axi_master_b_user_i       ( ext_master_resp_i.b.user                 ),
     .axi_master_b_ready_o      ( ext_master_req_o.b_ready                 ),
 
-    .term_evt_o                ( {term_event_pe_o,term_event_cl_o,term_event_o}     ),
-    .term_int_o                ( {term_irq_pe_o,term_irq_cl_o,term_irq_o      }     ),
+    .term_evt_o                ( {term_event_pe_o[1],term_event_pe_o[0],term_event_o}     ),
+    .term_int_o                ( {term_irq_pe_o[1],term_irq_pe_o[0],term_irq_o      }     ),
 
     .busy_o                    ( busy_o                             )
   );
