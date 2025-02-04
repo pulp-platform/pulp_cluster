@@ -170,6 +170,8 @@ package pulp_cluster_package;
     doub_t ClusterExternalOffs;
     // Address remap for virtualization
     bit EnableRemapAddress;
+    // Enable Snitch ICache
+    bit SnitchICache;
   } pulp_cluster_cfg_t;
 
   localparam int unsigned NB_SPERIPH_PLUGS_EU = 2;
@@ -263,6 +265,7 @@ package pulp_cluster_package;
     ClusterPeriphOffs: 'h00200000,
     ClusterExternalOffs: 'h00400000,
     EnableRemapAddress: 0,
+    SnitchICache: 0,
     default: '0
   };
 

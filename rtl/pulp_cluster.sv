@@ -1326,7 +1326,7 @@ generate
   end
 endgenerate
 
-`ifdef SNITCH_ICACHE
+if (Cfg.SnitchICache) begin : gen_snitch_icache
 
   pulp_icache_wrap #(
     .NumFetchPorts  ( Cfg.NumCores                                 ),
@@ -1390,7 +1390,7 @@ endgenerate
       assign IC_ctrl_unit_bus_main[i].ctrl_miss_count  = '0;
     `endif
   end
-`else
+end else begin : gen_hier_icache
   assign s_icache_flush_ready = '0;
   assign s_icache_l0_events = '0;
   assign s_icache_l1_events = '0;
@@ -1492,7 +1492,7 @@ endgenerate
     .IC_ctrl_unit_bus_pri   ( IC_ctrl_unit_bus_pri      ),
     .IC_ctrl_unit_bus_main  ( IC_ctrl_unit_bus_main     )
   );
-`endif
+end
 
 `REG_BUS_TYPEDEF_ALL(tcdm_scrubber_reg, logic[AddrWidth-1:0], logic[DataWidth-1:0], logic[BeWidth-1:0])
 
