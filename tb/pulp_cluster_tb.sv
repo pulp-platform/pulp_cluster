@@ -537,22 +537,28 @@ module pulp_cluster_tb;
     input string binary;                   // File name
     addr_t       section_addr, section_len;
     byte         buffer[];
+    addr_t       section_addr_offset;
 
     // Read ELF
     void'(read_elf(binary));
     $display("[TB] Reading %s", binary);
     while (get_section(section_addr, section_len)) begin
       // Read Sections
-      automatic int num_words = (section_len + AxiWideBeWidth - 1)/AxiWideBeWidth;
-      $display("[TB] Reading section %x with %0d words", section_addr, num_words);
+      automatic int num_start_unaligned_bytes = section_addr%AxiWideBeWidth;
+      automatic int num_wide_words = (num_start_unaligned_bytes + section_len + AxiWideBeWidth - 1)/AxiWideBeWidth;
 
-      sections[section_addr >> AxiWideByteOffset] = num_words;
-      buffer                                      = new[num_words * AxiWideBeWidth];
+      $display("[TB] Reading section %x with %0d words", section_addr, num_wide_words);
+
+      sections[section_addr >> AxiWideByteOffset] = num_wide_words;
+      buffer                                      = new[num_wide_words * AxiWideBeWidth];
       void'(read_section(section_addr, buffer, section_len));
-      for (int i = 0; i < num_words; i++) begin
+      for (int i = 0; i < num_wide_words; i++) begin
         automatic logic [AxiWideBeWidth-1:0][7:0] word = '0;
         for (int j = 0; j < AxiWideBeWidth; j++) begin
-          word[j] = buffer[i * AxiWideBeWidth + j];
+          automatic int index = i * AxiWideBeWidth + j - num_start_unaligned_bytes; 
+          if(index >= 0) begin 
+            word[j] = buffer[index];
+          end
         end
         memory[section_addr/AxiWideBeWidth + i] = word;
       end
