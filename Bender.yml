@@ -30,11 +30,11 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: astral-v1.0 }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: df0540ad43ae3b693c040587a50477558f183374 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: astral-v1.0 }
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 8e0883bd0c19c6844122456c749c2bdfde18011f }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
 
 export_include_dirs:
