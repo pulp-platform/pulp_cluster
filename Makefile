@@ -37,7 +37,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 27e5f58cd2b4168fc0d822f0b387fb156ed4d9e4 # branch: smazzola/chimera
+NONFREE_COMMIT ?= 4461846b7b1951b2ecb714a459256dfd80600c13 # branch: smazzola/chimera
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
