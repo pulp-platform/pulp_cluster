@@ -366,7 +366,8 @@ localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  DEFAULT_EW,
-  EHW: DEFAULT_EHW
+  EHW: DEFAULT_EHW,
+  FD:  0
 };
 localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
   DW:  Cfg.HwpeNumPorts * DataWidth,
@@ -375,7 +376,8 @@ localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  (Cfg.ECCInterco) ? HWPEParityWidth : DEFAULT_EW,
-  EHW: DEFAULT_EHW
+  EHW: DEFAULT_EHW,
+  FD:  2
 };
 localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
   DW:  DMA_HCI_DATA_WIDTH,
@@ -384,14 +386,16 @@ localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  DEFAULT_EW,
-  EHW: DEFAULT_EHW
+  EHW: DEFAULT_EHW,
+  FD:  0
 };
 
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW )
+  .AW ( HciCoreSizeParam.AW ),
+  .FD ( HciCoreSizeParam.FD )
 ) s_hci_ext[0:`NB_EXT-1] (
   .clk ( clk_i )
 );
@@ -405,7 +409,8 @@ XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 // DMA -> (optionally) size converter
 hci_core_intf #(
   .DW ( HciDmaSizeParam.DW ),
-  .AW ( HciDmaSizeParam.AW )
+  .AW ( HciDmaSizeParam.AW ),
+  .FD ( HciDmaSizeParam.FD )
 ) s_hci_dma[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
@@ -421,13 +426,15 @@ hci_core_intf #(
   .DW   ( HciHwpeSizeParam.DW  ),
   .AW   ( HciHwpeSizeParam.AW  ),
   .EW   ( HciHwpeSizeParam.EW  ),
-  .EHW  ( HciHwpeSizeParam.EHW )
+  .EHW  ( HciHwpeSizeParam.EHW ),
+  .FD   ( HciHwpeSizeParam.FD  )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW )
+  .AW ( HciCoreSizeParam.AW ),
+  .FD ( HciCoreSizeParam.FD )
 ) s_hci_core [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
@@ -455,7 +462,8 @@ XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
 // FIXME: iDMA
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW )
+  .AW ( HciCoreSizeParam.AW ),
+  .FD ( HciCoreSizeParam.FD )
 ) s_core_dmactrl_bus [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
@@ -501,7 +509,8 @@ localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  TCDM_ID_WIDTH,
   EW:  (Cfg.ECCInterco) ? ParityWidth+MetaParityWidth : DEFAULT_EW,
-  EHW: DEFAULT_EHW
+  EHW: DEFAULT_EHW,
+  FD:  0
 };
 
 // log interconnect -> TCDM memory banks (SRAM)
