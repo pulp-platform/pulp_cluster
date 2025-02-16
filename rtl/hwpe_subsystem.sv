@@ -57,6 +57,7 @@ module hwpe_subsystem
   `HCI_INTF(tcdm_softex, clk);
 
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
+  localparam int unsigned HWPE_SEL_BITS = (N_HWPES > 1) ? $clog2(N_HWPES) : 1;
 
   logic [N_HWPES-1:0] busy;
   logic [N_HWPES-1:0][N_CORES-1:0][1:0] evt;
@@ -64,9 +65,9 @@ module hwpe_subsystem
   logic [N_HWPES-1:0] hwpe_clk;
   logic [N_HWPES-1:0] hwpe_en_int;
 
-  logic [$clog2(N_HWPES)-1:0] hwpe_sel_int;
+  logic [HWPE_SEL_BITS-1:0] hwpe_sel_int;
 
-  assign hwpe_sel_int = hwpe_sel_i[0+:$clog2(N_HWPES)];
+  assign hwpe_sel_int = hwpe_sel_i[HWPE_SEL_BITS-1:0];
 
   hwpe_ctrl_intf_periph #(
     .ID_WIDTH ( ID_WIDTH )
