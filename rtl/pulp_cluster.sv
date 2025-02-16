@@ -310,7 +310,7 @@ localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
   BW:  DEFAULT_BW,
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
-  EW:  HWPEParityWidth,
+  EW:  (Cfg.ECCInterco) ? HWPEParityWidth : DEFAULT_EW,
   EHW: DEFAULT_EHW
 };
 /* logarithmic and peripheral interconnect interfaces */
@@ -419,21 +419,21 @@ snitch_icache_pkg::icache_l1_events_t                    s_icache_l1_events;
 localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs + 4 + Cfg.HwpeNumPorts;
 localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   DW:  DataWidth,
-  AW:  AddrMemWidth+2,
+  AW:  AddrMemWidth+2, // AddrMemWidth is word-wise, +2 for byte-wise
   BW:  8,
   UW:  DEFAULT_UW,
   IW:  TCDM_ID_WIDTH,
-  EW:  ParityWidth+MetaParityWidth,
+  EW:  (Cfg.ECCInterco) ? ParityWidth+MetaParityWidth : DEFAULT_EW,
   EHW: DEFAULT_EHW
 };
 
 // log interconnect -> TCDM memory banks (SRAM)
 hci_core_intf #(
-  .AW ( AddrMemWidth+2 ), // AddrMemWidth is word-wise, +2 for byte-wise
-  .DW ( DataWidth      ),
-  .BW ( 8              ),
-  .IW ( TCDM_ID_WIDTH  ),
-  .EW ( ParityWidth+MetaParityWidth )
+  .DW ( HciMemSizeParam.DW ),
+  .AW ( HciMemSizeParam.AW ),
+  .BW ( HciMemSizeParam.BW ),
+  .IW ( HciMemSizeParam.IW ),
+  .EW ( HciMemSizeParam.EW )
 `ifndef SYNTHESIS
   ,
   .WAIVE_RSP3_ASSERT ( 1'b1 ),
