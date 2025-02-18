@@ -22,6 +22,7 @@
 `include "cluster_bus_defines.sv"
 `include "pulp_interfaces.sv"
 `include "register_interface/typedef.svh"
+`include "pulp_soc_defines.sv"
 
 
 module pulp_cluster
@@ -385,7 +386,7 @@ localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
   .AW ( HciCoreSizeParam.AW )
-) s_hci_ext[0:Cfg.DmaNumPlugs-1] (
+) s_hci_ext[0:`NB_EXT-1] (
   .clk ( clk_i )
 );
 
@@ -485,7 +486,7 @@ snitch_icache_pkg::icache_l1_events_t                    s_icache_l1_events;
 // DMA ports do not need ID extension if mapped to HWPE ports as they are
 // currently muxed
 // TODO Arpan fix if needed
-localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs*DMA_IW_CONTRIB_FAC + 4 + Cfg.HwpeNumPorts;
+localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs*DMA_IW_CONTRIB_FAC + `NB_EXT + Cfg.HwpeNumPorts;
 
 localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   DW:  DataWidth,
@@ -654,7 +655,7 @@ cluster_bus_wrap #(
 );
 
 axi2mem_wrap #(
-  .NB_DMAS        ( Cfg.DmaNumPlugs     ),
+  .NB_DMAS        ( `NB_EXT             ),
   .AXI_ADDR_WIDTH ( Cfg.AxiAddrWidth    ),
   .AXI_DATA_WIDTH ( Cfg.AxiDataOutWidth ),
   .AXI_USER_WIDTH ( Cfg.AxiUserWidth    ),
