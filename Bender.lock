@@ -107,14 +107,6 @@ packages:
       Git: https://github.com/pulp-platform/fpu_div_sqrt_mvp.git
     dependencies:
     - common_cells
-  fpu_interco:
-    revision: b5f7a315929308823cacd81e1e4898f1eeecfc64
-    version: null
-    source:
-      Git: https://github.com/pulp-platform/fpu_interco.git
-    dependencies:
-    - fpnew
-    - riscv
   hci:
     revision: 38fc2a7eea7978df52434e66ee04a40788fd86b7
     version: null
@@ -209,7 +201,7 @@ packages:
     - axi_slice
   redmule:
     revision: 9223ccc932e21d0667e9c2d30831db41eec9299e
-    version: null
+    version: 
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:
@@ -257,8 +249,8 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 23faeccaf204817bc9e6649e469072e5726be561
-    version: 1.0.0
+    revision: 31e7534a3da3244f2f5c08bab430a560beee6ff2
+    version: null
     source:
       Git: https://github.com/belanoa/softex.git
     dependencies:

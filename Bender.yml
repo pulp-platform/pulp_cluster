@@ -22,7 +22,6 @@ dependencies:
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "2886cb2a46cea3e2bd2d979b505d88fadfbe150c" } # branch: astral
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "dd0e8f3497903a9ca99fc9f349d5a4f688ceb3ae" } # branch: michaero/astral_reliability
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: 0b8e8ab } # branch: fc/hci-v2
-  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "b5f7a315929308823cacd81e1e4898f1eeecfc64" } # branch: astral
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
@@ -34,9 +33,9 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 38fc2a7 } # branch: lg/ecc_rebase_v2.1.1
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 9223ccc } # branch: astral-hci-v2.1
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 94528df } # branch: fc/astral-v1.0-rebased
-  softex:                 { git: "https://github.com/belanoa/softex.git"       , version: 1.0.0 }
+  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
 
 export_include_dirs:
   - include

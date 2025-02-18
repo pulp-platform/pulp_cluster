@@ -45,8 +45,6 @@ import rapid_recovery_pkg::*;
 
   parameter int unsigned  FPU                     =  0,
   parameter int unsigned  FP_DIVSQRT              =  0,
-  parameter int unsigned  SHARED_FP               =  0,
-  parameter int unsigned  SHARED_FP_DIVSQRT       =  0,
 
   parameter int unsigned  DEBUG_START_ADDR        = 32'h1A110000,
 
@@ -235,10 +233,10 @@ import rapid_recovery_pkg::*;
       riscv_core #(
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH           ),
         .PULP_CLUSTER        ( 1                           ),
-        .FPU                 ( FPU | SHARED_FP             ),
+        .FPU                 ( FPU                         ),
         .FP_DIVSQRT          ( FP_DIVSQRT                  ),
-        .SHARED_FP           ( SHARED_FP                   ),
-        .SHARED_FP_DIVSQRT   ( SHARED_FP_DIVSQRT           ),
+        .SHARED_FP           ( 0                           ),
+        .SHARED_FP_DIVSQRT   ( 0                           ),
         .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS         ),
         .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),
