@@ -15,6 +15,7 @@
  */
 
 `include "hci_helpers.svh"
+`include "pulp_soc_defines.sv"
 
 import hci_package::*;
 
@@ -62,7 +63,7 @@ module cluster_interconnect_wrap
   hci_core_intf.target                 core_tcdm_slave   [0             : NB_CORES-1     ],
   hci_core_intf.target                 hwpe_tcdm_slave   [0             : NB_HWPE-1      ],
   XBAR_PERIPH_BUS.Slave                core_periph_slave [NB_CORES-1    : 0              ],
-  hci_core_intf.target                 ext_slave         [0             : 3              ],
+  hci_core_intf.target                 ext_slave         [0             : `NB_EXT-1      ],
   hci_core_intf.target                 dma_slave         [0             : NB_DMAS-1      ],
   XBAR_TCDM_BUS.Slave                  mperiph_slave     [NB_MPERIPHS-1 : 0              ],
   hci_core_intf.initiator              tcdm_sram_master  [0             : NB_TCDM_BANKS-1],
@@ -138,7 +139,7 @@ module cluster_interconnect_wrap
           .N_HWPE ( N_HCI_HWPE_PORTS         ),
           .N_CORE ( NB_CORES                 ),
           .N_DMA  ( N_HCI_DMA_PORTS          ),
-          .N_EXT  ( 4                        ),
+          .N_EXT  ( `NB_EXT                  ),
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
@@ -170,7 +171,7 @@ module cluster_interconnect_wrap
           .N_HWPE ( N_HCI_HWPE_PORTS         ),
           .N_CORE ( NB_CORES                 ),
           .N_DMA  ( N_HCI_DMA_PORTS          ),
-          .N_EXT  ( 4                        ),
+          .N_EXT  ( `NB_EXT                  ),
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
@@ -242,7 +243,7 @@ module cluster_interconnect_wrap
         .N_HWPE ( 0                      ),
         .N_CORE ( NB_CORES+HWPE_WIDTH_FAC ),
         .N_DMA  ( NB_DMAS                ),
-        .N_EXT  ( 4                      ),
+        .N_EXT  ( `NB_EXT                ),
         .N_MEM  ( NB_TCDM_BANKS          ),
         .IW     ( TCDM_ID_WIDTH          ),
         .AWC    ( ADDR_WIDTH             ),
