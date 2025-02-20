@@ -41,13 +41,13 @@ package pulp_cluster_package;
 
   localparam int unsigned MAX_NUM_HWPES = 8;
 
-  typedef struct {
+  typedef struct packed {
     hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
     byte_t NumHwpes;
   } hwpe_subsystem_cfg_t;
 
   // PULP cluster configuration
-  typedef struct {
+  typedef struct packed {
     // Type of core in the cluster
     core_type_e CoreType;
     // Number of cores in the cluster
