@@ -44,18 +44,6 @@ module hwpe_subsystem
   localparam int unsigned EW = HCI_HWPE_SIZE.EW;
   localparam int unsigned EHW = HCI_HWPE_SIZE.EHW;
 
-  // TEMP: localparam used by softex since it doesn't support yet ECC-HCI interface
-  localparam hci_package::hci_size_parameter_t `HCI_SIZE_PARAM(tcdm_softex) = '{
-    DW:  DW,
-    AW:  AW,
-    BW:  DEFAULT_BW,
-    UW:  DEFAULT_UW,
-    IW:  DEFAULT_IW,
-    EW:  DEFAULT_EW,
-    EHW: DEFAULT_EHW
-  };
-  `HCI_INTF(tcdm_softex, clk);
-
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
   localparam int unsigned HWPE_SEL_BITS = (N_HWPES > 1) ? $clog2(N_HWPES) : 1;
 
@@ -149,27 +137,14 @@ module hwpe_subsystem
 
       softex_top #(
         .N_CORES    ( N_CORES           ),
-        .`HCI_SIZE_PARAM(Tcdm) ( `HCI_SIZE_PARAM(tcdm_softex) )
+        .`HCI_SIZE_PARAM(Tcdm) ( HCI_HWPE_SIZE )
       ) i_softex (
         .clk_i  ( hwpe_clk[i] ),
         .rst_ni ( rst_n       ),
         .busy_o ( busy[i]     ),
         .evt_o  ( evt[i]      ),
-        .tcdm   ( tcdm_softex ),
+        .tcdm   ( tcdm[i]     ),
         .periph ( periph[i]   )
-      );
-
-      // TEMP: softex doesn't yet support ECC-HCI internally
-      hci_ecc_enc #(
-        .`HCI_SIZE_PARAM(tcdm_target)    ( `HCI_SIZE_PARAM(tcdm_softex) ),
-        .`HCI_SIZE_PARAM(tcdm_initiator) ( HCI_HWPE_SIZE )
-      ) i_ecc_softex_enc (
-        .r_data_single_err_o (  ),
-        .r_data_multi_err_o  (  ),
-        .r_meta_single_err_o (  ),
-        .r_meta_multi_err_o  (  ),
-        .tcdm_target         ( tcdm_softex ),
-        .tcdm_initiator      ( tcdm[i]     )
       );
 
     end
