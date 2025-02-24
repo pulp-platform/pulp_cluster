@@ -26,7 +26,7 @@
 `define MASTER_1_START_ADDR 32'h1020_0000
 `define MASTER_1_END_ADDR   32'h103F_FFFF
 
-`define TCDM_ASSIGN_MASTER(lhs, rhs)       \
+`define TCDM_ASSIGN_MASTER(lhs, rhs)      \
     assign lhs.req       = rhs.req;       \
     assign lhs.add       = rhs.add;       \
     assign lhs.wen       = rhs.wen;       \

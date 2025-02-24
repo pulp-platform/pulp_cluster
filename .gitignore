@@ -1,10 +1,8 @@
-.bender
-scripts/compile.tcl
-
+.bender/
+work/
 modelsim.ini
-work
 transcript
-
-regression-tests
-pulp-runtime
-nonfree
+scripts/compile.tcl
+regression_tests/
+pulp-runtime/
+fault_injection_sim/

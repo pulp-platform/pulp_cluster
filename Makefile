@@ -2,28 +2,33 @@
 # Solderpad Hardware License, Version 0.51, see LICENSE for details.
 # SPDX-License-Identifier: SHL-0.51
 
-ROOT_DIR      = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
+ROOT_DIR = $(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-GIT ?= git
+HOSTNAME := $(shell hostname)
+ETH_HOST = $(shell echo $(HOSTNAME) | grep -q "\.ee\.ethz\.ch$$" && echo 1 || echo 0)
+ifeq ($(ETH_HOST),1)
+QUESTA ?= questa-2023.4-zr
+else
+QUESTA ?=
+endif
+
 BENDER ?= bender
-VSIM ?= vsim
-VLIB ?= vlib
-VOPT ?= vopt
+
+VSIM ?= $(QUESTA) vsim
+VOPT ?= $(QUESTA) vopt
+VLIB ?= $(QUESTA) vlib
 top_level ?= pulp_cluster_tb
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
-CFLAGS ?= -I$(QUESTASIM_HOME)/include \
-					-I$(RISCV)/include/ \
-					-I/include -std=c++11 -I../tb/dpi -O3
+REGRESSIONS := $(ROOT_DIR)/regression_tests
 
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
-XVLOG_ARGS += -64bit -compile -vtimescale 1ns/1ns -quiet
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
-	bender script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
 	echo >> $1
 endef
 
@@ -32,7 +37,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= ff679262d78198a3ff54ff91811d7395e83998db
+NONFREE_COMMIT ?= 67079fe
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -42,70 +47,94 @@ nonfree-init:
 # Dependencies #
 ################
 
+.PHONY: init
+
+init: checkout
+
 .PHONY: checkout
 ## Checkout/update dependencies using Bender
 checkout:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
 	make scripts/compile.tcl
 
 Bender.lock:
-	bender checkout
+	$(BENDER) checkout
 	touch Bender.lock
+
 
 ######
 # SW #
 ######
 
-## Clone pulp-runtime as SW stack
-pulp-runtime:
-	git clone https://github.com/pulp-platform/pulp-runtime.git $@
-	cd $@; git checkout 38ae6be6e28ff39f79218d333c41632a935bd584; cd ..
+.PHONY: sw-init sw-clean
 
-## Clone regression tests for bare-metal verification
-regression-tests:
-	git clone https://github.com/pulp-platform/regression_tests.git $@
-	cd $@; git checkout 7343d39bb9d1137b6eb3f2561777df546cd1e421; cd ..
+sw-init: pulp-runtime fault_injection_sim regression_tests
+sw-clean:
+	@rm -rf pulp-runtime fault_injection_sim regression_test
+
+## Clone pulp-runtime as SW stack
+PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
+PULP_RUNTIME_COMMIT ?= b3c239c # branch: lg/upstream
+
+pulp-runtime:
+	git clone $(PULP_RUNTIME_REMOTE) $@
+	cd $@ && git checkout $(PULP_RUNTIME_COMMIT)
+
+## Clone fault injection scripts
+FAULT_SIM_REMOTE ?= https://github.com/pulp-platform/InjectaFault.git
+FAULT_SIM_COMMIT ?= 84ddcff # branch: rt/rename-var
+
+fault_injection_sim:
+	git clone $(FAULT_SIM_REMOTE) $@
+	cd $@ && git checkout $(FAULT_SIM_COMMIT)
+
+## Clone regression tests
+REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
+
+regression_tests:
+	git clone $(REGRESSION_TESTS_REMOTE) $@
+	cd $@ && git checkout $(REGRESSION_TESTS_COMMIT)
+	cd $@ && git submodule update --init --recursive
 
 ########################
 # Build and simulation #
 ########################
 
-sim_clean:
+.PHONY: sim-clean compile build run
+
+sim-clean:
 	rm -rf scripts/compile.tcl
 	rm -rf work
 
+include bender-common.mk
+include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, -t rtl -t test -t cluster_standalone,..)
+	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
 
-$(library):
-	$(VLIB) $(library)
+include bender-synth.mk
+scripts/synth-compile.tcl: | Bender.lock
+	$(BENDER) script synopsys $(common_targs) $(common_defs) $(synth_targs) $(synth_defs)	> $@
 
-compile: $(library) scripts/compile.tcl
+$(library):
+	$(QUESTA) vlib $(library)
+
+compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
-	$(VSIM) -c -do 'source scripts/compile.tcl; quit'
+	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized -debug
-
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
 
 run:
-	$(VSIM) +permissive $(questa-flags) $(questa-cmd) -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
+	$(VSIM) +permissive -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
 	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
-.PHONY: test-rt-par-bare
-## Run only parallel tests on pulp-runtime
-test-rt-par-bare: pulp-runtime regression-tests
-	cd regression-tests && $(bwruntest) --proc-verbose -v \
-		-t 3600 --yaml --max-procs 2 \
-		-o runtime-parallel.xml parallel-bare-tests.yaml
+####################
+# Regression tests #
+####################
 
-
-.PHONY: test-rt-mchan
-## Run mchan tests on pulp-runtime
-test-rt-mchan: pulp-runtime regression-tests
-	cd regression-tests && $(bwruntest) --proc-verbose -v \
-		-t 3600 --yaml --max-procs 2 \
-		-o runtime-mchan.xml pulp_cluster-mchan-tests.yaml
+include regression.mk

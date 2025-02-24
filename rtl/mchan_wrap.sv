@@ -34,27 +34,24 @@ module dmac_wrap
   parameter type         axi_req_t          = logic,
   parameter type         axi_resp_t         = logic
 )
-( 
+(
   input logic  clk_i,
   input logic  rst_ni,
   input logic  test_mode_i,
 
-  XBAR_TCDM_BUS.Slave   ctrl_slave[NB_CORES-1:0],
-  XBAR_PERIPH_BUS.Slave cl_ctrl_slave,
-  XBAR_PERIPH_BUS.Slave fc_ctrl_slave,
-   
-  hci_core_intf.master tcdm_master[3:0],
-  output axi_req_t ext_master_req_o,
-  input  axi_resp_t ext_master_resp_i,
-  output logic term_event_cl_o,
-  output logic term_irq_cl_o,
-  output logic term_event_pe_o,
-  output logic term_irq_pe_o,
+  hci_core_intf.target        ctrl_slave[0:NB_CORES-1],
+  XBAR_PERIPH_BUS.Slave       pe_ctrl_slave[1:0],
+
+  hci_core_intf.initiator     tcdm_master[3:0],
+  output axi_req_t            ext_master_req_o,
+  input  axi_resp_t           ext_master_resp_i,
+  output logic [1:0]          term_event_pe_o,
+  output logic [1:0]          term_irq_pe_o,
   output logic [NB_CORES-1:0] term_event_o,
   output logic [NB_CORES-1:0] term_irq_o,
-  output logic busy_o
+  output logic                busy_o
 );
-  
+
   //   CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
   logic [NB_CTRLS-1:0][DATA_WIDTH-1:0]  s_ctrl_bus_wdata;
   logic [NB_CTRLS-1:0][ADDR_WIDTH-1:0]  s_ctrl_bus_add;
@@ -85,45 +82,45 @@ module dmac_wrap
 
      assign s_ctrl_bus_add[i]     = ctrl_slave[i].add;
      assign s_ctrl_bus_req[i]     = ctrl_slave[i].req;
-     assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].wdata;
+     assign s_ctrl_bus_wdata[i]   = ctrl_slave[i].data;
      assign s_ctrl_bus_wen[i]     = ctrl_slave[i].wen;
      assign s_ctrl_bus_be[i]      = ctrl_slave[i].be;
      assign s_ctrl_bus_id[i]      = i;
 
-       
+
      assign ctrl_slave[i].gnt     = s_ctrl_bus_gnt[i];
      assign ctrl_slave[i].r_opc   = s_ctrl_bus_r_opc[i];
      assign ctrl_slave[i].r_valid = s_ctrl_bus_r_valid[i];
-     assign ctrl_slave[i].r_rdata = s_ctrl_bus_r_rdata[i];
+     assign ctrl_slave[i].r_data = s_ctrl_bus_r_rdata[i];
 
     end // for (genvar i=0; i<NB_CORES; i++)
   endgenerate
 
   // // CL CTRL PORT BINDING
-  assign s_ctrl_bus_add[NB_CORES]     = cl_ctrl_slave.add;
-  assign s_ctrl_bus_req[NB_CORES]     = cl_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[NB_CORES]   = cl_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[NB_CORES]     = cl_ctrl_slave.wen;
-  assign s_ctrl_bus_be[NB_CORES]      = cl_ctrl_slave.be;
-  assign s_ctrl_bus_id[NB_CORES]      = cl_ctrl_slave.id;
-  assign cl_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES];
-  assign cl_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES];
-  assign cl_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES];
-  assign cl_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES];
-  assign cl_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES];
+  assign s_ctrl_bus_add[NB_CORES]     = pe_ctrl_slave[0].add;
+  assign s_ctrl_bus_req[NB_CORES]     = pe_ctrl_slave[0].req;
+  assign s_ctrl_bus_wdata[NB_CORES]   = pe_ctrl_slave[0].wdata;
+  assign s_ctrl_bus_wen[NB_CORES]     = pe_ctrl_slave[0].wen;
+  assign s_ctrl_bus_be[NB_CORES]      = pe_ctrl_slave[0].be;
+  assign s_ctrl_bus_id[NB_CORES]      = pe_ctrl_slave[0].id;
+  assign pe_ctrl_slave[0].gnt     = s_ctrl_bus_gnt[NB_CORES];
+  assign pe_ctrl_slave[0].r_opc   = s_ctrl_bus_r_opc[NB_CORES];
+  assign pe_ctrl_slave[0].r_valid = s_ctrl_bus_r_valid[NB_CORES];
+  assign pe_ctrl_slave[0].r_rdata = s_ctrl_bus_r_rdata[NB_CORES];
+  assign pe_ctrl_slave[0].r_id    = s_ctrl_bus_r_id[NB_CORES];
 
   // FC CTRL PORT BINDING
-  assign s_ctrl_bus_add[NB_CORES+1]     = fc_ctrl_slave.add;
-  assign s_ctrl_bus_req[NB_CORES+1]     = fc_ctrl_slave.req;
-  assign s_ctrl_bus_wdata[NB_CORES+1]   = fc_ctrl_slave.wdata;
-  assign s_ctrl_bus_wen[NB_CORES+1]     = fc_ctrl_slave.wen;
-  assign s_ctrl_bus_be[NB_CORES+1]      = fc_ctrl_slave.be;
-  assign s_ctrl_bus_id[NB_CORES+1]      = fc_ctrl_slave.id;
-  assign fc_ctrl_slave.gnt     = s_ctrl_bus_gnt[NB_CORES+1];
-  assign fc_ctrl_slave.r_opc   = s_ctrl_bus_r_opc[NB_CORES+1];
-  assign fc_ctrl_slave.r_valid = s_ctrl_bus_r_valid[NB_CORES+1];
-  assign fc_ctrl_slave.r_rdata = s_ctrl_bus_r_rdata[NB_CORES+1];
-  assign fc_ctrl_slave.r_id    = s_ctrl_bus_r_id[NB_CORES+1];
+  assign s_ctrl_bus_add[NB_CORES+1]     = pe_ctrl_slave[1].add;
+  assign s_ctrl_bus_req[NB_CORES+1]     = pe_ctrl_slave[1].req;
+  assign s_ctrl_bus_wdata[NB_CORES+1]   = pe_ctrl_slave[1].wdata;
+  assign s_ctrl_bus_wen[NB_CORES+1]     = pe_ctrl_slave[1].wen;
+  assign s_ctrl_bus_be[NB_CORES+1]      = pe_ctrl_slave[1].be;
+  assign s_ctrl_bus_id[NB_CORES+1]      = pe_ctrl_slave[1].id;
+  assign pe_ctrl_slave[1].gnt     = s_ctrl_bus_gnt[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_opc   = s_ctrl_bus_r_opc[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_valid = s_ctrl_bus_r_valid[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_rdata = s_ctrl_bus_r_rdata[NB_CORES+1];
+  assign pe_ctrl_slave[1].r_id    = s_ctrl_bus_r_id[NB_CORES+1];
 
   generate
     for (genvar i=0; i<4; i++) begin : TCDM_MASTER_BIND
@@ -132,36 +129,23 @@ module dmac_wrap
       assign tcdm_master[i].data     = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen      = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be       = s_tcdm_bus_be[i];
-      assign tcdm_master[i].boffs    = '0;
-      assign tcdm_master[i].lrdy     = '1;
+      assign tcdm_master[i].r_ready  = '1;
+      assign tcdm_master[i].user     = '0;
+      assign tcdm_master[i].ecc      = '0;
+      assign tcdm_master[i].id       = '0;
+      assign tcdm_master[i].ereq     = '0;
+      assign tcdm_master[i].r_eready = '1;
 
       assign s_tcdm_bus_gnt[i]       = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i]   = tcdm_master[i].r_valid;
       assign s_tcdm_bus_r_rdata[i]   = tcdm_master[i].r_data;
     end
   endgenerate
-   
+
   mchan #(
 
-    .NB_CTRLS                 ( NB_CTRLS                     ),    // NUMBER OF CONTROL PORTS : 8 CORES, CL, FC
-    //.NB_TRANSFERS             ( 16                    ),    // NUMBER OF AVAILABLE DMA CHANNELS
-    //.CTRL_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
-    //.GLOBAL_TRANS_QUEUE_DEPTH ( 8                     ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
-     
-    //.TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
-    //.EXT_ADD_WIDTH            ( 32                    ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
-    //.NB_OUTSND_TRANS          ( 8                     ),    // NUMBER OF OUTSTANDING TRANSACTIONS
-    //.MCHAN_BURST_LENGTH       ( 256                   ),    // ANY POWER OF 2 VALUE FROM 32 TO 2048
-     
-    //.AXI_ADDR_WIDTH           ( 32                    ),
-    //.AXI_DATA_WIDTH           ( 64                    ),
-    //.AXI_USER_WIDTH           ( 6                     ),
-    //.AXI_ID_WIDTH             ( 4                     ),
-     
-    //.PE_ID_WIDTH              ( PE_ID_WIDTH           )
-    //.NB_CORES                 ( NB_CORES              ),    // NUMBER OF CORES
-    .NB_TRANSFERS             ( 2*NB_CORES            ),
-    //.CORE_TRANS_QUEUE_DEPTH   ( 2                     ),    // DEPTH OF PRIVATE PER-CORE COMMAND QUEUE (CTRL_UNIT)
+    .NB_CTRLS                 ( NB_CTRLS              ),    // NUMBER OF CONTROL PORTS : 8 CORES, CL, FC
+    .NB_TRANSFERS             ( 16                    ),
     .GLOBAL_TRANS_QUEUE_DEPTH ( 2*NB_CORES            ),    // DEPTH OF GLOBAL COMMAND QUEUE (CTRL_UNIT)
     .TCDM_ADD_WIDTH           ( TCDM_ADD_WIDTH        ),    // WIDTH OF TCDM ADDRESS
     .EXT_ADD_WIDTH            ( AXI_ADDR_WIDTH        ),    // WIDTH OF GLOBAL EXTERNAL ADDRESS
@@ -176,19 +160,7 @@ module dmac_wrap
     .clk_i                     ( clk_i                              ),
     .rst_ni                    ( rst_ni                             ),
     .test_mode_i               ( test_mode_i                        ),
-    
-    //.ctrl_pe_targ_req_i        (                                    ),
-    //.ctrl_pe_targ_add_i        (                                    ),
-    //.ctrl_pe_targ_type_i       (                                    ),
-    //.ctrl_pe_targ_be_i         (                                    ),
-    //.ctrl_pe_targ_data_i       (                                    ),
-    //.ctrl_pe_targ_id_i         (                                    ),
-    //.ctrl_pe_targ_gnt_o        (                                    ),
-    //.ctrl_pe_targ_r_valid_o    (                                    ),
-    //.ctrl_pe_targ_r_data_o     (                                    ),
-    //.ctrl_pe_targ_r_opc_o      (                                    ),
-    //.ctrl_pe_targ_r_id_o       (                                    ),
-    
+
     .ctrl_targ_req_i           ( s_ctrl_bus_req                     ),
     .ctrl_targ_add_i           ( s_ctrl_bus_add                     ),
     .ctrl_targ_type_i          ( s_ctrl_bus_wen                     ),
@@ -201,7 +173,7 @@ module dmac_wrap
 
     .ctrl_targ_r_valid_o       ( s_ctrl_bus_r_valid                 ),
     .ctrl_targ_r_data_o        ( s_ctrl_bus_r_rdata                 ),
-    
+
 
     // TCDM INITIATOR
       //***************************************
@@ -267,8 +239,8 @@ module dmac_wrap
     .axi_master_b_user_i       ( ext_master_resp_i.b.user                 ),
     .axi_master_b_ready_o      ( ext_master_req_o.b_ready                 ),
 
-    .term_evt_o                ( {term_event_pe_o,term_event_cl_o,term_event_o}     ),
-    .term_int_o                ( {term_irq_pe_o,term_irq_cl_o,term_irq_o      }     ),
+    .term_evt_o                ( {term_event_pe_o[1],term_event_pe_o[0],term_event_o}     ),
+    .term_int_o                ( {term_irq_pe_o[1],term_irq_pe_o[0],term_irq_o      }     ),
 
     .busy_o                    ( busy_o                             )
   );

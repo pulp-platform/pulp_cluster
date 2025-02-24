@@ -13,24 +13,22 @@
  * (http://www.pulp-platform.org), under the copyright of ETH Zurich and the
  * University of Bologna.
  */
- 
-`include "pulp_soc_defines.sv"
-//`define  PERF_CNT
 
-module core_demux
+
+module data_periph_demux
 #(
     parameter int unsigned ADDR_WIDTH = 32,
     parameter int unsigned DATA_WIDTH = 32,
     parameter int unsigned BYTE_ENABLE_BIT = DATA_WIDTH/8,
-    parameter bit [11:0]   CLUSTER_ALIAS_BASE = 12'h000
+    parameter int unsigned REMAP_ADDRESS = 0,
+    parameter int unsigned CLUSTER_ALIAS = 1,
+    parameter int unsigned CLUSTER_ALIAS_BASE = 12'h000
 )
 (
     input logic                          clk,
     input logic                          rst_ni,
     input logic                          test_en_i,
-`ifdef REMAP_ADDRESS
     input logic [3:0]                    base_addr_i,
-`endif
 
     // CORE SIDE
     input logic                          data_req_i,
@@ -40,7 +38,6 @@ module core_demux
     input logic [BYTE_ENABLE_BIT - 1:0]  data_be_i,
     output logic                         data_gnt_o,
 
-    input logic                          data_r_gnt_i,    // Data Response Grant (For LOAD/STORE commands)
     output logic                         data_r_valid_o,  // Data Response Valid (For LOAD/STORE commands)
     output logic [DATA_WIDTH - 1:0]      data_r_rdata_o,  // Data Response DATA (For LOAD commands)
     output logic                         data_r_opc_o,    // Data Response Error
@@ -138,9 +135,9 @@ module core_demux
 
   always_comb
   begin
-    TCDM_RW          = 12'h100 + (CLUSTER_ID << 2) + 0;
-    TCDM_TS          = 12'h100 + (CLUSTER_ID << 2) + 1;
-    DEM_PER          = 12'h100 + (CLUSTER_ID << 2) + 2;
+    TCDM_RW          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 0;
+    TCDM_TS          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 1;
+    DEM_PER          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 2;
   end
  
  
@@ -153,7 +150,7 @@ module core_demux
 
    assign data_add_int[27:0] = data_add_i[27:0];
 
-`ifdef REMAP_ADDRESS
+if (REMAP_ADDRESS == 1) begin
    always_comb
    begin
     if(data_add_i[31:28] == base_addr_i)
@@ -169,9 +166,9 @@ module core_demux
             data_add_int[31:28] = data_add_i[31:28];
          end
    end
-`else
+end else begin
    assign data_add_int[31:28] = data_add_i[31:28]; 
-`endif
+end
 
    //********************************************************
    //************** LEVEL 1 REQUEST ARBITER *****************
@@ -637,4 +634,4 @@ logic clear_regs, enable_regs;
   end
 `endif
 
-endmodule
+endmodule: data_periph_demux

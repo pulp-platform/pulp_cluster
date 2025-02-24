@@ -13,6 +13,21 @@ not a complete overview of all signals, this is meant as a slightly more
 detailed overview that can assist in development. Please be aware that the
 schematic may not be 100% accurate.
 
+## Dependencies
+
+To *build* the cluster, you will need:
+
+   - Bender `>= 0.24.0`
+   - GNU Make `>= 3.82`
+   - Python `>= 3.9`
+   - RISCV GCC `>= 11.2.0`
+
+We use [Bender](https://github.com/pulp-platform/bender) for hardware IP and dependency management; for more information on using Bender, please see its documentation. You can install Bender directly through the Rust package manager Cargo:
+
+```
+cargo install bender
+```
+
 ## Simulation
 
 It is possible to run benchmarks on the cluster, either within
@@ -38,14 +53,13 @@ Warning: requires QuestaSim 2022.3 or newer.
 3. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
-	make regression-tests
+	make regression_tests
 	```
 
 4. Source the environment:
    ```
    source env/env.sh
    ```
-   (At IIS, this sets up a proper QuestaSim environment, and links the toolchain.)
 
 5. Run the tests. Choose any test among the `parallel_bare_tests` and the
    `mchan_tests`, move into the related folder and do:

@@ -27,13 +27,13 @@ module axi2mem_wrap
   parameter type         axi_resp_t     = logic
 )
 (
-  input  logic          clk_i,
-  input  logic          rst_ni,
-  input  logic          test_en_i,
-  input axi_req_t      axi_slave_req_i,
-  output axi_resp_t    axi_slave_resp_o,
-  hci_core_intf.master tcdm_master[NB_DMAS-1:0],
-  output logic         busy_o
+  input  logic            clk_i,
+  input  logic            rst_ni,
+  input  logic            test_en_i,
+  input axi_req_t         axi_slave_req_i,
+  output axi_resp_t       axi_slave_resp_o,
+  hci_core_intf.initiator tcdm_master[0:NB_DMAS-1],
+  output logic            busy_o
 );
 
   logic [NB_DMAS-1:0][31:0] s_tcdm_bus_wdata;
@@ -52,8 +52,12 @@ module axi2mem_wrap
       assign tcdm_master[i].data   = s_tcdm_bus_wdata[i];
       assign tcdm_master[i].wen    = s_tcdm_bus_wen[i];
       assign tcdm_master[i].be     = s_tcdm_bus_be[i];
-      assign tcdm_master[i].boffs  = '0;
-      assign tcdm_master[i].lrdy   = '1;
+      assign tcdm_master[i].r_ready  = '1;
+      assign tcdm_master[i].user     = '0;
+      assign tcdm_master[i].ecc      = '0;
+      assign tcdm_master[i].id       = '0;
+      assign tcdm_master[i].ereq     = '0;
+      assign tcdm_master[i].r_eready = '1;
 
       assign s_tcdm_bus_gnt[i]     = tcdm_master[i].gnt;
       assign s_tcdm_bus_r_valid[i] = tcdm_master[i].r_valid;
@@ -69,17 +73,16 @@ module axi2mem_wrap
   ) axi2mem_i (
     .clk_i                 ( clk_i                ),
     .rst_ni                ( rst_ni               ),
-    //.slave                 ( axi_slave            ),
 
-    .tcdm_master_req_o                 ( s_tcdm_bus_req       ),
-    .tcdm_master_add_o                ( s_tcdm_bus_add       ),
-    .tcdm_master_type_o                  ( s_tcdm_bus_wen       ),
-    .tcdm_master_data_o                ( s_tcdm_bus_wdata     ),
-    .tcdm_master_be_o                  ( s_tcdm_bus_be        ),
+    .tcdm_master_req_o     ( s_tcdm_bus_req       ),
+    .tcdm_master_add_o     ( s_tcdm_bus_add       ),
+    .tcdm_master_type_o    ( s_tcdm_bus_wen       ),
+    .tcdm_master_data_o    ( s_tcdm_bus_wdata     ),
+    .tcdm_master_be_o      ( s_tcdm_bus_be        ),
     .tcdm_master_gnt_i     ( s_tcdm_bus_gnt       ),
 
     .tcdm_master_r_valid_i ( s_tcdm_bus_r_valid   ),
-    .tcdm_master_r_data_i                ( s_tcdm_bus_r_rdata   ),
+    .tcdm_master_r_data_i  ( s_tcdm_bus_r_rdata   ),
 
     .busy_o                ( busy_o               ),
     .test_en_i             ( test_en_i            ),
