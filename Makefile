@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 272b0da # branch: upstream-features
+PULP_RUNTIME_COMMIT ?= b3c239c # branch: lg/upstream
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 799c996 # branch: upstream-features
+REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
@@ -113,7 +113,6 @@ include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
-	echo 'vopt +permissive -suppress 3053 -suppress 8885 +UVM_NO_RELNOTES $(top_level) -o $(top_level)_optimized' >> $@
 
 include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
