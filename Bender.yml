@@ -12,29 +12,29 @@ package:
     - "Michael Rogenmoser <michaero@student.ethz.ch>"
 
 dependencies:
-  axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git", rev: "b0e963433b2f6a61262b1448031e74eaec57c203" } # branch: yt/astral
-  axi2per:                { git: "https://github.com/pulp-platform/axi2per.git", rev: "4932bd2b88a1c7b5f0bf95411fc512905ed32439" } # branch: yt/astral
-  per2axi:                { git: "https://github.com/pulp-platform/per2axi.git", rev: "95bf23119b47fc171d9ed3734c431f71cffd9350" } # branch: yt/astral
-  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: 1284def6c0b7f7e9355eb093d00883ad9dead1b7 } # branch: michaero/hci-fix
-  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git", rev: 28e0499374117c7b0ef4c6ad81b60d7526af886f } # branch: michaero/hmr
-  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: 7f064f205a3e0203e959b14773c4afecf56681ab } # branch: yt/fix-parametrization
-  idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1 } # branch: master
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: "2886cb2a46cea3e2bd2d979b505d88fadfbe150c" } # branch: astral
-  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: "dd0e8f3497903a9ca99fc9f349d5a4f688ceb3ae" } # branch: michaero/astral_reliability
-  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: 0b8e8ab } # branch: fc/hci-v2
+  axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git",              rev: v1.0.2      }
+  axi2per:                { git: "https://github.com/pulp-platform/axi2per.git",              rev: v1.0.2      }
+  per2axi:                { git: "https://github.com/pulp-platform/per2axi.git",              rev: v1.0.5      }
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
+  event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
+  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
+  idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: v0.6.3 }
+  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
+  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: v0.2.0 }
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
   riscv:                  { git: "https://github.com/AlSaqr-platform/riscv_nn.git", rev: astral-v1.0 }
-  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
+  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
-  scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: aed9005 } # branch: lg/ecc_fix_no_hwpe
+  scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: astral-v1.0 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: astral-v1.0 }
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 94528df } # branch: fc/astral-v1.0-rebased
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
 
 export_include_dirs:
