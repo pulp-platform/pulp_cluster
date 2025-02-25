@@ -48,6 +48,6 @@
 //PARAMETRES
 `define NB_CLUSTERS   1
 `define NB_CORES      8
-`define NB_DMAS       4
+`define NB_DMAS       2
 `define NB_MPERIPHS   1
 `define NB_SPERIPHS   12
