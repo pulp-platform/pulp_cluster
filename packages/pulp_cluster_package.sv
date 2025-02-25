@@ -53,11 +53,15 @@ package pulp_cluster_package;
     // Number of cores in the cluster
     byte_t NumCores;
     // Number of DMA TCDM plugs
+    // If using MCHAN, must be 4. If using iDMA, can vary in multiples of 2 or 3
     byte_t DmaNumPlugs;
     // Number of DMA outstanding transactions
     byte_t DmaNumOutstandingBursts;
     // DMA burst length in bits
     word_t DmaBurstLength;
+    // If the DMA should use a HWPE port, set to 1
+    // This makes sense only when using a DMA_TCDM_DATA_WIDTH close to the HWP
+    bit DmaUseHwpePort;
     // Number of masters in crossbar peripherals
     byte_t NumMstPeriphs;
     // Number of slaves in crossbar peripherals
@@ -213,6 +217,7 @@ package pulp_cluster_package;
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
+    DmaUseHwpePort: 0,
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,
     ClusterAlias: 1,
