@@ -41,23 +41,27 @@ package pulp_cluster_package;
 
   localparam int unsigned MAX_NUM_HWPES = 8;
 
-  typedef struct {
+  typedef struct packed {
     hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
     byte_t NumHwpes;
   } hwpe_subsystem_cfg_t;
 
   // PULP cluster configuration
-  typedef struct {
+  typedef struct packed {
     // Type of core in the cluster
     core_type_e CoreType;
     // Number of cores in the cluster
     byte_t NumCores;
     // Number of DMA TCDM plugs
+    // If using MCHAN, must be 4. If using iDMA, can vary in multiples of 2 or 3
     byte_t DmaNumPlugs;
     // Number of DMA outstanding transactions
     byte_t DmaNumOutstandingBursts;
     // DMA burst length in bits
     word_t DmaBurstLength;
+    // If the DMA should use a HWPE port, set to 1
+    // This makes sense only when using a DMA_TCDM_DATA_WIDTH close to the HWP
+    bit DmaUseHwpePort;
     // Number of masters in crossbar peripherals
     byte_t NumMstPeriphs;
     // Number of slaves in crossbar peripherals
@@ -136,6 +140,10 @@ package pulp_cluster_package;
     bit EnableSharedFpDivSqrt;
     // Number of shared FPUs
     byte_t NumSharedFpu;
+    // Enable TNN extension
+    bit EnableTnnExtension;
+    // Enable TNN unsigned
+    bit EnableTnnUnsigned;
     // Number of AXI crossbar subordinate ports
     byte_t NumAxiIn;
     // Number of AXI crossbar manager ports
@@ -144,12 +152,16 @@ package pulp_cluster_package;
     byte_t AxiIdInWidth;
     // AXI ID width of crossbar manager ports
     byte_t AxiIdOutWidth;
+    // AXI ID width of wide external to cluster port
+    byte_t AxiIdOutWideWidth;
     // AXI address width
     byte_t AxiAddrWidth;
-    // AXI data width from external to cluster
+    // AXI data width from external to cluster (narrow)
     byte_t AxiDataInWidth;
-    // AXI data width from cluster to external
+    // AXI data width from cluster to external (narrow)
     byte_t AxiDataOutWidth;
+    // AXI data width from cluster to external (wide)
+    word_t AxiDataOutWideWidth;
     // AXI user width
     byte_t AxiUserWidth;
     // AXI maximum subordinate transaction per ID
@@ -196,7 +208,7 @@ package pulp_cluster_package;
   localparam int unsigned SPER_ERROR_ID         = 12; // -> unmapped, directed to error
 
   // The following parameters refer to the cluster AXI crossbar
-  localparam byte_t NumAxiSubordinatePorts = 4;
+  localparam byte_t NumAxiSubordinatePorts = 3;
   localparam byte_t NumAxiManagerPorts = 3;
   localparam byte_t AxiSubordinateIdwidth = 4;
   localparam byte_t AxiManagerIdwidth = AxiSubordinateIdwidth + $clog2(NumAxiSubordinatePorts);
@@ -209,6 +221,7 @@ package pulp_cluster_package;
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
+    DmaUseHwpePort: 0,
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,
     ClusterAlias: 1,
@@ -248,13 +261,17 @@ package pulp_cluster_package;
     EnableSharedFpu: 0,
     EnableSharedFpDivSqrt: 0,
     NumSharedFpu: 0,
+    EnableTnnExtension: 1,
+    EnableTnnUnsigned: 1,
     NumAxiIn: NumAxiSubordinatePorts,
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiSubordinateIdwidth,
-    AxiIdOutWidth:AxiManagerIdwidth,
+    AxiIdOutWidth: AxiManagerIdwidth,
+    AxiIdOutWideWidth: 1,
     AxiAddrWidth: 48,
     AxiDataInWidth: 64,
     AxiDataOutWidth: 64,
+    AxiDataOutWideWidth: 128,
     AxiUserWidth: 10,
     AxiMaxInTrans: 64,
     AxiMaxOutTrans: 64,
