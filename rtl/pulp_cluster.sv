@@ -726,9 +726,9 @@ dmac_wrap #(
   .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
 `else
   .NB_PE_PORTS        ( 2                           ),
-  .NUM_STREAMS        ( 4                           ),
-  .TCDM_SIZE          ( Cfg.TcdmSize                ),
-  .ClusterBaseAddr    ( Cfg.ClusterBaseAddr         )
+  .NUM_BIDIR_STREAMS  ( 1                           ),
+  .GLOBAL_QUEUE_DEPTH ( 2                           ),
+  .MUX_READ           ( 1'b1                        ),
 `endif
 ) dmac_wrap_i     (
   .clk_i              ( clk_i                            ),
@@ -737,16 +737,20 @@ dmac_wrap #(
   .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
   .ctrl_slave         ( s_core_dmactrl_bus               ),
   .tcdm_master        ( s_hci_dma                        ),
-
+`ifdef TARGET_MCHAN
   .ext_master_req_o   ( s_dma_ext_bus_req                ),
   .ext_master_resp_i  ( s_dma_ext_bus_resp               ),
-
+`else
+  .ext_master_req_o   ( {s_dma_ext_bus_req}              ),
+  .ext_master_resp_i  ( {s_dma_ext_bus_resp}             ),
+`endif
   .term_event_o       ( s_dma_event                      ),
   .term_irq_o         ( s_dma_irq                        ),
   .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
   .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
   .busy_o             ( s_dmac_busy                      )
 );
+
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************

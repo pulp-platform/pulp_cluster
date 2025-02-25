@@ -48,6 +48,13 @@ packages:
     - register_interface
     - scm
     - tech_cells_generic
+  axi_stream:
+    revision: 54891ff40455ca94a37641b9da4604647878cc07
+    version: 0.1.1
+    source:
+      Git: https://github.com/pulp-platform/axi_stream.git
+    dependencies:
+    - common_cells
   cluster_interconnect:
     revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
     version: null
@@ -157,14 +164,16 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
+    revision: 4b3393b033b15641b8669970462ff39f4e00d207
     version: null
     source:
       Git: https://github.com/pulp-platform/iDMA.git
     dependencies:
     - axi
+    - axi_stream
     - common_cells
     - common_verification
+    - obi
     - register_interface
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
@@ -189,6 +198,14 @@ packages:
     - hwpe-ctrl
     - hwpe-stream
     - zeroriscy
+  obi:
+    revision: 2ee698211db5c007bd0d207ebd646ce79f0472ec
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
   per2axi:
     revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
     version: null
