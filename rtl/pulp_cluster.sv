@@ -23,6 +23,7 @@
 `include "pulp_interfaces.sv"
 `include "register_interface/typedef.svh"
 
+
 module pulp_cluster
   import pulp_cluster_package::*;
   import hci_package::*;
@@ -341,6 +342,16 @@ logic [Cfg.NumCores-1:0] hmr_barrier_matched;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_resynch_req, hmr_tmr_sw_resynch_req;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
 
+// number of log interconnect ports per DMA HCI port - i.e., how many times the
+// DMA ports are wider than the intc ports
+// DMA ports are currently muxed together with HWPE ports to a single port.
+// Thus they don't contribute to the ID width
+// TODO Arpan correct this if needed
+localparam DMA_IW_CONTRIB_FAC = Cfg.DmaUseHwpePort ? 0 : 1;
+// data width of the TCDM master ports coming from the DMA.
+// if using MCHAN, must be 32
+localparam int unsigned DMA_HCI_DATA_WIDTH = Cfg.DmaUseHwpePort ? Cfg.AxiDataOutWideWidth : DataWidth;
+
 localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   DW:  DataWidth,
   AW:  AddrWidth,
@@ -359,6 +370,16 @@ localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
   EW:  (Cfg.ECCInterco) ? HWPEParityWidth : DEFAULT_EW,
   EHW: DEFAULT_EHW
 };
+localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
+  DW:  DMA_HCI_DATA_WIDTH,
+  AW:  AddrWidth,
+  BW:  DEFAULT_BW,
+  UW:  DEFAULT_UW,
+  IW:  DEFAULT_IW,
+  EW:  DEFAULT_EW,
+  EHW: DEFAULT_EHW
+};
+
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
 hci_core_intf #(
@@ -374,14 +395,13 @@ XBAR_PERIPH_BUS s_xbar_speriph_bus[Cfg.NumSlvPeriphs-1:0]();
 // periph interconnect -> HWPE subsystem
 XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 
-// DMA -> log interconnect
+// DMA -> (optionally) size converter
 hci_core_intf #(
-  .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW )
+  .DW ( HciDmaSizeParam.DW ),
+  .AW ( HciDmaSizeParam.AW )
 ) s_hci_dma[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
-XBAR_TCDM_BUS s_dma_plugin_xbar_bus[Cfg.DmaNumPlugs-1:0]();
 
 // ext -> xbar periphs FIXME
 XBAR_TCDM_BUS s_mperiph_xbar_bus[Cfg.NumMstPeriphs-1:0]();
@@ -462,7 +482,11 @@ snitch_icache_pkg::icache_l0_events_t [Cfg.NumCores-1:0] s_icache_l0_events;
 snitch_icache_pkg::icache_l1_events_t                    s_icache_l1_events;
 //----------------------------------------------------------------------//
 
-localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs + 4 + Cfg.HwpeNumPorts;
+// DMA ports do not need ID extension if mapped to HWPE ports as they are
+// currently muxed
+// TODO Arpan fix if needed
+localparam TCDM_ID_WIDTH = Cfg.NumCores + Cfg.DmaNumPlugs*DMA_IW_CONTRIB_FAC + 4 + Cfg.HwpeNumPorts;
+
 localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   DW:  DataWidth,
   AW:  AddrMemWidth+2, // AddrMemWidth is word-wise, +2 for byte-wise
@@ -709,8 +733,9 @@ per2axi_wrap #(
 
 cluster_interconnect_wrap #(
   .NB_CORES               ( Cfg.NumCores                    ),
-  .HWPE_PRESENT           ( Cfg.HwpePresent                 ),
-  .NB_HWPE_PORTS          ( Cfg.HwpeNumPorts                ),
+  .NB_HWPE                ( Cfg.HwpePresent                 ),
+  .HWPE_WIDTH_FAC         ( Cfg.HwpeNumPorts                ),
+  .DMA_USE_HWPE_PORT      ( Cfg.DmaUseHwpePort              ),
   .NB_DMAS                ( Cfg.DmaNumPlugs                 ),
   .NB_MPERIPHS            ( Cfg.NumMstPeriphs               ),
   .NB_TCDM_BANKS          ( Cfg.TcdmNumBank                 ),
@@ -732,6 +757,7 @@ cluster_interconnect_wrap #(
   .USE_ECC_INTERCONNECT   ( Cfg.EnableECC && Cfg.ECCInterco ),
   .HCI_CORE_SIZE          ( HciCoreSizeParam                ),
   .HCI_HWPE_SIZE          ( HciHwpeSizeParam                ),
+  .HCI_DMA_SIZE           ( HciDmaSizeParam                 ),
   .HCI_MEM_SIZE           ( HciMemSizeParam                 )
 
 ) cluster_interconnect_wrap_i (
@@ -781,6 +807,7 @@ dmac_wrap #(
   .NUM_BIDIR_STREAMS  ( 1                           ),
   .GLOBAL_QUEUE_DEPTH ( 2                           ),
   .MUX_READ           ( 1'b1                        ),
+  .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
 `endif
 ) dmac_wrap_i     (
   .clk_i              ( clk_i                            ),
@@ -1928,5 +1955,27 @@ edge_propagator_tx ep_dma_pe_irq_i (
   .ack_i   ( dma_pe_irq_ack_i   ),
   .valid_o ( dma_pe_irq_valid_o )
 );
+
+// pragma translate_off
+`ifndef VERILATOR
+initial begin : p_assert
+  `ifdef TARGET_MCHAN
+  assert(DMA_HCI_DATA_WIDTH == 32)
+    else $fatal(1, "When using MCHAN, DMA_HCI_DATA_WIDTH must be 32!");
+  assert(Cfg.DmaNumPlugs == 4)
+    else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
+  assert(!Cfg.DmaUseHwpePort)
+    else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
+  `else
+  if (!Cfg.DmaUseHwpePort) begin
+    // The DMA can have wide access to TCDM only when sharing the master port to HCI with the HWPE
+    assert(DMA_HCI_DATA_WIDTH == DataWidth)
+      else $fatal(1, "When Cfg.DmaUseHwpePort is 0, DMA_HCI_DATA_WIDTH must be equal to DataWidth!");
+  end
+  `endif
+end
+`endif
+// pragma translate_on
+
 
 endmodule

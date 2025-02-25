@@ -21,8 +21,10 @@ import hci_package::*;
 module cluster_interconnect_wrap
 #(
   parameter int unsigned  NB_CORES        = 8,
-  parameter int unsigned  HWPE_PRESENT    = 1,
-  parameter int unsigned  NB_HWPE_PORTS   = 9,
+  parameter int unsigned  NB_HWPE         = 1,
+  // how many times wider a HWPE port is than DATA_WIDTH
+  parameter int unsigned  HWPE_WIDTH_FAC    = 4,
+  parameter bit           DMA_USE_HWPE_PORT = 1'b0,
   parameter int unsigned  NB_DMAS         = 4,
   parameter int unsigned  NB_MPERIPHS     = 1,
   parameter int unsigned  NB_TCDM_BANKS   = 16,
@@ -31,6 +33,7 @@ module cluster_interconnect_wrap
   parameter int unsigned  DATA_WIDTH      = 32,
   parameter int unsigned  ADDR_WIDTH      = 32,
   parameter int unsigned  BE_WIDTH        = DATA_WIDTH/8,
+  parameter int unsigned  TCDM_ID_WIDTH   = NB_DMAS + NB_CORES + 4 + HWPE_WIDTH_FAC,
   parameter logic [ADDR_WIDTH-1:0] ClusterBaseAddr        = 'h10000000,
   parameter logic [ADDR_WIDTH-1:0] ClusterPeripheralsOffs = 'h00200000,
   parameter logic [ADDR_WIDTH-1:0] ClusterExternalOffs    = 'h00400000,
@@ -48,6 +51,7 @@ module cluster_interconnect_wrap
   parameter int unsigned  USE_ECC_INTERCONNECT           = 0,
   parameter hci_package::hci_size_parameter_t HCI_CORE_SIZE = '0,
   parameter hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0,
+  parameter hci_package::hci_size_parameter_t HCI_DMA_SIZE  = '0,
   parameter hci_package::hci_size_parameter_t HCI_MEM_SIZE  = '0
 )
 (
@@ -56,7 +60,7 @@ module cluster_interconnect_wrap
   input logic                    [5:0] cluster_id_i,
   XBAR_PERIPH_BUS.Slave                hci_ecc_periph_slave,
   hci_core_intf.target                 core_tcdm_slave   [0             : NB_CORES-1     ],
-  hci_core_intf.target                 hwpe_tcdm_slave   [0             : 0              ],
+  hci_core_intf.target                 hwpe_tcdm_slave   [0             : NB_HWPE-1      ],
   XBAR_PERIPH_BUS.Slave                core_periph_slave [NB_CORES-1    : 0              ],
   hci_core_intf.target                 ext_slave         [0             : 3              ],
   hci_core_intf.target                 dma_slave         [0             : NB_DMAS-1      ],
@@ -67,7 +71,9 @@ module cluster_interconnect_wrap
   input logic [1:0]                    TCDM_arb_policy_i
 );
 
-  localparam TCDM_ID_WIDTH = NB_CORES+NB_DMAS+4+NB_HWPE_PORTS;
+  // if DMA uses HWPE ports, ID width must be increased correspondingly
+  localparam N_HCI_DMA_PORTS = DMA_USE_HWPE_PORT ? 0 : NB_DMAS;
+  localparam N_HCI_HWPE_PORTS = DMA_USE_HWPE_PORT ? NB_HWPE + NB_DMAS : NB_HWPE;
 
 
   //-********************************************************
@@ -75,12 +81,63 @@ module cluster_interconnect_wrap
   //-********************************************************
   // Wraps the Logarithmic Interconnect + a HWPE Interconnect
   generate
-    if( USE_HETEROGENEOUS_INTERCONNECT || !HWPE_PRESENT ) begin : hci_gen
+    if( USE_HETEROGENEOUS_INTERCONNECT || (NB_HWPE == 0) ) begin : hci_gen
+      // HWPEs interface
+      hci_core_intf #(
+        .DW(HCI_HWPE_SIZE.DW),
+        .AW(HCI_HWPE_SIZE.AW),
+        .BW(HCI_HWPE_SIZE.BW),
+        .UW(HCI_HWPE_SIZE.UW),
+        .IW(HCI_HWPE_SIZE.IW),
+        .EW(HCI_HWPE_SIZE.EW),
+        .EHW(HCI_HWPE_SIZE.EHW)
+      )
+      s_hwpe_intc [0:N_HCI_HWPE_PORTS-1] (
+        .clk(clk_i)
+      );
+      // DMA interface (only if !DMA_USE_HWPE_PORT)
+      hci_core_intf #(
+        .DW(HCI_CORE_SIZE.DW),
+        .AW(HCI_CORE_SIZE.AW),
+        .BW(HCI_HWPE_SIZE.BW),
+        .UW(HCI_HWPE_SIZE.UW),
+        .IW(HCI_HWPE_SIZE.IW),
+        .EW(HCI_HWPE_SIZE.EW),
+        .EHW(HCI_CORE_SIZE.EHW)
+      )
+      s_dma_intc [0:N_HCI_DMA_PORTS-1] (
+        .clk(clk_i)
+      );
+      // assign HWPE interfaces to s_hwpe_intc[:]
+      for (genvar i=0; i<NB_HWPE; i++) begin : connect_hwpe_intf
+        hci_core_assign i_hwpe_assign (
+          .tcdm_target(hwpe_tcdm_slave[i]),
+          .tcdm_initiator(s_hwpe_intc[i])
+        );
+      end
+      // if DMA_USE_HWPE_PORT, assign DMA interfaces to the rest of s_hwpe_intc[:]
+      for (genvar i=NB_HWPE; i<N_HCI_HWPE_PORTS; i++) begin : connect_dma_hwpe_intf
+        hci_core_assign_expand #(
+          .TGT_DATA_WIDTH(HCI_DMA_SIZE.DW),
+          .INIT_DATA_WIDTH(HCI_HWPE_SIZE.DW)
+        ) i_hwpe_dma_assign (
+          .tcdm_target(dma_slave[i-NB_HWPE]),
+          .tcdm_initiator(s_hwpe_intc[i])
+        );
+      end
+      // otherwise, if !DMA_USE_HWPE_PORT, assign DMA interfaces to s_dma_intc[:]
+      for (genvar i=0; i<N_HCI_DMA_PORTS; i++) begin : connect_dma_intf
+        hci_core_assign i_core_dma_assign(
+          .tcdm_target(dma_slave[i]),
+          .tcdm_initiator(s_dma_intc[i])
+        );
+      end
+
       if (USE_ECC_INTERCONNECT) begin : gen_ecc_interco
         hci_ecc_interconnect #(
-          .N_HWPE ( HWPE_PRESENT             ),
+          .N_HWPE ( N_HCI_HWPE_PORTS         ),
           .N_CORE ( NB_CORES                 ),
-          .N_DMA  ( NB_DMAS                  ),
+          .N_DMA  ( N_HCI_DMA_PORTS          ),
           .N_EXT  ( 4                        ),
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
@@ -103,16 +160,16 @@ module cluster_interconnect_wrap
           .ctrl_i         ( hci_ctrl_i           ),
           .periph_hci_ecc ( hci_ecc_periph_slave ),
           .cores          ( core_tcdm_slave      ),
-          .hwpe           ( hwpe_tcdm_slave [0]  ),
-          .dma            ( dma_slave            ),
+          .hwpe           ( s_hwpe_intc[0]       ),
+          .dma            ( s_dma_intc           ),
           .ext            ( ext_slave            ),
           .mems           ( tcdm_sram_master     )
         );
       end else begin : gen_standard_interco
         hci_interconnect #(
-          .N_HWPE ( HWPE_PRESENT             ),
+          .N_HWPE ( N_HCI_HWPE_PORTS         ),
           .N_CORE ( NB_CORES                 ),
-          .N_DMA  ( NB_DMAS                  ),
+          .N_DMA  ( N_HCI_DMA_PORTS          ),
           .N_EXT  ( 4                        ),
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
@@ -133,8 +190,8 @@ module cluster_interconnect_wrap
           .clear_i        ( 1'b0                 ),
           .ctrl_i         ( hci_ctrl_i           ),
           .cores          ( core_tcdm_slave      ),
-          .hwpe           ( hwpe_tcdm_slave [0]  ),
-          .dma            ( dma_slave            ),
+          .hwpe           ( s_hwpe_intc          ),
+          .dma            ( s_dma_intc           ),
           .ext            ( ext_slave            ),
           .mems           ( tcdm_sram_master     )
         );
@@ -151,27 +208,27 @@ module cluster_interconnect_wrap
       hci_core_intf #(
         .DW ( 32 ),
         .AW ( 32 )
-      ) core_hwpe_tcdm_slave [0:NB_CORES+NB_HWPE_PORTS-1] (
+      ) core_hwpe_tcdm_slave [0:NB_CORES+HWPE_WIDTH_FAC-1] (
         .clk ( clk_i )
       );
 
       hci_core_intf #(
-        .DW ( NB_HWPE_PORTS*32 ),
+        .DW ( HWPE_WIDTH_FAC*32 ),
         .AW ( 32               )
       ) null_hwpe_tcdm_slave (
         .clk ( clk_i )
       );
 
       hci_core_split #(
-        .DW                           ( NB_HWPE_PORTS*32 ),
-        .NB_OUT_CHAN                  ( NB_HWPE_PORTS    ),
+        .DW                           ( HWPE_WIDTH_FAC*32 ),
+        .NB_OUT_CHAN                  ( HWPE_WIDTH_FAC    ),
         .`HCI_SIZE_PARAM(tcdm_target) ( HCI_HWPE_SIZE    )
       ) i_hwpe_tcdm_splitter (
         .clk_i          ( clk_i                                                   ),
         .rst_ni         ( rst_ni                                                  ),
         .clear_i        ( clear_i                                                 ),
         .tcdm_target    ( hwpe_tcdm_slave[0]                                      ),
-        .tcdm_initiator ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+NB_HWPE_PORTS-1] )
+        .tcdm_initiator ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+HWPE_WIDTH_FAC-1] )
       );
   
       for(genvar ii=0; ii<NB_CORES; ii++) begin : core_tcdm_slave_gen
@@ -183,14 +240,14 @@ module cluster_interconnect_wrap
 
       hci_interconnect #(
         .N_HWPE ( 0                      ),
-        .N_CORE ( NB_CORES+NB_HWPE_PORTS ),
+        .N_CORE ( NB_CORES+HWPE_WIDTH_FAC ),
         .N_DMA  ( NB_DMAS                ),
         .N_EXT  ( 4                      ),
         .N_MEM  ( NB_TCDM_BANKS          ),
         .IW     ( TCDM_ID_WIDTH          ),
         .AWC    ( ADDR_WIDTH             ),
         .DW_LIC ( DATA_WIDTH             ),
-        .DW_SIC ( NB_HWPE_PORTS*32       ),
+        .DW_SIC ( HWPE_WIDTH_FAC*32      ),
         .TS_BIT ( TEST_SET_BIT           ),
         .AWH    ( 32                     ),
         .DWH    ( 288                    ),
@@ -248,5 +305,15 @@ module cluster_interconnect_wrap
      .mperiph_slave    ( mperiph_slave    )
    );
 
+  // pragma translate_off
+  `ifndef VERILATOR
+  initial begin : p_assert
+    if (N_HCI_HWPE_PORTS > 1) begin
+      assert(!USE_ECC_INTERCONNECT)
+        else $fatal(1, "If USE_ECC_INTERCONNECT is enabled, N_HCI_HWPE_PORTS cannot be more than 1.");
+    end
+  end
+  `endif
+  // pragma translate_on
 
 endmodule
