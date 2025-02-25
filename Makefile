@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 7ea7b36462d3257ae251f17541c21dcefd9fbc75 # branch: smazzola/chimera
+PULP_RUNTIME_COMMIT ?= 8000372999b5933317c357367b9d2f445a3cbfd0 # branch: smazzola/chimera
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= d75a64ae0af42d406d1b73137331b84161810be9 # branch: smazzola/chimera
+REGRESSION_TESTS_COMMIT ?= 029a11d2d1485d276c7153d6c996f24380b6e155 # branch: smazzola/chimera
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
