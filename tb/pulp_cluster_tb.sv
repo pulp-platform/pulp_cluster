@@ -57,7 +57,7 @@ module pulp_cluster_tb;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
   localparam AxiUw = 10;
 
-  localparam DmaAxiDw = 64;
+  localparam DmaAxiDw = 256;
   localparam DmaAxiIw = 1;
 
   localparam bit[AxiAw-1:0] ClustBase       = 'h10000000;
@@ -382,6 +382,7 @@ module pulp_cluster_tb;
     DmaNumPlugs: `NB_DMAS,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
+    DmaUseHwpePort: 1,
     NumMstPeriphs: `NB_MPERIPHS,
     NumSlvPeriphs: `NB_SPERIPHS,
     ClusterAlias: 1,
@@ -391,7 +392,7 @@ module pulp_cluster_tb;
     TcdmSize: 128*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
-    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
+    HwpeCfg: '{NumHwpes: 1, HwpeList: {NEUREKA}},
     HwpeNumPorts: 9,
     HMRPresent: 1,
     HMRDmrEnabled: 1,
