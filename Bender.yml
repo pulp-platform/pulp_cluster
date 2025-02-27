@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
-  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "4b3393b033b15641b8669970462ff39f4e00d207" } # branch: smazzola/chimera
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "92799c5fabcf2cd1f224f970bbb040b290d08fd5" } # branch: smazzola/chimera
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: v0.2.0 }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
@@ -32,10 +32,11 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 2d5ae7877125a8b5415ae343f1c7c401d4596e15 } # branch: smazzola/chimera
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: astral-v1.0 }
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 9e31f7c6c24877eaf58279903e7a162b16c9a721 } # branch: astral-v0
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 8e0883bd0c19c6844122456c749c2bdfde18011f }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
+  obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
 
 export_include_dirs:
   - include
