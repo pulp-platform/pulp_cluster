@@ -13,6 +13,7 @@ QUESTA ?=
 endif
 
 BENDER ?= bender
+PYTHON ?= python3
 
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
@@ -98,13 +99,39 @@ regression_tests:
 	cd $@ && git checkout $(REGRESSION_TESTS_COMMIT)
 	cd $@ && git submodule update --init --recursive
 
+#########################
+# Hardware dependencies #
+#########################
+
+# Set dependency paths only if dependencies have already been cloned
+# This avoids running `bender checkout` at every make command
+ifeq ($(shell test -d $(ROOT_DIR)/.bender || echo 1),)
+IDMA_ROOT := $(shell $(BENDER) path idma)
+endif
+
+# Fall back to safe defaults if dependencies are not cloned yet
+IDMA_ROOT ?= .
+
+# Python requirements (version and packages) coming from iDMA repository
+gen_idma_hw:
+	@$(PYTHON) --version >/dev/null 2>&1 || { echo "ERROR: Python not found. Python 3.8 or higher is required."; exit 1; } && \
+	$(PYTHON) -c "import sys; assert sys.version_info >= (3, 8)" || { echo "ERROR: Python version must be 3.8 or higher"; exit 1; } && \
+	$(PYTHON) -m venv venv && \
+	. venv/bin/activate && \
+	pip install --upgrade pip && \
+	pip install -r $(IDMA_ROOT)/requirements.txt && \
+	make -C $(IDMA_ROOT) idma_hw_all
+
+clean_idma_hw:
+	make -C $(IDMA_ROOT) idma_clean_all
+
 ########################
 # Build and simulation #
 ########################
 
 .PHONY: sim-clean compile build run
 
-sim-clean:
+sim-clean: clean_idma_hw
 	rm -rf scripts/compile.tcl
 	rm -rf work
 
@@ -121,7 +148,7 @@ scripts/synth-compile.tcl: | Bender.lock
 $(library):
 	$(QUESTA) vlib $(library)
 
-compile: $(library)
+compile: gen_idma_hw $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
