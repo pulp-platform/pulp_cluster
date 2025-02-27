@@ -697,7 +697,7 @@ module dmac_wrap #(
       obi_rready_converter #(
         .obi_a_chan_t(obi_a_chan_t),
         .obi_r_chan_t(obi_r_chan_t),
-        .DEPTH(1)
+        .Depth(1)
       ) obi_rready_converter_reorg_i (
         .clk_i,
         .rst_ni,
@@ -710,17 +710,19 @@ module dmac_wrap #(
         .rvalid_o(obi_reorg_rsp_to_dma[s].rvalid),
         .mgr_a_chan_o(obi_reorg_req_from_rrc[s].a),
         .req_o(obi_reorg_req_from_rrc[s].req),
-        .rready_o(obi_reorg_req_from_rrc[s].rready),
         .mgr_r_chan_i(obi_reorg_rsp_to_rrc[s].r),
         .gnt_i(obi_reorg_rsp_to_rrc[s].gnt),
         .rvalid_i(obi_reorg_rsp_to_rrc[s].rvalid)
       );
+      // We are always ready for responses, because we don't
+      // send more requests than we can absorb in the fifo
+      assign obi_reorg_req_from_rrc[s].rready = 1'b1;
     end  // else: !if(MUX_READ)
 
     obi_rready_converter #(
       .obi_a_chan_t(obi_a_chan_t),
       .obi_r_chan_t(obi_r_chan_t),
-      .DEPTH(1)
+      .Depth(1)
     ) obi_rready_converter_read_i (
       .clk_i,
       .rst_ni,
@@ -733,18 +735,19 @@ module dmac_wrap #(
       .rvalid_o(obi_read_rsp_to_mux[s].rvalid),
       .mgr_a_chan_o(obi_read_req_from_rrc[s].a),
       .req_o(obi_read_req_from_rrc[s].req),
-      .rready_o(obi_read_req_from_rrc[s].rready),
       .mgr_r_chan_i(obi_read_rsp_to_rrc[s].r),
       .gnt_i(obi_read_rsp_to_rrc[s].gnt),
       .rvalid_i(obi_read_rsp_to_rrc[s].rvalid)
     );
-
+    // We are always ready for responses, because we don't
+    // send more requests than we can absorb in the fifo
+    assign obi_read_req_from_rrc[s].rready = 1'b1;
 
 
     obi_rready_converter #(
       .obi_a_chan_t(obi_a_chan_t),
       .obi_r_chan_t(obi_r_chan_t),
-      .DEPTH(1)
+      .Depth(1)
     ) obi_rready_converter_wr_i (
       .clk_i,
       .rst_ni,
@@ -757,11 +760,12 @@ module dmac_wrap #(
       .rvalid_o(obi_write_rsp_to_dma[s].rvalid),
       .mgr_a_chan_o(obi_write_req_from_rrc[s].a),
       .req_o(obi_write_req_from_rrc[s].req),
-      .rready_o(obi_write_req_from_rrc[s].rready),
       .mgr_r_chan_i(obi_write_rsp_to_rrc[s].r),
       .gnt_i(obi_write_rsp_to_rrc[s].gnt),
       .rvalid_i(obi_write_rsp_to_rrc[s].rvalid)
     );
+    // Same as above
+    assign obi_write_req_from_rrc[s].rready = 1'b1;
   end
 
 
