@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
-  idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: v0.6.3 }
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "92799c5fabcf2cd1f224f970bbb040b290d08fd5" } # branch: smazzola/chimera
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: v0.2.0 }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
@@ -26,16 +26,17 @@ dependencies:
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  riscv:                  { git: "https://github.com/AlSaqr-platform/riscv_nn.git", rev: astral-v1.0 }
+  riscv:                  { git: "git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git", rev: "53b053cd0be8dae25caa24bd57824e81cf87ba21"} # branch smazzola/chimera
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: astral-v1.0 }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 4257a73b391731d94077ad72fc528c27f5b11392 } # branch: smazzola/chimera
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: astral-v1.0 }
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 9e31f7c6c24877eaf58279903e7a162b16c9a721 } # branch: astral-v0
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 8e0883bd0c19c6844122456c749c2bdfde18011f }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
+  obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
 
 export_include_dirs:
   - include

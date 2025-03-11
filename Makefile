@@ -37,7 +37,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 67079fe
+NONFREE_COMMIT ?= 4461846b7b1951b2ecb714a459256dfd80600c13 # branch: smazzola/chimera
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= b3c239c # branch: lg/upstream
+PULP_RUNTIME_COMMIT ?= 8000372999b5933317c357367b9d2f445a3cbfd0 # branch: smazzola/chimera
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -91,12 +91,31 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
+REGRESSION_TESTS_COMMIT ?= 029a11d2d1485d276c7153d6c996f24380b6e155 # branch: smazzola/chimera
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
 	cd $@ && git checkout $(REGRESSION_TESTS_COMMIT)
 	cd $@ && git submodule update --init --recursive
+
+#########################
+# Hardware dependencies #
+#########################
+
+# Set dependency paths only if dependencies have already been cloned
+# This avoids running `bender checkout` at every make command
+ifeq ($(shell test -d $(ROOT_DIR)/.bender || echo 1),)
+IDMA_ROOT := $(shell $(BENDER) path idma)
+endif
+
+# Fall back to safe defaults if dependencies are not cloned yet
+IDMA_ROOT ?= .
+
+gen_idma_hw:
+	make -C $(IDMA_ROOT) idma_hw_all
+
+clean_idma_hw:
+	make -C $(IDMA_ROOT) idma_clean_all
 
 ########################
 # Build and simulation #
@@ -104,7 +123,7 @@ regression_tests:
 
 .PHONY: sim-clean compile build run
 
-sim-clean:
+sim-clean: clean_idma_hw
 	rm -rf scripts/compile.tcl
 	rm -rf work
 
