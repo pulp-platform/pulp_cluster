@@ -63,8 +63,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 0d67563b6b592549542544f1abc0f43e5d4ee8b4
-    version: 1.35.0
+    revision: 9afda9abb565971649c2aa0985639c096f351171
+    version: 1.38.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -85,6 +85,12 @@ packages:
     - common_cells
     - fpnew
     - tech_cells_generic
+  cv32e40x:
+    revision: 96b933ac2f723351872da55e7d2e9a82abd5df34
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/cv32e40x.git
+    dependencies: []
   event_unit_flex:
     revision: 28e0499374117c7b0ef4c6ad81b60d7526af886f
     version: null
@@ -132,15 +138,15 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: a5966201aeeb988d607accdc55da933a53c6a56e
+    revision: 3690a3c648f120546d8de2bc583d5170c36d2f20
     version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 65c99a4a2f37a79acee800ab0151f67dfb1edef1
-    version: 1.8.0
+    revision: b3d33afdd27e79bcda1348d0ab5f4afd52c03106
+    version: 1.9.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -192,6 +198,14 @@ packages:
     - hwpe-stream
     - register_interface
     - zeroriscy
+  obi:
+    revision: 8097928cf1b43712f93d5356f336397879b4ad2c
+    version: 0.1.6
+    source:
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
   per2axi:
     revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
     version: null
@@ -200,18 +214,20 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 9223ccc932e21d0667e9c2d30831db41eec9299e
-    version: null
+    revision: 1e59faf9218a68270bf16aed0429a46d18afa753
+    version: 2.0.1
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:
     - common_cells
     - cv32e40p
+    - cv32e40x
     - fpnew
     - hci
     - hwpe-ctrl
     - hwpe-stream
-    - register_interface
+    - ibex
+    - obi
     - tech_cells_generic
   redundancy_cells:
     revision: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc
