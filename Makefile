@@ -90,8 +90,11 @@ fault_injection_sim:
 	cd $@ && git checkout $(FAULT_SIM_COMMIT)
 
 ## Clone regression tests
-REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 6e93422 # branch: lg/upstream
+# REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
+# REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
+
+REGRESSION_TESTS_REMOTE ?= https://github.com/RiccardoGandolfi/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= 0bd4365 # branch: lg/upstream
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
