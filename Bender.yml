@@ -30,10 +30,10 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 43dd99f334d8d91bf2f97575f4598497356b47e9 } # branch: yt/ooo-priority
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 8408a6d7a7a4d814dcb3468934e49b407b1c783e } # branch: master
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: v2.0.1 }
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: e0045466ab1c57da71104675a1c5ee6d066d50f8 } # branch: yt/streamer
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 0c2e2ad3d97c652618c88fb201b27e1bf2ea8f97 } # branch: yt/bump-hci
   softex:                 { git: "https://github.com/belanoa/softex.git"       , version: 1.0.0 }
 
