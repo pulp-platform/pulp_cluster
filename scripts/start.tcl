@@ -7,7 +7,7 @@ if {![info exists VSIM]} {
     set VSIM vsim
 }
 
-$VSIM +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
+$VSIM +permissive -suppress 3053 -suppress 8885 -suppress 12130 -suppress 7077 -lib $VSIM_PATH/work +APP=./test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
 
 if {[info exists ::env(FAULT_INJECTION)]} {
     if {![info exists ::env(FAULT_INJECTION_SCRIPT)]} {
