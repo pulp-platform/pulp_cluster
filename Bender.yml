@@ -33,7 +33,7 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 38fc2a7 } # branch: lg/ecc_rebase_v2.1.1
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: v2.0.1 }
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: e0045466ab1c57da71104675a1c5ee6d066d50f8 } # branch: yt/streamer
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 94528df } # branch: fc/astral-v1.0-rebased
   softex:                 { git: "https://github.com/belanoa/softex.git"       , version: 1.0.0 }
 
