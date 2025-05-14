@@ -101,7 +101,7 @@ module cluster_interconnect_wrap
         .ctrl_i         ( hci_ctrl_i           ),
         .periph_hci_ecc ( hci_ecc_periph_slave ),
         .cores          ( core_tcdm_slave      ),
-        .hwpe           ( hwpe_tcdm_slave [0]  ),
+        .hwpe           ( hwpe_tcdm_slave      ),
         .dma            ( dma_slave            ),
         .ext            ( ext_slave            ),
         .mems           ( tcdm_sram_master     )
