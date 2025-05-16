@@ -209,7 +209,7 @@
 
    // iDMA struct definitions
    localparam int unsigned TFLenWidth = AXI_ADDR_WIDTH;
-   localparam int unsigned NumDim = 32'd3;  // Support 2D mNB_CORESidend for 2D transfers
+   localparam int unsigned NumDim = 32'd3;  // Support 2D midend for 2D transfers
    localparam int unsigned RepWidth = 32'd32;
    localparam int unsigned StrideWidth = 32'd32;
    typedef logic [TFLenWidth-1:0] tf_len_t;

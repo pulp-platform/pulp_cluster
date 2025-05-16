@@ -205,7 +205,7 @@ packages:
     - common_verification
     - obi
     - register_interface
-    - obi 
+    - obi
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
     version: 1.0.0
