@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= git@github.com:RiccardoGandolfi/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 65bb9aca9b9b38b79fad5e73cbe57b8a9b9f8468 # branch: lg/upstream
+PULP_RUNTIME_COMMIT ?= b7699e10e5ec41b0dbf53198db1f9f825bfb9666 # branch: lg/upstream from RiccardoGandolfi fork
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -94,7 +94,7 @@ fault_injection_sim:
 # REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
 
 REGRESSION_TESTS_REMOTE ?= git@github.com:RiccardoGandolfi/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= cbf2bb51341c688666572bbda7090b573c11873e # branch: lg/upstream
+REGRESSION_TESTS_COMMIT ?= 60e539b3f7db30dd03655861f10b29f091ecef26 # branch: add_iDMA_tests from RiccardoGandolfi fork
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
