@@ -216,14 +216,16 @@
    typedef logic [RepWidth-1:0]   reps_t;
    typedef logic [StrideWidth-1:0] strides_t;
 
+   typedef logic [StreamWidth-1:0] stream_width_t;
+
    // iDMA request / response types
    `IDMA_TYPEDEF_FULL_REQ_T(idma_req_t, id_t, addr_t, tf_len_t)
    `IDMA_TYPEDEF_FULL_RSP_T(idma_rsp_t, addr_t)
 
    // iDMA ND request
-   `IDMA_TYPEDEF_FULL_ND_REQ_T(idma_nd_req_t, idma_req_t, reps_t, strides_t)
+   `IDMA_TYPEDEF_FULL_ND_REQ_32_3D_WRAP_T(idma_nd_req_t, idma_req_t, reps_t, strides_t, stream_width_t)
 
-   logic [StreamWidth-1:0] stream_idx;
+  //  logic [StreamWidth-1:0] stream_idx;
 
    idma_nd_req_t [NumStreams-1:0] twod_req_muxed, twod_req_queue;
    idma_nd_req_t  twod_req;
@@ -283,21 +285,21 @@
      .dma_ctrl_rsp_o(dma_regs_rsp),
      .dma_req_o     (twod_req),
      .req_valid_o   (one_fe_valid),
-     .req_ready_i   (fe_ready[stream_idx]),
-     .next_id_i     (next_id[stream_idx]),
-     .stream_idx_o  (stream_idx),
+     .req_ready_i   (fe_ready[twod_req.stream_idx]),
+     .next_id_i     (next_id[twod_req.stream_idx]),
+    //  .stream_idx_o  (stream_idx),
      .done_id_i     (done_id),
      .busy_i        (idma_busy),
      .midend_busy_i (midend_busy)
    );
 
    for (genvar s = 0; s < NumStreams; s++) begin : gen_stream_mux
-     assign twod_req_muxed[s] = (stream_idx == s) ? twod_req : '0;
+     assign twod_req_muxed[s] = (twod_req.stream_idx == s) ? twod_req : '0;
    end
 
    always_comb begin : proc_connect_valids
      fe_valid             = '0;
-     fe_valid[stream_idx] = one_fe_valid;
+     fe_valid[twod_req.stream_idx] = one_fe_valid;
    end
 
    // interrupts and events (currently broadcast tx_cplt event only)
