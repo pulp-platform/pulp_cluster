@@ -201,7 +201,7 @@ packages:
     - axi_slice
   redmule:
     revision: 9223ccc932e21d0667e9c2d30831db41eec9299e
-    version: 
+    version:
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:
@@ -237,7 +237,7 @@ packages:
     revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
     version: null
     source:
-      Git: https://github.com/AlSaqr-platform/riscv_nn.git
+      Git: https://github.com/pulp-platform/flex-v.git
     dependencies:
     - fpnew
     - tech_cells_generic
