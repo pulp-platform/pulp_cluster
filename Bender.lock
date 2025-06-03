@@ -7,8 +7,8 @@ packages:
     dependencies:
     - common_cells
   axi:
-    revision: 39f5f2d51c5e524f6fc5cf8b6e901f7dcc5622d7
-    version: 0.39.6
+    revision: f07498d53ecd5518b277c7d213ec3b71ca4df93c
+    version: 0.39.7
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -55,8 +55,8 @@ packages:
     - scm
     - tech_cells_generic
   cluster_interconnect:
-    revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
-    version: null
+    revision: 2967d8d17be0a6139229ca8d3d4956e182aec3de
+    version: 1.3.0
     source:
       Git: https://github.com/pulp-platform/cluster_interconnect.git
     dependencies:
@@ -69,8 +69,8 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: c27bce39ebb2e6bae52f60960814a2afca7bd4cb
-    version: 1.37.0
+    revision: 9afda9abb565971649c2aa0985639c096f351171
+    version: 1.38.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
@@ -165,8 +165,8 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 92799c5fabcf2cd1f224f970bbb040b290d08fd5
-    version: null
+    revision: ff5d56fffb3767814db88d6bf8f381974ea33aa5
+    version: 0.6.4
     source:
       Git: https://github.com/pulp-platform/idma.git
     dependencies:
@@ -257,8 +257,8 @@ packages:
     - fpnew
     - tech_cells_generic
   scm:
-    revision: 74426dee36f28ae1c02f7635cf844a0156145320
-    version: null
+    revision: 472f99affe44ff7b282b519c047a3cfeb35b16c6
+    version: 1.2.0
     source:
       Git: https://github.com/pulp-platform/scm.git
     dependencies:

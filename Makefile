@@ -76,7 +76,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 749c08e2036ddcb7baaa956c09a556f8b386b66f # branch: smazzola/chimera
+PULP_RUNTIME_COMMIT ?= 8000372999b5933317c357367b9d2f445a3cbfd0 # branch: dkeller/chimera-v2
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -92,7 +92,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 53e038baec991aa94e113ecefc03ca6377e56f85 # branch: smazzola/chimera
+REGRESSION_TESTS_COMMIT ?= 9ead1c0f6197e79d731749789f381ad83c7d81a2 # branch: dkeller/chimera-v2
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
@@ -160,6 +160,14 @@ run:
 	$(VSIM) +permissive -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
 	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
+.PHONY: clean
+
+clean:
+	rm -rf Bender.lock
+	rm -rf scripts/synth-compile.tcl
+	rm -rf scripts/compile.tcl
+	rm -rf transcript
+	rm -rf *.log
 ####################
 # Regression tests #
 ####################
