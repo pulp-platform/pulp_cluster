@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
-  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "92799c5fabcf2cd1f224f970bbb040b290d08fd5" } # branch: smazzola/chimera
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: v0.6.4 }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: v0.2.0 }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
@@ -31,7 +31,7 @@ dependencies:
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 5421524afca701e45a83d0f1ec47568c019e021a } # branch: main
-  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.5  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: astral-v1.0 }
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: ff7090eb3738a5192af0f4e1499e4ed44a3041e5 } # branch: main
