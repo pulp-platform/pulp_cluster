@@ -246,7 +246,7 @@ module dmac_wrap #(
     periph_to_reg #(
       .AW   (RegAddrWidth),
       .DW   (DATA_WIDTH),
-      .BW   (BE_WIDTH),
+      .BW   (BE_WIDTH<<1),
       .IW   (PE_ID_WIDTH),
       .req_t(dma_regs_req_t),
       .rsp_t(dma_regs_rsp_t)
