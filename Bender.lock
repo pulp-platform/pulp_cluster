@@ -214,7 +214,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: afd125371cde60603272808a82147b8d1de64b47
+    revision: 5dfeb61c060c9c5744b2c9c95e3bb51e3525cff2
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
