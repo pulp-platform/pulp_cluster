@@ -94,7 +94,7 @@ fault_injection_sim:
 # REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
 
 REGRESSION_TESTS_REMOTE ?= git@github.com:RiccardoGandolfi/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 929efcaeaea8e4dc7824e5a32ff9af3fc0edaf08 # branch: add_iDMA_tests from RiccardoGandolfi fork
+REGRESSION_TESTS_COMMIT ?= 41dc7e8390169efa708a6660cd3d2ba4241246d6 # branch: add_iDMA_tests from RiccardoGandolfi fork
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
