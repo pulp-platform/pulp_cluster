@@ -233,7 +233,7 @@ packages:
     - axi
     - common_cells
     - common_verification
-  riscv:
+  flex-v:
     revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
     version: null
     source:
