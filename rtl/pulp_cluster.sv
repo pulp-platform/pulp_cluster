@@ -1745,13 +1745,12 @@ if (Cfg.AxiDataInWidth != Cfg.AxiDataOutWidth) begin
   `AXI_ASSIGN_REQ_STRUCT(s_data_slave_32_req,dst_remap_req)
   `AXI_ASSIGN_RESP_STRUCT(dst_remap_resp,s_data_slave_32_resp)
 
-  axi_dw_converter_intf #(
-    .AXI_ID_WIDTH            ( AxiIdInWidth         ),
-    .AXI_ADDR_WIDTH          ( Cfg.AxiAddrWidth     ),
-    .AXI_SLV_PORT_DATA_WIDTH ( Cfg.AxiDataInWidth   ),
-    .AXI_MST_PORT_DATA_WIDTH ( Cfg.AxiDataOutWidth  ),
-    .AXI_USER_WIDTH          ( Cfg.AxiUserWidth     ),
-    .AXI_MAX_READS           ( 1                    ),
+  axi_dw_converter #(
+    .AxiIdWidth            ( AxiIdInWidth         ),
+    .AxiAddrWidth          ( Cfg.AxiAddrWidth     ),
+    .AxiSlvPortDataWidth   ( Cfg.AxiDataInWidth   ),
+    .AxiMstPortDataWidth   ( Cfg.AxiDataOutWidth  ),
+    .AxiMaxReads           ( 1                    ),
     .aw_chan_t               ( s2c_in_int_aw_chan_t ),
     .mst_w_chan_t            ( c2s_w_chan_t         ),
     .slv_w_chan_t            ( s2c_in_int_w_chan_t  ),
