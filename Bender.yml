@@ -32,7 +32,7 @@ dependencies:
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 8408a6d7a7a4d814dcb3468934e49b407b1c783e } # branch: master
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
-  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 6ba6f415a9024decedabaf3f2b45263ff546dabd } # branch: yt/redmule-v2
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 81acf33df0caef1760cb71fc5218855bdd12179d} # branch: yt/fma-model
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: f4e131c86205d37882cf02ea4dd3bd141ef32d86 } # branch: lg/astral-v1.1
   softex:                 { git: "https://github.com/belanoa/softex.git"       , version: 1.0.0 }
