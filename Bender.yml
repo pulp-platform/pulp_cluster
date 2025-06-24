@@ -30,7 +30,7 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: e863f576699815b38cc9d80dbdede8ed5efd5991 } # `michaero/safety-island-clic` branch
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: 74426dee36f28ae1c02f7635cf844a0156145320 } # branch: yt/bump-clkgating
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 8408a6d7a7a4d814dcb3468934e49b407b1c783e } # branch: master
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 2a5a5081a2b32f1a04e7e28c00d3762d92602b84 } # branch: yt/wen-filter
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 6ba6f415a9024decedabaf3f2b45263ff546dabd } # branch: yt/redmule-v2
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: ae6c14d776bdc620151329d494b3dd7d571283ed } # branch: main
