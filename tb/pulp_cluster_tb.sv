@@ -21,6 +21,7 @@
 `include "axi/typedef.svh"
 
 import "DPI-C" function read_elf(input string filename);
+import "DPI-C" function get_entry(output longint entry_ret);
 import "DPI-C" function byte get_section(output longint address, output longint len);
 import "DPI-C" context function byte read_section(input longint address, inout byte buffer[], input longint len);
 
@@ -64,7 +65,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h10000000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
-  localparam bit[AxiAw-1:0] ClustReturnInt  = 'h50200100;
+  localparam bit[AxiAw-1:0] ClustReturnInt  = ClustBase + ClustPeriphOffs + 'h100;
 
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
@@ -404,12 +405,14 @@ module pulp_cluster_tb;
 
   // Load ELF binary file
   task load_binary;
-    input string binary;                   // File name
-    addr_t       section_addr, section_len;
-    byte         buffer[];
+    input  string binary;                   // File name
+    output addr_t entry_point;
+    addr_t        section_addr, section_len;
+    byte          buffer[];
 
     // Read ELF
     void'(read_elf(binary));
+    get_entry(entry_point);
     $display("[TB] Reading %s", binary);
     while (get_section(section_addr, section_len)) begin
       // Read Sections
@@ -451,6 +454,7 @@ module pulp_cluster_tb;
   // Start writing to SRAM
   logic [32:0] addr;
   logic [AxiDw-1:0] ret_val;
+  logic [31:0] boot_addr;
 
   initial begin
 
@@ -465,7 +469,7 @@ module pulp_cluster_tb;
    if ( $value$plusargs ("APP=%s", binary));
      $display("[TB] Testing %s", binary);
 
-   load_binary(binary);
+   load_binary(binary, boot_addr);
 
    foreach (sections[addr]) begin
       $display("[TB] Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
@@ -513,7 +517,7 @@ module pulp_cluster_tb;
      aw_beat.ax_burst = axi_pkg::BURST_INCR;
      aw_beat.ax_size  = 4'h3;
 
-     w_beat.w_data = BootAddr;
+     w_beat.w_data = boot_addr;
      w_beat.w_strb = 'h1;
      w_beat.w_last = 'h1;
 
