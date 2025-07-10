@@ -26,7 +26,7 @@ dependencies:
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  flex-v:                 { git: "https://github.com/pulp-platform/flex-v.git", rev: astral-v1.1 }
+  riscv:                  { git: "git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git", rev: "53b053cd0be8dae25caa24bd57824e81cf87ba21"} # branch smazzola/chimera
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }

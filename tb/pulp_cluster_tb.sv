@@ -328,6 +328,8 @@ module pulp_cluster_tb;
     BootAddr: BootAddr,
     EnablePrivateFpu: 1,
     EnablePrivateFpDivSqrt: 0,
+    EnableTnnExtension: 1,
+    EnableTnnUnsigned: 1,
     NumAxiIn: NumAxiSubordinatePorts,
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiIw-2,

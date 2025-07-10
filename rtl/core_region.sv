@@ -45,6 +45,8 @@ import rapid_recovery_pkg::*;
 
   parameter int unsigned  FPU                     =  0,
   parameter int unsigned  FP_DIVSQRT              =  0,
+  parameter int unsigned  TNN_EXTENSION           =  0,
+  parameter int unsigned  TNN_UNSIGNED            =  0,
 
   parameter int unsigned  DEBUG_START_ADDR        = 32'h1A110000,
 
@@ -232,25 +234,30 @@ import rapid_recovery_pkg::*;
       assign boot_addr = boot_addr_i;
       riscv_core #(
         .INSTR_RDATA_WIDTH   ( INSTR_RDATA_WIDTH           ),
-        .PULP_CLUSTER        ( 1                           ),
+        //.PULP_CLUSTER        ( 1                           ),
+        .PULP_SECURE         ( 0                           ),
         .FPU                 ( FPU                         ),
         .FP_DIVSQRT          ( FP_DIVSQRT                  ),
         .SHARED_FP           ( 0                           ),
+        .SHARED_DSP_MULT     ( 0                           ),
+        .SHARED_INT_DIV      ( 0                           ),
         .SHARED_FP_DIVSQRT   ( 0                           ),
         .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS         ),
         .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),
-        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 )
-      ) RI5CY_CORE             (
+        .DM_HaltAddress      ( DEBUG_START_ADDR + 16'h0800 ),
+        .TNN_EXTENSION       ( TNN_EXTENSION               ),
+        .TNN_UNSIGNED        ( TNN_UNSIGNED                )
+      ) RISCV_CORE (
         .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
-        .setback_i             ( setback_i                   ),
+        //.setback_i           ( setback_i                   ),
         .clock_en_i            ( clock_en_i                  ),
         .test_en_i             ( test_mode_i                 ),
         // Control Interface
         .fregfile_disable_i    ( '1                          ),
         .boot_addr_i           ( boot_addr                   ),
-        .core_id_i             ( hart_id                     ),
+        .core_id_i             ( core_id_i                   ),
         .cluster_id_i          ( cluster_id_i                ),
         // Instruction Interface
         .instr_req_o           ( instr_req_o                 ),
@@ -267,7 +274,7 @@ import rapid_recovery_pkg::*;
         .data_addr_o           ( core_data_req_o.add         ),
         .data_wdata_o          ( core_data_req_o.data        ),
         .data_rdata_i          ( core_data_rsp_i.r_data      ),
-        .data_unaligned_o      (         /* Unused */        ),
+        //.data_unaligned_o    ( /* Unused */                ),
         // apu-interconnect
         // Handshake
         .apu_master_req_o      ( apu_master_req_o            ),
@@ -290,57 +297,60 @@ import rapid_recovery_pkg::*;
         .irq_sec_i             ( '0                          ),
         .sec_lvl_o             (                             ),
         // Debug Interface
-        .debug_req_i           ( debug_req_i |
-                                 recovery_bus_i.debug_req    ),
-        .debug_resume_i        ( recovery_bus_i.debug_resume ),
-        .debug_mode_o          ( debug_halted_o              ),
+        .debug_req_i           ( debug_req_i                 ),
+        //                     | recovery_bus_i.debug_req    ),
+        //.debug_resume_i      ( recovery_bus_i.debug_resume ),
+        //.debug_mode_o        ( debug_halted_o              ),
         // Yet other control signals
         .fetch_enable_i        ( fetch_en_i                  ),
         .core_busy_o           ( core_busy_o                 ),
         // External performance monitoring signals
-        .ext_perf_counters_i   ( ext_perf_i                  ),
+        .ext_perf_counters_i   ( ext_perf_i                  )
         // RF recovery ports
-        .recover_i         ( recovery_bus_i.rf_recovery_en            ),
+        //.recover_i         ( recovery_bus_i.rf_recovery_en            ),
         // Write port A
-        .regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata.waddr_a ),
-        .regfile_wdata_a_i ( recovery_bus_i.rf_recovery_rdata.rdata_a ),
-        .regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata.we_a    ),
+        //.regfile_waddr_a_i ( recovery_bus_i.rf_recovery_wdata.waddr_a ),
+        //.regfile_wdata_a_i ( recovery_bus_i.rf_recovery_rdata.rdata_a ),
+        //.regfile_we_a_i    ( recovery_bus_i.rf_recovery_wdata.we_a    ),
         // Write port B
-        .regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata.waddr_b ),
-        .regfile_wdata_b_i ( recovery_bus_i.rf_recovery_rdata.rdata_b ),
-        .regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata.we_b    ),
+        //.regfile_waddr_b_i ( recovery_bus_i.rf_recovery_wdata.waddr_b ),
+        //.regfile_wdata_b_i ( recovery_bus_i.rf_recovery_rdata.rdata_b ),
+        //.regfile_we_b_i    ( recovery_bus_i.rf_recovery_wdata.we_b    ),
         // Outputs from RF
         // Port A
-        .regfile_we_a_o    ( regfile_backup_o.we_a    ),
-        .regfile_waddr_a_o ( regfile_backup_o.waddr_a ),
-        .regfile_wdata_a_o ( regfile_backup_o.wdata_a ),
+        //.regfile_we_a_o    ( regfile_backup_o.we_a    ),
+        //.regfile_waddr_a_o ( regfile_backup_o.waddr_a ),
+        //.regfile_wdata_a_o ( regfile_backup_o.wdata_a ),
         // Port B
-        .regfile_we_b_o    ( regfile_backup_o.we_b    ),
-        .regfile_waddr_b_o ( regfile_backup_o.waddr_b ),
-        .regfile_wdata_b_o ( regfile_backup_o.wdata_b ),
+        //.regfile_we_b_o    ( regfile_backup_o.we_b    ),
+        //.regfile_waddr_b_o ( regfile_backup_o.waddr_b ),
+        //.regfile_wdata_b_o ( regfile_backup_o.wdata_b ),
         // Program Counter Backup
-        .backup_program_counter_o    ( pc_backup_o.program_counter    ),
-        .backup_program_counter_if_o ( pc_backup_o.program_counter_if ),
-        .backup_branch_o             ( pc_backup_o.is_branch          ),
-        .backup_branch_addr_o        ( pc_backup_o.branch_addr        ),
+        //.backup_program_counter_o    ( pc_backup_o.program_counter    ),
+        //.backup_program_counter_if_o ( pc_backup_o.program_counter_if ),
+        //.backup_branch_o             ( pc_backup_o.is_branch          ),
+        //.backup_branch_addr_o        ( pc_backup_o.branch_addr        ),
         // Program Counter Recovery
-        .pc_recover_i               ( recovery_bus_i.pc_recovery_en              ),
-        .recovery_program_counter_i ( recovery_bus_i.pc_recovery.program_counter ),
-        .recovery_branch_i          ( recovery_bus_i.pc_recovery.is_branch       ),
-        .recovery_branch_addr_i     ( recovery_bus_i.pc_recovery.branch_addr     ),
+        //.pc_recover_i               ( recovery_bus_i.pc_recovery_en              ),
+        //.recovery_program_counter_i ( recovery_bus_i.pc_recovery.program_counter ),
+        //.recovery_branch_i          ( recovery_bus_i.pc_recovery.is_branch       ),
+        //.recovery_branch_addr_i     ( recovery_bus_i.pc_recovery.branch_addr     ),
         // CSRs Backup
-        .backup_mstatus_o  ( csr_backup_o.csr_mstatus  ),
-        .backup_mtvec_o    ( csr_backup_o.csr_mtvec    ),
-        .backup_mscratch_o ( csr_backup_o.csr_mscratch ),
-        .backup_mepc_o     ( csr_backup_o.csr_mepc     ),
-        .backup_mcause_o   ( csr_backup_o.csr_mcause   ),
+        //.backup_mstatus_o  ( csr_backup_o.csr_mstatus  ),
+        //.backup_mtvec_o    ( csr_backup_o.csr_mtvec    ),
+        //.backup_mscratch_o ( csr_backup_o.csr_mscratch ),
+        //.backup_mepc_o     ( csr_backup_o.csr_mepc     ),
+        //.backup_mcause_o   ( csr_backup_o.csr_mcause   ),
         // CSRs Recovery
-        .recovery_mstatus_i  ( recovery_bus_i.csr_recovery.csr_mstatus  ),
-        .recovery_mtvec_i    ( recovery_bus_i.csr_recovery.csr_mtvec    ),
-        .recovery_mscratch_i ( recovery_bus_i.csr_recovery.csr_mscratch ),
-        .recovery_mepc_i     ( recovery_bus_i.csr_recovery.csr_mepc     ),
-        .recovery_mcause_i   ( recovery_bus_i.csr_recovery.csr_mcause   )
+        //.recovery_mstatus_i  ( recovery_bus_i.csr_recovery.csr_mstatus  ),
+        //.recovery_mtvec_i    ( recovery_bus_i.csr_recovery.csr_mtvec    ),
+        //.recovery_mscratch_i ( recovery_bus_i.csr_recovery.csr_mscratch ),
+        //.recovery_mepc_i     ( recovery_bus_i.csr_recovery.csr_mepc     ),
+        //.recovery_mcause_i   ( recovery_bus_i.csr_recovery.csr_mcause   )
       );
+      assign regfile_backup_o = '0;
+      assign pc_backup_o      = '0;
+      assign debug_halted_o    = '0;
       assign debug_havereset_o = '0;
       assign debug_running_o   = '0;
       assign csr_backup_o.csr_mie = '0;
@@ -632,5 +642,17 @@ import rapid_recovery_pkg::*;
     end
   end
 //synopsys translate_on
+
+// pragma translate_off
+`ifndef VERILATOR
+initial begin : p_assert
+  // TNN ISA extension only supported by RI5CY
+  if (CORE_TYPE_CL != 1) begin
+    assert(TNN_EXTENSION == 0)
+      else $fatal(1, "TNN_EXTENSION is only supported by RI5CY");
+  end
+end
+`endif
+// pragma translate_on
 
 endmodule

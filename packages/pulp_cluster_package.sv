@@ -136,6 +136,10 @@ package pulp_cluster_package;
     bit EnableSharedFpDivSqrt;
     // Number of shared FPUs
     byte_t NumSharedFpu;
+    // Enable TNN extension
+    bit EnableTnnExtension;
+    // Enable TNN unsigned
+    bit EnableTnnUnsigned;
     // Number of AXI crossbar subordinate ports
     byte_t NumAxiIn;
     // Number of AXI crossbar manager ports
@@ -248,6 +252,8 @@ package pulp_cluster_package;
     EnableSharedFpu: 0,
     EnableSharedFpDivSqrt: 0,
     NumSharedFpu: 0,
+    EnableTnnExtension: 1,
+    EnableTnnUnsigned: 1,
     NumAxiIn: NumAxiSubordinatePorts,
     NumAxiOut: NumAxiManagerPorts,
     AxiIdInWidth: AxiSubordinateIdwidth,

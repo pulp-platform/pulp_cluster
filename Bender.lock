@@ -233,11 +233,11 @@ packages:
     - axi
     - common_cells
     - common_verification
-  flex-v:
-    revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
+  riscv:
+    revision: 53b053cd0be8dae25caa24bd57824e81cf87ba21
     version: null
     source:
-      Git: https://github.com/pulp-platform/flex-v.git
+      Git: git@iis-git.ee.ethz.ch:pulpissimov2/riscv-nn.git
     dependencies:
     - fpnew
     - tech_cells_generic

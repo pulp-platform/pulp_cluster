@@ -37,7 +37,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 67079fe
+NONFREE_COMMIT ?= 5faadcadfea68614748556cb1f002d8145caeba8 # xpulpnn CI
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= e8fcd88 # branch: lg/upstream
+PULP_RUNTIME_COMMIT ?= e2d479506307f4c95dedcc23ccd8ed597bd1442f # xpulpnn
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
+REGRESSION_TESTS_COMMIT ?= 35005773709f592c84df7669ba21728997bf4ad0 # xpulpnn tests
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@

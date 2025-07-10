@@ -910,7 +910,7 @@ generate
 
     core_region #(
       .CORE_TYPE_CL        ( Cfg.CoreType               ),
-      .N_EXT_PERF_COUNTERS ( 5 + $bits(snitch_icache_pkg::icache_l0_events_t )                          ),
+      .N_EXT_PERF_COUNTERS ( 5 + $bits(snitch_icache_pkg::icache_l0_events_t ) ),
       .ADDR_WIDTH          ( AddrWidth                  ),
       .DATA_WIDTH          ( DataWidth                  ),
       .INSTR_RDATA_WIDTH   ( Cfg.iCachePrivateDataWidth ),
@@ -925,6 +925,8 @@ generate
       .DEBUG_START_ADDR    ( Cfg.DmBaseAddr             ),
       .FPU                 ( Cfg.EnablePrivateFpu       ),
       .FP_DIVSQRT          ( Cfg.EnablePrivateFpDivSqrt ),
+      .TNN_EXTENSION       ( Cfg.EnableTnnExtension     ),
+      .TNN_UNSIGNED        ( Cfg.EnableTnnUnsigned      ),
       .core_data_req_t     ( core_data_req_t            ),
       .core_data_rsp_t     ( core_data_rsp_t            )
     ) core_region_i        (
