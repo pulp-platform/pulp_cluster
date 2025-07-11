@@ -38,7 +38,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 4267271dca54a6c6592336919034ee6e5573974a # branch: smazzola/chimera
+NONFREE_COMMIT ?= f492530603be007bdc82c37bc0ebae6599d7c7a2 # branch: smazzola/chimera
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -76,7 +76,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 749c08e2036ddcb7baaa956c09a556f8b386b66f # branch: smazzola/chimera
+PULP_RUNTIME_COMMIT ?= 3c6e91f03942b3a1951b1315b6f175bbd851361c # branch: smazzola/chimera
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
