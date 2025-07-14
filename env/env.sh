@@ -6,8 +6,8 @@
 ROOTD=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)
 
 if (hostname | grep -qE "\.ee\.ethz\.ch$") ;  then
-  export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/pack/riscv-1.0-kgf/pulp-gcc-1.0.16
+  export PULP_RUNTIME_GCC_TOOLCHAIN=/usr/scratch2/lagrev5/lghionda/toolchains/corev-openhw-gcc-modded/
 fi
 
-source "$ROOTD/pulp-runtime/configs/pulp_cluster.sh"
+source "$ROOTD/pulp-runtime/configs/pulp_cluster_cv32e40p.sh"
 source "$ROOTD/scripts/vsim.sh"

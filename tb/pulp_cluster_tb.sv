@@ -285,7 +285,7 @@ module pulp_cluster_tb;
       );
 
   localparam pulp_cluster_cfg_t PulpClusterCfg = '{
-    CoreType: pulp_cluster_package::RI5CY,
+    CoreType: pulp_cluster_package::CV32,
     NumCores: `NB_CORES,
     DmaNumPlugs: `NB_DMAS,
     DmaNumOutstandingBursts: 8,
@@ -343,7 +343,7 @@ module pulp_cluster_tb;
     ClusterPeriphOffs: ClustPeriphOffs,
     ClusterExternalOffs: ClustExtOffs,
     EnableRemapAddress: 0,
-    SnitchICache: 0,
+    SnitchICache: 1,
     default: '0
   };
 

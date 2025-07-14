@@ -151,23 +151,26 @@ import rapid_recovery_pkg::*;
   generate
     if ( CORE_TYPE_CL == 0 ) begin: CV32_CORE
       assign boot_addr = boot_addr_i;
+`ifdef VERILATOR
+      cv32e40p_top #(
+`elsif TRACE_EXECUTION
       cv32e40p_wrapper #(
-        .PULP_XPULP          ( 1                           ), // For now this is a no
-        .PULP_CLUSTER        ( 1                           ),
-        .FPU                 ( FPU                         ),
-        .NUM_EXTERNAL_PERF   ( N_EXT_PERF_COUNTERS         ),
-        .NUM_INTERRUPTS      ( NUM_INTERRUPTS              ),
-        .PULP_ZFINX          ( 0                           )
+`else
+      cv32e40p_top #(
+`endif
+        .COREV_PULP            ( 1                           ), // For now this is a no
+        .COREV_CLUSTER         ( 1                           ),
+        .FPU                   ( FPU                         ),
+        .ZFINX                 ( 0                           ),
+        .NUM_MHPMCOUNTERS      ( 29                          )
       ) CV32_CORE (
         .clk_i                 ( clk_i                       ),
         .rst_ni                ( rst_ni                      ),
-        .setback_i             ( '0                          ),
         // Control Interface
         .pulp_clock_en_i       ( clock_en_i                  ),
         .scan_cg_en_i          ( test_mode_i                 ),
         .boot_addr_i           ( boot_addr                   ),
         .mtvec_addr_i          ( '0                          ),
-        .mtvt_addr_i           ( '0                          ),
         .dm_halt_addr_i        ( DEBUG_START_ADDR + 16'h0800 ),
         .hart_id_i             ( hart_id                     ),
         .dm_exception_addr_i   ( DEBUG_START_ADDR + 16'h080C ), // From Control PULP, to be checked
@@ -186,34 +189,8 @@ import rapid_recovery_pkg::*;
         .data_addr_o           ( core_data_req_o.add         ),
         .data_wdata_o          ( core_data_req_o.data        ),
         .data_rdata_i          ( core_data_rsp_i.r_data      ),
-        // Shadow Memory Interface
-        .shadow_req_o          ( /* Unconnected */           ),
-        .shadow_gnt_i          ( '0                          ),
-        .shadow_rvalid_i       ( '0                          ),
-        .shadow_we_o           ( /* Unconnected */           ),
-        .shadow_be_o           ( /* Unconnected */           ),
-        .shadow_addr_o         ( /* Unconnected */           ),
-        .shadow_wdata_o        ( /* Unconnected */           ),
-        .shadow_rdata_i        ( '0                          ),
-        // Atomic operation
-        .data_atop_o           ( /* Unconnected */           ),
-        // apu-interconnect
-        // Handshake
-        .apu_req_o             ( apu_master_req_o            ),
-        .apu_gnt_i             ( apu_master_gnt_i            ),
-        // Request Bus
-        .apu_operands_o        ( apu_master_operands_o       ),
-        .apu_op_o              ( apu_master_op_o             ),
-        .apu_type_o            ( apu_master_type_o           ),
-        .apu_flags_o           ( apu_master_flags_o          ),
-        // Response Bus
-        .apu_rvalid_i          ( apu_master_valid_i          ),
-        .apu_result_i          ( apu_master_result_i         ),
-        .apu_flags_i           ( apu_master_flags_i          ),
         // IRQ Interface
         .irq_i                 ( core_irq_x                  ),
-        .irq_level_i           ( '0                          ), // CLIC interrupt level
-        .irq_shv_i             ( '0                          ), // CLIC selective hardware vectoring
         .irq_ack_o             ( irq_ack_o                   ),
         .irq_id_o              ( irq_ack_id_o                ),
         // Debug Interface
@@ -223,9 +200,7 @@ import rapid_recovery_pkg::*;
         .debug_halted_o        ( debug_halted_o              ),
         // Yet other control signals
         .fetch_enable_i        ( fetch_en_i                  ),
-        .core_sleep_o          ( core_sleep                  ),
-        // External performance monitoring signals
-        .external_perf_i       ( ext_perf_i                  )
+        .core_sleep_o          ( core_sleep                  )
       );
       assign core_busy_o = ~core_sleep;
     end else if ( CORE_TYPE_CL == 1 ) begin: RI5CY_CORE

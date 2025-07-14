@@ -75,7 +75,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= b3c239c # branch: lg/upstream
+PULP_RUNTIME_COMMIT ?= a99e03a # branch: lg/ohw_cv32
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
+REGRESSION_TESTS_COMMIT ?= 4024cbd # branch: lg/ohw_cv32
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
