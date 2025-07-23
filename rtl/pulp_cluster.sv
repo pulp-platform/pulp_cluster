@@ -339,6 +339,22 @@ logic                                       s_dma_cl_irq;
 logic                                       s_dma_fc_event;
 logic                                       s_dma_fc_irq;
 
+// Determine if wide AXI port should be enabled based on DMA type and configuration
+// - MCHAN: Always disable wide port (uses narrow port only)
+// - iDMA: Use Cfg.EnableWidePort parameter
+`ifdef TARGET_MCHAN
+  localparam bit WidePortShouldBeEnabled = 1'b0;  // MCHAN never needs wide ports
+`else
+  localparam bit WidePortShouldBeEnabled = Cfg.EnableWidePort;  // User-configurable for iDMA
+`endif
+
+// Wide AXI infrastructure: Conditional implementation based on EnableWidePort
+// - MCHAN: Always uses narrow transfers (WidePortShouldBeEnabled = 0)
+// - iDMA with EnableWidePort=1: Uses wide transfers (256-bit AXI) 
+// - iDMA with EnableWidePort=0: Uses narrow transfers (64-bit AXI)
+// - Wide infrastructure present for interface compatibility
+// - Narrow DMA master merged with cluster bus master when wide disabled
+
 logic [Cfg.NumCores-1:0] hmr_barrier_matched;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_resynch_req, hmr_tmr_sw_resynch_req;
 logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
@@ -352,6 +368,7 @@ localparam DMA_IW_CONTRIB_FAC = Cfg.DmaUseHwpePort ? 0 : 1;
 // data width of the TCDM master ports coming from the DMA.
 // if using MCHAN, must be 32
 localparam int unsigned DMA_HCI_DATA_WIDTH = Cfg.DmaUseHwpePort ? Cfg.AxiDataOutWideWidth : DataWidth;
+
 
 localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   DW:  DataWidth,
@@ -578,8 +595,11 @@ hci_core_intf #(
   c2s_in_int_req_t s_core_instr_bus_req;
   c2s_in_int_resp_t s_core_instr_bus_resp;
 
-  c2s_wide_req_t s_dma_master_req;
+  // DMA master signals - always declared, conditionally connected
+  c2s_wide_req_t s_dma_master_req;       // Wide DMA master (256-bit)
   c2s_wide_resp_t s_dma_master_resp;
+  c2s_out_int_req_t s_dma_narrow_master_req;   // Narrow DMA master (64-bit) 
+  c2s_out_int_resp_t s_dma_narrow_master_resp;
 
 
   // core per2axi -> ext
@@ -790,15 +810,15 @@ dmac_wrap #(
   .NB_CORES           ( Cfg.NumCores                ),
   .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
   .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
-  .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWideWidth     ),
-  .AXI_ID_WIDTH       ( Cfg.AxiIdOutWideWidth       ),
+  .AXI_DATA_WIDTH     ( WidePortShouldBeEnabled ? Cfg.AxiDataOutWideWidth : Cfg.AxiDataOutWidth ),
+  .AXI_ID_WIDTH       ( WidePortShouldBeEnabled ? Cfg.AxiIdOutWideWidth : AxiIdOutWidth ),
   .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
   .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
   .DATA_WIDTH         ( DataWidth                   ),
   .ADDR_WIDTH         ( AddrWidth                   ),
   .BE_WIDTH           ( BeWidth                     ),
-  .axi_req_t          ( c2s_wide_req_t              ),
-  .axi_resp_t         ( c2s_wide_resp_t             ),
+  .axi_req_t          ( WidePortShouldBeEnabled ? c2s_wide_req_t : c2s_out_int_req_t ),
+  .axi_resp_t         ( WidePortShouldBeEnabled ? c2s_wide_resp_t : c2s_out_int_resp_t ),
 `ifdef TARGET_MCHAN
   .NB_CTRLS           ( Cfg.NumCores + 2            ),
   .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
@@ -818,11 +838,11 @@ dmac_wrap #(
   .ctrl_slave         ( s_core_dmactrl_bus               ),
   .tcdm_master        ( s_hci_dma                        ),
 `ifdef TARGET_MCHAN
-  .ext_master_req_o   ( s_dma_master_req                 ),
-  .ext_master_resp_i  ( s_dma_master_resp                ),
+  .ext_master_req_o   ( /* MCHAN uses narrow port - not connected to wide */ ),
+  .ext_master_resp_i  ( '0                                                   ),
 `else
-  .ext_master_req_o   ( {s_dma_master_req}               ),
-  .ext_master_resp_i  ( {s_dma_master_resp}              ),
+  .ext_master_req_o   ( WidePortShouldBeEnabled ? {s_dma_master_req} : {s_dma_narrow_master_req} ),
+  .ext_master_resp_i  ( WidePortShouldBeEnabled ? {s_dma_master_resp} : {s_dma_narrow_master_resp} ),
 `endif
   .term_event_o       ( s_dma_event                      ),
   .term_irq_o         ( s_dma_irq                        ),
@@ -1664,8 +1684,57 @@ c2s_resp_t  src_resp, isolate_src_resp;
 c2s_remap_req_t src_remap_req;
 c2s_remap_resp_t src_remap_resp;
 
-`AXI_ASSIGN_REQ_STRUCT(src_remap_req,s_data_master_req)
-`AXI_ASSIGN_RESP_STRUCT(s_data_master_resp,src_remap_resp)
+// Connect DMA narrow master when wide port disabled, otherwise cluster bus master
+if (WidePortShouldBeEnabled) begin : gen_cluster_bus_narrow_master
+  `AXI_ASSIGN_REQ_STRUCT(src_remap_req,s_data_master_req)
+  `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp,src_remap_resp)
+end else begin : gen_dma_narrow_master  
+  // Merge cluster bus master and DMA narrow master
+  c2s_remap_req_t [1:0] narrow_master_reqs;
+  c2s_remap_resp_t [1:0] narrow_master_resps;
+  
+  `AXI_ASSIGN_REQ_STRUCT(narrow_master_reqs[0],s_data_master_req)      // Cluster bus
+  `AXI_ASSIGN_REQ_STRUCT(narrow_master_reqs[1],s_dma_narrow_master_req) // DMA narrow
+  `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp,narrow_master_resps[0])
+  `AXI_ASSIGN_RESP_STRUCT(s_dma_narrow_master_resp,narrow_master_resps[1])
+  
+  // Simple AXI crossbar to merge two narrow masters
+  axi_xbar #(
+    .Cfg          ( '{
+      NoSlvPorts: 2,
+      NoMstPorts: 1,  
+      MaxMstTrans: 4,
+      MaxSlvTrans: 4,
+      FallThrough: 1'b0,
+      LatencyMode: axi_pkg::CUT_ALL_AX,
+      PipelineStages: 0,
+      AxiIdWidthSlvPorts: AxiIdOutWidth,
+      AxiIdUsedSlvPorts: AxiIdOutWidth,
+      UniqueIds: 1'b1,
+      AxiAddrWidth: Cfg.AxiAddrWidth,
+      AxiDataWidth: Cfg.AxiDataOutWidth,
+      NoAddrRules: 1
+    } ),
+    .ATOPs        ( 1'b1             ),
+    .Connectivity ( '1               ),
+    .slv_req_t    ( c2s_remap_req_t  ),
+    .slv_resp_t   ( c2s_remap_resp_t ),
+    .mst_req_t    ( c2s_remap_req_t  ),
+    .mst_resp_t   ( c2s_remap_resp_t ),
+    .rule_t       ( axi_pkg::xbar_rule_32_t )
+  ) i_narrow_master_xbar (
+    .clk_i         ( clk_i                     ),
+    .rst_ni        ( rst_ni                    ),
+    .test_i        ( test_mode_i               ),
+    .slv_ports_req_i ( narrow_master_reqs      ),
+    .slv_ports_resp_o( narrow_master_resps     ),
+    .mst_ports_req_o ( src_remap_req           ),
+    .mst_ports_resp_i( src_remap_resp          ),
+    .addr_map_i    ( '{'{idx: 0, start_addr: '0, end_addr: '1}} ),
+    .en_default_mst_port_i( '1                 ),
+    .default_mst_port_i   ( '0                 )
+  );
+end
 
 if (Cfg.AxiIdOutWidth != AxiIdOutWidth) begin : gen_c2s_idwremap
   axi_id_remap            #(
@@ -1767,7 +1836,7 @@ axi_isolate            #(
   .slv_resp_o           ( isolate_src_wide_resp ),
   .mst_req_o            ( src_wide_req          ),
   .mst_resp_i           ( src_wide_resp         ),
-  .isolate_i            ( axi_isolate_synch     ),
+  .isolate_i            ( axi_isolate_synch ),
   .isolated_o           ( axi_isolated_wide_o   )
 );
 
@@ -1967,12 +2036,17 @@ initial begin : p_assert
     else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
   assert(!Cfg.DmaUseHwpePort)
     else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
+  assert(!WidePortShouldBeEnabled)
+    else $fatal(1, "When using MCHAN, wide port should be disabled!");
   `else
   if (!Cfg.DmaUseHwpePort) begin
     // The DMA can have wide access to TCDM only when sharing the master port to HCI with the HWPE
     assert(DMA_HCI_DATA_WIDTH == DataWidth)
       else $fatal(1, "When Cfg.DmaUseHwpePort is 0, DMA_HCI_DATA_WIDTH must be equal to DataWidth!");
   end
+  // Note: iDMA now uses conditional data width and AXI path selection
+  // EnableWidePort=0: iDMA uses 64-bit narrow transfers via cluster bus AXI path  
+  // EnableWidePort=1: iDMA uses 256-bit wide transfers via dedicated wide AXI path
   `endif
 end
 `endif

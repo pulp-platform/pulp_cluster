@@ -178,6 +178,11 @@ package pulp_cluster_package;
     doub_t ClusterExternalOffs;
     // Address remap for virtualization
     bit EnableRemapAddress;
+    // Enable wide AXI master port for high-bandwidth DMA transfers
+    // When disabled (0): Wide AXI ports are tied off, DMA uses narrow transfers only
+    // When enabled (1): DMA can use wide AXI port for high-bandwidth transfers
+    // Automatically disabled when using MCHAN (TARGET_MCHAN defined)
+    bit EnableWidePort;
     // Enable Snitch ICache
     bit SnitchICache;
   } pulp_cluster_cfg_t;
@@ -276,6 +281,7 @@ package pulp_cluster_package;
     ClusterPeriphOffs: 'h00200000,
     ClusterExternalOffs: 'h00400000,
     EnableRemapAddress: 0,
+    EnableWidePort: 1,
     SnitchICache: 0,
     default: '0
   };
