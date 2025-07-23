@@ -39,7 +39,7 @@ module dmac_wrap #(
   parameter int unsigned GLOBAL_QUEUE_DEPTH     = 2,
   // mux read ports between tcdm-tcdm and tcdm-axi?
   parameter bit          MUX_READ               = 1'b0,
-  parameter bit          TCDM_MEM2BANKS         = 1'b0,
+    parameter bit          TCDM_MEM2BANKS         = 1'b0,
   // when using mem2banks (implies AXI_DATA_WIDTH==64):
   // 4 ports per stream if read ports muxed, otherwise 6
   // when not using mem2banks:
@@ -177,7 +177,7 @@ module dmac_wrap #(
   axi_req_t  [       NumStreams-1:0] dma_req;
   axi_resp_t [       NumStreams-1:0] dma_rsp;
 
-  // interface to structs
+  // interface to structs  
   for (genvar s = 0; s < NUM_BIDIR_STREAMS; s++) begin : gen_connect_interface
     assign ext_master_req_o[s] = soc_req[s];
     assign soc_rsp[s]          = ext_master_resp_i[s];
