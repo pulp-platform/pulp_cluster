@@ -76,7 +76,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 8000372999b5933317c357367b9d2f445a3cbfd0 # branch: dkeller/chimera-v2
+PULP_RUNTIME_COMMIT ?= af75d00 # branch: dkeller/chimera-v2
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
