@@ -343,13 +343,13 @@ logic                                       s_dma_fc_irq;
 // - MCHAN: Always disable wide port (uses narrow port only)
 // - iDMA: Use Cfg.EnableWidePort parameter
 `ifdef TARGET_MCHAN
-  localparam bit WidePortShouldBeEnabled = 1'b0;  // MCHAN never needs wide ports
+  localparam bit EnableWidePort = 1'b0;  // MCHAN never needs wide ports
 `else
-  localparam bit WidePortShouldBeEnabled = Cfg.EnableWidePort;  // User-configurable for iDMA
+  localparam bit EnableWidePort = Cfg.EnableWidePort;  // User-configurable for iDMA
 `endif
 
 // Wide AXI infrastructure: Conditional implementation based on EnableWidePort
-// - MCHAN: Always uses narrow transfers (WidePortShouldBeEnabled = 0)
+// - MCHAN: Always uses narrow transfers (EnableWidePort = 0)
 // - iDMA with EnableWidePort=1: Uses wide transfers (256-bit AXI) 
 // - iDMA with EnableWidePort=0: Uses narrow transfers (64-bit AXI)
 // - Wide infrastructure present for interface compatibility
@@ -806,7 +806,7 @@ cluster_interconnect_wrap #(
 //***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
-if (WidePortShouldBeEnabled) begin : gen_wide_port_idma
+if (EnableWidePort) begin : gen_wide_port_idma
   dmac_wrap #(
     .NB_CORES           ( Cfg.NumCores                ),
     .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
@@ -1732,7 +1732,7 @@ c2s_remap_req_t src_remap_req;
 c2s_remap_resp_t src_remap_resp;
 
 // Connect DMA narrow master when wide port disabled, otherwise cluster bus master
-if (WidePortShouldBeEnabled) begin : gen_cluster_bus_narrow_master
+if (EnableWidePort) begin : gen_cluster_bus_narrow_master
   `AXI_ASSIGN_REQ_STRUCT(src_remap_req, s_data_master_req)
   `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp, src_remap_resp)
 end else begin : gen_dma_narrow_master  
@@ -1850,48 +1850,48 @@ axi_isolate            #(
 );
 
 axi_cdc_src  #(
- .aw_chan_t   ( c2s_aw_chan_t        ),
- .w_chan_t    ( c2s_w_chan_t         ),
- .b_chan_t    ( c2s_b_chan_t         ),
- .r_chan_t    ( c2s_r_chan_t         ),
- .ar_chan_t   ( c2s_ar_chan_t        ),
- .axi_req_t   ( c2s_req_t            ),
- .axi_resp_t  ( c2s_resp_t           ),
- .LogDepth    ( Cfg.AxiCdcLogDepth   ),
- .SyncStages  ( Cfg.AxiCdcSyncStages )
+  .aw_chan_t   ( c2s_aw_chan_t        ),
+  .w_chan_t    ( c2s_w_chan_t         ),
+  .b_chan_t    ( c2s_b_chan_t         ),
+  .r_chan_t    ( c2s_r_chan_t         ),
+  .ar_chan_t   ( c2s_ar_chan_t        ),
+  .axi_req_t   ( c2s_req_t            ),
+  .axi_resp_t  ( c2s_resp_t           ),
+  .LogDepth    ( Cfg.AxiCdcLogDepth   ),
+  .SyncStages  ( Cfg.AxiCdcSyncStages )
 ) axi_master_cdc_i (
- .src_rst_ni                       ( pwr_on_rst_ni               ),
- .src_clk_i                        ( clk_i                       ),
- .src_req_i                        ( src_req                     ),
- .src_resp_o                       ( src_resp                    ),
- .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),
- .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
- .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
- .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
- .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
- .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
- .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
- .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
- .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
- .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
- .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
- .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
- .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
- .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
- .async_data_master_r_data_i       ( async_data_master_r_data_i  )
+  .src_rst_ni                       ( pwr_on_rst_ni               ),
+  .src_clk_i                        ( clk_i                       ),
+  .src_req_i                        ( src_req                     ),
+  .src_resp_o                       ( src_resp                    ),
+  .async_data_master_aw_wptr_o      ( async_data_master_aw_wptr_o ),
+  .async_data_master_aw_rptr_i      ( async_data_master_aw_rptr_i ),
+  .async_data_master_aw_data_o      ( async_data_master_aw_data_o ),
+  .async_data_master_w_wptr_o       ( async_data_master_w_wptr_o  ),
+  .async_data_master_w_rptr_i       ( async_data_master_w_rptr_i  ),
+  .async_data_master_w_data_o       ( async_data_master_w_data_o  ),
+  .async_data_master_ar_wptr_o      ( async_data_master_ar_wptr_o ),
+  .async_data_master_ar_rptr_i      ( async_data_master_ar_rptr_i ),
+  .async_data_master_ar_data_o      ( async_data_master_ar_data_o ),
+  .async_data_master_b_wptr_i       ( async_data_master_b_wptr_i  ),
+  .async_data_master_b_rptr_o       ( async_data_master_b_rptr_o  ),
+  .async_data_master_b_data_i       ( async_data_master_b_data_i  ),
+  .async_data_master_r_wptr_i       ( async_data_master_r_wptr_i  ),
+  .async_data_master_r_rptr_o       ( async_data_master_r_rptr_o  ),
+  .async_data_master_r_data_i       ( async_data_master_r_data_i  )
 );
 
 // Cluster to Soc (wide)
 c2s_wide_req_t   src_wide_req, isolate_src_wide_req;
 c2s_wide_resp_t  src_wide_resp, isolate_src_wide_resp;
 
-// Route DMA master request/response based on WidePortShouldBeEnabled
-assign isolate_src_wide_req = WidePortShouldBeEnabled ? s_dma_master_req : s_dma_narrow_master_req;
-assign s_dma_master_resp    = WidePortShouldBeEnabled ? isolate_src_wide_resp : s_dma_narrow_master_resp;
+// Route DMA master request/response based on EnableWidePort
+assign isolate_src_wide_req = EnableWidePort ? s_dma_master_req : s_dma_narrow_master_req;
+assign s_dma_master_resp    = EnableWidePort ? isolate_src_wide_resp : s_dma_narrow_master_resp;
 
 // Instantiate wide port isolation and CDC only when enabled
 generate
-  if (WidePortShouldBeEnabled) begin : gen_wide_port
+  if (EnableWidePort) begin : gen_wide_port
     axi_isolate #(
       .NumPending           ( 8                       ),
       .TerminateTransaction ( 1                       ),
@@ -2109,7 +2109,7 @@ initial begin : p_assert
     else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
   assert(!Cfg.DmaUseHwpePort)
     else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
-  assert(!WidePortShouldBeEnabled)
+  assert(!EnableWidePort)
     else $fatal(1, "When using MCHAN, wide port should be disabled!");
   `else
   if (!Cfg.DmaUseHwpePort) begin
