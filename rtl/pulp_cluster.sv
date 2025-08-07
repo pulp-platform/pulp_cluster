@@ -842,8 +842,8 @@ if (WidePortShouldBeEnabled) begin : gen_wide_port_idma
     .ext_master_req_o   ( /* MCHAN uses narrow port - not connected to wide */ ),
     .ext_master_resp_i  ( '0                                                   ),
   `else
-    .ext_master_req_o   ( {s_dma_narrow_master_req} ),
-    .ext_master_resp_i  ( {s_dma_narrow_master_resp} ),
+    .ext_master_req_o   ( {s_dma_master_req} ),
+    .ext_master_resp_i  ( {s_dma_master_resp} ),
   `endif
     .term_event_o       ( s_dma_event                      ),
     .term_irq_o         ( s_dma_irq                        ),
