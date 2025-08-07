@@ -753,6 +753,7 @@ module pulp_cluster_tb;
    w_beat.w_strb = '1;
    w_beat.w_last = '1;
 
+
    axi_master_drv.send_aw(aw_beat);
    axi_master_drv.send_w(w_beat);
    @(posedge s_clk);
