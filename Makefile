@@ -48,6 +48,7 @@ NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.gi
 NONFREE_BRANCH ?= dkeller/chimera-v2
 
 nonfree-init:
+	rm -rf nonfree;
 	git clone --single-branch --branch $(NONFREE_BRANCH) $(NONFREE_REMOTE) nonfree
 	cd nonfree && git checkout $(NONFREE_COMMIT)
 
