@@ -29,7 +29,6 @@ REGRESSIONS := $(ROOT_DIR)/regression_tests
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
 
 # TB's wide DMA port toggle override
-
 export TB_ENABLE_WIDE_PORT
 ifneq ($(strip $(TB_ENABLE_WIDE_PORT)),)
 VLOG_ARGS += +define+TB_ENABLE_WIDE_PORT=$(TB_ENABLE_WIDE_PORT)
@@ -173,7 +172,6 @@ run:
 .PHONY: clean
 
 clean:
-	rm -rf Bender.lock
 	rm -rf scripts/synth-compile.tcl
 	rm -rf scripts/compile.tcl
 	rm -rf transcript
