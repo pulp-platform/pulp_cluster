@@ -883,13 +883,8 @@ end else begin : gen_narrow_port_idma
     .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
     .ctrl_slave         ( s_core_dmactrl_bus               ),
     .tcdm_master        ( s_hci_dma                        ),
-  `ifdef TARGET_MCHAN
-    .ext_master_req_o   ( /* MCHAN uses narrow port - not connected to wide */ ),
-    .ext_master_resp_i  ( '0                                                   ),
-  `else
-    .ext_master_req_o   ( {s_dma_narrow_master_req} ),
-    .ext_master_resp_i  ( {s_dma_narrow_master_resp} ),
-  `endif
+    .ext_master_req_o   ( {s_dma_narrow_master_req}        ),
+    .ext_master_resp_i  ( {s_dma_narrow_master_resp}       ),
     .term_event_o       ( s_dma_event                      ),
     .term_irq_o         ( s_dma_irq                        ),
     .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),

@@ -149,7 +149,7 @@ module pulp_cluster_tb;
     DmaNumPlugs: `NB_DMAS,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
-    DmaUseHwpePort: 1,
+    DmaUseHwpePort: `DMA_USE_HWPE_PORT,
     NumMstPeriphs: `NB_MPERIPHS,
     NumSlvPeriphs: `NB_SPERIPHS,
     ClusterAlias: 1,
