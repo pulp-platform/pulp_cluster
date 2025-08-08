@@ -27,6 +27,12 @@ REGRESSIONS := $(ROOT_DIR)/regression_tests
 
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
 
+# TB's wide DMA port toggle override
+TB_ENABLE_WIDE_PORT ?= 1
+ifneq ($(strip $(TB_ENABLE_WIDE_PORT)),)
+VLOG_ARGS += +define+TB_ENABLE_WIDE_PORT=$(TB_ENABLE_WIDE_PORT)
+endif
+
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
 	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
