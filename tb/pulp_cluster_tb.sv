@@ -24,7 +24,7 @@ import "DPI-C" function read_elf(input string filename);
 import "DPI-C" function byte get_section(output longint address, output longint len);
 import "DPI-C" context function byte read_section(input longint address, inout byte buffer[], input longint len);
 
-// PULP Cluster flavors
+// PULP Cluster flavors override
 `ifndef TB_ENABLE_WIDE_PORT
   `define TB_ENABLE_WIDE_PORT 1
 `endif
