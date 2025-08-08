@@ -180,5 +180,4 @@ clean:
 ####################
 # Regression tests #
 ####################
-
 include regression.mk
