@@ -176,6 +176,7 @@ clean:
 	rm -rf scripts/compile.tcl
 	rm -rf transcript
 	rm -rf *.log
+
 ####################
 # Regression tests #
 ####################
