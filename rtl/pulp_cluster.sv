@@ -342,11 +342,11 @@ logic                                       s_dma_fc_irq;
 // Determine if wide AXI port should be enabled based on DMA type and configuration
 // - MCHAN: Always disable wide port (uses narrow port only)
 // - iDMA: Use Cfg.EnableWidePort parameter
-`ifdef TARGET_MCHAN
-  localparam bit EnableWidePort = 1'b0;  // MCHAN never needs wide ports
-`else
-  localparam bit EnableWidePort = Cfg.EnableWidePort;  // User-configurable for iDMA
-`endif
+// `ifdef TARGET_MCHAN
+//   localparam bit EnableWidePort = 1'b0;  // MCHAN never needs wide ports
+// `else
+//   localparam bit EnableWidePort = Cfg.EnableWidePort;  // User-configurable for iDMA
+// `endif
 
 // Wide AXI infrastructure: Conditional implementation based on EnableWidePort
 // - MCHAN: Always uses narrow transfers (EnableWidePort = 0)
@@ -806,7 +806,7 @@ cluster_interconnect_wrap #(
 //***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
-if (EnableWidePort) begin : gen_wide_port_idma
+if (Cfg.EnableWidePort) begin : gen_wide_port_idma
   dmac_wrap #(
     .NB_CORES           ( Cfg.NumCores                ),
     .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
@@ -1727,7 +1727,7 @@ c2s_remap_req_t src_remap_req;
 c2s_remap_resp_t src_remap_resp;
 
 // Connect DMA narrow master when wide port disabled, otherwise cluster bus master
-if (EnableWidePort) begin : gen_cluster_bus_narrow_master
+if (Cfg.EnableWidePort) begin : gen_cluster_bus_narrow_master
   `AXI_ASSIGN_REQ_STRUCT(src_remap_req, s_data_master_req)
   `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp, src_remap_resp)
 end else begin : gen_dma_narrow_master  
@@ -1881,12 +1881,12 @@ c2s_wide_req_t   src_wide_req, isolate_src_wide_req;
 c2s_wide_resp_t  src_wide_resp, isolate_src_wide_resp;
 
 // Route DMA master request/response based on EnableWidePort
-assign isolate_src_wide_req = EnableWidePort ? s_dma_master_req : s_dma_narrow_master_req;
-assign s_dma_master_resp    = EnableWidePort ? isolate_src_wide_resp : s_dma_narrow_master_resp;
+assign isolate_src_wide_req = Cfg.EnableWidePort ? s_dma_master_req : s_dma_narrow_master_req;
+assign s_dma_master_resp    = Cfg.EnableWidePort ? isolate_src_wide_resp : s_dma_narrow_master_resp;
 
 // Instantiate wide port isolation and CDC only when enabled
 generate
-  if (EnableWidePort) begin : gen_wide_port
+  if (Cfg.EnableWidePort) begin : gen_wide_port
     axi_isolate #(
       .NumPending           ( 8                       ),
       .TerminateTransaction ( 1                       ),
@@ -2105,7 +2105,7 @@ initial begin : p_assert
     else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
   assert(!Cfg.DmaUseHwpePort)
     else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
-  assert(!EnableWidePort)
+  assert(!Cfg.EnableWidePort)
     else $fatal(1, "When using MCHAN, wide port should be disabled!");
   `else
   if (!Cfg.DmaUseHwpePort) begin
