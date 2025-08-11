@@ -179,9 +179,6 @@ package pulp_cluster_package;
     // Address remap for virtualization
     bit EnableRemapAddress;
     // Enable wide AXI master port for high-bandwidth DMA transfers
-    // When disabled (0): Wide AXI ports are tied off, DMA uses narrow transfers only
-    // When enabled (1): DMA can use wide AXI port for high-bandwidth transfers
-    // Automatically disabled when using MCHAN (TARGET_MCHAN defined)
     bit EnableWidePort;
     // Enable Snitch ICache
     bit SnitchICache;
@@ -222,7 +219,7 @@ package pulp_cluster_package;
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
-    DmaUseHwpePort: 0,
+    DmaUseHwpePort: `DMA_USE_HWPE_PORT,
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,
     ClusterAlias: 1,
