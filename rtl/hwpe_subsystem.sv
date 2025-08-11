@@ -84,6 +84,8 @@ module hwpe_subsystem
     // Generate desired HWPEs
     if (HWPE_CFG.HwpeList[i] == REDMULE) begin : gen_redmule
 
+      cv32e40x_if_xif core_xif ();
+
       /////////////
       // REDMULE //
       /////////////
@@ -92,6 +94,7 @@ module hwpe_subsystem
         .ID_WIDTH    ( ID_WIDTH         ),
         .N_CORES     ( N_CORES          ),
         .DW          ( N_MASTER_PORT*32 ),
+        .X_EXT       ( 0                ),
         .`HCI_SIZE_PARAM(tcdm) ( HCI_HWPE_SIZE )
       ) i_redmule    (
         .clk_i       ( hwpe_clk[i] ),
@@ -99,6 +102,10 @@ module hwpe_subsystem
         .test_mode_i ( test_mode   ),
         .busy_o      ( busy[i]     ),
         .evt_o       ( evt[i]      ),
+        .xif_issue_if_i      ( core_xif.coproc_issue      ),
+        .xif_result_if_o     ( core_xif.coproc_result     ),
+        .xif_compressed_if_i ( core_xif.coproc_compressed ),
+        .xif_mem_if_o        ( core_xif.coproc_mem        ),
         .tcdm        ( tcdm[i]     ),
         .periph      ( periph[i]   )
       );

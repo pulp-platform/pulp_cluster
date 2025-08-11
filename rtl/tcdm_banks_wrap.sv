@@ -42,7 +42,7 @@ module tcdm_banks_wrap #(
   output logic [NbBanks-1:0] ecc_multiple_error_o,
   hci_core_intf.target tcdm_slave[0:NbBanks-1]
 );
-   
+
 for(genvar i=0; i<NbBanks; i++) begin : banks_gen
 
   logic [IdWidth-1:0] resp_id_d, resp_id_q;
@@ -92,7 +92,7 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
       hci_ecc_dec #(
         //For an explanation of these macros refer to https://github.com/pulp-platform/hci/blob/v2.1.1/rtl/common/hci_helpers.svh
         .`HCI_SIZE_PARAM(tcdm_target) ( HCI_MEM_SIZE ),
-        .EnableData                   ( 0            )
+        .ENABLE_DATA                  ( 0            )
       ) i_ecc_dec_meta (
         .data_single_err_o (  ),
         .data_multi_err_o  (  ),
