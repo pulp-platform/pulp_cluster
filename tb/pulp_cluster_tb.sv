@@ -56,15 +56,15 @@ module pulp_cluster_tb;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
   localparam AxiUw = 10;
 
-  localparam bit[AxiAw-1:0] ClustBase       = 'h10000000;
+  localparam bit[AxiAw-1:0] ClustBase       = 'h50000000;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
   localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
   localparam bit[      5:0] ClustIdx        = 'h0;
   localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
-  localparam bit[AxiAw-1:0] L2BaseAddr      = 'h1C000000;
+  localparam bit[AxiAw-1:0] L2BaseAddr      = 'h78000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
-  localparam bit[AxiAw-1:0] ClustReturnInt  = 'h10200100;
+  localparam bit[AxiAw-1:0] ClustReturnInt  = ClustBase + ClustPeriphOffs + 'h100;
 
   typedef logic [AxiAw-1:0]    axi_addr_t;
   typedef logic [AxiDw-1:0]    axi_data_t;
@@ -303,18 +303,18 @@ module pulp_cluster_tb;
     HwpePresent: 1,
     HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
-    HMRPresent: 1,
-    HMRDmrEnabled: 1,
-    HMRTmrEnabled: 1,
+    HMRPresent: 0,
+    HMRDmrEnabled: 0,
+    HMRTmrEnabled: 0,
     HMRDmrFIxed: 0,
     HMRTmrFIxed: 0,
-    HMRInterleaveGrps: 1,
-    HMREnableRapidRecovery: 1,
-    HMRSeparateDataVoters: 1,
+    HMRInterleaveGrps: 0,
+    HMREnableRapidRecovery: 0,
+    HMRSeparateDataVoters: 0,
     HMRSeparateAxiBus: 0,
-    HMRNumBusVoters: 1,
-    EnableECC: 1,
-    ECCInterco: 1,
+    HMRNumBusVoters: 0,
+    EnableECC: 0,
+    ECCInterco: 0,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,
