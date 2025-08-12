@@ -222,7 +222,6 @@ module pulp_cluster_tb;
 
   generate
     if (EnableWidePort) begin : gen_dma_buses
-      // $display("[TB] Instantiting cluster with wide ports\n");
       AXI_BUS #(
         .AXI_ADDR_WIDTH( AxiAw    ),
         .AXI_DATA_WIDTH( DmaAxiDw ),
@@ -380,24 +379,6 @@ module pulp_cluster_tb;
       );
 
     end else begin : gen_dma_stubs
-      // Dummy wires with correct width for cluster port connections
-      logic async_dma_axi_bus_aw_wptr;
-      logic async_dma_axi_bus_aw_rptr;
-      logic async_dma_axi_bus_aw_data;
-      logic async_dma_axi_bus_ar_wptr;
-      logic async_dma_axi_bus_ar_rptr;
-      logic async_dma_axi_bus_ar_data;
-      logic async_dma_axi_bus_w_wptr;
-      logic async_dma_axi_bus_w_rptr;
-      logic async_dma_axi_bus_w_data;
-      logic async_dma_axi_bus_r_wptr;
-      logic async_dma_axi_bus_r_rptr;
-      logic async_dma_axi_bus_r_data;
-      logic async_dma_axi_bus_b_wptr;
-      logic async_dma_axi_bus_b_rptr;
-      logic async_dma_axi_bus_b_data;
-
-      // $display("[TB] Instantiting cluster with narrow ports\n");
       pulp_cluster
       `ifdef USE_PULP_PARAMETERS
         #( .Cfg ( PulpClusterCfg ) )
