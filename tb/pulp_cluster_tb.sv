@@ -52,6 +52,7 @@ module pulp_cluster_tb;
       .rst_no ( s_rstn )
   );
 
+  
   localparam AxiAw  = 32;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
