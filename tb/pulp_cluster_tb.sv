@@ -209,6 +209,9 @@ module pulp_cluster_tb;
     default: '0
   };
 
+  // Questasim visible; keep true to avoid optimization
+  (* keep = "true" *) pulp_cluster_package::pulp_cluster_cfg_t PulpClusterCfgVis = PulpClusterCfg;
+
   initial begin
     if (EnableWidePort) begin
       $display("[TB] Instantiating cluster with wide ports");
