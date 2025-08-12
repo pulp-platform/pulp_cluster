@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
-  idma:                   { git: "https://github.com/pulp-platform/iDMA.git", rev: v0.6.3 }
+  idma:                   { git: "https://github.com/pulp-platform/idma.git", rev: "92799c5fabcf2cd1f224f970bbb040b290d08fd5" } # branch: smazzola/chimera
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: v0.2.0 }
   cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
