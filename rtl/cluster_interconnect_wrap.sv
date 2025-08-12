@@ -162,7 +162,7 @@ module cluster_interconnect_wrap
           .ctrl_i         ( hci_ctrl_i           ),
           .periph_hci_ecc ( hci_ecc_periph_slave ),
           .cores          ( core_tcdm_slave      ),
-          .hwpe           ( s_hwpe_intc[0]       ),
+          .hwpe           ( s_hwpe_intc          ),
           .dma            ( s_dma_intc           ),
           .ext            ( ext_slave            ),
           .mems           ( tcdm_sram_master     )
@@ -307,16 +307,5 @@ module cluster_interconnect_wrap
      .speriph_master   ( speriph_master   ),
      .mperiph_slave    ( mperiph_slave    )
    );
-
-  // pragma translate_off
-  `ifndef VERILATOR
-  initial begin : p_assert
-    if (N_HCI_HWPE_PORTS > 1) begin
-      assert(!USE_ECC_INTERCONNECT)
-        else $fatal(1, "If USE_ECC_INTERCONNECT is enabled, N_HCI_HWPE_PORTS cannot be more than 1.");
-    end
-  end
-  `endif
-  // pragma translate_on
 
 endmodule
