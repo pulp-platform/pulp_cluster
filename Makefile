@@ -71,7 +71,7 @@ Bender.lock:
 
 sw-init: pulp-runtime fault_injection_sim regression_tests
 sw-clean:
-	@rm -rf pulp-runtime fault_injection_sim regression_test
+	@rm -rf pulp-runtime fault_injection_sim regression_tests
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
