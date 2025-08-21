@@ -69,10 +69,10 @@ packages:
     dependencies:
     - hci
   common_cells:
-    revision: 9afda9abb565971649c2aa0985639c096f351171
+    revision: b20ad7aba2080b3bb705680e0f70f1fc180ce290
     version: 1.38.0
     source:
-      Git: git@github.com:pulp-platform/common_cells.git
+      Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
     - common_verification
     - tech_cells_generic
