@@ -13,8 +13,8 @@ QUESTA ?=
 endif
 
 
-# BENDER ?= bender
-BENDER ?= /local/user/dkm/Projects/pulp_cluster/bender-cust/target/debug/bender
+BENDER ?= bender
+# BENDER ?= /local/user/dkm/Projects/pulp_cluster/bender-cust/target/debug/bender
 PYTHON ?= python3
 
 VSIM ?= $(QUESTA) vsim
