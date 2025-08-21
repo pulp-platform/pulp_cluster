@@ -129,7 +129,7 @@ module pulp_cluster
   // Number of parity bits for ECC-extended HCI HWPE branch
   localparam int unsigned HWPEParityWidth =
     ($clog2(DataWidth) + 2) * Cfg.HwpeNumPorts +
-    ($clog2(AddrWidth + (Cfg.HwpeNumPorts * DataWidth) / 8 + 1) + 2);
+    ($clog2(AddrWidth + (Cfg.HwpeNumPorts * DataWidth) / 8 + 1) + 2)
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -1204,6 +1204,7 @@ end
 
 logic [Cfg.NumCores/3-1:0] hmr_tmr_sw_resynch_req_short;
 logic [Cfg.NumCores/2-1:0] hmr_dmr_sw_resynch_req_short;
+
 always_comb begin
   hmr_tmr_sw_resynch_req = '0;
   hmr_dmr_sw_resynch_req = '0;
