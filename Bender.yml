@@ -30,11 +30,11 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 4257a73b391731d94077ad72fc528c27f5b11392 } # branch: smazzola/chimera
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 5421524afca701e45a83d0f1ec47568c019e021a  } # branch: main
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.5  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 9e31f7c6c24877eaf58279903e7a162b16c9a721 } # branch: astral-v0
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 8e0883bd0c19c6844122456c749c2bdfde18011f }
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
 

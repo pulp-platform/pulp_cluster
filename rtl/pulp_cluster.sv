@@ -278,6 +278,8 @@ logic [Cfg.NumCores-1:0]                dbg_core_running;
 logic [Cfg.NumCores-1:0]                s_dbg_irq;
 logic                                   s_hwpe_en;
 logic [$clog2(MAX_NUM_HWPES)-1:0]       s_hwpe_sel;
+// localparam int unsigned HWPE_SEL_BITS = (Cfg.HwpeCfg.NumHwpes > 1) ? $clog2(Cfg.HwpeCfg.NumHwpes) : 1;
+// logic [HWPE_SEL_BITS-1:0]       s_hwpe_sel;
 
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
@@ -900,6 +902,7 @@ end
 cluster_peripherals #(
   .NB_CORES       ( Cfg.NumCores      ),
   .NB_HWPES       ( MAX_NUM_HWPES     ),
+  //.NB_HWPES       ( Cfg.HwpeCfg.NumHwpes ),
   .NB_MPERIPHS    ( Cfg.NumMstPeriphs ),
   .NB_CACHE_BANKS ( Cfg.iCacheNumBanks),
   .NB_SPERIPHS    ( Cfg.NumSlvPeriphs ),
@@ -1345,6 +1348,8 @@ generate
       .HWPE_CFG      ( Cfg.HwpeCfg                      ),
       .N_CORES       ( Cfg.NumCores                     ),
       .N_MASTER_PORT ( Cfg.HwpeNumPorts                 ),
+      //.N_HWPES       ( Cfg.HwpeCfg.NumHwpes             ),
+      //.HWPE_SEL_BITS ( HWPE_SEL_BITS                    ),
       .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs ),
       .HCI_HWPE_SIZE ( HciHwpeSizeParam                 )
     ) hwpe_subsystem_i (

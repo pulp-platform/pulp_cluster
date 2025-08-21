@@ -13,7 +13,8 @@ QUESTA ?=
 endif
 
 
-BENDER ?= bender
+# BENDER ?= bender
+BENDER ?= /local/user/dkm/Projects/pulp_cluster/bender-cust/target/debug/bender
 PYTHON ?= python3
 
 VSIM ?= $(QUESTA) vsim
@@ -72,6 +73,8 @@ Bender.lock:
 	$(BENDER) checkout
 	touch Bender.lock
 
+update:
+	$(BENDER) update
 
 ######
 # SW #
