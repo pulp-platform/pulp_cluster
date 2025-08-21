@@ -1211,6 +1211,7 @@ always_comb begin
     end
   end
 
+
   for (int i = 0; i < Cfg.NumCores/2; i++) begin
     if (1'b1) begin // InterleaveGrps
       hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
