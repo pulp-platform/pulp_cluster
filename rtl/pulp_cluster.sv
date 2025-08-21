@@ -31,7 +31,8 @@ module pulp_cluster
   import rapid_recovery_pkg::*;
   import fpnew_pkg::*;
 #(
-  parameter  pulp_cluster_package::pulp_cluster_cfg_t Cfg = pulp_cluster_package::PulpClusterDefaultCfg,
+  parameter  pulp_cluster_package::pulp_cluster_cfg_t Cfg =
+    pulp_cluster_package::PulpClusterDefaultCfg,
   localparam int unsigned TcdmBankSize = Cfg.TcdmSize/Cfg.TcdmNumBank,
   localparam int unsigned TcdmNumRows  = TcdmBankSize/4,
   localparam int unsigned MaxUniqId = 1,
@@ -126,7 +127,9 @@ module pulp_cluster
   // TCDM banks data width extended with parity for ECCs
   localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth,
   // Number of parity bits for ECC-extended HCI HWPE branch
-  localparam int unsigned HWPEParityWidth = ($clog2(DataWidth)+2)*Cfg.HwpeNumPorts + ($clog2(AddrWidth+(Cfg.HwpeNumPorts*DataWidth)/8+1)+2)
+  localparam int unsigned HWPEParityWidth =
+    ($clog2(DataWidth) + 2) * Cfg.HwpeNumPorts +
+    ($clog2(AddrWidth + (Cfg.HwpeNumPorts * DataWidth) / 8 + 1) + 2)
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -253,7 +256,8 @@ module pulp_cluster
 
 //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
 if (Cfg.AxiIdInWidth < 1 + $clog2(Cfg.iCacheNumBanks))
-  $info("AXI input ID width must be larger than 1+$clog2(Cfg.iCacheNumBanks) which is %d but was %d", 1 + $clog2(Cfg.iCacheNumBanks), Cfg.AxiIdInWidth);
+  $info("AXI input ID width must be larger than 1+$clog2(Cfg.iCacheNumBanks) which is %d but was %d"
+  , 1 + $clog2(Cfg.iCacheNumBanks), Cfg.AxiIdInWidth);
 
 localparam int unsigned NB_L1_CUTS      = 16;
 localparam int unsigned RW_MARGIN_WIDTH = 4;
@@ -521,6 +525,7 @@ hci_core_intf #(
   // ***********************************************************************************************+
   // ***********************************************************************************************+
   // ***********************************************************************************************+
+
 
   //***************************************************
   /* synchronous AXI interfaces internal to the cluster */
