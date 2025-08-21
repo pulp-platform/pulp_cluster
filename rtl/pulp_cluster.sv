@@ -31,7 +31,8 @@ module pulp_cluster
   import rapid_recovery_pkg::*;
   import fpnew_pkg::*;
 #(
-  parameter  pulp_cluster_package::pulp_cluster_cfg_t Cfg = pulp_cluster_package::PulpClusterDefaultCfg,
+  parameter  pulp_cluster_package::pulp_cluster_cfg_t Cfg =
+    pulp_cluster_package::PulpClusterDefaultCfg,
   localparam int unsigned TcdmBankSize = Cfg.TcdmSize/Cfg.TcdmNumBank,
   localparam int unsigned TcdmNumRows  = TcdmBankSize/4,
   localparam int unsigned MaxUniqId = 1,
@@ -126,7 +127,9 @@ module pulp_cluster
   // TCDM banks data width extended with parity for ECCs
   localparam int unsigned ProtectedTcdmWidth = DataWidth + ParityWidth,
   // Number of parity bits for ECC-extended HCI HWPE branch
-  localparam int unsigned HWPEParityWidth = ($clog2(DataWidth)+2)*Cfg.HwpeNumPorts + ($clog2(AddrWidth+(Cfg.HwpeNumPorts*DataWidth)/8+1)+2)
+  localparam int unsigned HWPEParityWidth =
+    ($clog2(DataWidth) + 2) * Cfg.HwpeNumPorts +
+    ($clog2(AddrWidth + (Cfg.HwpeNumPorts * DataWidth) / 8 + 1) + 2);
 )(
   input logic                                    clk_i,
   input logic                                    rst_ni,
@@ -253,7 +256,8 @@ module pulp_cluster
 
 //Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
 if (Cfg.AxiIdInWidth < 1 + $clog2(Cfg.iCacheNumBanks))
-  $info("AXI input ID width must be larger than 1+$clog2(Cfg.iCacheNumBanks) which is %d but was %d", 1 + $clog2(Cfg.iCacheNumBanks), Cfg.AxiIdInWidth);
+  $info("AXI input ID width must be larger than 1+$clog2(Cfg.iCacheNumBanks) which is %d but was %d"
+  , 1 + $clog2(Cfg.iCacheNumBanks), Cfg.AxiIdInWidth);
 
 localparam int unsigned NB_L1_CUTS      = 16;
 localparam int unsigned RW_MARGIN_WIDTH = 4;
@@ -352,7 +356,7 @@ logic                                       s_dma_fc_irq;
 
 // Wide AXI infrastructure: Conditional implementation based on EnableWidePort
 // - MCHAN: Always uses narrow transfers (EnableWidePort = 0)
-// - iDMA with EnableWidePort=1: Uses wide transfers (256-bit AXI) 
+// - iDMA with EnableWidePort=1: Uses wide transfers (256-bit AXI)
 // - iDMA with EnableWidePort=0: Uses narrow transfers (64-bit AXI)
 // - Wide infrastructure present for interface compatibility
 // - Narrow DMA master merged with cluster bus master when wide disabled
@@ -1211,7 +1215,6 @@ always_comb begin
     end
   end
 
-
   for (int i = 0; i < Cfg.NumCores/2; i++) begin
     if (1'b1) begin // InterleaveGrps
       hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
@@ -1285,13 +1288,13 @@ generate
     assign setback                      = '0;
 
     for (genvar i = 0; i < Cfg.NumCores; i++) begin
-      assign hmr2core[i].clock_en     = sys2hmr[i].clock_en;     
-      assign hmr2core[i].boot_addr    = sys2hmr[i].boot_addr;    
-      assign hmr2core[i].core_id      = sys2hmr[i].core_id;      
-      assign hmr2core[i].cluster_id   = sys2hmr[i].cluster_id;   
-      assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;    
-      assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid; 
-      assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;  
+      assign hmr2core[i].clock_en     = sys2hmr[i].clock_en;
+      assign hmr2core[i].boot_addr    = sys2hmr[i].boot_addr;
+      assign hmr2core[i].core_id      = sys2hmr[i].core_id;
+      assign hmr2core[i].cluster_id   = sys2hmr[i].cluster_id;
+      assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;
+      assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid;
+      assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;
       assign hmr2core[i].data_gnt     = sys2hmr[i].data_gnt;     
       assign hmr2core[i].data_rvalid  = sys2hmr[i].data_rvalid;  
       assign hmr2core[i].data_rdata   = sys2hmr[i].data_rdata;   
