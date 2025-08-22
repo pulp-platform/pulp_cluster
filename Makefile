@@ -174,6 +174,8 @@ regression_tests:
 		git -C $(REGRESSION_TESTS_DIR) checkout $(REGRESSION_TESTS_BRANCH) || true; \
 		git -C $(REGRESSION_TESTS_DIR) pull --ff-only || true; \
 	fi
+	@echo "[regression_tests] Initializing submodules (e.g., pulp-nnx)"
+	@git -C $(REGRESSION_TESTS_DIR) submodule update --init --recursive
 
 lock-regression-tests:
 	@git -C $(REGRESSION_TESTS_DIR) rev-parse HEAD > $(REGRESSION_TESTS_LOCK_FILE) && \
