@@ -713,6 +713,7 @@ module pulp_cluster_tb;
    if ( $value$plusargs ("APP=%s", binary));
      $display("[TB] Testing %s", binary);
 
+
    load_binary(binary);
 
    foreach (sections[addr]) begin
