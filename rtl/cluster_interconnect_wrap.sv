@@ -92,7 +92,8 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_HWPE_SIZE.EHW)
+        .EHW(HCI_HWPE_SIZE.EHW),
+        .FD(HCI_HWPE_SIZE.FD)
       )
       s_hwpe_intc [0:N_HCI_HWPE_PORTS-1] (
         .clk(clk_i)
@@ -105,7 +106,8 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_CORE_SIZE.EHW)
+        .EHW(HCI_CORE_SIZE.EHW),
+        .FD(HCI_DMA_SIZE.FD)
       )
       s_dma_intc [0:N_HCI_DMA_PORTS-1] (
         .clk(clk_i)
@@ -144,7 +146,6 @@ module cluster_interconnect_wrap
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
-          .EXPFIFO ( 2                      ),
           .FILTER_WRITE_R_VALID ( HCI_FILTER_WRITE_R_VALID ),
           //For an explanation of these macros refer to https://github.com/pulp-platform/hci/blob/v2.1.1/rtl/common/hci_helpers.svh
           .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
@@ -178,7 +179,6 @@ module cluster_interconnect_wrap
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
-          .EXPFIFO ( 0                      ),
           .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
           .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
           .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )

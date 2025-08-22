@@ -114,7 +114,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 4257a73b391731d94077ad72fc528c27f5b11392
+    revision: 0faa4f3cdfc87ead4a10e5c307c00aa6c4504d0d
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -190,7 +190,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: ff7090eb3738a5192af0f4e1499e4ed44a3041e5
+    revision: 5ff2b6bc0a04de07eb2549a599655fb6d7f99c58
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
