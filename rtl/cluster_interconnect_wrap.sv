@@ -75,7 +75,7 @@ module cluster_interconnect_wrap
   // if DMA uses HWPE ports, ID width must be increased correspondingly
   localparam N_HCI_DMA_PORTS = DMA_USE_HWPE_PORT ? 0 : NB_DMAS;
   localparam N_HCI_HWPE_PORTS = DMA_USE_HWPE_PORT ? NB_HWPE + NB_DMAS : NB_HWPE;
-  localparam int unsigned HCI_FILTER_WRITE_R_VALID[0:N_HCI_HWPE_PORTS-1] = {1, 0, 0};
+  localparam int unsigned HCI_FILTER_WRITE_R_VALID[0:NB_HWPE-1] = '{default: 1};
 
 
   //-********************************************************
@@ -178,7 +178,7 @@ module cluster_interconnect_wrap
           .N_MEM  ( NB_TCDM_BANKS            ),
           .IW     ( TCDM_ID_WIDTH            ),
           .TS_BIT ( TEST_SET_BIT             ),
-          .EXPFIFO ( 2                       ),
+          .EXPFIFO ( 0                      ),
           .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
           .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
           .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )
