@@ -11,6 +11,7 @@ common_defs += -D CLUSTER_ALIAS
 common_defs += -D USE_PULP_PARAMETERS
 
 common_targs += -t rtl
+
 # DMA configuration
 DMA_TYPE ?= idma
 

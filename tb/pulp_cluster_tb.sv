@@ -494,6 +494,14 @@ module pulp_cluster_tb;
     .AXI_USER_WIDTH ( AxiUw ),
     .LOG_DEPTH      ( 3     )
   ) async_cluster_to_soc_axi_bus();
+  
+  AXI_BUS_ASYNC_GRAY #(
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_ID_WIDTH   ( DmaAxiIw ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .LOG_DEPTH      ( 3        )
+  ) async_dma_axi_bus();
 
    // Behavioural slaves
    axi_m_req_t  axi_memreq;
@@ -501,6 +509,38 @@ module pulp_cluster_tb;
 
   `AXI_ASSIGN_TO_REQ(axi_memreq, axi_master[1])
   `AXI_ASSIGN_FROM_RESP(axi_master[1], axi_memrsp)
+
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AxiIw    ),
+    .AXI_ADDR_WIDTH          ( AxiAw    ),
+    .AXI_SLV_PORT_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_MST_PORT_DATA_WIDTH ( AxiDw    ),
+    .AXI_USER_WIDTH          ( AxiUw    ),
+    .AXI_MAX_READS           ( 3        )
+  ) i_dma_dw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave_iw ),
+    .mst    ( axi_slave[2] )
+  );
+
+  axi_iw_converter_intf #(
+    .AXI_SLV_PORT_ID_WIDTH        ( DmaAxiIw ),
+    .AXI_MST_PORT_ID_WIDTH        ( AxiIw    ),
+    .AXI_SLV_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS        ( 5        ),
+    .AXI_MST_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_MST_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_ADDR_WIDTH               ( AxiAw    ),
+    .AXI_DATA_WIDTH               ( DmaAxiDw ),
+    .AXI_USER_WIDTH               ( AxiUw    )
+  ) i_dma_iw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave    ),
+    .mst    ( dma_slave_iw )
+  );
 
   axi_sim_mem #(
     .AddrWidth ( AxiAw        ),
@@ -804,6 +844,5 @@ module pulp_cluster_tb;
    end
 
   end
-
 
 endmodule : pulp_cluster_tb

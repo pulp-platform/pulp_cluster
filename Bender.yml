@@ -26,7 +26,7 @@ dependencies:
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
   tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  riscv:                  { git: "https://github.com/AlSaqr-platform/riscv_nn.git", rev: astral-v1.0 }
+  flex-v:                 { git: "https://github.com/pulp-platform/flex-v.git", rev: astral-v1.1 }
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
@@ -34,7 +34,7 @@ dependencies:
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.5  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 9e31f7c6c24877eaf58279903e7a162b16c9a721 } # branch: astral-v0
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
-  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
+  neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: ff7090eb3738a5192af0f4e1499e4ed44a3041e5 } # branch: main
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
 
@@ -96,4 +96,3 @@ sources:
     files:
     - nonfree/gf12/sourcecode/tc_sram.sv
     - nonfree/gf12/sourcecode/tc_clk.sv
-
