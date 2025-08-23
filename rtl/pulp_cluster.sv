@@ -375,6 +375,7 @@ localparam DMA_IW_CONTRIB_FAC = Cfg.DmaUseHwpePort ? 0 : 1;
 // if using MCHAN, must be 32
 localparam int unsigned DMA_HCI_DATA_WIDTH = Cfg.DmaUseHwpePort ? Cfg.AxiDataOutWideWidth : DataWidth;
 
+
 localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   DW:  DataWidth,
   AW:  AddrWidth,
@@ -615,6 +616,7 @@ hci_core_intf #(
   c2s_wide_resp_t s_dma_master_resp;
   c2s_out_int_req_t s_dma_narrow_master_req;   // Narrow DMA master (64-bit) 
   c2s_out_int_resp_t s_dma_narrow_master_resp;
+
 
   // core per2axi -> ext
   c2s_in_int_req_t s_core_ext_bus_req;
@@ -905,6 +907,7 @@ end else begin : gen_narrow_port_idma
     .busy_o             ( s_dmac_busy                      )
   );
 end
+
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************
@@ -2047,12 +2050,13 @@ if (Cfg.AxiDataInWidth != Cfg.AxiDataOutWidth) begin
   `AXI_ASSIGN_REQ_STRUCT(s_data_slave_32_req,dst_remap_req)
   `AXI_ASSIGN_RESP_STRUCT(dst_remap_resp,s_data_slave_32_resp)
 
-  axi_dw_converter #(
-    .AxiIdWidth            ( AxiIdInWidth         ),
-    .AxiAddrWidth          ( Cfg.AxiAddrWidth     ),
-    .AxiSlvPortDataWidth   ( Cfg.AxiDataInWidth   ),
-    .AxiMstPortDataWidth   ( Cfg.AxiDataOutWidth  ),
-    .AxiMaxReads           ( 1                    ),
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AxiIdInWidth         ),
+    .AXI_ADDR_WIDTH          ( Cfg.AxiAddrWidth     ),
+    .AXI_SLV_PORT_DATA_WIDTH ( Cfg.AxiDataInWidth   ),
+    .AXI_MST_PORT_DATA_WIDTH ( Cfg.AxiDataOutWidth  ),
+    .AXI_USER_WIDTH          ( Cfg.AxiUserWidth     ),
+    .AXI_MAX_READS           ( 1                    ),
     .aw_chan_t               ( s2c_in_int_aw_chan_t ),
     .mst_w_chan_t            ( c2s_w_chan_t         ),
     .slv_w_chan_t            ( s2c_in_int_w_chan_t  ),
@@ -2128,6 +2132,9 @@ initial begin : p_assert
     assert(DMA_HCI_DATA_WIDTH == DataWidth)
       else $fatal(1, "When Cfg.DmaUseHwpePort is 0, DMA_HCI_DATA_WIDTH must be equal to DataWidth!");
   end
+  // Note: iDMA now uses conditional data width and AXI path selection
+  // EnableWidePort=0: iDMA uses 64-bit narrow transfers via cluster bus AXI path  
+  // EnableWidePort=1: iDMA uses 256-bit wide transfers via dedicated wide AXI path
   `endif
 end
 `endif

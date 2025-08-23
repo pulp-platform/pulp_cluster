@@ -14,6 +14,7 @@ endif
 
 
 BENDER ?= bender
+# BENDER ?= /local/user/dkm/Projects/pulp_cluster/bender-cust/target/debug/bender
 PYTHON ?= python3
 
 VSIM ?= $(QUESTA) vsim
@@ -45,6 +46,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
+#NONFREE_COMMIT ?= 6f5b4b5aa85b6f3ac4bbe03439dd250ab4810d80 # branch: dkeller/chimera-v2
 NONFREE_BRANCH ?= dkeller/chimera-v2
 
 nonfree-init:
@@ -204,34 +206,6 @@ gen_idma_hw:
 	pip install --upgrade pip && \
 	pip install -r $(IDMA_ROOT)/requirements.txt && \
 	make -C $(IDMA_ROOT) idma_hw_all
-
-clean_idma_hw:
-	make -C $(IDMA_ROOT) idma_clean_all
-
-#########################
-# Hardware dependencies #
-#########################
-
-# Set dependency paths only if dependencies have already been cloned
-# This avoids running `bender checkout` at every make command
-ifeq ($(shell test -d $(ROOT_DIR)/.bender || echo 1),)
-IDMA_ROOT := $(shell $(BENDER) path idma)
-endif
-
-# Fall back to safe defaults if dependencies are not cloned yet
-IDMA_ROOT ?= .
-
-# Python requirements (version and packages) coming from iDMA repository
-gen_idma_hw: $(IDMA_ROOT)/.idma_generated
-$(IDMA_ROOT)/.idma_generated:
-	@$(PYTHON) --version >/dev/null 2>&1 || { echo "ERROR: Python not found. Python 3.8 or higher is required."; exit 1; } && \
-	$(PYTHON) -c "import sys; assert sys.version_info >= (3, 8)" || { echo "ERROR: Python version must be 3.8 or higher"; exit 1; } && \
-	rm -rf venv && $(PYTHON) -m venv venv && \
-	. venv/bin/activate && \
-	pip install --upgrade pip && \
-	pip install -r $(IDMA_ROOT)/requirements.txt && \
-	make -C $(IDMA_ROOT) idma_hw_all && \
-	touch $@
 
 clean_idma_hw:
 	make -C $(IDMA_ROOT) idma_clean_all
