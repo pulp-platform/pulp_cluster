@@ -159,7 +159,7 @@ module pulp_cluster_tb;
     TcdmSize: 128*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
-    HwpeCfg: '{NumHwpes: 1, HwpeList: {NEUREKA}},
+    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
     HMRPresent: 1,
     HMRDmrEnabled: 1,

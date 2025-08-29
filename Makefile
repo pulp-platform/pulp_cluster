@@ -71,6 +71,8 @@ Bender.lock:
 	$(BENDER) checkout
 	touch Bender.lock
 
+update:
+	$(BENDER) update
 
 ######
 # SW #
