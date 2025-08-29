@@ -1,6 +1,6 @@
 # PULP Cluster
 
-![pulp_cluster schematic](doc/PULP_CLUSTER.png)
+![pulp_cluster schematic](doc/PULP_CLUSTER_updateOct2024.png)
 
 The `pulp_cluster` repository contains the structure of the cluster subsystem
 used in PULP chips. For more details on the internal architecture, see the

@@ -25,7 +25,13 @@ import "DPI-C" function get_entry(output longint entry_ret);
 import "DPI-C" function byte get_section(output longint address, output longint len);
 import "DPI-C" context function byte read_section(input longint address, inout byte buffer[], input longint len);
 
+// PULP Cluster flavors
+`ifndef TB_ENABLE_WIDE_PORT
+  `define TB_ENABLE_WIDE_PORT 1
+`endif
+
 module pulp_cluster_tb;
+  localparam bit EnableWidePort = `TB_ENABLE_WIDE_PORT;
 
   import pulp_cluster_package::*;
   import uvm_pkg::*;
@@ -50,12 +56,15 @@ module pulp_cluster_tb;
   localparam AxiAw  = 32;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
-  localparam NMst   = 2;
+  localparam NMst   = 3;
   localparam NSlv   = 3;
   localparam AxiIwMst = AxiIw + $clog2(NMst);
   localparam AxiWideBeWidth = AxiDw/8;
   localparam AxiWideByteOffset = $clog2(AxiWideBeWidth);
   localparam AxiUw = 10;
+
+  localparam DmaAxiDw = EnableWidePort ? 256 : 64;
+  localparam DmaAxiIw = EnableWidePort ? 1   : AxiIw;
 
   localparam bit[AxiAw-1:0] ClustBase       = 'h10000000;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
@@ -74,23 +83,42 @@ module pulp_cluster_tb;
   typedef logic [AxiIw-1:0]    axi_id_t;
   typedef logic [AxiIwMst-1:0] axi_m_id_t;
 
+  typedef logic [DmaAxiDw-1:0]   dma_axi_data_t;
+  typedef logic [DmaAxiDw/8-1:0] dma_axi_strb_t;
+  typedef logic [DmaAxiIw-1:0]   dma_axi_id_t;
+
+  // Narrow AXI port type
   `AXI_TYPEDEF_W_CHAN_T(w_chan_t, axi_data_t, axi_strb_t, axi_user_t)
   `AXI_TYPEDEF_AW_CHAN_T(aw_chan_t, axi_addr_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_B_CHAN_T(b_chan_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_AR_CHAN_T(ar_chan_t, axi_addr_t, axi_id_t, axi_user_t)
   `AXI_TYPEDEF_R_CHAN_T(r_chan_t, axi_data_t, axi_id_t, axi_user_t)
+
   `AXI_TYPEDEF_REQ_T(axi_req_t, aw_chan_t, w_chan_t, ar_chan_t)
   `AXI_TYPEDEF_RESP_T(axi_resp_t, b_chan_t, r_chan_t)
 
+  // Wide AXI port type
+  `AXI_TYPEDEF_W_CHAN_T(dma_w_chan_t, dma_axi_data_t, dma_axi_strb_t, axi_user_t)
+  `AXI_TYPEDEF_AW_CHAN_T(dma_aw_chan_t, axi_addr_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_B_CHAN_T(dma_b_chan_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_AR_CHAN_T(dma_ar_chan_t, axi_addr_t, dma_axi_id_t, axi_user_t)
+  `AXI_TYPEDEF_R_CHAN_T(dma_r_chan_t, dma_axi_data_t, dma_axi_id_t, axi_user_t)
+
+  `AXI_TYPEDEF_REQ_T(dma_axi_req_t, aw_chan_t, dma_w_chan_t, ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(dma_axi_resp_t, b_chan_t, dma_r_chan_t)
+
+  // Memory-side AXI port type
   `AXI_TYPEDEF_AW_CHAN_T(aw_m_chan_t, axi_addr_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_B_CHAN_T(b_m_chan_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_AR_CHAN_T(ar_m_chan_t, axi_addr_t, axi_m_id_t, axi_user_t)
   `AXI_TYPEDEF_R_CHAN_T(r_m_chan_t, axi_data_t, axi_m_id_t, axi_user_t)
+
   `AXI_TYPEDEF_REQ_T(axi_m_req_t, aw_m_chan_t, w_chan_t, ar_m_chan_t)
   `AXI_TYPEDEF_RESP_T(axi_m_resp_t, b_m_chan_t, r_m_chan_t)
 
   typedef logic [AxiAw-1:0] addr_t;
   typedef logic [AxiDw-1:0] data_t;
+  typedef logic [DmaAxiDw-1:0] dma_data_t;
   data_t memory [bit [31:0]];
   int sections  [bit [31:0]];
 
@@ -113,13 +141,342 @@ module pulp_cluster_tb;
       .AXI_DATA_WIDTH( AxiDw ),
       .AXI_ID_WIDTH  ( AxiIw ),
       .AXI_USER_WIDTH( AxiUw )
-  ) axi_slave[NMst-1:0]();
+    ) axi_slave[NMst-1:0]();
+
+  localparam pulp_cluster_cfg_t PulpClusterCfg = '{
+    CoreType: pulp_cluster_package::RI5CY,
+    NumCores: `NB_CORES,
+    DmaNumPlugs: `NB_DMAS,
+    DmaNumOutstandingBursts: 8,
+    DmaBurstLength: 256,
+    DmaUseHwpePort: `DMA_USE_HWPE_PORT,
+    NumMstPeriphs: `NB_MPERIPHS,
+    NumSlvPeriphs: `NB_SPERIPHS,
+    ClusterAlias: 1,
+    ClusterAliasBase: 'h0,
+    NumSyncStages: 3,
+    UseHci: 1,
+    TcdmSize: 128*1024,
+    TcdmNumBank: 16,
+    HwpePresent: 1,
+    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
+    HwpeNumPorts: 9,
+    HMRPresent: 1,
+    HMRDmrEnabled: 1,
+    HMRTmrEnabled: 1,
+    HMRDmrFIxed: 0,
+    HMRTmrFIxed: 0,
+    HMRInterleaveGrps: 1,
+    HMREnableRapidRecovery: 1,
+    HMRSeparateDataVoters: 1,
+    HMRSeparateAxiBus: 0,
+    HMRNumBusVoters: 1,
+    EnableECC: 0,
+    ECCInterco: 0,
+    iCacheNumBanks: 2,
+    iCacheNumLines: 1,
+    iCacheNumWays: 4,
+    iCacheSharedSize: 4*1024,
+    iCachePrivateSize: 512,
+    iCachePrivateDataWidth: 32,
+    EnableReducedTag: 1,
+    L2Size: 1000*1024,
+    DmBaseAddr: 'h60203000,
+    BootRomBaseAddr: BootAddr,
+    BootAddr: BootAddr,
+    EnablePrivateFpu: 1,
+    EnablePrivateFpDivSqrt: 0,
+    NumAxiIn: NumAxiSubordinatePorts,
+    NumAxiOut: NumAxiManagerPorts,
+    AxiIdInWidth: AxiIw-2,
+    AxiIdOutWidth: AxiIw,
+    AxiIdOutWideWidth: 1,
+    AxiAddrWidth: AxiAw,
+    AxiDataInWidth: AxiDw,
+    AxiDataOutWidth: AxiDw,
+    AxiDataOutWideWidth: DmaAxiDw,
+    AxiUserWidth: AxiUw,
+    AxiMaxInTrans: 64,
+    AxiMaxOutTrans: 64,
+    AxiCdcLogDepth: 3,
+    AxiCdcSyncStages: 3,
+    SyncStages: 3,
+    ClusterBaseAddr: ClustBaseAddr,
+    ClusterPeriphOffs: ClustPeriphOffs,
+    ClusterExternalOffs: ClustExtOffs,
+    EnableRemapAddress: 0,
+    EnableWidePort: EnableWidePort,
+    SnitchICache: 0,
+    default: '0
+  };
+
+  // Questasim visible; keep true to avoid optimization
+  (* keep = "true" *) pulp_cluster_package::pulp_cluster_cfg_t PulpClusterCfgVis = PulpClusterCfg;
+
+  initial begin
+    if (EnableWidePort) begin
+      $display("[TB] Instantiating cluster with wide ports");
+    end else begin
+      $display("[TB] Instantiating cluster with narrow ports");
+    end
+  end
+
+  generate
+    if (EnableWidePort) begin : gen_dma_buses
+      AXI_BUS #(
+        .AXI_ADDR_WIDTH( AxiAw    ),
+        .AXI_DATA_WIDTH( DmaAxiDw ),
+        .AXI_ID_WIDTH  ( DmaAxiIw ),
+        .AXI_USER_WIDTH( AxiUw )
+      ) dma_slave();
+
+      AXI_BUS #(
+        .AXI_ADDR_WIDTH( AxiAw ),
+        .AXI_DATA_WIDTH( DmaAxiDw ),
+        .AXI_ID_WIDTH  ( AxiIw ),
+        .AXI_USER_WIDTH( AxiUw )
+      ) dma_slave_iw();
+
+      AXI_BUS_ASYNC_GRAY #(
+        .AXI_ADDR_WIDTH ( AxiAw    ),
+        .AXI_DATA_WIDTH ( DmaAxiDw ),
+        .AXI_ID_WIDTH   ( DmaAxiIw ),
+        .AXI_USER_WIDTH ( AxiUw    ),
+        .LOG_DEPTH      ( 3        )
+      ) async_dma_axi_bus();
+
+      axi_dw_converter_intf #(
+        .AXI_ID_WIDTH            ( AxiIw    ),
+        .AXI_ADDR_WIDTH          ( AxiAw    ),
+        .AXI_SLV_PORT_DATA_WIDTH ( DmaAxiDw ),
+        .AXI_MST_PORT_DATA_WIDTH ( AxiDw    ),
+        .AXI_USER_WIDTH          ( AxiUw    ),
+        .AXI_MAX_READS           ( 3        )
+      ) i_dma_dw_conv (
+        .clk_i  ( s_clk        ),
+        .rst_ni ( s_rstn       ),
+        .slv    ( dma_slave_iw ),
+        .mst    ( axi_slave[2] )
+      );
+
+      axi_iw_converter_intf #(
+        .AXI_SLV_PORT_ID_WIDTH        ( DmaAxiIw ),
+        .AXI_MST_PORT_ID_WIDTH        ( AxiIw    ),
+        .AXI_SLV_PORT_MAX_UNIQ_IDS    ( 5        ),
+        .AXI_SLV_PORT_MAX_TXNS_PER_ID ( 5        ),
+        .AXI_SLV_PORT_MAX_TXNS        ( 5        ),
+        .AXI_MST_PORT_MAX_UNIQ_IDS    ( 5        ),
+        .AXI_MST_PORT_MAX_TXNS_PER_ID ( 5        ),
+        .AXI_ADDR_WIDTH               ( AxiAw    ),
+        .AXI_DATA_WIDTH               ( DmaAxiDw ),
+        .AXI_USER_WIDTH               ( AxiUw    )
+      ) i_dma_iw_conv (
+        .clk_i  ( s_clk        ),
+        .rst_ni ( s_rstn       ),
+        .slv    ( dma_slave    ),
+        .mst    ( dma_slave_iw )
+      );
+
+      axi_cdc_dst_intf   #(
+        .AXI_ADDR_WIDTH ( AxiAw    ),
+        .AXI_DATA_WIDTH ( DmaAxiDw ),
+        .AXI_ID_WIDTH   ( DmaAxiIw ),
+        .AXI_USER_WIDTH ( AxiUw    ),
+        .LOG_DEPTH      ( 3        )
+      ) cluster_to_soc_dma_dst_cdc_fifo_i (
+        .dst_clk_i  ( s_clk             ),
+        .dst_rst_ni ( s_rstn            ),
+        .src        ( async_dma_axi_bus ),
+        .dst        ( dma_slave         )
+      );
+
+      pulp_cluster
+      `ifdef USE_PULP_PARAMETERS
+        #( .Cfg ( PulpClusterCfg ) )
+      `endif
+      cluster_i (
+        .clk_i                       ( s_clk                                ),
+        .rst_ni                      ( s_rstn                               ),
+        .pwr_on_rst_ni               ( s_rstn                               ),
+        .ref_clk_i                   ( s_clk                                ),
+        .axi_isolate_i               ( '0                                   ),
+        .axi_isolated_o              (                                      ),
+        .axi_isolated_wide_o         (                                      ),
+
+        .pmu_mem_pwdn_i              ( 1'b0                                 ),
+
+        .base_addr_i                 ( ClustBase[31:28]                     ),
+
+        .dma_pe_evt_ack_i            ( '1                                   ),
+        .dma_pe_evt_valid_o          (                                      ),
+
+        .dma_pe_irq_ack_i            ( 1'b1                                 ),
+        .dma_pe_irq_valid_o          (                                      ),
+
+        .dbg_irq_valid_i             ( '0                                   ),
+        .mbox_irq_i                  ( '0                                   ),
+
+        .pf_evt_ack_i                ( 1'b1                                 ),
+        .pf_evt_valid_o              (                                      ),
+
+        .async_cluster_events_wptr_i ( '0                                   ),
+        .async_cluster_events_rptr_o (                                      ),
+        .async_cluster_events_data_i ( '0                                   ),
+
+        .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
+        .test_mode_i                 ( 1'b0                                 ),
+        .fetch_en_i                  ( s_cluster_fetch_en                   ),
+        .eoc_o                       ( s_cluster_eoc                        ),
+        .busy_o                      ( s_cluster_busy                       ),
+        .cluster_id_i                ( ClustIdx                             ),
+
+        .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
+        .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
+        .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
+        .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
+        .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
+        .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
+        .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
+        .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
+        .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
+        .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
+        .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
+        .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
+        .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
+        .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
+        .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
+
+        .async_wide_master_aw_wptr_o ( async_dma_axi_bus.aw_wptr ),
+        .async_wide_master_aw_rptr_i ( async_dma_axi_bus.aw_rptr ),
+        .async_wide_master_aw_data_o ( async_dma_axi_bus.aw_data ),
+        .async_wide_master_ar_wptr_o ( async_dma_axi_bus.ar_wptr ),
+        .async_wide_master_ar_rptr_i ( async_dma_axi_bus.ar_rptr ),
+        .async_wide_master_ar_data_o ( async_dma_axi_bus.ar_data ),
+        .async_wide_master_w_data_o  ( async_dma_axi_bus.w_data  ),
+        .async_wide_master_w_wptr_o  ( async_dma_axi_bus.w_wptr  ),
+        .async_wide_master_w_rptr_i  ( async_dma_axi_bus.w_rptr  ),
+        .async_wide_master_r_wptr_i  ( async_dma_axi_bus.r_wptr  ),
+        .async_wide_master_r_rptr_o  ( async_dma_axi_bus.r_rptr  ),
+        .async_wide_master_r_data_i  ( async_dma_axi_bus.r_data  ),
+        .async_wide_master_b_wptr_i  ( async_dma_axi_bus.b_wptr  ),
+        .async_wide_master_b_rptr_o  ( async_dma_axi_bus.b_rptr  ),
+        .async_wide_master_b_data_i  ( async_dma_axi_bus.b_data  ),
+
+        .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
+        .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
+        .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
+        .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
+        .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
+        .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
+        .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
+        .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
+        .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
+        .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
+        .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
+        .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
+        .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
+        .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
+        .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
+      );
+
+    end else begin : gen_dma_stubs
+      pulp_cluster
+      `ifdef USE_PULP_PARAMETERS
+        #( .Cfg ( PulpClusterCfg ) )
+      `endif
+      cluster_i (
+        .clk_i                       ( s_clk                                ),
+        .rst_ni                      ( s_rstn                               ),
+        .pwr_on_rst_ni               ( s_rstn                               ),
+        .ref_clk_i                   ( s_clk                                ),
+        .axi_isolate_i               ( '0                                   ),
+        .axi_isolated_o              (                                      ),
+        .axi_isolated_wide_o         (                                      ),
+
+        .pmu_mem_pwdn_i              ( 1'b0                                 ),
+
+        .base_addr_i                 ( ClustBase[31:28]                     ),
+
+        .dma_pe_evt_ack_i            ( '1                                   ),
+        .dma_pe_evt_valid_o          (                                      ),
+
+        .dma_pe_irq_ack_i            ( 1'b1                                 ),
+        .dma_pe_irq_valid_o          (                                      ),
+
+        .dbg_irq_valid_i             ( '0                                   ),
+        .mbox_irq_i                  ( '0                                   ),
+
+        .pf_evt_ack_i                ( 1'b1                                 ),
+        .pf_evt_valid_o              (                                      ),
+
+        .async_cluster_events_wptr_i ( '0                                   ),
+        .async_cluster_events_rptr_o (                                      ),
+        .async_cluster_events_data_i ( '0                                   ),
+
+        .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
+        .test_mode_i                 ( 1'b0                                 ),
+        .fetch_en_i                  ( s_cluster_fetch_en                   ),
+        .eoc_o                       ( s_cluster_eoc                        ),
+        .busy_o                      ( s_cluster_busy                       ),
+        .cluster_id_i                ( ClustIdx                             ),
+
+        .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
+        .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
+        .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
+        .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
+        .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
+        .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
+        .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
+        .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
+        .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
+        .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
+        .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
+        .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
+        .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
+        .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
+        .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
+
+        // Wide master ports tied off when wide port disabled
+        .async_wide_master_aw_wptr_o (                                      ),
+        .async_wide_master_aw_rptr_i ( '0                                   ),
+        .async_wide_master_aw_data_o (                                      ),
+        .async_wide_master_ar_wptr_o (                                      ),
+        .async_wide_master_ar_rptr_i ( '0                                   ),
+        .async_wide_master_ar_data_o (                                      ),
+        .async_wide_master_w_data_o  (                                      ),
+        .async_wide_master_w_wptr_o  (                                      ),
+        .async_wide_master_w_rptr_i  ( '0                                   ),
+        .async_wide_master_r_wptr_i  ( '0                                   ),
+        .async_wide_master_r_rptr_o  (                                      ),
+        .async_wide_master_r_data_i  ( 'x                                   ),
+        .async_wide_master_b_wptr_i  ( '0                                   ),
+        .async_wide_master_b_rptr_o  (                                      ),
+        .async_wide_master_b_data_i  ( 'x                                   ),
+
+        .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
+        .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
+        .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
+        .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
+        .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
+        .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
+        .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
+        .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
+        .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
+        .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
+        .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
+        .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
+        .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
+        .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
+        .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
+      );
+    end
+  endgenerate
 
   AXI_BUS #(
-      .AXI_ADDR_WIDTH( AxiAw   ),
-      .AXI_DATA_WIDTH( AxiDw   ),
-      .AXI_ID_WIDTH  ( AxiIw-2 ),
-      .AXI_USER_WIDTH( AxiUw   )
+    .AXI_ADDR_WIDTH( AxiAw   ),
+    .AXI_DATA_WIDTH( AxiDw   ),
+    .AXI_ID_WIDTH  ( AxiIw-2 ),
+    .AXI_USER_WIDTH( AxiUw   )
   ) soc_to_cluster_axi_bus();
 
   AXI_BUS_ASYNC_GRAY #(
@@ -131,11 +488,11 @@ module pulp_cluster_tb;
   ) async_soc_to_cluster_axi_bus();
 
   AXI_BUS_ASYNC_GRAY #(
-     .AXI_ADDR_WIDTH ( AxiAw ),
-     .AXI_DATA_WIDTH ( AxiDw ),
-     .AXI_ID_WIDTH   ( AxiIw ),
-     .AXI_USER_WIDTH ( AxiUw ),
-     .LOG_DEPTH      ( 3     )
+    .AXI_ADDR_WIDTH ( AxiAw ),
+    .AXI_DATA_WIDTH ( AxiDw ),
+    .AXI_ID_WIDTH   ( AxiIw ),
+    .AXI_USER_WIDTH ( AxiUw ),
+    .LOG_DEPTH      ( 3     )
   ) async_cluster_to_soc_axi_bus();
 
    // Behavioural slaves
@@ -280,149 +637,12 @@ module pulp_cluster_tb;
     .AXI_ID_WIDTH   ( AxiIw ),
     .AXI_USER_WIDTH ( AxiUw ),
     .LOG_DEPTH      ( 3     )
-    ) cluster_to_soc_dst_cdc_fifo_i (
+  ) cluster_to_soc_dst_cdc_fifo_i (
       .dst_clk_i  ( s_clk                        ),
       .dst_rst_ni ( s_rstn                       ),
       .src        ( async_cluster_to_soc_axi_bus ),
       .dst        ( axi_slave[1]                 )
       );
-
-  localparam pulp_cluster_cfg_t PulpClusterCfg = '{
-    CoreType: pulp_cluster_package::RI5CY,
-    NumCores: `NB_CORES,
-    DmaNumPlugs: `NB_DMAS,
-    DmaNumOutstandingBursts: 8,
-    DmaBurstLength: 256,
-    NumMstPeriphs: `NB_MPERIPHS,
-    NumSlvPeriphs: `NB_SPERIPHS,
-    ClusterAlias: 1,
-    ClusterAliasBase: 'h0,
-    NumSyncStages: 3,
-    UseHci: 1,
-    TcdmSize: 128*1024,
-    TcdmNumBank: 16,
-    HwpePresent: 1,
-    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
-    HwpeNumPorts: 9,
-    HMRPresent: 1,
-    HMRDmrEnabled: 1,
-    HMRTmrEnabled: 1,
-    HMRDmrFIxed: 0,
-    HMRTmrFIxed: 0,
-    HMRInterleaveGrps: 1,
-    HMREnableRapidRecovery: 1,
-    HMRSeparateDataVoters: 1,
-    HMRSeparateAxiBus: 0,
-    HMRNumBusVoters: 1,
-    EnableECC: 1,
-    ECCInterco: 1,
-    iCacheNumBanks: 2,
-    iCacheNumLines: 1,
-    iCacheNumWays: 4,
-    iCacheSharedSize: 4*1024,
-    iCachePrivateSize: 512,
-    iCachePrivateDataWidth: 32,
-    EnableReducedTag: 1,
-    L2Size: 1000*1024,
-    DmBaseAddr: 'h60203000,
-    BootRomBaseAddr: BootAddr,
-    BootAddr: BootAddr,
-    EnablePrivateFpu: 1,
-    EnablePrivateFpDivSqrt: 0,
-    NumAxiIn: NumAxiSubordinatePorts,
-    NumAxiOut: NumAxiManagerPorts,
-    AxiIdInWidth: AxiIw-2,
-    AxiIdOutWidth:AxiIw,
-    AxiAddrWidth: AxiAw,
-    AxiDataInWidth: AxiDw,
-    AxiDataOutWidth: AxiDw,
-    AxiUserWidth: AxiUw,
-    AxiMaxInTrans: 64,
-    AxiMaxOutTrans: 64,
-    AxiCdcLogDepth: 3,
-    AxiCdcSyncStages: 3,
-    SyncStages: 3,
-    ClusterBaseAddr: ClustBaseAddr,
-    ClusterPeriphOffs: ClustPeriphOffs,
-    ClusterExternalOffs: ClustExtOffs,
-    EnableRemapAddress: 0,
-    SnitchICache: 0,
-    default: '0
-  };
-
-  pulp_cluster
-`ifdef USE_PULP_PARAMETERS
-  #(
-    .Cfg ( PulpClusterCfg )
-   )
-`endif
-  cluster_i (
-    .clk_i                       ( s_clk                                ),
-    .rst_ni                      ( s_rstn                               ),
-    .pwr_on_rst_ni               ( s_rstn                               ),
-    .ref_clk_i                   ( s_clk                                ),
-    .axi_isolate_i               ( '0                                   ),
-    .axi_isolated_o              (                                      ),
-
-    .pmu_mem_pwdn_i              ( 1'b0                                 ),
-
-    .base_addr_i                 ( ClustBase[31:28]                     ),
-
-    .dma_pe_evt_ack_i            ( '1                                   ),
-    .dma_pe_evt_valid_o          (                                      ),
-
-    .dma_pe_irq_ack_i            ( 1'b1                                 ),
-    .dma_pe_irq_valid_o          (                                      ),
-
-    .dbg_irq_valid_i             ( '0                                   ),
-    .mbox_irq_i                  ( '0                                   ),
-
-    .pf_evt_ack_i                ( 1'b1                                 ),
-    .pf_evt_valid_o              (                                      ),
-
-    .async_cluster_events_wptr_i ( '0                                   ),
-    .async_cluster_events_rptr_o (                                      ),
-    .async_cluster_events_data_i ( '0                                   ),
-
-    .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
-    .test_mode_i                 ( 1'b0                                 ),
-    .fetch_en_i                  ( s_cluster_fetch_en                   ),
-    .eoc_o                       ( s_cluster_eoc                        ),
-    .busy_o                      ( s_cluster_busy                       ),
-    .cluster_id_i                ( ClustIdx                             ),
-
-    .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
-    .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
-    .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
-    .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
-    .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
-    .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
-    .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
-    .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
-    .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
-    .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
-    .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
-    .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
-    .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
-    .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
-    .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
-
-    .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
-    .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
-    .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
-    .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
-    .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
-    .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
-    .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
-    .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
-    .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
-    .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
-    .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
-    .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
-    .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
-    .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
-    .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
-  );
 
   // Load ELF binary file
   task load_binary;
@@ -430,6 +650,7 @@ module pulp_cluster_tb;
     output addr_t entry_point;
     addr_t        section_addr, section_len;
     byte          buffer[];
+    addr_t        section_addr_offset;
 
     // Read ELF
     void'(read_elf(binary));
@@ -437,16 +658,21 @@ module pulp_cluster_tb;
     $display("[TB] Reading %s", binary);
     while (get_section(section_addr, section_len)) begin
       // Read Sections
-      automatic int num_words = (section_len + AxiWideBeWidth - 1)/AxiWideBeWidth;
-      $display("[TB] Reading section %x with %0d words", section_addr, num_words);
+      automatic int num_start_unaligned_bytes = section_addr%AxiWideBeWidth;
+      automatic int num_wide_words = (num_start_unaligned_bytes + section_len + AxiWideBeWidth - 1)/AxiWideBeWidth;
 
-      sections[section_addr >> AxiWideByteOffset] = num_words;
-      buffer                                      = new[num_words * AxiWideBeWidth];
+      $display("[TB] Reading section %x with %0d words", section_addr, num_wide_words);
+
+      sections[section_addr >> AxiWideByteOffset] = num_wide_words;
+      buffer                                      = new[num_wide_words * AxiWideBeWidth];
       void'(read_section(section_addr, buffer, section_len));
-      for (int i = 0; i < num_words; i++) begin
+      for (int i = 0; i < num_wide_words; i++) begin
         automatic logic [AxiWideBeWidth-1:0][7:0] word = '0;
         for (int j = 0; j < AxiWideBeWidth; j++) begin
-          word[j] = buffer[i * AxiWideBeWidth + j];
+          automatic int index = i * AxiWideBeWidth + j - num_start_unaligned_bytes; 
+          if(index >= 0) begin 
+            word[j] = buffer[index];
+          end
         end
         memory[section_addr/AxiWideBeWidth + i] = word;
       end
