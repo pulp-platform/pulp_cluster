@@ -9,12 +9,12 @@ quietly WaveActivateNextPane {} 0
 
 set CORE_TYPE    [examine -radix symbolic sim:/pulp_cluster_tb/PulpClusterCfgVis.CoreType]
 set NUM_CORES    [examine -radix dec sim:/pulp_cluster_tb/PulpClusterCfgVis.NumCores]
-set HMR_PRESENT  [examine -radix dec sim:/pulp_cluster_tb/PulpClusterCfgVis.HMRPresent]
-set HWPE_PRESENT [examine -radix dec sim:/pulp_cluster_tb/PulpClusterCfgVis.HwpePresent]
+set HMR_PRESENT  [examine -radix hex sim:/pulp_cluster_tb/PulpClusterCfgVis.HMRPresent]
+set HWPE_PRESENT [examine -radix hex sim:/pulp_cluster_tb/PulpClusterCfgVis.HwpePresent]
 set HWPE_LIST    [examine sim:/pulp_cluster_tb/PulpClusterCfgVis.HwpeCfg.HwpeList]
 set NUM_HWPE     [examine -radix dec sim:/pulp_cluster_tb/PulpClusterCfgVis.HwpeCfg.NumHwpes]
 
-set ENABLE_WIDE  [examine -radix dec sim:/pulp_cluster_tb/PulpClusterCfgVis.EnableWidePort]
+set ENABLE_WIDE  [examine -radix hex sim:/pulp_cluster_tb/PulpClusterCfgVis.EnableWidePort]
 if { $ENABLE_WIDE == 1 } {
   set CLUSTER_PATH /pulp_cluster_tb/gen_dma_buses/cluster_i
 } else {

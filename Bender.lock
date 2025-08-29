@@ -198,7 +198,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: ff7090eb3738a5192af0f4e1499e4ed44a3041e5
+    revision: 94528df2bc6d5eedc0439bd403c2ad005f0a7519
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -206,6 +206,7 @@ packages:
     - hci
     - hwpe-ctrl
     - hwpe-stream
+    - register_interface
     - zeroriscy
   obi:
     revision: c2141a653c755461ff44f61d12aeb5d99fc8e760

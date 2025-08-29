@@ -1331,6 +1331,8 @@ generate
       .HWPE_CFG      ( Cfg.HwpeCfg                      ),
       .N_CORES       ( Cfg.NumCores                     ),
       .N_MASTER_PORT ( Cfg.HwpeNumPorts                 ),
+      //.N_HWPES       ( Cfg.HwpeCfg.NumHwpes             ),
+      //.HWPE_SEL_BITS ( HWPE_SEL_BITS                    ),
       .ID_WIDTH      ( Cfg.NumCores + Cfg.NumMstPeriphs ),
       .HCI_HWPE_SIZE ( HciHwpeSizeParam                 )
     ) hwpe_subsystem_i (
