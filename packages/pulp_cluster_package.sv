@@ -178,6 +178,8 @@ package pulp_cluster_package;
     doub_t ClusterExternalOffs;
     // Address remap for virtualization
     bit EnableRemapAddress;
+    // Enable wide AXI master port for high-bandwidth DMA transfers
+    bit EnableWidePort;
     // Enable Snitch ICache
     bit SnitchICache;
   } pulp_cluster_cfg_t;
@@ -217,7 +219,7 @@ package pulp_cluster_package;
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
     DmaBurstLength: 256,
-    DmaUseHwpePort: 0,
+    DmaUseHwpePort: `DMA_USE_HWPE_PORT,
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,
     ClusterAlias: 1,
@@ -276,6 +278,7 @@ package pulp_cluster_package;
     ClusterPeriphOffs: 'h00200000,
     ClusterExternalOffs: 'h00400000,
     EnableRemapAddress: 0,
+    EnableWidePort: 1,
     SnitchICache: 0,
     default: '0
   };

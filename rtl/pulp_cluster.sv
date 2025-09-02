@@ -278,6 +278,8 @@ logic [Cfg.NumCores-1:0]                dbg_core_running;
 logic [Cfg.NumCores-1:0]                s_dbg_irq;
 logic                                   s_hwpe_en;
 logic [$clog2(MAX_NUM_HWPES)-1:0]       s_hwpe_sel;
+// localparam int unsigned HWPE_SEL_BITS = (Cfg.HwpeCfg.NumHwpes > 1) ? $clog2(Cfg.HwpeCfg.NumHwpes) : 1;
+// logic [HWPE_SEL_BITS-1:0]       s_hwpe_sel;
 
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
@@ -578,8 +580,11 @@ hci_core_intf #(
   c2s_in_int_req_t s_core_instr_bus_req;
   c2s_in_int_resp_t s_core_instr_bus_resp;
 
-  c2s_wide_req_t s_dma_master_req;
+  // DMA signals
+  c2s_wide_req_t s_dma_master_req;             // Wide DMA master (256-bit)
   c2s_wide_resp_t s_dma_master_resp;
+  c2s_out_int_req_t s_dma_narrow_master_req;   // Narrow DMA master (64-bit) 
+  c2s_out_int_resp_t s_dma_narrow_master_resp;
 
 
   // core per2axi -> ext
@@ -760,7 +765,6 @@ cluster_interconnect_wrap #(
   .HCI_HWPE_SIZE          ( HciHwpeSizeParam                ),
   .HCI_DMA_SIZE           ( HciDmaSizeParam                 ),
   .HCI_MEM_SIZE           ( HciMemSizeParam                 )
-
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                                     ),
   .rst_ni             ( rst_ni                                    ),
@@ -786,50 +790,92 @@ cluster_interconnect_wrap #(
 //***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
-dmac_wrap #(
-  .NB_CORES           ( Cfg.NumCores                ),
-  .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
-  .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
-  .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWideWidth     ),
-  .AXI_ID_WIDTH       ( Cfg.AxiIdOutWideWidth       ),
-  .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
-  .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
-  .DATA_WIDTH         ( DataWidth                   ),
-  .ADDR_WIDTH         ( AddrWidth                   ),
-  .BE_WIDTH           ( BeWidth                     ),
-  .axi_req_t          ( c2s_wide_req_t              ),
-  .axi_resp_t         ( c2s_wide_resp_t             ),
-`ifdef TARGET_MCHAN
-  .NB_CTRLS           ( Cfg.NumCores + 2            ),
-  .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
-  .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
-`else
-  .NB_PE_PORTS        ( 2                           ),
-  .NUM_BIDIR_STREAMS  ( 1                           ),
-  .GLOBAL_QUEUE_DEPTH ( 2                           ),
-  .MUX_READ           ( 1'b1                        ),
-  .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
-`endif
-) dmac_wrap_i     (
-  .clk_i              ( clk_i                            ),
-  .rst_ni             ( rst_ni                           ),
-  .test_mode_i        ( test_mode_i                      ),
-  .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
-  .ctrl_slave         ( s_core_dmactrl_bus               ),
-  .tcdm_master        ( s_hci_dma                        ),
-`ifdef TARGET_MCHAN
-  .ext_master_req_o   ( s_dma_master_req                 ),
-  .ext_master_resp_i  ( s_dma_master_resp                ),
-`else
-  .ext_master_req_o   ( {s_dma_master_req}               ),
-  .ext_master_resp_i  ( {s_dma_master_resp}              ),
-`endif
-  .term_event_o       ( s_dma_event                      ),
-  .term_irq_o         ( s_dma_irq                        ),
-  .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
-  .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
-  .busy_o             ( s_dmac_busy                      )
-);
+if (Cfg.EnableWidePort) begin : gen_wide_port_idma
+  dmac_wrap #(
+    .NB_CORES           ( Cfg.NumCores                ),
+    .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
+    .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
+    .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWideWidth     ),
+    .AXI_ID_WIDTH       ( Cfg.AxiIdOutWideWidth       ),
+    .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
+    .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
+    .DATA_WIDTH         ( DataWidth                   ),
+    .ADDR_WIDTH         ( AddrWidth                   ),
+    .BE_WIDTH           ( BeWidth                     ),
+    .axi_req_t          ( c2s_wide_req_t             ),
+    .axi_resp_t         ( c2s_wide_resp_t             ),
+  `ifdef TARGET_MCHAN
+    .NB_CTRLS           ( Cfg.NumCores + 2            ),
+    .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
+    .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
+  `else
+    .NB_PE_PORTS        ( 2                           ),
+    .NUM_BIDIR_STREAMS  ( 1                           ),
+    .GLOBAL_QUEUE_DEPTH ( 2                           ),
+    .MUX_READ           ( 1'b1                        ),
+    .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
+  `endif
+  ) dmac_wrap_i     (
+    .clk_i              ( clk_i                            ),
+    .rst_ni             ( rst_ni                           ),
+    .test_mode_i        ( test_mode_i                      ),
+    .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
+    .ctrl_slave         ( s_core_dmactrl_bus               ),
+    .tcdm_master        ( s_hci_dma                        ),
+  `ifdef TARGET_MCHAN
+    .ext_master_req_o   ( /* MCHAN uses narrow port - not connected to wide */ ),
+    .ext_master_resp_i  ( '0                                                   ),
+  `else
+    .ext_master_req_o   ( {s_dma_master_req} ),
+    .ext_master_resp_i  ( {s_dma_master_resp} ),
+  `endif
+    .term_event_o       ( s_dma_event                      ),
+    .term_irq_o         ( s_dma_irq                        ),
+    .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
+    .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
+    .busy_o             ( s_dmac_busy                      )
+  );
+end else begin : gen_narrow_port_idma
+  dmac_wrap #(
+    .NB_CORES           ( Cfg.NumCores                ),
+    .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
+    .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
+    .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWidth         ),
+    .AXI_ID_WIDTH       ( AxiIdOutWidth               ),
+    .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
+    .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
+    .DATA_WIDTH         ( DataWidth                   ),
+    .ADDR_WIDTH         ( AddrWidth                   ),
+    .BE_WIDTH           ( BeWidth                     ),
+    .axi_req_t          ( c2s_out_int_req_t          ),
+    .axi_resp_t         ( c2s_out_int_resp_t         ),
+  `ifdef TARGET_MCHAN
+    .NB_CTRLS           ( Cfg.NumCores + 2            ),
+    .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
+    .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
+  `else
+    .NB_PE_PORTS        ( 2                           ),
+    .NUM_BIDIR_STREAMS  ( 1                           ),
+    .GLOBAL_QUEUE_DEPTH ( 2                           ),
+    .MUX_READ           ( 1'b1                        ),
+    .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
+  `endif
+  ) dmac_wrap_i     (
+    .clk_i              ( clk_i                            ),
+    .rst_ni             ( rst_ni                           ),
+    .test_mode_i        ( test_mode_i                      ),
+    .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
+    .ctrl_slave         ( s_core_dmactrl_bus               ),
+    .tcdm_master        ( s_hci_dma                        ),
+    .ext_master_req_o   ( {s_dma_narrow_master_req}        ),
+    .ext_master_resp_i  ( {s_dma_narrow_master_resp}       ),
+    .term_event_o       ( s_dma_event                      ),
+    .term_irq_o         ( s_dma_irq                        ),
+    .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
+    .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
+    .busy_o             ( s_dmac_busy                      )
+  );
+end
 
 
 //***************************************************
@@ -838,6 +884,7 @@ dmac_wrap #(
 cluster_peripherals #(
   .NB_CORES       ( Cfg.NumCores      ),
   .NB_HWPES       ( MAX_NUM_HWPES     ),
+  //.NB_HWPES       ( Cfg.HwpeCfg.NumHwpes ),
   .NB_MPERIPHS    ( Cfg.NumMstPeriphs ),
   .NB_CACHE_BANKS ( Cfg.iCacheNumBanks),
   .NB_SPERIPHS    ( Cfg.NumSlvPeriphs ),
@@ -1134,6 +1181,7 @@ end
 
 logic [Cfg.NumCores/3-1:0] hmr_tmr_sw_resynch_req_short;
 logic [Cfg.NumCores/2-1:0] hmr_dmr_sw_resynch_req_short;
+
 always_comb begin
   hmr_tmr_sw_resynch_req = '0;
   hmr_dmr_sw_resynch_req = '0;
@@ -1219,13 +1267,13 @@ generate
     assign setback                      = '0;
 
     for (genvar i = 0; i < Cfg.NumCores; i++) begin
-      assign hmr2core[i].clock_en     = sys2hmr[i].clock_en;     
-      assign hmr2core[i].boot_addr    = sys2hmr[i].boot_addr;    
-      assign hmr2core[i].core_id      = sys2hmr[i].core_id;      
-      assign hmr2core[i].cluster_id   = sys2hmr[i].cluster_id;   
-      assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;    
-      assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid; 
-      assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;  
+      assign hmr2core[i].clock_en     = sys2hmr[i].clock_en;
+      assign hmr2core[i].boot_addr    = sys2hmr[i].boot_addr;
+      assign hmr2core[i].core_id      = sys2hmr[i].core_id;
+      assign hmr2core[i].cluster_id   = sys2hmr[i].cluster_id;
+      assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;
+      assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid;
+      assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;
       assign hmr2core[i].data_gnt     = sys2hmr[i].data_gnt;     
       assign hmr2core[i].data_rvalid  = sys2hmr[i].data_rvalid;  
       assign hmr2core[i].data_rdata   = sys2hmr[i].data_rdata;   
@@ -1664,8 +1712,79 @@ c2s_resp_t  src_resp, isolate_src_resp;
 c2s_remap_req_t src_remap_req;
 c2s_remap_resp_t src_remap_resp;
 
-`AXI_ASSIGN_REQ_STRUCT(src_remap_req,s_data_master_req)
-`AXI_ASSIGN_RESP_STRUCT(s_data_master_resp,src_remap_resp)
+// Connect DMA narrow master when wide port disabled, otherwise cluster bus master
+if (Cfg.EnableWidePort) begin : gen_cluster_bus_narrow_master
+  `AXI_ASSIGN_REQ_STRUCT(src_remap_req, s_data_master_req)
+  `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp, src_remap_resp)
+end else begin : gen_dma_narrow_master  
+  // Merge cluster bus master and DMA narrow master via AXI multiplexer
+  localparam int SlvIdWidth = AxiIdOutWidth;
+  localparam int MstIdWidth = AxiIdOutWidth + 1;
+
+  // Widened AW channel for mux output
+  `AXI_TYPEDEF_AW_CHAN_T(c2s_mux_aw_chan_t, logic[Cfg.AxiAddrWidth-1:0], logic[MstIdWidth-1:0], logic[Cfg.AxiUserWidth-1:0])
+  `AXI_TYPEDEF_W_CHAN_T(c2s_mux_w_chan_t, logic[Cfg.AxiDataOutWidth-1:0], logic[Cfg.AxiDataOutWidth/8-1:0], logic[Cfg.AxiUserWidth-1:0])
+  `AXI_TYPEDEF_B_CHAN_T(c2s_mux_b_chan_t,  logic[MstIdWidth-1:0],   logic[Cfg.AxiUserWidth-1:0])
+  `AXI_TYPEDEF_AR_CHAN_T(c2s_mux_ar_chan_t, logic[Cfg.AxiAddrWidth-1:0], logic[MstIdWidth-1:0], logic[Cfg.AxiUserWidth-1:0])
+  `AXI_TYPEDEF_R_CHAN_T(c2s_mux_r_chan_t,  logic[Cfg.AxiDataOutWidth-1:0], logic[MstIdWidth-1:0], logic[Cfg.AxiUserWidth-1:0])
+
+  `AXI_TYPEDEF_REQ_T(c2s_mux_req_t,   c2s_mux_aw_chan_t, c2s_mux_w_chan_t,   c2s_mux_ar_chan_t)
+  `AXI_TYPEDEF_RESP_T(c2s_mux_resp_t, c2s_mux_b_chan_t,   c2s_mux_r_chan_t)
+
+  // Arrays for the two slave ports
+  c2s_remap_req_t [1:0]  narrow_master_reqs;
+  c2s_remap_resp_t [1:0] narrow_master_resps;
+  c2s_mux_req_t     mux_req;
+  c2s_mux_resp_t    mux_resp;
+
+  // Bind cluster-bus and DMA inputs
+  `AXI_ASSIGN_REQ_STRUCT(narrow_master_reqs[0], s_data_master_req)
+  `AXI_ASSIGN_REQ_STRUCT(narrow_master_reqs[1], s_dma_narrow_master_req)
+
+  // 2-to-1 AXI multiplexer (prepending ID bit)
+  axi_mux #(
+    .SlvAxiIDWidth ( AxiIdOutWidth ),
+    .slv_aw_chan_t ( c2s_remap_aw_chan_t ), .mst_aw_chan_t ( c2s_mux_aw_chan_t ),
+    .w_chan_t      ( c2s_remap_w_chan_t ),
+    .slv_b_chan_t  ( c2s_remap_b_chan_t ), .mst_b_chan_t  ( c2s_mux_b_chan_t ),
+    .slv_ar_chan_t ( c2s_remap_ar_chan_t ), .mst_ar_chan_t ( c2s_mux_ar_chan_t ),
+    .slv_r_chan_t  ( c2s_remap_r_chan_t ), .mst_r_chan_t  ( c2s_mux_r_chan_t ),
+    .slv_req_t     ( c2s_remap_req_t ), .slv_resp_t    ( c2s_remap_resp_t ),
+    .mst_req_t     ( c2s_mux_req_t ),   .mst_resp_t    ( c2s_mux_resp_t ),
+    .NoSlvPorts    ( 2 ), .FallThrough(1'b1)
+  ) i_idma_narrow_mux (
+    .clk_i       ( clk_i ),
+    .rst_ni      ( rst_ni ),
+    .test_i      ( test_mode_i ),
+    // Inputs: cluster-bus first, then DMA narrow
+    .slv_reqs_i   ( narrow_master_reqs ),
+    .slv_resps_o  ( narrow_master_resps ),
+    // Output of mux feeds ID shrink stage
+    .mst_req_o    ( mux_req             ),
+    .mst_resp_i   ( mux_resp            )
+  );
+
+  axi_id_remap #(
+    .AxiSlvPortIdWidth    ( MstIdWidth          ),  // ID width = AxiIdOutWidth + 1
+    .AxiSlvPortMaxUniqIds ( 4                   ),
+    .AxiMaxTxnsPerId      ( Cfg.AxiMaxOutTrans  ),
+    .AxiMstPortIdWidth    ( AxiIdOutWidth       ),
+    .slv_req_t            ( c2s_mux_req_t       ),
+    .slv_resp_t           ( c2s_mux_resp_t      ),
+    .mst_req_t            ( c2s_remap_req_t     ),
+    .mst_resp_t           ( c2s_remap_resp_t    )
+  ) i_idma_narrow_id_shrink (
+    .clk_i      ( clk_i ),
+    .rst_ni     ( rst_ni ),
+    .slv_req_i  ( mux_req  ),
+    .slv_resp_o ( mux_resp ),
+    .mst_req_o  ( src_remap_req   ),
+    .mst_resp_i ( src_remap_resp  )
+  );
+  // Drive external responses from narrow_master_resps
+  `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp,   narrow_master_resps[0])
+  `AXI_ASSIGN_RESP_STRUCT(s_dma_narrow_master_resp, narrow_master_resps[1])
+end
 
 if (Cfg.AxiIdOutWidth != AxiIdOutWidth) begin : gen_c2s_idwremap
   axi_id_remap            #(
@@ -1747,62 +1866,67 @@ axi_cdc_src  #(
 c2s_wide_req_t   src_wide_req, isolate_src_wide_req;
 c2s_wide_resp_t  src_wide_resp, isolate_src_wide_resp;
 
-assign isolate_src_wide_req = s_dma_master_req;
-assign s_dma_master_resp = isolate_src_wide_resp;
+// Route DMA master request/response based on EnableWidePort
+assign isolate_src_wide_req = Cfg.EnableWidePort ? s_dma_master_req      : s_dma_narrow_master_req;
+assign s_dma_master_resp    = Cfg.EnableWidePort ? isolate_src_wide_resp : s_dma_narrow_master_resp;
 
-axi_isolate            #(
-  .NumPending           ( 8                       ),
-  .TerminateTransaction ( 1                       ),
-  .AtopSupport          ( 1                       ),
-  .AxiAddrWidth         ( Cfg.AxiAddrWidth        ),
-  .AxiDataWidth         ( Cfg.AxiDataOutWideWidth ),
-  .AxiIdWidth           ( Cfg.AxiIdOutWideWidth   ),
-  .AxiUserWidth         ( Cfg.AxiUserWidth        ),
-  .axi_req_t            ( c2s_wide_req_t          ),
-  .axi_resp_t           ( c2s_wide_resp_t         )
-) i_axi_wide_master_isolate  (
-  .clk_i                ( clk_i                 ),
-  .rst_ni               ( rst_ni                ),
-  .slv_req_i            ( isolate_src_wide_req  ),
-  .slv_resp_o           ( isolate_src_wide_resp ),
-  .mst_req_o            ( src_wide_req          ),
-  .mst_resp_i           ( src_wide_resp         ),
-  .isolate_i            ( axi_isolate_synch     ),
-  .isolated_o           ( axi_isolated_wide_o   )
-);
+// Instantiate wide port isolation and CDC only when enabled
+generate
+  if (Cfg.EnableWidePort) begin : gen_wide_port
+    axi_isolate #(
+      .NumPending           ( 8                       ),
+      .TerminateTransaction ( 1                       ),
+      .AtopSupport          ( 1                       ),
+      .AxiAddrWidth         ( Cfg.AxiAddrWidth        ),
+      .AxiDataWidth         ( Cfg.AxiDataOutWideWidth ),
+      .AxiIdWidth           ( Cfg.AxiIdOutWideWidth   ),
+      .AxiUserWidth         ( Cfg.AxiUserWidth        ),
+      .axi_req_t            ( c2s_wide_req_t          ),
+      .axi_resp_t           ( c2s_wide_resp_t         )
+    ) i_axi_wide_master_isolate (
+      .clk_i        ( clk_i                 ),
+      .rst_ni       ( rst_ni                ),
+      .slv_req_i    ( isolate_src_wide_req  ),
+      .slv_resp_o   ( isolate_src_wide_resp ),
+      .mst_req_o    ( src_wide_req          ),
+      .mst_resp_i   ( src_wide_resp         ),
+      .isolate_i    ( axi_isolate_synch     ),
+      .isolated_o   ( axi_isolated_wide_o   )
+    );
 
-axi_cdc_src  #(
- .aw_chan_t   ( c2s_wide_aw_chan_t   ),
- .w_chan_t    ( c2s_wide_w_chan_t    ),
- .b_chan_t    ( c2s_wide_b_chan_t    ),
- .r_chan_t    ( c2s_wide_r_chan_t    ),
- .ar_chan_t   ( c2s_wide_ar_chan_t   ),
- .axi_req_t   ( c2s_wide_req_t       ),
- .axi_resp_t  ( c2s_wide_resp_t      ),
- .LogDepth    ( Cfg.AxiCdcLogDepth   ),
- .SyncStages  ( Cfg.AxiCdcSyncStages )
-) axi_wide_master_cdc_i (
- .src_rst_ni                       ( pwr_on_rst_ni               ),
- .src_clk_i                        ( clk_i                       ),
- .src_req_i                        ( src_wide_req                ),
- .src_resp_o                       ( src_wide_resp               ),
- .async_data_master_aw_wptr_o      ( async_wide_master_aw_wptr_o ),
- .async_data_master_aw_rptr_i      ( async_wide_master_aw_rptr_i ),
- .async_data_master_aw_data_o      ( async_wide_master_aw_data_o ),
- .async_data_master_w_wptr_o       ( async_wide_master_w_wptr_o  ),
- .async_data_master_w_rptr_i       ( async_wide_master_w_rptr_i  ),
- .async_data_master_w_data_o       ( async_wide_master_w_data_o  ),
- .async_data_master_ar_wptr_o      ( async_wide_master_ar_wptr_o ),
- .async_data_master_ar_rptr_i      ( async_wide_master_ar_rptr_i ),
- .async_data_master_ar_data_o      ( async_wide_master_ar_data_o ),
- .async_data_master_b_wptr_i       ( async_wide_master_b_wptr_i  ),
- .async_data_master_b_rptr_o       ( async_wide_master_b_rptr_o  ),
- .async_data_master_b_data_i       ( async_wide_master_b_data_i  ),
- .async_data_master_r_wptr_i       ( async_wide_master_r_wptr_i  ),
- .async_data_master_r_rptr_o       ( async_wide_master_r_rptr_o  ),
- .async_data_master_r_data_i       ( async_wide_master_r_data_i  )
-);
-
+    axi_cdc_src #(
+      .aw_chan_t   ( c2s_wide_aw_chan_t   ),
+      .w_chan_t    ( c2s_wide_w_chan_t    ),
+      .b_chan_t    ( c2s_wide_b_chan_t    ),
+      .r_chan_t    ( c2s_wide_r_chan_t    ),
+      .ar_chan_t   ( c2s_wide_ar_chan_t   ),
+      .axi_req_t   ( c2s_wide_req_t       ),
+      .axi_resp_t  ( c2s_wide_resp_t      ),
+      .LogDepth    ( Cfg.AxiCdcLogDepth   ),
+      .SyncStages  ( Cfg.AxiCdcSyncStages )
+    ) axi_wide_master_cdc_i (
+      .src_rst_ni                       ( pwr_on_rst_ni               ),
+      .src_clk_i                        ( clk_i                       ),
+      .src_req_i                        ( src_wide_req                ),
+      .src_resp_o                       ( src_wide_resp               ),
+      .async_data_master_aw_wptr_o      ( async_wide_master_aw_wptr_o ),
+      .async_data_master_aw_rptr_i      ( async_wide_master_aw_rptr_i ),
+      .async_data_master_aw_data_o      ( async_wide_master_aw_data_o ),
+      .async_data_master_w_wptr_o       ( async_wide_master_w_wptr_o  ),
+      .async_data_master_w_rptr_i       ( async_wide_master_w_rptr_i  ),
+      .async_data_master_w_data_o       ( async_wide_master_w_data_o  ),
+      .async_data_master_ar_wptr_o      ( async_wide_master_ar_wptr_o ),
+      .async_data_master_ar_rptr_i      ( async_wide_master_ar_rptr_i ),
+      .async_data_master_ar_data_o      ( async_wide_master_ar_data_o ),
+      .async_data_master_b_wptr_i       ( async_wide_master_b_wptr_i  ),
+      .async_data_master_b_rptr_o       ( async_wide_master_b_rptr_o  ),
+      .async_data_master_b_data_i       ( async_wide_master_b_data_i  ),
+      .async_data_master_r_wptr_i       ( async_wide_master_r_wptr_i  ),
+      .async_data_master_r_rptr_o       ( async_wide_master_r_rptr_o  ),
+      .async_data_master_r_data_i       ( async_wide_master_r_data_i  )
+    );
+  end
+endgenerate
 
 // SOC TO CLUSTER
 `AXI_TYPEDEF_AW_CHAN_T(s2c_aw_chan_t,logic[Cfg.AxiAddrWidth-1:0],logic[Cfg.AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
@@ -1966,6 +2090,8 @@ initial begin : p_assert
     else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
   assert(!Cfg.DmaUseHwpePort)
     else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
+  assert(!Cfg.EnableWidePort)
+    else $fatal(1, "When using MCHAN, wide port should be disabled!");
   `else
   if (!Cfg.DmaUseHwpePort) begin
     // The DMA can have wide access to TCDM only when sharing the master port to HCI with the HWPE
