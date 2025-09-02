@@ -153,8 +153,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: c1e25094bf9f2fee754611ef7491b7a1144e11b9
-    version: 1.9.1
+    revision: 3bc9694705b72a5b9bddc7fcde5091b9e45ba0c8
+    version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -173,8 +173,8 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 92799c5fabcf2cd1f224f970bbb040b290d08fd5
-    version: null
+    revision: ff5d56fffb3767814db88d6bf8f381974ea33aa5
+    version: 0.6.4
     source:
       Git: https://github.com/pulp-platform/idma.git
     dependencies:
@@ -206,7 +206,6 @@ packages:
     - hci
     - hwpe-ctrl
     - hwpe-stream
-    - register_interface
     - zeroriscy
   obi:
     revision: c2141a653c755461ff44f61d12aeb5d99fc8e760
@@ -238,7 +237,7 @@ packages:
     - register_interface
     - tech_cells_generic
   redundancy_cells:
-    revision: d924bd6a2ffa48f0e6d26e6c66725012cf677abe
+    revision: 9e31f7c6c24877eaf58279903e7a162b16c9a721
     version: null
     source:
       Git: https://github.com/pulp-platform/redundancy_cells.git
