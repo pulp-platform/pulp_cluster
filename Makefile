@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= dd7ef99 # branch: lg/upstream
+REGRESSION_TESTS_COMMIT ?= 5e26b13 # branch: yt/redmule-v2
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
