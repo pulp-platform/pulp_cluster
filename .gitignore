@@ -6,3 +6,5 @@ scripts/compile.tcl
 regression_tests/
 pulp-runtime/
 fault_injection_sim/
+venv/
+.venv/
