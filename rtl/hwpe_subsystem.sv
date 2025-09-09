@@ -88,19 +88,26 @@ module hwpe_subsystem
       // REDMULE //
       /////////////
 
+      cv32e40x_if_xif core_xif ();
+
       redmule_top   #(
         .ID_WIDTH    ( ID_WIDTH         ),
         .N_CORES     ( N_CORES          ),
         .DW          ( N_MASTER_PORT*32 ),
+        .X_EXT       ( 0                ),
         .`HCI_SIZE_PARAM(tcdm) ( HCI_HWPE_SIZE )
-      ) i_redmule    (
-        .clk_i       ( hwpe_clk[i] ),
-        .rst_ni      ( rst_n       ),
-        .test_mode_i ( test_mode   ),
-        .busy_o      ( busy[i]     ),
-        .evt_o       ( evt[i]      ),
-        .tcdm        ( tcdm[i]     ),
-        .periph      ( periph[i]   )
+      ) i_redmule           (
+        .clk_i              ( hwpe_clk[i]                ),
+        .rst_ni             ( rst_n                      ),
+        .test_mode_i        ( test_mode                  ),
+        .busy_o             ( busy[i]                    ),
+        .evt_o              ( evt[i]                     ),
+        .xif_issue_if_i     ( core_xif.coproc_issue      ),
+        .xif_result_if_o    ( core_xif.coproc_result     ),
+        .xif_compressed_if_i( core_xif.coproc_compressed ),
+        .xif_mem_if_o       ( core_xif.coproc_mem        ),
+        .tcdm               ( tcdm[i]                    ),
+        .periph             ( periph[i]                  )
       );
 
     end else if (HWPE_CFG.HwpeList[i] == NEUREKA) begin : gen_neureka

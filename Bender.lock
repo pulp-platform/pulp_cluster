@@ -7,8 +7,8 @@ packages:
     dependencies:
     - common_cells
   axi:
-    revision: 853ede23b2a9837951b74dbdc6d18c3eef5bac7d
-    version: 0.39.5
+    revision: 78831b6feba265d5ee2683bbf42b4150f8a35c43
+    version: 0.39.8
     source:
       Git: https://github.com/pulp-platform/axi.git
     dependencies:
@@ -16,16 +16,16 @@ packages:
     - common_verification
     - tech_cells_generic
   axi2mem:
-    revision: b0e963433b2f6a61262b1448031e74eaec57c203
-    version: null
+    revision: be0c696709acaee579787ba2432d26ad27640594
+    version: 1.0.2
     source:
       Git: https://github.com/pulp-platform/axi2mem.git
     dependencies:
     - axi_slice
     - common_cells
   axi2per:
-    revision: 4932bd2b88a1c7b5f0bf95411fc512905ed32439
-    version: null
+    revision: e8ca052a745e184ca960933b2fe416b725e9ca81
+    version: 1.0.2
     source:
       Git: https://github.com/pulp-platform/axi2per.git
     dependencies:
@@ -37,47 +37,53 @@ packages:
       Git: https://github.com/pulp-platform/axi_slice.git
     dependencies:
     - common_cells
+  axi_stream:
+    revision: 54891ff40455ca94a37641b9da4604647878cc07
+    version: 0.1.1
+    source:
+      Git: https://github.com/pulp-platform/axi_stream.git
+    dependencies:
+    - common_cells
   cluster_icache:
-    revision: dd0e8f3497903a9ca99fc9f349d5a4f688ceb3ae
-    version: null
+    revision: 64e21ae455bbdde850c4df13bef86ea55ac42537
+    version: 0.2.0
     source:
       Git: https://github.com/pulp-platform/cluster_icache.git
     dependencies:
     - axi
     - common_cells
-    - register_interface
     - scm
     - tech_cells_generic
   cluster_interconnect:
-    revision: 1284def6c0b7f7e9355eb093d00883ad9dead1b7
-    version: null
+    revision: 2967d8d17be0a6139229ca8d3d4956e182aec3de
+    version: 1.3.0
     source:
       Git: https://github.com/pulp-platform/cluster_interconnect.git
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: 0b8e8ab9e6be3a5030a18256bb7e75cf6b6f6cac
-    version: null
+    revision: e464eb9ddcc39e5a50009819601c4f213b1d4ba3
+    version: 2.2.0
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
     dependencies:
     - hci
   common_cells:
-    revision: c27bce39ebb2e6bae52f60960814a2afca7bd4cb
-    version: 1.37.0
+    revision: 9afda9abb565971649c2aa0985639c096f351171
+    version: 1.38.0
     source:
       Git: https://github.com/pulp-platform/common_cells.git
     dependencies:
     - common_verification
     - tech_cells_generic
   common_verification:
-    revision: 9c07fa860593b2caabd9b5681740c25fac04b878
-    version: 0.2.3
+    revision: fb1885f48ea46164a10568aeff51884389f67ae3
+    version: 0.2.5
     source:
       Git: https://github.com/pulp-platform/common_verification.git
     dependencies: []
   cv32e40p:
-    revision: e863f576699815b38cc9d80dbdede8ed5efd5991
+    revision: 1a93f340e9dadb9f7c8c471f27a40932c8b1c62e
     version: null
     source:
       Git: https://github.com/pulp-platform/cv32e40p.git
@@ -85,6 +91,12 @@ packages:
     - common_cells
     - fpnew
     - tech_cells_generic
+  cv32e40x:
+    revision: 96b933ac2f723351872da55e7d2e9a82abd5df34
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/cv32e40x.git
+    dependencies: []
   event_unit_flex:
     revision: 28e0499374117c7b0ef4c6ad81b60d7526af886f
     version: null
@@ -92,8 +104,16 @@ packages:
       Git: https://github.com/pulp-platform/event_unit_flex.git
     dependencies:
     - common_cells
+  flex-v:
+    revision: e9355c2f6ec4c105abdff39489e5d1be93bc4374
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/flex-v.git
+    dependencies:
+    - fpnew
+    - tech_cells_generic
   fpnew:
-    revision: a8e0cba6dd50f357ece73c2c955d96efc3c6c315
+    revision: e5aa6a01b5bbe1675c3aa8872e1203413ded83d1
     version: null
     source:
       Git: https://github.com/pulp-platform/cvfpu.git
@@ -108,7 +128,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: aed9005c761827c6cbff2ea9a15f9cc37acd1169
+    revision: 2a5a5081a2b32f1a04e7e28c00d3762d92602b84
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -120,8 +140,8 @@ packages:
     - redundancy_cells
     - register_interface
   hier-icache:
-    revision: 2886cb2a46cea3e2bd2d979b505d88fadfbe150c
-    version: null
+    revision: 7243834d2407ca23cff583d57641c84b982bd9bc
+    version: 1.3.0
     source:
       Git: https://github.com/pulp-platform/hier-icache.git
     dependencies:
@@ -132,15 +152,15 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: a5966201aeeb988d607accdc55da933a53c6a56e
-    version: null
+    revision: 3690a3c648f120546d8de2bc583d5170c36d2f20
+    version: 2.0.0
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 65c99a4a2f37a79acee800ab0151f67dfb1edef1
-    version: 1.8.0
+    revision: b3d33afdd27e79bcda1348d0ab5f4afd52c03106
+    version: 1.9.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -159,14 +179,16 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 437ffa9dac5dea0daccfd3e8ae604d4f6ae2cdf1
-    version: null
+    revision: c12caf59bb482fe44b27361f6924ad346b2d22fe
+    version: 0.6.3
     source:
       Git: https://github.com/pulp-platform/iDMA.git
     dependencies:
     - axi
+    - axi_stream
     - common_cells
     - common_verification
+    - obi
     - register_interface
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
@@ -175,14 +197,14 @@ packages:
       Git: https://github.com/pulp-platform/L2_tcdm_hybrid_interco.git
     dependencies: []
   mchan:
-    revision: 7f064f205a3e0203e959b14773c4afecf56681ab
-    version: null
+    revision: 3f2ae92f78e2ddbd0e079cbb4f81fcc248171c12
+    version: 1.2.4
     source:
       Git: https://github.com/pulp-platform/mchan.git
     dependencies:
     - common_cells
   neureka:
-    revision: 94528df2bc6d5eedc0439bd403c2ad005f0a7519
+    revision: f4e131c86205d37882cf02ea4dd3bd141ef32d86
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -192,29 +214,40 @@ packages:
     - hwpe-stream
     - register_interface
     - zeroriscy
+  obi:
+    revision: 0155fc34e900c7c884e081c0a1114a247937ff69
+    version: 0.1.7
+    source:
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
   per2axi:
-    revision: 95bf23119b47fc171d9ed3734c431f71cffd9350
-    version: null
+    revision: 18cf4f2ad51b73de0448843ce0def54ab5fb274b
+    version: 1.0.5
     source:
       Git: https://github.com/pulp-platform/per2axi.git
     dependencies:
     - axi_slice
   redmule:
-    revision: 9223ccc932e21d0667e9c2d30831db41eec9299e
-    version:
+    revision: 78696fb0d6d429bdad2e38740792648d44095605
+    version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:
     - common_cells
     - cv32e40p
+    - cv32e40x
     - fpnew
     - hci
     - hwpe-ctrl
     - hwpe-stream
+    - ibex
+    - obi
     - register_interface
     - tech_cells_generic
   redundancy_cells:
-    revision: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc
+    revision: 6ba6f415a9024decedabaf3f2b45263ff546dabd
     version: null
     source:
       Git: https://github.com/pulp-platform/redundancy_cells.git
@@ -233,23 +266,15 @@ packages:
     - axi
     - common_cells
     - common_verification
-  flex-v:
-    revision: c760db14dbd6cc3ec3b8ae8274df2eac7225bcac
-    version: null
-    source:
-      Git: https://github.com/pulp-platform/flex-v.git
-    dependencies:
-    - fpnew
-    - tech_cells_generic
   scm:
-    revision: 74426dee36f28ae1c02f7635cf844a0156145320
-    version: null
+    revision: 472f99affe44ff7b282b519c047a3cfeb35b16c6
+    version: 1.2.0
     source:
       Git: https://github.com/pulp-platform/scm.git
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 31e7534a3da3244f2f5c08bab430a560beee6ff2
+    revision: 11dd29e85d40e29fea0481b471f1c0cc967df1a4
     version: null
     source:
       Git: https://github.com/belanoa/softex.git
