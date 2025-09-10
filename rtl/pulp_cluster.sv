@@ -760,8 +760,8 @@ cluster_peripherals #(
   .NB_TCDM_BANKS  ( Cfg.TcdmNumBank   ),
   .ROM_BOOT_ADDR  ( Cfg.BootRomBaseAddr),
   .BOOT_ADDR      ( Cfg.BootAddr      ),
+  .SNITCH_ICACHE  ( Cfg.SnitchICache  ),
   .EVNT_WIDTH     ( EventWidth        ),
-
   .NB_L1_CUTS      ( NB_L1_CUTS       ),
   .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
 
