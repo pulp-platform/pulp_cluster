@@ -133,7 +133,7 @@ module cluster_interconnect_wrap
           .clear_i        ( 1'b0                 ),
           .ctrl_i         ( hci_ctrl_i           ),
           .cores          ( core_tcdm_slave      ),
-          .hwpe           ( hwpe_tcdm_slave [0]  ),
+          .hwpe           ( hwpe_tcdm_slave      ),
           .dma            ( dma_slave            ),
           .ext            ( ext_slave            ),
           .mems           ( tcdm_sram_master     )
