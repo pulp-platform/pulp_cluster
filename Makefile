@@ -17,6 +17,10 @@ BENDER ?= bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 VLIB ?= $(QUESTA) vlib
+
+QSIM ?= $(QUESTA) qsim
+QOPT ?= $(QUESTA) qopt
+
 top_level ?= pulp_cluster_tb
 library ?= work
 elf-bin ?= stimuli.riscv
@@ -75,7 +79,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= git@github.com:RiccardoGandolfi/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 761d7d86ee5be44013439d608129ccc6f396d51c # branch: lg/upstream from RiccardoGandolfi fork
+PULP_RUNTIME_COMMIT ?= 048502d346e13753e384d9777829db26468097d6 # branch: lg/upstream
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -90,11 +94,8 @@ fault_injection_sim:
 	cd $@ && git checkout $(FAULT_SIM_COMMIT)
 
 ## Clone regression tests
-# REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-# REGRESSION_TESTS_COMMIT ?= d43cb0d # branch: lg/upstream
-
 REGRESSION_TESTS_REMOTE ?= git@github.com:RiccardoGandolfi/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= e198a0f50367ca345f5bc061e7f7c00e9f8b6d55 # branch: add_iDMA_tests from RiccardoGandolfi fork
+REGRESSION_TESTS_COMMIT ?= 6fac940e924c7de83b37d7be14bfd9febbf04678 # branch: lg/upstream
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
@@ -128,6 +129,10 @@ compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
+
+build_qone: compile
+	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized
+
 
 build: compile
 	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
