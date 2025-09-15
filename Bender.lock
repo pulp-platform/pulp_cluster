@@ -194,10 +194,10 @@ packages:
     - common_cells
     - common_verification
   idma:
-    revision: c12caf59bb482fe44b27361f6924ad346b2d22fe
-    version: 0.6.3
+    revision: e4e9c6fe385f6803052e3b2c09722638d6172359
+    version: null
     source:
-      Path: working_dir/idma
+      Git: https://github.com/RiccardoGandolfi/iDMA.git
     dependencies:
     - axi
     - axi_stream
@@ -205,7 +205,6 @@ packages:
     - common_verification
     - obi
     - register_interface
-    - obi
   l2_tcdm_hybrid_interco:
     revision: fa55e72859dcfb117a2788a77352193bef94ff2b
     version: 1.0.0
