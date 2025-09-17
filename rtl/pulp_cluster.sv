@@ -726,9 +726,10 @@ dmac_wrap #(
   .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
 `else
   .NB_PE_PORTS        ( 2                           ),
-  .NUM_STREAMS        ( 4                           ),
-  .TCDM_SIZE          ( Cfg.TcdmSize                ),
-  .ClusterBaseAddr    ( Cfg.ClusterBaseAddr         )
+  .NUM_BIDIR_STREAMS  ( 1                           ),
+  .GLOBAL_QUEUE_DEPTH ( 2                           ),
+  .MUX_READ           ( 1'b1                        ),
+  .TCDM_MEM2BANKS     ( 1                           )
 `endif
 ) dmac_wrap_i     (
   .clk_i              ( clk_i                            ),

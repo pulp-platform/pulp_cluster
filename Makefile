@@ -17,14 +17,19 @@ BENDER ?= bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 VLIB ?= $(QUESTA) vlib
-top_level ?= pulp_cluster_tb
+
+QSIM ?= $(QUESTA) qsim
+QOPT ?= $(QUESTA) qopt
+
+top_level ?= pulp_cluster
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
 REGRESSIONS := $(ROOT_DIR)/regression_tests
 
-VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS_LINT += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1ns / 1ps\" \"+incdir+$(shell pwd)/include\"
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
@@ -74,8 +79,8 @@ sw-clean:
 	@rm -rf pulp-runtime fault_injection_sim regression_tests
 
 ## Clone pulp-runtime as SW stack
-PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 1e3bccf # branch: lg/upstream
+PULP_RUNTIME_REMOTE ?= git@github.com:RiccardoGandolfi/pulp-runtime.git
+PULP_RUNTIME_COMMIT ?= 048502d346e13753e384d9777829db26468097d6 # branch: lg/upstream
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -90,8 +95,8 @@ fault_injection_sim:
 	cd $@ && git checkout $(FAULT_SIM_COMMIT)
 
 ## Clone regression tests
-REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 6e93422 # branch: lg/upstream
+REGRESSION_TESTS_REMOTE ?= git@github.com:RiccardoGandolfi/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= 6fac940e924c7de83b37d7be14bfd9febbf04678 # branch: lg/upstream
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
@@ -118,6 +123,11 @@ include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
 	$(BENDER) script synopsys $(common_targs) $(common_defs) $(synth_targs) $(synth_defs)	> $@
 
+scripts/compile_lint.tcl:
+	echo 'set ROOT $(ROOT_DIR)' > $@
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS_LINT)" $(common_defs) $(common_targs) | grep -v "set ROOT" >> $@
+	echo >> $@
+
 $(library):
 	$(QUESTA) vlib $(library)
 
@@ -126,12 +136,33 @@ compile: $(library)
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
+build_qone: compile
+	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
+
+
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized +acc
+
+compile_lint: $(library)
+	qverify -od lint/comp_lint_results -c -do " \
+	onerror {exit}; \
+	do scripts/compile_lint.tcl; \
+	exit"
+
+lint: compile_lint
+	qverify -od lint/lint_results -c -do " \
+	lint methodology ip -goal release; \
+	lint run -d $(top_level); \
+	exit"
+
+cdc: compile_lint
+	qverify -od cdc_results -c -do " \
+	cdc run -d $(top_level); \
+	exit"
 
 run:
 	$(VSIM) +permissive -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
-	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
+	${top_level}_tb_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
 ####################
 # Regression tests #
