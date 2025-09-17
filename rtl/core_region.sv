@@ -235,8 +235,8 @@ import rapid_recovery_pkg::*;
         .PULP_CLUSTER        ( 1                           ),
         .FPU                 ( FPU                         ),
         .FP_DIVSQRT          ( FP_DIVSQRT                  ),
-        .SHARED_FP           ( 0                           ),
-        .SHARED_FP_DIVSQRT   ( 0                           ),
+        .SHARED_FP           ( 1                           ),//1
+        .SHARED_FP_DIVSQRT   ( 1                           ),//1
         .N_EXT_PERF_COUNTERS ( N_EXT_PERF_COUNTERS         ),
         .Zfinx               ( FPU                         ),
         .WAPUTYPE            ( WAPUTYPE                    ),

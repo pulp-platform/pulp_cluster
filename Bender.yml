@@ -36,7 +36,7 @@ dependencies:
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: astral-v1.0 }
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
-
+  fpu_interco:            { git: "https://github.com/pulp-platform/fpu_interco.git", rev: "fcca6ecbe8b2af3ce5c0c7c3fb4634c4c6f9b4ae" } # branch: yt/carfield
 export_include_dirs:
   - include
 

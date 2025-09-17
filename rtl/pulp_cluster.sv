@@ -923,8 +923,8 @@ generate
       .APU_NDSFLAGS_CPU    ( FpuInFlagsWidth            ),
       .APU_NUSFLAGS_CPU    ( FpuOutFlagsWidth           ),
       .DEBUG_START_ADDR    ( Cfg.DmBaseAddr             ),
-      .FPU                 ( Cfg.EnablePrivateFpu       ),
-      .FP_DIVSQRT          ( Cfg.EnablePrivateFpDivSqrt ),
+      .FPU                 ( (Cfg.EnablePrivateFpu       | Cfg.EnableSharedFpu      ) ),
+      .FP_DIVSQRT          ( (Cfg.EnablePrivateFpDivSqrt | Cfg.EnableSharedFpDivSqrt) ),
       .core_data_req_t     ( core_data_req_t            ),
       .core_data_rsp_t     ( core_data_rsp_t            )
     ) core_region_i        (
@@ -1166,6 +1166,30 @@ endgenerate
 //****************************************************
 //****          Shared execution units             ***
 //****************************************************
+// // request channel
+// logic [Cfg.NumCores-1:0][FpuNumArgs-1:0][31:0] s_apu__operands;
+// logic [Cfg.NumCores-1:0][FpuOpCodeWidth-1:0] s_apu__op;
+// logic [Cfg.NumCores-1:0][FpuTypeWidth-1:0] s_apu__type;
+// logic [Cfg.NumCores-1:0][FpuInFlagsWidth-1:0] s_apu__flags;
+// // response channel
+// logic [Cfg.NumCores-1:0][FpuOutFlagsWidth-1:0] s_apu__rflags;
+
+// genvar k;
+// for(k=0;k<Cfg.NumCores;k++)
+// begin
+//   assign s_apu__operands[k] = s_apu_master_operands[k];
+//   assign s_apu__op[k] = s_apu_master_op[k];
+//   assign s_apu__type[k] = s_apu_master_type[k];
+//   assign s_apu__flags[k] = s_apu_master_flags[k];
+//   assign s_apu_master_rflags[k] = s_apu__rflags[k];
+// end
+
+// // At the moment, the cluster does not support any shared execution unit 
+// assign s_apu_master_gnt    = '0;
+// assign s_apu_master_rvalid = '0;
+// assign s_apu_master_rdata  = '0;
+// assign s_apu__rflags       = '0;
+  
 // request channel
 logic [Cfg.NumCores-1:0][FpuNumArgs-1:0][31:0] s_apu__operands;
 logic [Cfg.NumCores-1:0][FpuOpCodeWidth-1:0] s_apu__op;
@@ -1177,19 +1201,72 @@ logic [Cfg.NumCores-1:0][FpuOutFlagsWidth-1:0] s_apu__rflags;
 genvar k;
 for(k=0;k<Cfg.NumCores;k++)
 begin
-  assign s_apu__operands[k] = s_apu_master_operands[k];
-  assign s_apu__op[k] = s_apu_master_op[k];
-  assign s_apu__type[k] = s_apu_master_type[k];
-  assign s_apu__flags[k] = s_apu_master_flags[k];
+  assign s_apu__operands[k]     = s_apu_master_operands[k];
+  assign s_apu__op[k]           = s_apu_master_op[k];
+  assign s_apu__type[k]         = s_apu_master_type[k] < 4 ? 0:s_apu_master_type[k];
+  // assign s_apu__type[k]         = s_apu_master_type[k];
+  assign s_apu__flags[k]        = s_apu_master_flags[k];
   assign s_apu_master_rflags[k] = s_apu__rflags[k];
 end
 
-// At the moment, the cluster does not support any shared execution unit 
-assign s_apu_master_gnt    = '0;
-assign s_apu_master_rvalid = '0;
-assign s_apu_master_rdata  = '0;
-assign s_apu__rflags       = '0;
-  
+generate
+  if (Cfg.EnableSharedFpDivSqrt) begin
+    shared_fpu_cluster #(
+      .NB_CORES         ( Cfg.NumCores      ),
+      .NB_APUS          ( 1                 ),
+      .NB_FPNEW         ( Cfg.NumSharedFpu  ),
+      .FP_TYPE_WIDTH    ( FpuTypeWidth      ),
+
+      .NB_CORE_ARGS      ( FpuNumArgs       ),
+      .CORE_DATA_WIDTH   ( 32               ),
+      .CORE_OPCODE_WIDTH ( FpuOpCodeWidth   ),
+      .CORE_DSFLAGS_CPU  ( FpuInFlagsWidth  ),
+      .CORE_USFLAGS_CPU  ( FpuOutFlagsWidth ),
+
+      .NB_APU_ARGS      ( 2                 ),//2?
+      .APU_OPCODE_WIDTH ( FpuOpCodeWidth    ),
+      .APU_DSFLAGS_CPU  ( FpuInFlagsWidth   ),
+      .APU_USFLAGS_CPU  ( FpuOutFlagsWidth  ),
+
+      .NB_FPNEW_ARGS        ( 3               ), //= 3,
+      .FPNEW_OPCODE_WIDTH   ( FpuOpCodeWidth  ), //= 6,
+      .FPNEW_DSFLAGS_CPU    ( FpuInFlagsWidth ), //= 15,
+      .FPNEW_USFLAGS_CPU    ( FpuOutFlagsWidth), //= 5,
+
+      .APUTYPE_ID       ( 1                 ),
+      .FPNEWTYPE_ID     ( 0                 ),
+
+      .C_FPNEW_FMTBITS     (fpnew_pkg::FP_FORMAT_BITS  ),
+      .C_FPNEW_IFMTBITS    (fpnew_pkg::INT_FORMAT_BITS ),
+      .C_ROUND_BITS        (3                          ),
+      .C_FPNEW_OPBITS      (fpnew_pkg::OP_BITS         ),
+      .USE_FPU_OPT_ALLOC   ("FALSE"),
+      .USE_FPNEW_OPT_ALLOC ("TRUE"),
+      .FPNEW_INTECO_TYPE   ("SINGLE_INTERCO")
+    ) i_shared_fpu_cluster (
+      .clk                   ( clk_i                   ),
+      .rst_n                 ( rst_ni                  ),
+      .test_mode_i           ( test_mode_i             ),
+      .core_slave_req_i      ( s_apu_master_req        ),
+      .core_slave_gnt_o      ( s_apu_master_gnt        ),
+      .core_slave_type_i     ( s_apu__type             ),
+      .core_slave_operands_i ( s_apu__operands         ),
+      .core_slave_op_i       ( s_apu__op               ),
+      .core_slave_flags_i    ( s_apu__flags            ),
+      .core_slave_rready_i   ( s_apu_master_rready     ),
+      .core_slave_rvalid_o   ( s_apu_master_rvalid     ),
+      .core_slave_rdata_o    ( s_apu_master_rdata      ),
+      .core_slave_rflags_o   ( s_apu__rflags           )
+    );
+  end else begin
+    assign s_apu_master_gnt    = '0;
+    assign s_apu_master_rvalid = '0;
+    assign s_apu_master_rdata  = '0;
+    assign s_apu__rflags       = '0;
+  end
+endgenerate
+
+
 //**************************************************************
 //**** HW Processing Engines / Cluster-Coupled Accelerators ****
 //**************************************************************

@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "pmsis.h": "c",
+        "pulp.h": "c",
+        "bitset": "c",
+        "data.h": "c",
+        "config.h": "c",
+        "stdio.h": "c",
+        "limits.h": "c",
+        "math.h": "c",
+        "matmul.h": "c",
+        "pulp_defs.h": "c",
+        "utils.h": "c",
+        "cstdlib": "c",
+        "stdint.h": "c",
+        "mldist.h": "c"
+    }
+}
