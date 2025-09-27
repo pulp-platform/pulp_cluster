@@ -685,7 +685,7 @@ cluster_interconnect_wrap #(
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                                     ),
   .rst_ni             ( rst_ni                                    ),
-  .cluster_id_i       ( '0                                        ),
+  .cluster_id_i       ( cluster_id_i                              ),
 
   .hci_ecc_periph_slave ( s_periph_hwpe_hci_ecc_bus               ),
 
