@@ -115,7 +115,8 @@ for(genvar i=0; i<NbBanks; i++) begin : banks_gen
         .NumWords         ( BankSize       ),
         .InputECC         ( EccInterco     ),
         .UnprotectedWidth ( DataWidth      ),
-        .ProtectedWidth   ( ProtectedWidth )
+        .ProtectedWidth   ( ProtectedWidth ),
+        .SimInit          ( "zeros"        )
       ) i_ecc_bank             (
         .clk_i                 ( clk_i                  ),
         .rst_ni                ( rst_ni                 ),

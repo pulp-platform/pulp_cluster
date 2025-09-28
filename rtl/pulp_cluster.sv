@@ -555,7 +555,7 @@ cluster_bus_wrap #(
   .clk_i         ( clk_i             ),
   .rst_ni        ( rst_ni            ),
   .test_en_i     ( test_mode_i       ),
-  .cluster_id_i  ( '0                ),
+  .cluster_id_i  ( cluster_id_i      ),
   .instr_slave   ( s_core_instr_bus  ),
   .data_slave    ( s_core_ext_bus    ),
   .dma_slave     ( s_dma_ext_bus     ),
@@ -663,7 +663,7 @@ cluster_interconnect_wrap #(
 ) cluster_interconnect_wrap_i (
   .clk_i              ( clk_i                                     ),
   .rst_ni             ( rst_ni                                    ),
-  .cluster_id_i       ( '0                                        ),
+  .cluster_id_i       ( cluster_id_i                              ),
 
   .hci_ecc_periph_slave ( s_periph_hwpe_hci_ecc_bus               ),
 
