@@ -61,7 +61,7 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
   localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
   localparam bit[      5:0] ClustIdx        = 'h0;
-  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
+  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase - (ClustIdx << 22);
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h1C000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
