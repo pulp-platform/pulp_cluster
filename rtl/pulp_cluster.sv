@@ -1027,7 +1027,7 @@ generate
       .test_en_i           ( test_mode_i           ),
       .clk_en_i            ( clk_core_en[i]        ),
       .base_addr_i         ( base_addr_i           ),
-      .cluster_id_i        ( '0                    ),
+      .cluster_id_i        ( cluster_id_i          ),
       .ext_perf_o          ( ext_perf[i]           ),
       .core_data_req_i     ( demux_data_req[i]     ),
       .core_data_rsp_o     ( demux_data_rsp[i]     ),
