@@ -197,8 +197,8 @@ module pulp_cluster_tb;
   };
   assign addr_map[2] = '{ // Pulp Cluster
     idx:        2,
-    start_addr: ClustBaseAddr,
-    end_addr:   ClustBaseAddr + ClustExtOffs
+    start_addr: ClustBase,
+    end_addr:   ClustBase + ClustExtOffs
   };
   assign addr_map[3] = '{ // Return address
     idx:        1, // Just put it in axi_sim_mem
