@@ -212,8 +212,8 @@ module pulp_cluster_tb;
   };
   assign addr_map[2] = '{ // Pulp Cluster
     idx:        2,
-    start_addr: ClustBaseAddr,
-    end_addr:   ClustBaseAddr + ClustExtOffs
+    start_addr: ClustBase,
+    end_addr:   ClustBase + ClustExtOffs
   };
 
   // Crossbar Configuration and Instantiation
