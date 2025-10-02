@@ -78,9 +78,7 @@ module data_periph_demux
     output logic                         perf_l2_ld_o, // nr of L2 loads
     output logic                         perf_l2_st_o, // nr of L2 stores
     output logic                         perf_l2_ld_cyc_o, // cycles used for L2 loads
-    output logic                         perf_l2_st_cyc_o,  // cycles used for L2 stores
-    
-    input  logic [5:0]                   CLUSTER_ID
+    output logic                         perf_l2_st_cyc_o  // cycles used for L2 stores
 );
    
    logic [10:0] CLUSTER_ALIAS_BASE_11;
@@ -135,9 +133,9 @@ module data_periph_demux
 
   always_comb
   begin
-    TCDM_RW          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 0;
-    TCDM_TS          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 1;
-    DEM_PER          = {base_addr_i, 8'h00} + (CLUSTER_ID << 2) + 2;
+    TCDM_RW          = {base_addr_i, 8'h00} + 0;
+    TCDM_TS          = {base_addr_i, 8'h00} + 1;
+    DEM_PER          = {base_addr_i, 8'h00} + 2;
   end
  
  

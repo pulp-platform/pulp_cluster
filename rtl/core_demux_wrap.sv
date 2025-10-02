@@ -14,7 +14,6 @@ module core_demux_wrap #(
   input  logic test_en_i                     ,
   input  logic clk_en_i                      ,
   input  logic [3:0] base_addr_i             ,
-  input  logic [5:0] cluster_id_i            ,
   output logic [NumExtPerf-1:0] ext_perf_o   ,
   input  core_data_req_t core_data_req_i     ,
   output core_data_rsp_t core_data_rsp_o     ,
@@ -109,8 +108,7 @@ data_periph_demux #(
   .perf_l2_ld_o       (  ext_perf_o [0]             ),
   .perf_l2_st_o       (  ext_perf_o [1]             ),
   .perf_l2_ld_cyc_o   (  ext_perf_o [2]             ),
-  .perf_l2_st_cyc_o   (  ext_perf_o [3]             ),
-  .CLUSTER_ID         (  cluster_id_i               )
+  .perf_l2_st_cyc_o   (  ext_perf_o [3]             )
 );
 
 assign ext_perf_o[4] = '0;
