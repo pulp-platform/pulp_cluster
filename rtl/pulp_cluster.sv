@@ -1082,7 +1082,7 @@ end
          .core_slave_rdata_o    ( s_apu_master_rdata                        ),
          .core_slave_rflags_o   ( s_apu__rflags                             )
       );
-`elsif
+`else
       assign s_apu_master_req    = 1'b0;
       assign s_apu_master_gnt    = 1'b0;
       assign s_apu__type         = 1'b0;
