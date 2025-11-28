@@ -4,7 +4,7 @@
  *
  * This code is under development and not yet released to the public.
  * Until it is released, the code is under the copyright of ETH Zurich and
- * the University of Bologna, and may contain confidential and/or unpublished 
+ * the University of Bologna, and may contain confidential and/or unpublished
  * work. Any reuse/redistribution is strictly forbidden without written
  * permission from ETH Zurich.
  *
@@ -22,13 +22,13 @@ module data_periph_demux
     parameter int unsigned BYTE_ENABLE_BIT = DATA_WIDTH/8,
     parameter int unsigned REMAP_ADDRESS = 0,
     parameter int unsigned CLUSTER_ALIAS = 1,
-    parameter int unsigned CLUSTER_ALIAS_BASE = 12'h000
+    parameter int unsigned CLUSTER_ALIAS_BASE = 12'h000,
+    parameter int unsigned CLUSTER_BASE_ADDR = 32'h10000000
 )
 (
     input logic                          clk,
     input logic                          rst_ni,
     input logic                          test_en_i,
-    input logic [3:0]                    base_addr_i,
 
     // CORE SIDE
     input logic                          data_req_i,
@@ -62,7 +62,7 @@ module data_periph_demux
     input logic                          data_r_valid_i_EXT,
     input logic [DATA_WIDTH - 1:0]       data_r_rdata_i_EXT,
     input logic                          data_r_opc_i_EXT,
-    
+
     // Peripheral interconnect SIDE
     output logic                         data_req_o_PE,
     output logic [ADDR_WIDTH - 1:0]      data_add_o_PE,
@@ -73,19 +73,20 @@ module data_periph_demux
     input logic                          data_r_valid_i_PE,
     input logic                          data_r_opc_i_PE,
     input logic [DATA_WIDTH - 1:0]       data_r_rdata_i_PE,
-    
+
     // Performance Counters
     output logic                         perf_l2_ld_o, // nr of L2 loads
     output logic                         perf_l2_st_o, // nr of L2 stores
     output logic                         perf_l2_ld_cyc_o, // cycles used for L2 loads
     output logic                         perf_l2_st_cyc_o  // cycles used for L2 stores
 );
-   
+
    logic [10:0] CLUSTER_ALIAS_BASE_11;
    logic [11:0] CLUSTER_ALIAS_BASE_12;
-   
+   localparam logic [3:0] BASE_ADDR = CLUSTER_BASE_ADDR[ADDR_WIDTH-1:ADDR_WIDTH-4];
+
    logic                                  s_data_req_PE;
-   logic                                  s_data_gnt_PE;  
+   logic                                  s_data_gnt_PE;
    logic [DATA_WIDTH - 1:0]               s_data_r_data_PE;
    logic                                  s_data_r_valid_PE;
    logic                                  s_data_r_opc_PE;
@@ -102,12 +103,12 @@ module data_periph_demux
    logic [DATA_WIDTH - 1:0]               data_wdata_to_L2;
    logic [BYTE_ENABLE_BIT - 1:0]          data_be_to_L2;
    logic                                  data_gnt_from_L2;
-   
+
    enum logic [1:0]                       {SH, PE, EXT } request_destination, destination;
 
-   
+
   logic [ADDR_WIDTH - 1:0]                data_add_int;
-   
+
   // Signal to PERIPH FIFO
   logic                                   data_busy_PE_fifo;
   logic                                   data_req_PE_fifo;
@@ -116,7 +117,7 @@ module data_periph_demux
   logic [DATA_WIDTH - 1:0]                data_wdata_PE_fifo;
   logic [BYTE_ENABLE_BIT - 1:0]           data_be_PE_fifo;
   logic                                   data_gnt_PE_fifo;
-  
+
   logic                                   data_r_valid_PE_fifo;
   logic                                   data_r_opc_PE_fifo;
   logic [DATA_WIDTH - 1:0]                data_r_rdata_PE_fifo;
@@ -133,17 +134,17 @@ module data_periph_demux
 
   always_comb
   begin
-    TCDM_RW          = {base_addr_i, 8'h00} + 0;
-    TCDM_TS          = {base_addr_i, 8'h00} + 1;
-    DEM_PER          = {base_addr_i, 8'h00} + 2;
+    TCDM_RW          = {BASE_ADDR, 8'h00} + 0;
+    TCDM_TS          = {BASE_ADDR, 8'h00} + 1;
+    DEM_PER          = {BASE_ADDR, 8'h00} + 2;
   end
- 
- 
- 
-   // This section is used to swap the 4 most significant bits of the address 
-   // with the ones that are provided by the base_addr_i
-   // If data_add_i[31:28] == base_addr_i then data_add_i[31:28] are changed in 4'b0001
-   // If data_add_i[31:28] == 4'b0001 --> then th data_add_i[31:28] is changed in base_addr_i
+
+
+
+   // This section is used to swap the 4 most significant bits of the address
+   // with the ones that are provided by the BASE_ADDR
+   // If data_add_i[31:28] == BASE_ADDR then data_add_i[31:28] are changed in 4'b0001
+   // If data_add_i[31:28] == 4'b0001 --> then th data_add_i[31:28] is changed in BASE_ADDR
    // In the other cases, the address is unchanged
 
    assign data_add_int[27:0] = data_add_i[27:0];
@@ -151,13 +152,13 @@ module data_periph_demux
 if (REMAP_ADDRESS == 1) begin
    always_comb
    begin
-    if(data_add_i[31:28] == base_addr_i)
+    if(data_add_i[31:28] == BASE_ADDR)
     begin
       data_add_int[31:28] = 4'b0001;
     end
     else if(data_add_int[31:28] == 4'b0001)
          begin
-            data_add_int[31:28] = base_addr_i;
+            data_add_int[31:28] = BASE_ADDR;
          end
          else
          begin
@@ -165,7 +166,7 @@ if (REMAP_ADDRESS == 1) begin
          end
    end
 end else begin
-   assign data_add_int[31:28] = data_add_i[31:28]; 
+   assign data_add_int[31:28] = data_add_i[31:28];
 end
 
    //********************************************************
@@ -179,7 +180,7 @@ end
    assign data_add_to_L2   = data_add_int;
    assign data_wen_to_L2   = data_wen_i;
    assign data_wdata_to_L2 = data_wdata_i;
-   assign data_be_to_L2    = data_be_i;   
+   assign data_be_to_L2    = data_be_i;
 
    always_ff @(posedge clk, negedge rst_ni)
    begin : _UPDATE_RESPONSE_DESTINATION_
@@ -196,42 +197,42 @@ end
 
           `ifdef DEM_PER_BEFORE_TCDM_TS
 
-                TCDM_RW `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE  `endif : 
+                TCDM_RW `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE  `endif :
                 begin
                     if(data_add_int[19:14] == 6'b11_1111)
                         request_destination <= EXT;
-                    else 
+                    else
                         request_destination <= SH;
                 end  // CLUSTER or DEM peripherals (mappping based on Germain suggestion)
 
-                TCDM_TS `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+1) `endif: 
+                TCDM_TS `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+1) `endif:
                 begin
                         request_destination <= SH;
-                end          
-                
-                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif: 
+                end
+
+                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif:
                 begin
                         request_destination <= PE;
                 end
 
           `else
-            
-                TCDM_RW, TCDM_TS  `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE, (CLUSTER_ALIAS_BASE+1) `endif : 
-                begin 
-                    request_destination <= SH; 
+
+                TCDM_RW, TCDM_TS  `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE, (CLUSTER_ALIAS_BASE+1) `endif :
+                begin
+                    request_destination <= SH;
                 end  // CLUSTER
 
-                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif: 
+                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif:
                 begin
                      if(data_add_int[14]) // DEMUX PERIPHERALS
-                        request_destination <= EXT; 
+                        request_destination <= EXT;
                      else
                         request_destination <= PE;
                 end
           `endif
-                default: 
-                begin 
-                    request_destination <= PE; 
+                default:
+                begin
+                    request_destination <= PE;
                 end  // CLUSTER PERIPHERAL and REst of the memory map
 
                 endcase
@@ -241,27 +242,27 @@ end
       end
    end
 
-   
+
    // USED FOR THE PE FSM
    always_comb
    begin : _UPDATE_REQUEST_DESTINATION_
 
       `ifdef DEM_PER_BEFORE_TCDM_TS
             case(data_add_int[31:20])
-                TCDM_RW   `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE `endif : 
+                TCDM_RW   `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE `endif :
                 begin
                     if(data_add_int[19:14] == 6'b11_1111)
                         destination = EXT;
-                    else 
+                    else
                         destination = SH;
                 end  // CLUSTER or DEM peripherals (mappping based on Germain suggestion)
 
-                TCDM_TS `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+1) `endif: 
+                TCDM_TS `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+1) `endif:
                 begin
                         destination = SH;
-                end          
-                
-                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif: 
+                end
+
+                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif:
                 begin
                         destination = PE;
                 end
@@ -269,33 +270,33 @@ end
             endcase
       `else
             case(data_add_int[31:20])
-                TCDM_RW, TCDM_TS  `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE, (CLUSTER_ALIAS_BASE+1) `endif : 
-                begin 
+                TCDM_RW, TCDM_TS  `ifdef CLUSTER_ALIAS , CLUSTER_ALIAS_BASE, (CLUSTER_ALIAS_BASE+1) `endif :
+                begin
                     destination  = SH;  // CLUSTER
                 end
 
 
-                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif: 
+                DEM_PER `ifdef CLUSTER_ALIAS  , (CLUSTER_ALIAS_BASE+2) `endif:
                 begin
                     if(data_add_int[14]) // DEMUX PERIPHERALS
-                        destination  = EXT; 
+                        destination  = EXT;
                     else
-                        destination  = PE; 
+                        destination  = PE;
                 end  // DEMUX PERIPHERALS
             default:          begin destination  = PE;  end  // CLUSTER PERIPHERAL and REst of the memory map
             endcase
         `endif
-   end   
-   
-   
+   end
+
+
    always_comb
-   begin : L1_REQUEST_ARBITER   
+   begin : L1_REQUEST_ARBITER
 
 `ifdef DEM_PER_BEFORE_TCDM_TS
 
    `ifdef CLUSTER_ALIAS
         if( ( data_add_int[31:21] == TCDM_RW[11:1])  || ( data_add_int[31:21] == CLUSTER_ALIAS_BASE_11 ) )  //LOGARITHMIC INTERCONNECT --> 31:20 --> 0x100 or 0x101 or ALIAS (0x000 or 0x001) or DEM PERIPH
-   `else 
+   `else
         if(data_add_int[31:21] == TCDM_RW[11:1])  //LOGARITHMIC INTERCONNECT --> 31:20 --> 0x100 or 0x101 or DEM PERIPH
    `endif
         begin : _TO_DEM_PER_L2_
@@ -312,7 +313,7 @@ end
                data_gnt_o     = data_gnt_i_SH;
             end
         end
-        else 
+        else
         begin : _TO_L2_LEVEL_
            data_req_o_SH  = 1'b0;
            data_req_to_L2 = data_req_i;
@@ -323,7 +324,7 @@ end
 
    `ifdef CLUSTER_ALIAS
         if( ( data_add_int[31:21] == TCDM_RW[11:1])  || ( data_add_int[31:21] == CLUSTER_ALIAS_BASE_11) )  //LOGARITHMIC INTERCONNECT --> 31:20 --> 0x100 or 0x101 or ALIAS (0x000 or 0x001)
-   `else 
+   `else
         if(data_add_int[31:21] == TCDM_RW[11:1])  //LOGARITHMIC INTERCONNECT --> 31:20 --> 0x100 or 0x101
    `endif
         begin : _TO_CLUSTER_
@@ -331,7 +332,7 @@ end
            data_req_to_L2 = 1'b0;
            data_gnt_o     = data_gnt_i_SH;
         end
-        else 
+        else
         begin : _TO_L2_LEVEL_
            data_req_o_SH  = 1'b0;
            data_req_to_L2 = data_req_i;
@@ -339,11 +340,11 @@ end
         end
 `endif
    end
- 
- 
- 
- 
- 
+
+
+
+
+
    //********************************************************
    //************** LEVEL 2 REQUEST ARBITER *****************
    //********************************************************
@@ -363,17 +364,17 @@ end
   `ifdef DEM_PER_BEFORE_TCDM_TS
 
         `ifdef CLUSTER_ALIAS
-            if ( ((data_add_int[31:20] == TCDM_RW )  || (data_add_int[31:20] == CLUSTER_ALIAS) )  && (data_add_int[19:14] == 6'b11_1111) ) 
+            if ( ((data_add_int[31:20] == TCDM_RW )  || (data_add_int[31:20] == CLUSTER_ALIAS) )  && (data_add_int[19:14] == 6'b11_1111) )
         `else
-            if ( (data_add_int[31:20] == DEM_PER ) && (data_add_int[19:14] == 6'b11_1111) ) 
+            if ( (data_add_int[31:20] == DEM_PER ) && (data_add_int[19:14] == 6'b11_1111) )
         `endif
             begin : _TO_DEMUX_PERIPH_  //Peripheral --> add_i[31:0] --> 0x100F_FC00 to 0x100F_FFFF
                data_req_PE_fifo = 1'b0;
                data_req_o_EXT  = data_req_to_L2;
                data_gnt_from_L2 = data_gnt_i_EXT;
             end
-            else 
-            begin : _TO_PERIPHERAL_INTERCO_ 
+            else
+            begin : _TO_PERIPHERAL_INTERCO_
                data_req_PE_fifo = s_data_req_PE;
                data_req_o_EXT   = 1'b0;
                data_gnt_from_L2 = s_data_gnt_PE;
@@ -382,17 +383,17 @@ end
   `else
 
         `ifdef CLUSTER_ALIAS
-            if ( ((data_add_int[31:20] == DEM_PER )  || (data_add_int[31:20] == (CLUSTER_ALIAS_BASE+2)) )  && (data_add_int[14] == 1'b1) ) 
+            if ( ((data_add_int[31:20] == DEM_PER )  || (data_add_int[31:20] == (CLUSTER_ALIAS_BASE+2)) )  && (data_add_int[14] == 1'b1) )
         `else
-            if ( (data_add_int[31:20] == DEM_PER ) && (data_add_int[14] == 1'b1) ) 
+            if ( (data_add_int[31:20] == DEM_PER ) && (data_add_int[14] == 1'b1) )
         `endif
             begin : _TO_DEMUX_PERIPH_  //Peripheral --> add_i[31:0] --> 0x1020_4000 to 0x1020_7FFF
                data_req_PE_fifo = 1'b0;
                data_req_o_EXT  = data_req_to_L2;
                data_gnt_from_L2 = data_gnt_i_EXT;
             end
-            else 
-            begin : _TO_PERIPHERAL_INTERCO_ 
+            else
+            begin : _TO_PERIPHERAL_INTERCO_
                data_req_PE_fifo = s_data_req_PE;
                data_req_o_EXT   = 1'b0;
                data_gnt_from_L2 = s_data_gnt_PE;
@@ -408,7 +409,7 @@ end
    always_comb
    begin: _RESPONSE_ARBITER_
       case(request_destination)
-        SH: 
+        SH:
         begin
           data_r_valid_o = data_r_valid_i_SH;
           data_r_rdata_o = data_r_rdata_i_SH;
@@ -605,21 +606,21 @@ logic [31:0] STALL_L2;
 
 logic clear_regs, enable_regs;
 
-  always_ff @(posedge clk or negedge rst_ni) 
+  always_ff @(posedge clk or negedge rst_ni)
   begin
-    if(~rst_ni) 
+    if(~rst_ni)
     begin
        STALL_TCDM <= '0;
        STALL_L2 <= '0;
-    end 
+    end
     else
     begin
         if(clear_regs)
-        begin 
+        begin
           STALL_TCDM <= '0;
           STALL_L2 <= '0;
         end
-        else 
+        else
              if( enable_regs )
              begin
                 if( data_req_o_SH & ~data_gnt_i_SH )

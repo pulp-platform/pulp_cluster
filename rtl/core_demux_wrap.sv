@@ -1,19 +1,19 @@
 module core_demux_wrap #(
-  parameter  int unsigned AddrWidth       = 32         ,
-  parameter  int unsigned DataWidth       = 32         ,
-  parameter  int unsigned RemapAddress    = 1          ,
-  parameter  int unsigned ClustAlias      = 1          ,
-  parameter  int unsigned ClustAliasBase  = 12'h000    ,
-  parameter  int unsigned NumExtPerf      = 5          ,
-  parameter  type         core_data_req_t = logic      ,
-  parameter  type         core_data_rsp_t = logic      ,
+  parameter  int unsigned AddrWidth       = 32          ,
+  parameter  int unsigned DataWidth       = 32          ,
+  parameter  int unsigned RemapAddress    = 1           ,
+  parameter  int unsigned ClustAlias      = 1           ,
+  parameter  int unsigned ClustAliasBase  = 12'h000     ,
+  parameter  int unsigned ClustBaseAddr   = 32'h10000000,
+  parameter  int unsigned NumExtPerf      = 5           ,
+  parameter  type         core_data_req_t = logic       ,
+  parameter  type         core_data_rsp_t = logic       ,
   localparam int unsigned ByteEnable      = DataWidth/8
 )(
   input  logic clk_i                         ,
   input  logic rst_ni                        ,
   input  logic test_en_i                     ,
   input  logic clk_en_i                      ,
-  input  logic [3:0] base_addr_i             ,
   output logic [NumExtPerf-1:0] ext_perf_o   ,
   input  core_data_req_t core_data_req_i     ,
   output core_data_rsp_t core_data_rsp_o     ,
@@ -60,12 +60,12 @@ data_periph_demux #(
   .BYTE_ENABLE_BIT    ( ByteEnable     ),
   .REMAP_ADDRESS      ( RemapAddress   ),
   .CLUSTER_ALIAS      ( ClustAlias     ),
-  .CLUSTER_ALIAS_BASE ( ClustAliasBase )
+  .CLUSTER_ALIAS_BASE ( ClustAliasBase ),
+  .CLUSTER_BASE_ADDR  ( ClustBaseAddr  )
 ) data_periph_demux_i (
   .clk                (  clk_i                    ),
   .rst_ni             (  rst_ni                   ),
   .test_en_i          (  test_en_i                ),
-  .base_addr_i        (  base_addr_i              ),
   .data_req_i         (  core_data_req_i.req      ),
   .data_add_i         (  core_data_req_i.add      ),
   .data_wen_i         (  ~core_data_req_i.we      ), //inverted when using OR10N

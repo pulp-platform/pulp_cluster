@@ -17,14 +17,22 @@ BENDER ?= bender
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 VLIB ?= $(QUESTA) vlib
-top_level ?= pulp_cluster_tb
+
+QSIM ?= $(QUESTA) qsim
+QOPT ?= $(QUESTA) qopt
+Q1VE ?= q1ve --qverify
+
+VENV  := venv
+
+top_level ?= pulp_cluster
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
 REGRESSIONS := $(ROOT_DIR)/regression_tests
 
-VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS_LINT += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1ns / 1ps\" \"+incdir+$(shell pwd)/include\"
 
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
@@ -49,7 +57,7 @@ nonfree-init:
 
 .PHONY: init
 
-init: checkout
+init: checkout generate_idma_rtl
 
 .PHONY: checkout
 ## Checkout/update dependencies using Bender
@@ -74,8 +82,8 @@ sw-clean:
 	@rm -rf pulp-runtime fault_injection_sim regression_tests
 
 ## Clone pulp-runtime as SW stack
-PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= f10670b # branch: lg/upstream
+PULP_RUNTIME_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-runtime.git
+PULP_RUNTIME_COMMIT ?= ad6690b0f03e8f8559606cc907125914de4b0873 # branch: new_iDMA_tests
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -90,8 +98,8 @@ fault_injection_sim:
 	cd $@ && git checkout $(FAULT_SIM_COMMIT)
 
 ## Clone regression tests
-REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 7fa307d # branch: lg/upstream
+REGRESSION_TESTS_REMOTE ?= https://github.com/FondazioneChipsIT/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= c9fcb90 # branch: new_iDMA_tests
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
@@ -111,27 +119,67 @@ sim-clean:
 include bender-common.mk
 include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
+	$(call generate_vsim, $@, $(common_defs) $(common_targs) -t idma $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
+
+scripts/compile.tcl-mchan: | Bender.lock
+	$(call generate_vsim, scripts/compile.tcl, $(common_defs) $(common_targs) -t mchan $(sim_defs) $(sim_targs),..)
+	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> scripts/compile.tcl
 
 include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
 	$(BENDER) script synopsys $(common_targs) $(common_defs) $(synth_targs) $(synth_defs)	> $@
 
+scripts/compile_lint.tcl:
+	echo 'set ROOT $(ROOT_DIR)' > $@
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS_LINT)" $(common_defs) $(common_targs) | grep -v "set ROOT" >> $@
+	echo >> $@
+
 $(library):
 	$(QUESTA) vlib $(library)
+
+venv:
+	python3 -m venv $(VENV) && \
+	$(VENV)/bin/python -m pip install -U pip && \
+	$(VENV)/bin/python -m pip install -r $(shell bender path idma)/requirements.txt
+
+generate_idma_rtl: venv
+	. "$(VENV)/bin/activate" && $(MAKE) -C $(shell bender path idma) idma_hw_all
 
 compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
-build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
+build_qone: compile
+	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
+
+
+build: generate_idma_rtl compile
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized +acc
+
+compile_lint: $(library)
+	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
+	@test -f scripts/compile_lint.tcl || { echo "ERROR: scripts/compile_lint.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
+	$(Q1VE) -od lint/comp_lint_results -c -do " \
+	onerror {exit}; \
+	do scripts/compile_lint.tcl; \
+	exit"
+
+lint: compile_lint
+	$(Q1VE) -od lint/lint_results -c -do " \
+	lint methodology ip -goal release; \
+	lint run -d $(top_level); \
+	exit"
+
+cdc: compile_lint
+	$(Q1VE) -od cdc_results -c -do " \
+	cdc run -d $(top_level); \
+	exit"
 
 run:
 	$(VSIM) +permissive -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
-	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
+	${top_level}_tb_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
 ####################
 # Regression tests #

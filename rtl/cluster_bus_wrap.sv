@@ -107,7 +107,7 @@ module cluster_bus_wrap
   `AXI_ASSIGN_RESP_STRUCT(axi_master_resps[1], periph_master_resp_i)
   `AXI_ASSIGN_REQ_STRUCT(ext_master_req_o, axi_master_reqs[2])
   `AXI_ASSIGN_RESP_STRUCT(axi_master_resps[2], ext_master_resp_i)
-  
+
   // Address Map Rule
   typedef struct packed {
       logic [AXI_ADDR_WIDTH-1:0] idx       ;
@@ -131,28 +131,28 @@ module cluster_bus_wrap
     start_addr: cluster_base_addr + ClusterPeripheralsOffs,
     end_addr:   cluster_base_addr + ClusterExternalOffs
   };
-  assign addr_map[2] = '{ // everything above cluster to ext_slave
+  assign addr_map[2] = '{ // everything below cluster to ext_slave
     idx:  2,
     start_addr: cluster_base_addr + ClusterExternalOffs,
-    end_addr:   32'hFFFF_FFFF
+    end_addr:   'hFFFF_FFFF
   };
-  assign addr_map[3] = '{ // everything below cluster
+  assign addr_map[3] = '{ // everything above cluster
     idx:  2,
     start_addr: 'h0,
     end_addr:   cluster_base_addr
   };
-    
+
   localparam int unsigned MAX_TXNS_PER_SLV_PORT = (DMA_NB_OUTSND_BURSTS > NB_CORES) ?
-                                                    DMA_NB_OUTSND_BURSTS : NB_CORES;
+                                                   DMA_NB_OUTSND_BURSTS : NB_CORES;
 
   localparam xbar_cfg_t AXI_XBAR_CFG = '{
                                           NoSlvPorts: NB_SLAVE,
                                           NoMstPorts: NB_MASTER,
                                           MaxMstTrans: MAX_TXNS_PER_SLV_PORT,       //The TCDM ports do not support
-                                          //outstanding transactiions anyways
+                                          //outstanding transactions anyways
                                           MaxSlvTrans: DMA_NB_OUTSND_BURSTS + NB_CORES,       //Allow up to 4 in-flight transactions
                                           //per slave port
-                                          FallThrough: 1'b0,       //Use the reccomended default config 
+                                          FallThrough: 1'b0,       //Use the recommended default config
                                           LatencyMode: axi_pkg::NO_LATENCY, // CUT_ALL_AX | axi_pkg::DemuxW,
                                           PipelineStages: 0,
                                           AxiIdWidthSlvPorts: AXI_ID_IN_WIDTH,
@@ -162,7 +162,6 @@ module cluster_bus_wrap
                                           AxiDataWidth: AXI_DATA_WIDTH,
                                           NoAddrRules: N_RULES
                                           };
-
 
   axi_xbar #(
     .Cfg             ( AXI_XBAR_CFG     ),

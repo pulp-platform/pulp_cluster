@@ -351,10 +351,12 @@ module pulp_cluster_tb;
   };
 
   pulp_cluster
+`ifndef CLUSTER_NETLIST
 `ifdef USE_PULP_PARAMETERS
   #(
     .Cfg ( PulpClusterCfg )
    )
+`endif
 `endif
   cluster_i (
     .clk_i                       ( s_clk                                ),
@@ -365,8 +367,6 @@ module pulp_cluster_tb;
     .axi_isolated_o              (                                      ),
 
     .pmu_mem_pwdn_i              ( 1'b0                                 ),
-
-    .base_addr_i                 ( ClustBase[31:28]                     ),
 
     .dma_pe_evt_ack_i            ( '1                                   ),
     .dma_pe_evt_valid_o          (                                      ),
@@ -579,6 +579,39 @@ module pulp_cluster_tb;
    end
 
   end
+
+/**************
+ *  VCD Dump  *
+ **************/
+
+`ifdef VCD_DUMP
+  initial begin: vcd_dump
+    string vcd_dump_file;
+
+    // Wait for the reset
+    wait (s_rstn);
+
+    // Wait until the probe is high
+    while (!s_cluster_fetch_en)
+      @(posedge s_clk);
+
+     if ( $value$plusargs ("VCD_DUMP_FILE=%s", vcd_dump_file));
+     $display("[TB] Dumping VCD in %s", vcd_dump_file);
+
+    $dumpfile(vcd_dump_file);
+    $dumpvars(0, cluster_i);
+    $dumpon;
+
+    // Wait until the probe is low
+    while (s_cluster_fetch_en)
+      @(posedge s_clk);
+
+    $dumpoff;
+
+    // Stop the execution
+    $finish(0);
+  end: vcd_dump
+`endif
 
 
 endmodule : pulp_cluster_tb

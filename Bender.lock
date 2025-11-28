@@ -15,6 +15,13 @@ packages:
     - common_cells
     - common_verification
     - tech_cells_generic
+  axi_stream:
+    revision: 54891ff40455ca94a37641b9da4604647878cc07
+    version: 0.1.1
+    source:
+      Git: https://github.com/pulp-platform/axi_stream.git
+    dependencies:
+    - common_cells
   axi2mem:
     revision: be0c696709acaee579787ba2432d26ad27640594
     version: 1.0.2
@@ -178,11 +185,19 @@ packages:
     source:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
-  idma:
-    revision: c12caf59bb482fe44b27361f6924ad346b2d22fe
-    version: 0.6.3
+  obi:
+    revision: c2141a653c755461ff44f61d12aeb5d99fc8e760
+    version: 0.1.3
     source:
-      Git: https://github.com/pulp-platform/iDMA.git
+      Git: https://github.com/pulp-platform/obi.git
+    dependencies:
+    - common_cells
+    - common_verification
+  idma:
+    revision: 4e2aad04a328f04ef494bd435f02b13605c9145f
+    version: null
+    source:
+      Git: https://github.com/FondazioneChipsIT/iDMA.git
     dependencies:
     - axi
     - axi_stream
@@ -204,7 +219,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: f4e131c86205d37882cf02ea4dd3bd141ef32d86
+    revision: 2e076f7d25cdfba38821ee95595bb27aec53c764
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -230,8 +245,8 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 78696fb0d6d429bdad2e38740792648d44095605
-    version: 2.0.4
+    revision: dbcba6b1efda24dc909ebdd4ace132f798c8c12b
+    version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:
