@@ -128,7 +128,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 0faa4f3cdfc87ead4a10e5c307c00aa6c4504d0d
+    revision: ab5bba3ca59bace78400f1da06c40d61a9f3578e
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -159,8 +159,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: 3bc9694705b72a5b9bddc7fcde5091b9e45ba0c8
-    version: null
+    revision: b3d33afdd27e79bcda1348d0ab5f4afd52c03106
+    version: 1.9.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -229,8 +229,8 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: 9223ccc932e21d0667e9c2d30831db41eec9299e
-    version: null
+    revision: 78696fb0d6d429bdad2e38740792648d44095605
+    version: 2.0.4
     source:
       Git: https://github.com/pulp-platform/redmule.git
     dependencies:

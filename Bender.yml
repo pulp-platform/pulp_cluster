@@ -30,10 +30,10 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 0faa4f3cdfc87ead4a10e5c307c00aa6c4504d0d } # branch: feat/multicyclesupport
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: ab5bba3ca59bace78400f1da06c40d61a9f3578e } # branch: multicycle-rebased
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.5  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 9e31f7c6c24877eaf58279903e7a162b16c9a721 } # branch: astral-v0
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: astral-v1.0 }
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", version: =2.0.4 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 5ff2b6bc0a04de07eb2549a599655fb6d7f99c58 } # branch: feat/multicyclesupport
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
