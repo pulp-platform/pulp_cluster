@@ -140,7 +140,7 @@ fault_injection_sim:
 		git -C $(FAULT_SIM_DIR) checkout $(FAULT_SIM_BRANCH) || true; \
 		git -C $(FAULT_SIM_DIR) pull --ff-only || true; \
 	fi
-	
+
 lock-fault-sim:
 	@git -C $(FAULT_SIM_DIR) rev-parse HEAD > $(FAULT_SIM_LOCK_FILE) && \
 	echo "Locked fault_injection_sim to $$(cat $(FAULT_SIM_LOCK_FILE))"

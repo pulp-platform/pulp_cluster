@@ -91,6 +91,12 @@ packages:
     - common_cells
     - fpnew
     - tech_cells_generic
+  cv32e40x:
+    revision: 96b933ac2f723351872da55e7d2e9a82abd5df34
+    version: null
+    source:
+      Git: https://github.com/pulp-platform/cv32e40x.git
+    dependencies: []
   event_unit_flex:
     revision: 28e0499374117c7b0ef4c6ad81b60d7526af886f
     version: null
@@ -107,7 +113,7 @@ packages:
     - fpnew
     - tech_cells_generic
   fpnew:
-    revision: a8e0cba6dd50f357ece73c2c955d96efc3c6c315
+    revision: e5aa6a01b5bbe1675c3aa8872e1203413ded83d1
     version: null
     source:
       Git: https://github.com/pulp-platform/cvfpu.git
@@ -146,8 +152,8 @@ packages:
     - scm
     - tech_cells_generic
   hwpe-ctrl:
-    revision: a5966201aeeb988d607accdc55da933a53c6a56e
-    version: null
+    revision: 3690a3c648f120546d8de2bc583d5170c36d2f20
+    version: 2.0.0
     source:
       Git: https://github.com/pulp-platform/hwpe-ctrl.git
     dependencies:
@@ -230,10 +236,13 @@ packages:
     dependencies:
     - common_cells
     - cv32e40p
+    - cv32e40x
     - fpnew
     - hci
     - hwpe-ctrl
     - hwpe-stream
+    - ibex
+    - obi
     - register_interface
     - tech_cells_generic
   redundancy_cells:
