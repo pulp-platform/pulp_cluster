@@ -30,6 +30,7 @@ module dmac_wrap #(
   parameter int unsigned DATA_WIDTH             = 32,
   parameter int unsigned ADDR_WIDTH             = 32,
   parameter int unsigned BE_WIDTH               = DATA_WIDTH / 8,
+  parameter int unsigned IDMA_BURST_LENGTH      = 5,
   parameter type         axi_req_t              = logic,
   parameter type         axi_resp_t             = logic,
   // bidirectional streams: range 1 to 8
@@ -192,6 +193,17 @@ module dmac_wrap #(
 
   // connect RW axi buses
   for (genvar s = 0; s < NUM_BIDIR_STREAMS; s++) begin : gen_rw_axi_connection
+
+    assign dma_req[2*s].ar = '0;
+    assign dma_req[2*s].ar_valid = '0;
+    assign dma_req[2*s].r_ready = '0;
+
+    assign dma_req[2*s+1].aw = '0;
+    assign dma_req[2*s+1].aw_valid = '0;
+    assign dma_req[2*s+1].w = '0;
+    assign dma_req[2*s+1].w_valid = '0;
+    assign dma_req[2*s+1].b_ready = '0;
+
     axi_rw_join #(
       .axi_req_t (axi_req_t),
       .axi_resp_t(axi_resp_t)
@@ -438,20 +450,21 @@ module dmac_wrap #(
       assign obi_read_req_from_dma[s/2].rready  = obi2axi_read_req_from_dma[s/2].rready ;
 
       idma_backend_synth_r_obi_rw_init_w_axi #(
-        .DataWidth           ( AXI_DATA_WIDTH   ),
-        .AddrWidth           ( AXI_ADDR_WIDTH   ),
-        .UserWidth           ( AXI_USER_WIDTH   ),
-        .AxiIdWidth          ( AXI_ID_WIDTH     ),
-        .NumAxInFlight       ( NB_OUTSND_BURSTS ),
-        .BufferDepth         ( 32'd3            ),
-        .TFLenWidth          ( TFLenWidth       ),
-        .MemSysDepth         ( 32'd0            ),
-        .CombinedShifter     ( 1'b0             ),
-        .RAWCouplingAvail    ( 1'b0             ),
-        .MaskInvalidData     ( 1'b0             ),
-        .HardwareLegalizer   ( 1'b1             ),
-        .RejectZeroTransfers ( 1'b1             ),
-        .ErrorHandling       ( 1'b0             )
+        .DataWidth           ( AXI_DATA_WIDTH    ),
+        .AddrWidth           ( AXI_ADDR_WIDTH    ),
+        .UserWidth           ( AXI_USER_WIDTH    ),
+        .AxiIdWidth          ( AXI_ID_WIDTH      ),
+        .NumAxInFlight       ( NB_OUTSND_BURSTS  ),
+        .BufferDepth         ( 32'd3             ),
+        .TFLenWidth          ( TFLenWidth        ),
+        .MemSysDepth         ( 32'd0             ),
+        .CombinedShifter     ( 1'b0              ),
+        .RAWCouplingAvail    ( 1'b0              ),
+        .MaskInvalidData     ( 1'b0              ),
+        .HardwareLegalizer   ( 1'b1              ),
+        .RejectZeroTransfers ( 1'b1              ),
+        .ErrorHandling       ( 1'b0              ),
+        .Burst_len           ( IDMA_BURST_LENGTH )
       ) i_idma_backend_r_obi_rw_init_w_axi (
         .clk_i              ( clk_i                                   ),
         .rst_ni             ( rst_ni                                  ),
