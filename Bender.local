@@ -1,0 +1,21 @@
+overrides:
+  axi2mem:                { git: "https://github.com/pulp-platform/axi2mem.git",              version: =1.0.2 }
+  axi2per:                { git: "https://github.com/pulp-platform/axi2per.git",              version: =1.0.2 }
+  per2axi:                { git: "https://github.com/pulp-platform/per2axi.git",              version: =1.0.5 }
+  cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", version: =1.3.0 }
+  mchan:                  { git: "https://github.com/pulp-platform/mchan.git",                version: =1.2.4 }
+  obi:                    { git: "https://github.com/pulp-platform/obi.git",                  version: =0.1.7 }
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git",  version: =2.2.0 }
+  axi:                    { git: "https://github.com/pulp-platform/axi.git",                  version: =0.39.8 }
+  timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git",           version: =1.0.2 }
+  tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git",   version: =0.2.13 }
+  scm:                    { git: "https://github.com/pulp-platform/scm.git",                  version: =1.2.0 }
+  register_interface:     { git: "https://github.com/pulp-platform/register_interface.git",   version: =0.4.7 }
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git",              version: =2.0.4 }
+  common_cells:           { git: "https://github.com/FondazioneChipsIT/common_cells.git",     rev: 286ffd49d9ed3409ceaef7c7fe98516e2611a1a9 } # gl/fix_define
+  hci:                    { git: "https://github.com/FondazioneChipsIT/hci.git",              rev: 3e63936991569d0b1e315d6914478937b37bb338 }
+  cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git",             rev: astral-v1.0 }
+  redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git",     rev: 6ba6f41 } # yt/redmule-v2
+  fpnew:                  { git: "https://github.com/pulp-platform/cvfpu.git",                rev: pulp-v0.1.3 }
+  hwpe-stream:            { git: "https://github.com/pulp-platform/hwpe-stream.git",          version: =1.9.0 }
+  hwpe-ctrl:              { git: "https://github.com/pulp-platform/hwpe-ctrl.git",            rev: 3690a3c }
