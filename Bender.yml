@@ -17,17 +17,17 @@ dependencies:
   per2axi:                { git: "https://github.com/pulp-platform/per2axi.git",              rev: v1.0.5      }
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
-  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", rev: v1.2.4 }
-  idma:                   { git: "https://github.com/FondazioneChipsIT/iDMA.git", rev: 4e2aad04a328f04ef494bd435f02b13605c9145f }
-  obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
-  hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", rev: v1.3.0 }
-  cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", rev: 917ecbf908bdaa22c5713bbcff277d142506bb16 }
-  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: v2.2.0 }
-  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: 0.39.3  }
-  timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: 1.0.2 }
-  common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: 1.35.0 }
-  tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.3 }
-  flex-v:                 { git: "https://github.com/pulp-platform/flex-v.git", rev: astral-v1.1 }
+  mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: =1.2.4 }
+  idma:                   { git: "https://github.com/FondazioneChipsIT/iDMA.git", rev: ChipsIt-v0.0.0 }
+  obi:                    { git: "https://github.com/pulp-platform/obi.git", version: =0.1.7 }
+  hier-icache:            { git: "https://github.com/FondazioneChipsIT/hier-icache.git", rev: 416c5cbc7b9b8724a40da6ac6d0b19a9c6b864bc } # gl/fix_define
+  cluster_icache:         { git: "https://github.com/FondazioneChipsIT/cluster_icache.git", rev: 57ffb22066171d89974bdec240bad13f5efac9de } # gl/fix_define
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", version: =2.2.0 }
+  axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.8  }
+  timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: =1.0.2 }
+  common_cells:           { git: "https://github.com/FondazioneChipsIT/common_cells.git", rev: 286ffd49d9ed3409ceaef7c7fe98516e2611a1a9 } # gl/fix_define
+  tech_cells_generic:     { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: =0.2.3 }
+  flex-v:                 { git: "https://github.com/FondazioneChipsIT/flex-v.git", rev: f22937733fd058550ef847ddbf1381e821f0f9d2 } # gl/fix_pkg_import
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }

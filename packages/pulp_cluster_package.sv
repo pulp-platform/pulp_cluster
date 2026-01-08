@@ -208,7 +208,7 @@ package pulp_cluster_package;
     NumCores: NumCores,
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
-    DmaBurstLength: 256,
+    DmaBurstLength: 5, // Means bursts of 256 bytes: passed as 256 to mchan top, later computed inside iDMA
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,
     ClusterAlias: 1,
