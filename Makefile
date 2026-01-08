@@ -84,8 +84,8 @@ sw-clean:
 	@rm -rf pulp-runtime fault_injection_sim regression_tests
 
 ## Clone pulp-runtime as SW stack
-PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 3b48b0c6872cc01ba169a2c9c886ebb815d22cdc
+PULP_RUNTIME_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-runtime.git
+PULP_RUNTIME_COMMIT ?= 83919f7c7b8c2dbab5533f5114b4f8bd633349fb # branch: remap_iDMA_registers
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
