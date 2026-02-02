@@ -83,7 +83,7 @@ pulp-runtime:
 
 ## Clone fault injection scripts
 FAULT_SIM_REMOTE ?= https://github.com/pulp-platform/InjectaFault.git
-FAULT_SIM_COMMIT ?= 84ddcff # branch: rt/rename-var
+FAULT_SIM_COMMIT ?= bcc4758 # branch: rt/rename-var
 
 fault_injection_sim:
 	git clone $(FAULT_SIM_REMOTE) $@
@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= a41ab5b # branch: lg/isolde
+REGRESSION_TESTS_COMMIT ?= e1797de # branch: lg/isolde
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
