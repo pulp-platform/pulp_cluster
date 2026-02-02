@@ -181,7 +181,7 @@ module pulp_cluster_tb;
    .AxiDw   ( AxiDw         ),
    .AxiUw   ( AxiUw         ),
    .N_CORES ( 8             ),
-   .BaseAddr( 32'h4000_0000 )
+   .BaseAddr( 32'h03002000  )
   ) i_mock_uart (
      .clk_i  ( s_clk         ),
      .rst_ni ( s_rstn        ),
