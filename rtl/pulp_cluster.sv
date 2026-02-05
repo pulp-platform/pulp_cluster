@@ -1036,40 +1036,53 @@ generate
   end
 endgenerate
 
-logic [Cfg.NumCores/3-1:0] hmr_tmr_synch;
-for (genvar i = 0; i < Cfg.NumCores/3; i++) begin
-  if (1'b1) begin // InterleaveGrps
-    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
-  end else begin
-    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
-  end
-end
-
-logic [Cfg.NumCores/3-1:0] hmr_tmr_sw_resynch_req_short;
-logic [Cfg.NumCores/2-1:0] hmr_dmr_sw_resynch_req_short;
-always_comb begin
-  hmr_tmr_sw_resynch_req = '0;
-  hmr_dmr_sw_resynch_req = '0;
-
-  for (int i = 0; i < Cfg.NumCores/3; i++) begin
-    if (1'b1) begin // InterleaveGrps
-      hmr_tmr_sw_resynch_req[i] = hmr_tmr_sw_resynch_req_short[i];
-    end else begin
-      hmr_tmr_sw_resynch_req[3*i] = hmr_tmr_sw_resynch_req_short[i];
-    end
-  end
-
-  for (int i = 0; i < Cfg.NumCores/2; i++) begin
-    if (1'b1) begin // InterleaveGrps
-      hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
-    end else begin
-      hmr_dmr_sw_resynch_req[2*i] = hmr_dmr_sw_resynch_req_short[i];
-    end
-  end
-end
-
 generate
   if (Cfg.HMRPresent) begin : gen_hmr_unit
+
+    localparam int unsigned NumTMRGroups   = Cfg.HMRTmrEnabled ? NumCores/3 : 1;
+    localparam int unsigned NumDMRGroups   = Cfg.HMRDmrEnabled ? NumCores/2 : 1;
+
+    logic [NumTMRGroups-1:0] hmr_tmr_synch;
+    logic [NumTMRGroups-1:0] hmr_tmr_sw_resynch_req_short;
+    logic [NumDMRGroups-1:0] hmr_dmr_sw_resynch_req_short;
+
+
+    if (Cfg.HMRTmrEnabled) begin : gen_hmr_tmr_synch
+      for (genvar i = 0; i < Cfg.NumCores/3; i++) begin
+        if (1'b1) begin // InterleaveGrps
+          assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
+        end else begin
+          assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
+        end
+      end
+
+      always_comb begin
+        hmr_tmr_sw_resynch_req = '0;
+        for (int i = 0; i < Cfg.NumCores/3; i++) begin
+          if (1'b1) begin // InterleaveGrps
+            hmr_tmr_sw_resynch_req[i] = hmr_tmr_sw_resynch_req_short[i];
+          end else begin
+            hmr_tmr_sw_resynch_req[3*i] = hmr_tmr_sw_resynch_req_short[i];
+          end
+        end
+      end
+
+    end else begin : gen_no_hmr_tmr_synch
+      assign hmr_tmr_synch = '0;
+      assign hmr_tmr_sw_resynch_req = '0;
+    end
+
+    always_comb begin
+      hmr_dmr_sw_resynch_req = '0;
+      for (int i = 0; i < Cfg.NumCores/2; i++) begin
+        if (1'b1) begin // InterleaveGrps
+          hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
+        end else begin
+          hmr_dmr_sw_resynch_req[2*i] = hmr_dmr_sw_resynch_req_short[i];
+        end
+      end
+    end
+
     hmr_unit #(
       .NumCores          ( Cfg.NumCores                         ),
       .DMRSupported      ( Cfg.HMRDmrEnabled                    ),
@@ -1122,11 +1135,19 @@ generate
       .core_bus_outputs_i     ( '0           ),
       .core_axi_outputs_i     ( '0           )
     );
+
+    `ifndef VERILATOR
+    initial begin: p_assertions
+      assert (Cfg.HMRPresent && (Cfg.HMRDmrEnabled || Cfg.HMRTmrEnabled))
+          else $fatal(1, "Either DMR or TMR must be enabled when HMR is present!");
+    end
+    `endif
+
   end else begin : gen_no_hmr_unit
     assign hmr_reg_rsp                  = '0;
-    assign hmr_tmr_sw_resynch_req_short = '0;
     assign hmr_tmr_sw_synch_req         = '0;
-    assign hmr_dmr_sw_resynch_req_short = '0;
+    assign hmr_tmr_sw_resynch_req       = '0;
+    assign hmr_dmr_sw_resynch_req       = '0;
     assign hmr_dmr_sw_synch_req         = '0;
     assign recovery_bus                 = '0;
     assign setback                      = '0;
