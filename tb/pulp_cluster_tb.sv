@@ -64,6 +64,8 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase - (ClustIdx << 22);
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h1C000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
+  localparam bit[AxiAw-1:0] UartBaseAddr    = 'h40000000;
+  localparam bit[AxiAw-1:0] UartSize        = 'h1000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
   localparam bit[AxiAw-1:0] ClustReturnInt  = ClustBase + ClustPeriphOffs + 'h100;
 
@@ -177,12 +179,12 @@ module pulp_cluster_tb;
   );
 
   mock_uart_axi #(
-   .AxiIw   ( AxiIwMst      ),
-   .AxiAw   ( AxiAw         ),
-   .AxiDw   ( AxiDw         ),
-   .AxiUw   ( AxiUw         ),
-   .N_CORES ( 8             ),
-   .BaseAddr( 32'h4000_0000 )
+   .AxiIw   ( AxiIwMst     ),
+   .AxiAw   ( AxiAw        ),
+   .AxiDw   ( AxiDw        ),
+   .AxiUw   ( AxiUw        ),
+   .N_CORES ( `NB_CORES    ),
+   .BaseAddr( UartBaseAddr )
   ) i_mock_uart (
      .clk_i  ( s_clk         ),
      .rst_ni ( s_rstn        ),
@@ -202,8 +204,8 @@ module pulp_cluster_tb;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
     idx:        0,
-    start_addr: 'h03002000,
-    end_addr:   'h03003000
+    start_addr: UartBaseAddr,
+    end_addr:   UartBaseAddr + UartSize
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
