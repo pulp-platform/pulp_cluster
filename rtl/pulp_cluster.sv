@@ -228,6 +228,8 @@ logic [Cfg.NumCores-1:0]                s_dbg_irq;
 logic                                   s_hwpe_en;
 logic [$clog2(MAX_NUM_HWPES)-1:0]       s_hwpe_sel;
 
+logic                     s_idma_en;
+
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
 logic                     axi_isolate_synch;
@@ -702,6 +704,26 @@ cluster_interconnect_wrap #(
 );
 
 //***************************************************
+//****************iDMA Clock Gating******************
+//***************************************************
+//*****************************************************
+// CONTROL CLOCK GATING CELL --> This clock gating cell
+// handles the clock gating control signal coming from
+// the cluster control unit, completely disabling the
+// clock in the idma wrapper
+//*****************************************************
+
+`ifdef TARGET_IDMA
+logic idma_clk_gated;
+cluster_clock_gating idma_ctrl_ckgate (
+    .clk_i      ( clk_i          ),
+    .en_i       ( s_idma_en      ),
+    .test_en_i  ( test_mode_i    ),
+    .clk_o      ( idma_clk_gated )
+  );
+`endif
+
+//***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
 dmac_wrap #(
@@ -730,7 +752,11 @@ dmac_wrap #(
   .IDMA_BURST_LENGTH  ( Cfg.DmaBurstLength          )
 `endif
 ) dmac_wrap_i     (
+`ifdef TARGET_IDMA
+  .clk_i              ( idma_clk_gated                   ),
+`else
   .clk_i              ( clk_i                            ),
+`endif
   .rst_ni             ( rst_ni                           ),
   .test_mode_i        ( test_mode_i                      ),
   .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
@@ -826,6 +852,7 @@ cluster_peripherals #(
   .hwpe_events_i            ( s_hwpe_remap_evt                  ),
   .hwpe_en_o                ( s_hwpe_en                         ),
   .hwpe_sel_o               ( s_hwpe_sel                        ),
+  .idma_en_o                ( s_idma_en                         ),
   .hci_ctrl_o               ( s_hci_ctrl                        ),
   .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
   .flush_valid_o            ( s_icache_flush_valid              ),
