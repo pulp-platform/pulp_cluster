@@ -69,10 +69,10 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: e464eb9ddcc39e5a50009819601c4f213b1d4ba3
-    version: 2.2.0
+    revision: 6e55d0a74ff33ce9aac9fcd44ad702f323ace644
+    version: null
     source:
-      Git: https://github.com/pulp-platform/cluster_peripherals.git
+      Git: https://github.com/FondazioneChipsIT/cluster_peripherals.git
     dependencies:
     - hci
   common_cells:
