@@ -13,13 +13,15 @@ init:
   stage: nonfree
   script: make nonfree-init
   artifacts:
-    paths: [ nonfree/ci.yml ]
+    paths: [ nonfree/.gitlab-ci.yml ]
 
 subpipe:
   stage: nonfree
   needs: [ init ]
+  variables:
+    PARENT_PIPELINE_SOURCE: $CI_PIPELINE_SOURCE
   trigger:
     include:
-      - artifact: nonfree/ci.yml
+      - artifact: nonfree/.gitlab-ci.yml
         job: init
     strategy: depend
