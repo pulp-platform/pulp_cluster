@@ -230,6 +230,7 @@ module cluster_interconnect_wrap import tcdm_interconnect_pkg::topo_e;
               cv32e40p_pkg::AMO_MAX[4:2]:  amo = 4'h6;
               cv32e40p_pkg::AMO_MINU[4:2]: amo = 4'h9;
               cv32e40p_pkg::AMO_MAXU[4:2]: amo = 4'h7;
+              default : amo = 4'h0; // AMONone
             endcase
           end
         endcase
