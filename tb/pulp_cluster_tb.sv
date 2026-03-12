@@ -14,7 +14,8 @@
 //              the virtual interfaces and starts the test passed by +UVM_TEST+
 //`define TEST_CLOCK_BYPASS
 
-`timescale 1ps/1ps
+// `timescale 1ps/1ps
+`timescale 1ns/1ps
 
 `include "pulp_soc_defines.sv"
 `include "axi/assign.svh"
@@ -35,9 +36,9 @@ module pulp_cluster_tb;
   logic s_rstn;
   logic s_rstn_cl;
 
-  localparam time SYS_TCK  = 8ns;
-  localparam time SYS_TA   = 2ns;
-  localparam time SYS_TT   = SYS_TCK - 2ns;
+  localparam time SYS_TCK  = 2ns;
+  localparam time SYS_TA   = 0.5ns;
+  localparam time SYS_TT   = SYS_TCK - 0.5ns;
 
   clk_rst_gen #(
     .ClkPeriod    ( SYS_TCK ),
@@ -47,7 +48,8 @@ module pulp_cluster_tb;
       .rst_no ( s_rstn )
   );
 
-  localparam AxiAw  = 32;
+  // localparam AxiAw  = 32;
+  localparam AxiAw  = 48;
   localparam AxiDw  = 64;
   localparam AxiIw  = 6;
   localparam NMst   = 2;
@@ -302,12 +304,12 @@ module pulp_cluster_tb;
     UseHci: 1,
     TcdmSize: 128*1024,
     TcdmNumBank: 16,
-    HwpePresent: 1,
+    HwpePresent: 0,
     HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
     HwpeNumPorts: 9,
-    HMRPresent: 1,
-    HMRDmrEnabled: 1,
-    HMRTmrEnabled: 1,
+    HMRPresent: 0,
+    HMRDmrEnabled: 0,
+    HMRTmrEnabled: 0,
     HMRDmrFIxed: 0,
     HMRTmrFIxed: 0,
     HMRInterleaveGrps: 1,
@@ -315,8 +317,8 @@ module pulp_cluster_tb;
     HMRSeparateDataVoters: 1,
     HMRSeparateAxiBus: 0,
     HMRNumBusVoters: 1,
-    EnableECC: 1,
-    ECCInterco: 1,
+    EnableECC: 0,
+    ECCInterco: 0,
     iCacheNumBanks: 2,
     iCacheNumLines: 1,
     iCacheNumWays: 4,
@@ -325,9 +327,11 @@ module pulp_cluster_tb;
     iCachePrivateDataWidth: 32,
     EnableReducedTag: 1,
     L2Size: 1000*1024,
-    DmBaseAddr: 'h60203000,
-    BootRomBaseAddr: BootAddr,
-    BootAddr: BootAddr,
+    DmBaseAddr: 'h60203000,//CHECK
+    // BootRomBaseAddr: BootAddr,
+    // BootAddr: BootAddr,
+    BootRomBaseAddr: 'h1A000000,
+    BootAddr: 'h1C000000,    
     EnablePrivateFpu: 0,//0
     EnablePrivateFpDivSqrt: 0,
     NumAxiIn: NumAxiSubordinatePorts,
@@ -494,25 +498,38 @@ module pulp_cluster_tb;
    if ( $value$plusargs ("APP=%s", binary));
      $display("[TB] Testing %s", binary);
 
+  //  binary = "/scratch2/amirkia/yvan/pulp_cluster_new/regression_tests/hello/build/test/test";
+  //  binary = "/scratch2/amirkia/yvan/pulp_cluster_new/regression_tests/myMatmul/build/test/test";
+  //  binary = "/scratch2/amirkia/yvan/pulp_cluster_new/regression_tests/idle/build/test/test";
+  //  binary = "/scratch2/amirkia/yvan/pulp_cluster_new/regression_tests/parallel_bare_tests/parMatrixMul32/build/test/test";
+  //  $display("[TB] Testing %s", binary);
    load_binary(binary, boot_addr);
 
    foreach (sections[addr]) begin
       $display("[TB] Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
       for (int i = 0; i < sections[addr]; i++) begin
-
+        // $display("[MYTB] aw assign start");
         aw_beat.ax_addr  = ( addr << 3 ) + ( i * 8 );
+        // $display("[TB] Writing %h with %0d words", addr << 3, sections[addr]); // word = 8 bytes here
         aw_beat.ax_len   = '0;
         aw_beat.ax_burst = axi_pkg::BURST_INCR;
         aw_beat.ax_size  = 4'h3;
+        // $display("[MYTB] aw assign done");
+        // $display("[MYTB] w assign start");
 
         w_beat.w_data = memory[addr + i][63:0];
         w_beat.w_strb = '1;
         w_beat.w_last = '1;
+        // $display("[MYTB] w assign done");
 
         axi_master_drv.send_aw(aw_beat);
+        // $display("[MYTB] send_aw(aw_beat)");
         axi_master_drv.send_w(w_beat);
+        // $display("[MYTB] send_w(w_beat)");        
         @(posedge s_clk);
+        // $display("[MYTB] (posedge s_clk)");
         axi_master_drv.recv_b(b_beat);
+        // $display("[MYTB] recv_b(b_beat)");        
 
       end // for (int i = 0; i < sections[addr]; i++)
       $display("[TB] Completed\n");

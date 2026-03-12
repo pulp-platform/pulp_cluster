@@ -8,6 +8,7 @@ HOSTNAME := $(shell hostname)
 ETH_HOST = $(shell echo $(HOSTNAME) | grep -q "\.ee\.ethz\.ch$$" && echo 1 || echo 0)
 ifeq ($(ETH_HOST),1)
 QUESTA ?= questa-2023.4-zr
+# QUESTA ?= questa-2025.3
 else
 QUESTA ?=
 endif
@@ -37,7 +38,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 67079fe
+NONFREE_COMMIT ?= f2825c2b1416a754edfb105d905f205dd8a71ac7
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
