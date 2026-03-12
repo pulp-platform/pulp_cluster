@@ -52,8 +52,8 @@ module cluster_bus_wrap
 );
 
 
-  localparam NB_MASTER      = `NB_MASTER;
-  localparam NB_SLAVE       = `NB_SLAVE;
+  localparam NB_MASTER      = `CLUSTER_BUS_NB_MASTER;
+  localparam NB_SLAVE       = `CLUSTER_BUS_NB_SLAVE;
 
   //Ensure that AXI_ID out width has the correct size with an elaboration system task
   if (AXI_ID_OUT_WIDTH < AXI_ID_IN_WIDTH + $clog2(NB_SLAVE))
