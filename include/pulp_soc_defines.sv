@@ -19,6 +19,10 @@
  * 
  */
 
+`ifndef PULP_SOC_DEFINES_SV
+`define PULP_SOC_DEFINES_SV
+
+
 `define CLUSTER_ALIAS
 `define PRIVATE_ICACHE
 `define HIERARCHY_ICACHE_32BIT
@@ -51,3 +55,33 @@
 `define NB_DMAS       4
 `define NB_MPERIPHS   1
 `define NB_SPERIPHS   12
+
+// Width of byte enable for a given data width
+`define EVAL_BE_WIDTH(DATAWIDTH) (DATAWIDTH/8)
+
+`define NB_L2_CHANNELS 4
+
+// Default JTAG ID code type
+typedef struct packed {
+  bit [ 3:0]  version;
+  bit [15:0]  part_num;
+  bit [10:0]  manufacturer;
+  bit         _one;
+} jtag_idcode_t;
+
+// PULP Platform manufacturer and default PulpOpen part number
+localparam bit [10:0] JtagPulpManufacturer  = 11'h6d9;
+localparam bit [15:0] JtagPulpOpenPartNum   = 16'hc5e5;
+localparam bit [ 3:0] JtagPulpOpenVersion   = 4'h1;
+localparam jtag_idcode_t PulpOpenIdCode = '{
+  _one          : 1,
+  manufacturer  : JtagPulpManufacturer,
+  part_num      : JtagPulpOpenPartNum,
+  version       : JtagPulpOpenVersion
+};
+
+// JTAG
+`define DMI_JTAG_IDCODE PulpOpenIdCode
+// `define DMI_JTAG_IDCODE 32'h249511C3
+
+`endif
