@@ -57,14 +57,13 @@ nonfree-init:
 
 .PHONY: init
 
-init: checkout generate_idma_rtl
+init: checkout generate_idma_rtl scripts/compile.tcl
 
 .PHONY: checkout
 ## Checkout/update dependencies using Bender
 checkout:
 	$(BENDER) checkout
 	touch Bender.lock
-	make scripts/compile.tcl
 
 Bender.lock:
 	$(BENDER) checkout
