@@ -33,7 +33,7 @@ dependencies:
   hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 2a5a5081a2b32f1a04e7e28c00d3762d92602b84 } # branch: yt/wen-filter
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 49e714b97a19a7aaddf064ae2757c8f02d1f62dc } # branch: astral-v0
-  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 78696fb0d6d429bdad2e38740792648d44095605 } # branch: main
+  redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 5842580906c3ad3748df43673cf2a23dabaa2473 } # branch: ab/xif-1.0
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: f4e131c86205d37882cf02ea4dd3bd141ef32d86 } # branch: lg/astral-v1.1
   softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
 
