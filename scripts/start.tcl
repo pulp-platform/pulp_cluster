@@ -1,3 +1,8 @@
+global filename
+global RUN_SAIF
+set dirname power
+set filename [file join $dirname power.saif]
+
 if {![info exists VSIM_PATH ]} {
     return -code error -errorinfo "[ERRORINFO] You must set the \"VSIM_PATH\" variable before sourcing the start script."
     set VSIM_PATH ""
@@ -14,4 +19,26 @@ if {[info exists ::env(FAULT_INJECTION)]} {
         error "Error: Missing FAULT_INJECTION_SCRIPT to source!"
     }
     source $::env(FAULT_INJECTION_SCRIPT)
+}
+
+proc run_saif {} {
+
+    when -label {cluster_start} {pulp_cluster_tb.cluster_i.fetch_en_i == 1'b1} {
+        set scope {pulp_cluster_tb.cluster_i}
+        power reset -all
+        power add -r $scope/*
+        echo "\[POWER\] POWER ON: $now"
+        power on
+    }
+
+    when -label {cluster_stop} {pulp_cluster_tb.cluster_i.eoc_o == 1'b1} {
+        echo "\[POWER\] POWER OFF: $now"
+        power off
+        power report -all -bsaif cluster_i.saif
+    }
+
+}
+
+if {[info exists RUN_SAIF]} {
+    run_saif
 }
