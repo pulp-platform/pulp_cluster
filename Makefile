@@ -98,7 +98,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/FondazioneChipsIT/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 6ea0be82aff710b52f697bdc9de9bf8308b8b93c # branch: rg/add_iDMA_tests
+REGRESSION_TESTS_COMMIT ?= 7316445ee9d9a9fbacc5b0102ce304f100c2331f # branch: rg/pulp_cluster_pr
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
