@@ -82,7 +82,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 483c17a805b897552629e112a86ae8f23b60fb77 # branch: rg/update_runtime
+PULP_RUNTIME_COMMIT ?= fcb67d5fbdec0026d182bb601bcb3e2eab3a6bad # branch: rg/pulp_cluster_pr
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
@@ -98,7 +98,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/FondazioneChipsIT/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= 7316445ee9d9a9fbacc5b0102ce304f100c2331f # branch: rg/pulp_cluster_pr
+REGRESSION_TESTS_COMMIT ?= 5f6387a017d2223314c4530c9ac890ca1073634c # branch: rg/pulp_cluster_pr
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
