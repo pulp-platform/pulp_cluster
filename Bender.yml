@@ -18,7 +18,7 @@ dependencies:
   cluster_interconnect:   { git: "https://github.com/pulp-platform/cluster_interconnect.git", rev: v1.3.0      }
   event_unit_flex:        { git: "https://github.com/pulp-platform/event_unit_flex.git",      rev: astral-v1.0 }
   mchan:                  { git: "https://github.com/pulp-platform/mchan.git", version: =1.2.4 }
-  idma:                   { git: "https://github.com/FondazioneChipsIT/iDMA.git", rev: ChipsIt-v0.0.0 }
+  idma:                   { git: "https://github.com/FondazioneChipsIT/iDMA.git", rev: 8cf9982279d44704f96a7bc1df0c3ba524cbe5dd } #rg/pulp_cluster_pr
   obi:                    { git: "https://github.com/pulp-platform/obi.git", version: =0.1.7 }
   hier-icache:            { git: "https://github.com/FondazioneChipsIT/hier-icache.git", rev: 416c5cbc7b9b8724a40da6ac6d0b19a9c6b864bc } # gl/fix_define
   cluster_icache:         { git: "https://github.com/FondazioneChipsIT/cluster_icache.git", rev: 57ffb22066171d89974bdec240bad13f5efac9de } # gl/fix_define

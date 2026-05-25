@@ -194,7 +194,7 @@ packages:
     - common_cells
     - common_verification
   idma:
-    revision: 2e637216e0455d77706a50d0639b86891e2a83aa
+    revision: 8cf9982279d44704f96a7bc1df0c3ba524cbe5dd
     version: null
     source:
       Git: https://github.com/FondazioneChipsIT/iDMA.git

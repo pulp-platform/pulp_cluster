@@ -82,7 +82,7 @@ sw-clean:
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= fcb67d5fbdec0026d182bb601bcb3e2eab3a6bad # branch: rg/pulp_cluster_pr
+PULP_RUNTIME_COMMIT ?= 8b80c73a4d263ddcd92d2882611551c12622307c # branch: rg/pulp_cluster_pr_test_rebase_on_master
 
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
