@@ -507,7 +507,7 @@ module dmac_wrap #(
         .HardwareLegalizer   ( 1'b1              ),
         .RejectZeroTransfers ( 1'b1              ),
         .ErrorHandling       ( 1'b0              ),
-        .Burst_len           ( IDMA_BURST_LENGTH )
+        .BurstLen            ( IDMA_BURST_LENGTH )
       ) i_idma_backend_r_obi_rw_init_w_axi (
         .clk_i              ( datapath_clk_gated                               ),
         .rst_ni             ( rst_ni                                  ),

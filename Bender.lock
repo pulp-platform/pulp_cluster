@@ -179,7 +179,7 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 94ef5bb2f3ec2cb2741416d2b6d1ad5ba4dc4743
+    revision: 03a8dd2773534d1887c42050410b0122be78699a
     version: null
     source:
       Git: https://github.com/FondazioneChipsIT/iDMA.git
