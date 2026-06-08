@@ -12,7 +12,7 @@ else
 QUESTA ?=
 endif
 
-BENDER ?= bender
+BENDER ?= bender --suppress E24
 
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
