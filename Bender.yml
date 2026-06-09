@@ -22,7 +22,7 @@ dependencies:
   obi:                    { git: "https://github.com/pulp-platform/obi.git", version: =0.1.7 }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", version: =1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", version: =0.2.0 }
-  cluster_peripherals:    { git: "https://github.com/FondazioneChipsIT/cluster_peripherals.git", rev: "630159c9d81c41a9638163de292fbfc0682bf0e5" } # chips-it
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: "072ddd876c88324ef28856d4b2697424aaa231ce" }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.8  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: =1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: =1.38.0 }
