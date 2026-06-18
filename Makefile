@@ -140,8 +140,14 @@ scripts/compile_lint.tcl:
 $(library):
 	$(QUESTA) vlib $(library)
 
-generate_idma_rtl:
-	$(MAKE) -C $(shell bender path idma) idma_hw_all
+
+uv:
+	cd $(shell bender path idma) && \
+	curl -LsSf https://astral.sh/uv/install.sh | sh && \
+	uv sync --locked
+
+generate_idma_rtl: uv
+	. "$(shell bender path idma)/.venv/bin/activate" && $(MAKE) -C $(shell bender path idma) idma_hw_all
 
 compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
