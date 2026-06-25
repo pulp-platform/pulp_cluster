@@ -57,6 +57,13 @@ Warning: requires QuestaSim 2022.3 or newer.
 4. Compile the hw:
    ```
    make checkout
+   make generate_idma_rtl
+   make scripts/compile.tcl
+   make build
+   ```
+   Or alternatively:
+   ```
+   make init
    make build
    ```
 
