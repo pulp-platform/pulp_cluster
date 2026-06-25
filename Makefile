@@ -158,7 +158,7 @@ build_qone: compile
 	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
 
 
-build: generate_idma_rtl compile
+build: compile
 	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized +acc
 
 compile_lint: $(library)
