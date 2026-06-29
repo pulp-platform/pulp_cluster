@@ -36,7 +36,7 @@ dependencies:
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 6ba6f41 } # yt/redmule-v2
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", version: =2.0.4 }
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: f4e131c } # branch: lg/astral-v1.1
-  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: astral-v1.0 }
+  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: e3c89aa59a47103efd57dcc90ff744af04e426c8 } # branch: yt/includes
 
 export_include_dirs:
   - include

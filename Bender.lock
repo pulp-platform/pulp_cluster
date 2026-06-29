@@ -159,8 +159,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: b3d33afdd27e79bcda1348d0ab5f4afd52c03106
-    version: 1.9.0
+    revision: 63a20b74dd627b0b47d1ae6e00751a87b03ecea1
+    version: null
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -184,6 +184,7 @@ packages:
     source:
       Git: https://github.com/pulp-platform/iDMA.git
     dependencies:
+    - apb
     - axi
     - axi_stream
     - common_cells
@@ -274,7 +275,7 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 11dd29e85d40e29fea0481b471f1c0cc967df1a4
+    revision: e3c89aa59a47103efd57dcc90ff744af04e426c8
     version: null
     source:
       Git: https://github.com/belanoa/softex.git

@@ -8,8 +8,10 @@ HOSTNAME := $(shell hostname)
 ETH_HOST = $(shell echo $(HOSTNAME) | grep -q "\.ee\.ethz\.ch$$" && echo 1 || echo 0)
 ifeq ($(ETH_HOST),1)
 QUESTA ?= questa-2023.4-zr
+VCS ?= vcs-2025.06
 else
 QUESTA ?=
+VCS ?=
 endif
 
 BENDER ?= bender
@@ -25,6 +27,9 @@ QSIM ?= $(QUESTA) qsim
 QOPT ?= $(QUESTA) qopt
 Q1VE ?= q1ve --qverify
 
+VLOGAN ?= vlogan
+VCS_BIN ?= $(VCS_VERSION) vcs
+
 VENV  := venv
 
 top_level ?= pulp_cluster
@@ -37,9 +42,21 @@ REGRESSIONS := $(ROOT_DIR)/regression_tests
 VLOG_ARGS_LINT += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 \"+incdir+$(shell pwd)/include\"
 VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1ns / 1ps\" \"+incdir+$(shell pwd)/include\"
 
+VLOGAN_ARGS ?= -ntb_opts uvm -kdb -nc -assert svaext +v2k -timescale=1ns/1ps +incdir+$(VCS_UVM_HOME)/src $(VCS_UVM_HOME)/src/uvm_pkg.sv
+
+vcs_flags ?= -full64 -kdb -O2 -debug_access=r -debug_region=1
+
+CXX_PATH ?= g++
+
 define generate_vsim
 	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
 	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS)" $2 | grep -v "set ROOT" >> $1
+	echo >> $1
+endef
+
+define generate_vcs
+	echo 'set ROOT [file normalize [file dirname [info script]]/$3]' > $1
+	$(BENDER) script vcs --vlog-arg="$(VLOGAN_ARGS)" --vlogan-bin="$(VLOGAN)" $2 | grep -v "set ROOT" >> $1
 	echo >> $1
 endef
 
@@ -123,6 +140,11 @@ include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
 	$(call generate_vsim, $@, $(common_defs) $(common_targs) -t idma $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
+
+scripts/compile.sh: | Bender.lock
+	$(call generate_vcs, $@, $(common_defs) $(common_targs) -t idma -e softex $(sim_defs) $(sim_targs),..)
+	echo '$(VCS_BIN) $(vcs_flags) -cpp $(CXX_PATH) $(ROOT_DIR)/tb/dpi/elfloader.cpp $(top_level)_tb' >> $@
+	chmod +x $@
 
 scripts/compile.tcl-mchan: | Bender.lock
 	$(call generate_vsim, scripts/compile.tcl, $(common_defs) $(common_targs) -t mchan $(sim_defs) $(sim_targs),..)

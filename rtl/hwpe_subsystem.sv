@@ -142,17 +142,33 @@ module hwpe_subsystem
       // SOFTEX //
       ////////////
 
-      softex_top #(
-        .N_CORES    ( N_CORES           ),
-        .`HCI_SIZE_PARAM(Tcdm) ( HCI_HWPE_SIZE )
-      ) i_softex (
-        .clk_i  ( hwpe_clk[i] ),
-        .rst_ni ( rst_n       ),
-        .busy_o ( busy[i]     ),
-        .evt_o  ( evt[i]      ),
-        .tcdm   ( tcdm[i]     ),
-        .periph ( periph[i]   )
-      );
+      // FIXME: masked for now since internally has many parameters set to 0
+      // which then result in infinite dimension arrays.
+
+      // softex_top #(
+      //   .N_CORES    ( N_CORES           ),
+      //   .`HCI_SIZE_PARAM(Tcdm) ( HCI_HWPE_SIZE )
+      // ) i_softex (
+      //   .clk_i  ( hwpe_clk[i] ),
+      //   .rst_ni ( rst_n       ),
+      //   .busy_o ( busy[i]     ),
+      //   .evt_o  ( evt[i]      ),
+      //   .tcdm   ( tcdm[i]     ),
+      //   .periph ( periph[i]   )
+      // );
+
+      assign busy[i] = '0;
+      assign evt_o[i] = '0;
+
+      assign tcdm[i].gnt = '0;
+      assign tcdm[i].r_data = '0;
+      assign tcdm[i].r_valid = '0;
+      assign tcdm[i].r_user = '0;
+      assign tcdm[i].r_id = '0;
+      assign tcdm[i].r_opc= '0;
+      assign tcdm[i].r_ecc= '0;
+      assign tcdm[i].egnt = '1;
+      assign tcdm[i].r_evalid = '0;
 
     end
   end
