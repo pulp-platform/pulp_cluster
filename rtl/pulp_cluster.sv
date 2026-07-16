@@ -288,6 +288,9 @@ module pulp_cluster
 
   logic                              s_incoming_req;
   logic                              s_isolate_cluster;
+
+  // No cluster-external incoming request source: tie off the clock-gate input
+  assign s_incoming_req = 1'b0;
   logic                              s_events_async;
 
   logic                              s_events_valid;
@@ -438,6 +441,9 @@ module pulp_cluster
     .AXI_ID_WIDTH   ( AXI_ID_OUT_WIDTH   ),
     .AXI_USER_WIDTH ( AXI_USER_WIDTH     )
   ) s_core_instr_bus();
+
+  // Instruction bridge never issues AXI atomics: tie off the atomic op field
+  assign s_core_instr_bus.aw_atop = '0;
 
 
    // ***********************************************************************************************+
@@ -638,6 +644,12 @@ module pulp_cluster
   );
 
   `TCDM_ASSIGN_MASTER (s_mperiph_xbar_bus[`NB_MPERIPHS-1], s_mperiph_demux_bus[0])
+
+  // Second demux master port is unused: tie off its response inputs
+  assign s_mperiph_demux_bus[1].gnt     = 1'b0;
+  assign s_mperiph_demux_bus[1].r_rdata = '0;
+  assign s_mperiph_demux_bus[1].r_opc   = 1'b0;
+  assign s_mperiph_demux_bus[1].r_valid = 1'b0;
 
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].req   = s_mperiph_demux_bus[0].req;
   // assign s_mperiph_xbar_bus[NB_MPERIPHS-1].add   = s_mperiph_demux_bus[0].add;

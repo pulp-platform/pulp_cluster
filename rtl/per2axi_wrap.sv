@@ -77,6 +77,7 @@ module per2axi_wrap
     .axi_master_aw_qos_o    ( axi_master.aw_qos                   ),
     .axi_master_aw_id_o     ( axi_master.aw_id[AXI_ID_WIDTH-1:0]  ),
     .axi_master_aw_user_o   ( axi_master.aw_user                  ),
+    .axi_master_aw_atop_o   ( axi_master.aw_atop                  ),
     .axi_master_aw_ready_i  ( axi_master.aw_ready                 ),
 
     .axi_master_ar_valid_o  ( axi_master.ar_valid                 ),
