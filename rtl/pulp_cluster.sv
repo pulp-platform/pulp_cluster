@@ -261,6 +261,9 @@ module pulp_cluster
   logic [NB_CORES-1:0]                dbg_core_resume;
   logic [NB_CORES-1:0]                dbg_core_halted;
   logic [NB_CORES-1:0]                s_dbg_irq;
+
+  // core debug-halted status not wired (driver commented out in CORE gen): tie off
+  assign dbg_core_halted = '0;
   logic                               s_hwpe_sel;
   logic                               s_hwpe_en;
 
@@ -1131,6 +1134,7 @@ end
       assign s_hwpe_cfg_bus.gnt     = '1;
       assign s_hwpe_cfg_bus.r_rdata = 32'hdeadbeef;
       assign s_hwpe_cfg_bus.r_id    = '0;
+      assign s_hwpe_cfg_bus.r_opc   = '0;
       for (genvar i=NB_CORES; i<NB_CORES+NB_HWPE_PORTS; i++) begin : no_hwpe_bias
         assign s_core_xbar_bus[i].req = '0;
         assign s_core_xbar_bus[i].wen = '0;
@@ -1613,6 +1617,8 @@ end
 //    .ack_i   ( pf_evt_ack_i   ),
 //    .valid_o ( pf_evt_valid_o )
 //  );
+  // Prefetch-event path disabled (edge propagator above commented out): tie off
+  assign pf_evt_valid_o = 1'b0;
 
   /* centralized gating */
   cluster_clock_gate #(

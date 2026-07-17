@@ -244,6 +244,10 @@ module core_region
      .apu_flags_i    ( apu_master_flags_i    )
    );
 
+   // cv32e40p's APU protocol has no result-backpressure: the core always accepts
+   // the APU/FPU result, so report permanently ready.
+   assign apu_master_ready_o = 1'b1;
+
    // OBI-PULP adapter
    obi_pulp_adapter i_obi_pulp_adapter (
      .rst_ni(rst_ni),
