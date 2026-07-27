@@ -137,6 +137,10 @@ typedef struct {
   uint64_t st_size;
 } Elf64_Sym;
 
+// Write granularity of the testbench preload (AxiWideBeWidth). Sections handed
+// to the TB are aligned and non-overlapping at this granularity.
+#define BUS_BYTES 8
+
 // address and size
 std::vector<std::pair<uint64_t, uint64_t>> sections;
 
@@ -154,13 +158,19 @@ extern "C" {
   char read_elf(const char *filename);
 }
 
-static void write (uint64_t address, uint64_t len, uint8_t *buf)
+// Publish [start, end) as one section, filling gaps with zeros
+static void emit_run (uint64_t start, uint64_t end, const std::map<uint64_t, uint8_t> &img)
 {
-  std::vector<uint8_t> mem;
-  for (int i = 0; i < len; i++) {
-    mem.push_back(buf[i]);
+  std::vector<uint8_t> mem(end - start, 0);
+
+  for (uint64_t addr = start; addr < end; addr++) {
+    std::map<uint64_t, uint8_t>::const_iterator byte = img.find(addr);
+    if (byte != img.end())
+      mem[addr - start] = byte->second;
   }
-  mems.insert(std::make_pair(address, mem));
+
+  sections.push_back(std::make_pair(start, end - start));
+  mems[start] = mem;
 }
 
 // Return the entry point reported by the ELF file
@@ -191,23 +201,21 @@ extern "C" char read_section(long long address, const svOpenArrayHandle buffer, 
 {
   // get actual pointer
   char *buf = (char *) svGetArrayPtr(buffer);
-  
+
   // check that the address points to a section
-  if (!mems.count(address)) {
+  std::map<uint64_t, std::vector<uint8_t>>::const_iterator sec = mems.find(address);
+  if (sec == mems.end()) {
     printf("[ELF] ERROR: No section found for address %p\n", address);
     return -1;
   }
-  
-  // copy array
-  long long int len_tmp = len;
-  for (auto &datum : mems.find(address)->second) {
-    if(len_tmp-- == 0){
-      printf("[ELF] ERROR: Copied 0x%lx bytes. Buffer is full but there is still data available.\n", len);
-      return -1;
-    }
 
-    *buf++ = datum;
+  if ((long long)sec->second.size() > len) {
+    printf("[ELF] ERROR: Buffer holds 0x%llx bytes but the section is 0x%lx bytes.\n",
+           len, sec->second.size());
+    return -1;
   }
+
+  memcpy(buf, sec->second.data(), sec->second.size());
 
   return 0;
 }
@@ -229,23 +237,53 @@ static void load_elf(char *buf, size_t size)
   entry = eh->e_entry;
   printf("[ELF] INFO: Entrypoint at %p\n", entry);
 
-  // Iterate over all program header entries
-  for (unsigned int i = 0; i < eh->e_phnum; i++) {
-    // Check whether the current program header entry contains a loadable section of nonzero size
-    if(ph[i].p_type == PT_LOAD && ph[i].p_memsz) {
-      // Is this section something else than zeros?
-      if (ph[i].p_filesz) {
-        assert(size >= ph[i].p_offset + ph[i].p_filesz);
-        sections.push_back(std::make_pair(ph[i].p_paddr, ph[i].p_memsz));
-        write(ph[i].p_paddr, ph[i].p_filesz, (uint8_t*)buf + ph[i].p_offset);
-      }
+  // Flatten every loadable segment into a byte-accurate image. Segment addresses
+  // are only 4-byte aligned in practice (e.g. .data_tiny_l1 @ 0x1c01c19c), so they
+  // cannot be handed to the TB as-is: its preload writes whole BUS_BYTES words and
+  // would round the base down, shifting the payload and clobbering the neighbour.
+  std::map<uint64_t, uint8_t> img;
 
-      if(ph[i].p_memsz > ph[i].p_filesz){
-        printf("[ELF] WARNING: The section starting @ %p contains 0x%lx zero bytes which will NOT be preloaded!\n",
-               ph[i].p_paddr, (ph[i].p_memsz - ph[i].p_filesz));
-      }
+  for (unsigned int i = 0; i < eh->e_phnum; i++) {
+    if(ph[i].p_type == PT_LOAD && ph[i].p_memsz) {
+      assert(size >= ph[i].p_offset + ph[i].p_filesz);
+      const uint8_t *src = (const uint8_t *)buf + ph[i].p_offset;
+
+      for (uint64_t k = 0; k < ph[i].p_filesz; k++)
+        img[ph[i].p_paddr + k] = src[k];
+
+      // .bss-style tail: preloaded as zeros
+      for (uint64_t k = ph[i].p_filesz; k < ph[i].p_memsz; k++)
+        img[ph[i].p_paddr + k] = 0;
     }
   }
+
+  // Coalesce into BUS_BYTES-aligned, non-overlapping runs. Rounding a run outwards
+  // can make it touch its neighbour (two segments sharing one bus word); merging
+  // them here is what keeps the shared word from being written twice.
+  uint64_t run_start = 0, run_end = 0;
+  bool     in_run    = false;
+
+  for (std::map<uint64_t, uint8_t>::const_iterator it = img.begin(); it != img.end(); ) {
+    uint64_t start = it->first, end = start;
+    while (it != img.end() && it->first == end) { end++; it++; }
+
+    uint64_t aligned_start = start & ~(uint64_t)(BUS_BYTES - 1);
+    uint64_t aligned_end   = (end + BUS_BYTES - 1) & ~(uint64_t)(BUS_BYTES - 1);
+
+    if (in_run && aligned_start <= run_end) {
+      if (aligned_end > run_end)
+        run_end = aligned_end;
+    } else {
+      if (in_run)
+        emit_run(run_start, run_end, img);
+      run_start = aligned_start;
+      run_end   = aligned_end;
+      in_run    = true;
+    }
+  }
+
+  if (in_run)
+    emit_run(run_start, run_end, img);
 
   if(size < eh->e_shoff + (eh->e_shnum * sizeof(Sh))){
     printf("[ELF] ERROR: Filesize is smaller than advertised section headers (0x%lx vs 0x%lx)\n",
