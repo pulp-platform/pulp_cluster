@@ -91,7 +91,7 @@ fault_injection_sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= e1797de # branch: lg/isolde
+REGRESSION_TESTS_COMMIT ?= fc78497 # branch: fc/isolde
 
 regression_tests:
 	git clone $(REGRESSION_TESTS_REMOTE) $@
