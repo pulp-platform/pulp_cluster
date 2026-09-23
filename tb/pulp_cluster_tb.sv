@@ -223,254 +223,159 @@ module pulp_cluster_tb;
     end
   end
 
-  generate
-    if (EnableWidePort) begin : gen_dma_buses
-      AXI_BUS #(
-        .AXI_ADDR_WIDTH( AxiAw    ),
-        .AXI_DATA_WIDTH( DmaAxiDw ),
-        .AXI_ID_WIDTH  ( DmaAxiIw ),
-        .AXI_USER_WIDTH( AxiUw )
-      ) dma_slave();
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH( AxiAw    ),
+    .AXI_DATA_WIDTH( DmaAxiDw ),
+    .AXI_ID_WIDTH  ( DmaAxiIw ),
+    .AXI_USER_WIDTH( AxiUw )
+  ) dma_slave();
 
-      AXI_BUS #(
-        .AXI_ADDR_WIDTH( AxiAw ),
-        .AXI_DATA_WIDTH( DmaAxiDw ),
-        .AXI_ID_WIDTH  ( AxiIw ),
-        .AXI_USER_WIDTH( AxiUw )
-      ) dma_slave_iw();
+  AXI_BUS #(
+    .AXI_ADDR_WIDTH( AxiAw ),
+    .AXI_DATA_WIDTH( DmaAxiDw ),
+    .AXI_ID_WIDTH  ( AxiIw ),
+    .AXI_USER_WIDTH( AxiUw )
+  ) dma_slave_iw();
 
-      AXI_BUS_ASYNC_GRAY #(
-        .AXI_ADDR_WIDTH ( AxiAw    ),
-        .AXI_DATA_WIDTH ( DmaAxiDw ),
-        .AXI_ID_WIDTH   ( DmaAxiIw ),
-        .AXI_USER_WIDTH ( AxiUw    ),
-        .LOG_DEPTH      ( 3        )
-      ) async_dma_axi_bus();
+  AXI_BUS_ASYNC_GRAY #(
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_ID_WIDTH   ( DmaAxiIw ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .LOG_DEPTH      ( 3        )
+  ) async_dma_axi_bus();
 
-      axi_dw_converter_intf #(
-        .AXI_ID_WIDTH            ( AxiIw    ),
-        .AXI_ADDR_WIDTH          ( AxiAw    ),
-        .AXI_SLV_PORT_DATA_WIDTH ( DmaAxiDw ),
-        .AXI_MST_PORT_DATA_WIDTH ( AxiDw    ),
-        .AXI_USER_WIDTH          ( AxiUw    ),
-        .AXI_MAX_READS           ( 3        )
-      ) i_dma_dw_conv (
-        .clk_i  ( s_clk        ),
-        .rst_ni ( s_rstn       ),
-        .slv    ( dma_slave_iw ),
-        .mst    ( axi_slave[2] )
-      );
+  axi_dw_converter_intf #(
+    .AXI_ID_WIDTH            ( AxiIw    ),
+    .AXI_ADDR_WIDTH          ( AxiAw    ),
+    .AXI_SLV_PORT_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_MST_PORT_DATA_WIDTH ( AxiDw    ),
+    .AXI_USER_WIDTH          ( AxiUw    ),
+    .AXI_MAX_READS           ( 3        )
+  ) i_dma_dw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave_iw ),
+    .mst    ( axi_slave[2] )
+  );
 
-      axi_iw_converter_intf #(
-        .AXI_SLV_PORT_ID_WIDTH        ( DmaAxiIw ),
-        .AXI_MST_PORT_ID_WIDTH        ( AxiIw    ),
-        .AXI_SLV_PORT_MAX_UNIQ_IDS    ( 5        ),
-        .AXI_SLV_PORT_MAX_TXNS_PER_ID ( 5        ),
-        .AXI_SLV_PORT_MAX_TXNS        ( 5        ),
-        .AXI_MST_PORT_MAX_UNIQ_IDS    ( 5        ),
-        .AXI_MST_PORT_MAX_TXNS_PER_ID ( 5        ),
-        .AXI_ADDR_WIDTH               ( AxiAw    ),
-        .AXI_DATA_WIDTH               ( DmaAxiDw ),
-        .AXI_USER_WIDTH               ( AxiUw    )
-      ) i_dma_iw_conv (
-        .clk_i  ( s_clk        ),
-        .rst_ni ( s_rstn       ),
-        .slv    ( dma_slave    ),
-        .mst    ( dma_slave_iw )
-      );
+  axi_iw_converter_intf #(
+    .AXI_SLV_PORT_ID_WIDTH        ( DmaAxiIw ),
+    .AXI_MST_PORT_ID_WIDTH        ( AxiIw    ),
+    .AXI_SLV_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_SLV_PORT_MAX_TXNS        ( 5        ),
+    .AXI_MST_PORT_MAX_UNIQ_IDS    ( 5        ),
+    .AXI_MST_PORT_MAX_TXNS_PER_ID ( 5        ),
+    .AXI_ADDR_WIDTH               ( AxiAw    ),
+    .AXI_DATA_WIDTH               ( DmaAxiDw ),
+    .AXI_USER_WIDTH               ( AxiUw    )
+  ) i_dma_iw_conv (
+    .clk_i  ( s_clk        ),
+    .rst_ni ( s_rstn       ),
+    .slv    ( dma_slave    ),
+    .mst    ( dma_slave_iw )
+  );
 
-      axi_cdc_dst_intf   #(
-        .AXI_ADDR_WIDTH ( AxiAw    ),
-        .AXI_DATA_WIDTH ( DmaAxiDw ),
-        .AXI_ID_WIDTH   ( DmaAxiIw ),
-        .AXI_USER_WIDTH ( AxiUw    ),
-        .LOG_DEPTH      ( 3        )
-      ) cluster_to_soc_dma_dst_cdc_fifo_i (
-        .dst_clk_i  ( s_clk             ),
-        .dst_rst_ni ( s_rstn            ),
-        .src        ( async_dma_axi_bus ),
-        .dst        ( dma_slave         )
-      );
+  axi_cdc_dst_intf   #(
+    .AXI_ADDR_WIDTH ( AxiAw    ),
+    .AXI_DATA_WIDTH ( DmaAxiDw ),
+    .AXI_ID_WIDTH   ( DmaAxiIw ),
+    .AXI_USER_WIDTH ( AxiUw    ),
+    .LOG_DEPTH      ( 3        )
+  ) cluster_to_soc_dma_dst_cdc_fifo_i (
+    .dst_clk_i  ( s_clk             ),
+    .dst_rst_ni ( s_rstn            ),
+    .src        ( async_dma_axi_bus ),
+    .dst        ( dma_slave         )
+  );
 
-      pulp_cluster
-      `ifdef USE_PULP_PARAMETERS
-        #( .Cfg ( PulpClusterCfg ) )
-      `endif
-      cluster_i (
-        .clk_i                       ( s_clk                                ),
-        .rst_ni                      ( s_rstn                               ),
-        .pwr_on_rst_ni               ( s_rstn                               ),
-        .ref_clk_i                   ( s_clk                                ),
-        .axi_isolate_i               ( '0                                   ),
-        .axi_isolated_o              (                                      ),
-        .axi_isolated_wide_o         (                                      ),
+  pulp_cluster
+  `ifdef USE_PULP_PARAMETERS
+    #( .Cfg ( PulpClusterCfg ) )
+  `endif
+  cluster_i (
+    .clk_i                       ( s_clk                                ),
+    .rst_ni                      ( s_rstn                               ),
+    .pwr_on_rst_ni               ( s_rstn                               ),
+    .ref_clk_i                   ( s_clk                                ),
+    .axi_isolate_i               ( '0                                   ),
+    .axi_isolated_o              (                                      ),
+    .axi_isolated_wide_o         (                                      ),
 
-        .pmu_mem_pwdn_i              ( 1'b0                                 ),
+    .pmu_mem_pwdn_i              ( 1'b0                                 ),
 
-        .dma_pe_evt_ack_i            ( '1                                   ),
-        .dma_pe_evt_valid_o          (                                      ),
+    .dma_pe_evt_ack_i            ( '1                                   ),
+    .dma_pe_evt_valid_o          (                                      ),
 
-        .dma_pe_irq_ack_i            ( 1'b1                                 ),
-        .dma_pe_irq_valid_o          (                                      ),
+    .dma_pe_irq_ack_i            ( 1'b1                                 ),
+    .dma_pe_irq_valid_o          (                                      ),
 
-        .dbg_irq_valid_i             ( '0                                   ),
-        .mbox_irq_i                  ( '0                                   ),
+    .dbg_irq_valid_i             ( '0                                   ),
+    .mbox_irq_i                  ( '0                                   ),
 
-        .pf_evt_ack_i                ( 1'b1                                 ),
-        .pf_evt_valid_o              (                                      ),
+    .pf_evt_ack_i                ( 1'b1                                 ),
+    .pf_evt_valid_o              (                                      ),
 
-        .async_cluster_events_wptr_i ( '0                                   ),
-        .async_cluster_events_rptr_o (                                      ),
-        .async_cluster_events_data_i ( '0                                   ),
+    .async_cluster_events_wptr_i ( '0                                   ),
+    .async_cluster_events_rptr_o (                                      ),
+    .async_cluster_events_data_i ( '0                                   ),
 
-        .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
-        .test_mode_i                 ( 1'b0                                 ),
-        .fetch_en_i                  ( s_cluster_fetch_en                   ),
-        .eoc_o                       ( s_cluster_eoc                        ),
-        .busy_o                      ( s_cluster_busy                       ),
-        .cluster_id_i                ( ClustIdx                             ),
+    .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
+    .test_mode_i                 ( 1'b0                                 ),
+    .fetch_en_i                  ( s_cluster_fetch_en                   ),
+    .eoc_o                       ( s_cluster_eoc                        ),
+    .busy_o                      ( s_cluster_busy                       ),
+    .cluster_id_i                ( ClustIdx                             ),
 
-        .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
-        .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
-        .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
-        .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
-        .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
-        .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
-        .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
-        .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
-        .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
-        .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
-        .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
-        .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
-        .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
-        .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
-        .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
+    .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
+    .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
+    .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
+    .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
+    .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
+    .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
+    .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
+    .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
+    .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
+    .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
+    .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
+    .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
+    .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
+    .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
+    .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
 
-        .async_wide_master_aw_wptr_o ( async_dma_axi_bus.aw_wptr ),
-        .async_wide_master_aw_rptr_i ( async_dma_axi_bus.aw_rptr ),
-        .async_wide_master_aw_data_o ( async_dma_axi_bus.aw_data ),
-        .async_wide_master_ar_wptr_o ( async_dma_axi_bus.ar_wptr ),
-        .async_wide_master_ar_rptr_i ( async_dma_axi_bus.ar_rptr ),
-        .async_wide_master_ar_data_o ( async_dma_axi_bus.ar_data ),
-        .async_wide_master_w_data_o  ( async_dma_axi_bus.w_data  ),
-        .async_wide_master_w_wptr_o  ( async_dma_axi_bus.w_wptr  ),
-        .async_wide_master_w_rptr_i  ( async_dma_axi_bus.w_rptr  ),
-        .async_wide_master_r_wptr_i  ( async_dma_axi_bus.r_wptr  ),
-        .async_wide_master_r_rptr_o  ( async_dma_axi_bus.r_rptr  ),
-        .async_wide_master_r_data_i  ( async_dma_axi_bus.r_data  ),
-        .async_wide_master_b_wptr_i  ( async_dma_axi_bus.b_wptr  ),
-        .async_wide_master_b_rptr_o  ( async_dma_axi_bus.b_rptr  ),
-        .async_wide_master_b_data_i  ( async_dma_axi_bus.b_data  ),
+    .async_wide_master_aw_wptr_o ( async_dma_axi_bus.aw_wptr ),
+    .async_wide_master_aw_rptr_i ( async_dma_axi_bus.aw_rptr ),
+    .async_wide_master_aw_data_o ( async_dma_axi_bus.aw_data ),
+    .async_wide_master_ar_wptr_o ( async_dma_axi_bus.ar_wptr ),
+    .async_wide_master_ar_rptr_i ( async_dma_axi_bus.ar_rptr ),
+    .async_wide_master_ar_data_o ( async_dma_axi_bus.ar_data ),
+    .async_wide_master_w_data_o  ( async_dma_axi_bus.w_data  ),
+    .async_wide_master_w_wptr_o  ( async_dma_axi_bus.w_wptr  ),
+    .async_wide_master_w_rptr_i  ( async_dma_axi_bus.w_rptr  ),
+    .async_wide_master_r_wptr_i  ( async_dma_axi_bus.r_wptr  ),
+    .async_wide_master_r_rptr_o  ( async_dma_axi_bus.r_rptr  ),
+    .async_wide_master_r_data_i  ( async_dma_axi_bus.r_data  ),
+    .async_wide_master_b_wptr_i  ( async_dma_axi_bus.b_wptr  ),
+    .async_wide_master_b_rptr_o  ( async_dma_axi_bus.b_rptr  ),
+    .async_wide_master_b_data_i  ( async_dma_axi_bus.b_data  ),
 
-        .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
-        .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
-        .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
-        .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
-        .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
-        .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
-        .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
-        .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
-        .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
-        .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
-        .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
-        .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
-        .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
-        .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
-        .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
-      );
-
-    end else begin : gen_dma_stubs
-      pulp_cluster
-      `ifdef USE_PULP_PARAMETERS
-        #( .Cfg ( PulpClusterCfg ) )
-      `endif
-      cluster_i (
-        .clk_i                       ( s_clk                                ),
-        .rst_ni                      ( s_rstn                               ),
-        .pwr_on_rst_ni               ( s_rstn                               ),
-        .ref_clk_i                   ( s_clk                                ),
-        .axi_isolate_i               ( '0                                   ),
-        .axi_isolated_o              (                                      ),
-        .axi_isolated_wide_o         (                                      ),
-
-        .pmu_mem_pwdn_i              ( 1'b0                                 ),
-
-        .base_addr_i                 ( ClustBase[31:28]                     ),
-
-        .dma_pe_evt_ack_i            ( '1                                   ),
-        .dma_pe_evt_valid_o          (                                      ),
-
-        .dma_pe_irq_ack_i            ( 1'b1                                 ),
-        .dma_pe_irq_valid_o          (                                      ),
-
-        .dbg_irq_valid_i             ( '0                                   ),
-        .mbox_irq_i                  ( '0                                   ),
-
-        .pf_evt_ack_i                ( 1'b1                                 ),
-        .pf_evt_valid_o              (                                      ),
-
-        .async_cluster_events_wptr_i ( '0                                   ),
-        .async_cluster_events_rptr_o (                                      ),
-        .async_cluster_events_data_i ( '0                                   ),
-
-        .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
-        .test_mode_i                 ( 1'b0                                 ),
-        .fetch_en_i                  ( s_cluster_fetch_en                   ),
-        .eoc_o                       ( s_cluster_eoc                        ),
-        .busy_o                      ( s_cluster_busy                       ),
-        .cluster_id_i                ( ClustIdx                             ),
-
-        .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
-        .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
-        .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
-        .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
-        .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
-        .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
-        .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
-        .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
-        .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
-        .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
-        .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
-        .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
-        .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
-        .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
-        .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
-
-        // Wide master ports tied off when wide port disabled
-        .async_wide_master_aw_wptr_o (                                      ),
-        .async_wide_master_aw_rptr_i ( '0                                   ),
-        .async_wide_master_aw_data_o (                                      ),
-        .async_wide_master_ar_wptr_o (                                      ),
-        .async_wide_master_ar_rptr_i ( '0                                   ),
-        .async_wide_master_ar_data_o (                                      ),
-        .async_wide_master_w_data_o  (                                      ),
-        .async_wide_master_w_wptr_o  (                                      ),
-        .async_wide_master_w_rptr_i  ( '0                                   ),
-        .async_wide_master_r_wptr_i  ( '0                                   ),
-        .async_wide_master_r_rptr_o  (                                      ),
-        .async_wide_master_r_data_i  ( 'x                                   ),
-        .async_wide_master_b_wptr_i  ( '0                                   ),
-        .async_wide_master_b_rptr_o  (                                      ),
-        .async_wide_master_b_data_i  ( 'x                                   ),
-
-        .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
-        .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
-        .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
-        .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
-        .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
-        .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
-        .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
-        .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
-        .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
-        .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
-        .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
-        .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
-        .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
-        .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
-        .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
-      );
-    end
-  endgenerate
+    .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
+    .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
+    .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
+    .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
+    .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
+    .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
+    .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
+    .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
+    .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
+    .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
+    .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
+    .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
+    .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
+    .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
+    .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
+  );
 
   AXI_BUS #(
     .AXI_ADDR_WIDTH( AxiAw   ),
@@ -643,80 +548,6 @@ module pulp_cluster_tb;
       .src        ( async_cluster_to_soc_axi_bus ),
       .dst        ( axi_slave[1]                 )
       );
-
-//  pulp_cluster
-//`ifndef CLUSTER_NETLIST
-//`ifdef USE_PULP_PARAMETERS
-//  #(
-//    .Cfg ( PulpClusterCfg )
-//   )
-//`endif
-//`endif
-//  cluster_i (
-//    .clk_i                       ( s_clk                                ),
-//    .rst_ni                      ( s_rstn                               ),
-//    .pwr_on_rst_ni               ( s_rstn                               ),
-//    .ref_clk_i                   ( s_clk                                ),
-//    .axi_isolate_i               ( '0                                   ),
-//    .axi_isolated_o              (                                      ),
-//
-//    .pmu_mem_pwdn_i              ( 1'b0                                 ),
-//
-//    .dma_pe_evt_ack_i            ( '1                                   ),
-//    .dma_pe_evt_valid_o          (                                      ),
-//
-//    .dma_pe_irq_ack_i            ( 1'b1                                 ),
-//    .dma_pe_irq_valid_o          (                                      ),
-//
-//    .dbg_irq_valid_i             ( '0                                   ),
-//    .mbox_irq_i                  ( '0                                   ),
-//
-//    .pf_evt_ack_i                ( 1'b1                                 ),
-//    .pf_evt_valid_o              (                                      ),
-//
-//    .async_cluster_events_wptr_i ( '0                                   ),
-//    .async_cluster_events_rptr_o (                                      ),
-//    .async_cluster_events_data_i ( '0                                   ),
-//
-//    .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
-//    .test_mode_i                 ( 1'b0                                 ),
-//    .fetch_en_i                  ( s_cluster_fetch_en                   ),
-//    .eoc_o                       ( s_cluster_eoc                        ),
-//    .busy_o                      ( s_cluster_busy                       ),
-//    .cluster_id_i                ( ClustIdx                             ),
-//
-//    .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
-//    .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
-//    .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
-//    .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
-//    .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
-//    .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
-//    .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
-//    .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
-//    .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
-//    .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
-//    .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
-//    .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
-//    .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
-//    .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
-//    .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
-//
-//    .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
-//    .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
-//    .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
-//    .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
-//    .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
-//    .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
-//    .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
-//    .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
-//    .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
-//    .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
-//    .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
-//    .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
-//    .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
-//    .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
-//    .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
-//  );
 
   // Load ELF binary file
   task load_binary;
