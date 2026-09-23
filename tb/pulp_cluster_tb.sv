@@ -14,7 +14,7 @@
 //              the virtual interfaces and starts the test passed by +UVM_TEST+
 //`define TEST_CLOCK_BYPASS
 
-`timescale 1ps/1ps
+`timescale 1ns/1ps
 
 `include "pulp_soc_defines.sv"
 `include "axi/assign.svh"
@@ -41,9 +41,9 @@ module pulp_cluster_tb;
   logic s_rstn;
   logic s_rstn_cl;
 
-  localparam time SYS_TCK  = 8ns;
-  localparam time SYS_TA   = 2ns;
-  localparam time SYS_TT   = SYS_TCK - 2ns;
+  localparam time SYS_TCK  = 2ns;
+  localparam time SYS_TA   = 0.5ns;
+  localparam time SYS_TT   = SYS_TCK - 0.5ns;
 
   clk_rst_gen #(
     .ClkPeriod    ( SYS_TCK ),
@@ -70,9 +70,11 @@ module pulp_cluster_tb;
   localparam bit[AxiAw-1:0] ClustPeriphOffs = 'h00200000;
   localparam bit[AxiAw-1:0] ClustExtOffs    = 'h00400000;
   localparam bit[      5:0] ClustIdx        = 'h0;
-  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase;
+  localparam bit[AxiAw-1:0] ClustBaseAddr   = ClustBase - (ClustIdx << 22);
   localparam bit[AxiAw-1:0] L2BaseAddr      = 'h1C000000;
   localparam bit[AxiAw-1:0] L2Size          = 'h00100000;
+  localparam bit[AxiAw-1:0] UartBaseAddr    = 'h40000000;
+  localparam bit[AxiAw-1:0] UartSize        = 'h1000;
   localparam bit[AxiAw-1:0] BootAddr        = L2BaseAddr + 'h8080;
   localparam bit[AxiAw-1:0] ClustReturnInt  = ClustBase + ClustPeriphOffs + 'h100;
 
@@ -305,8 +307,6 @@ module pulp_cluster_tb;
 
         .pmu_mem_pwdn_i              ( 1'b0                                 ),
 
-        .base_addr_i                 ( ClustBase[31:28]                     ),
-
         .dma_pe_evt_ack_i            ( '1                                   ),
         .dma_pe_evt_valid_o          (                                      ),
 
@@ -534,12 +534,12 @@ module pulp_cluster_tb;
   );
 
   mock_uart_axi #(
-   .AxiIw   ( AxiIwMst      ),
-   .AxiAw   ( AxiAw         ),
-   .AxiDw   ( AxiDw         ),
-   .AxiUw   ( AxiUw         ),
-   .N_CORES ( 8             ),
-   .BaseAddr( 32'h4000_0000 )
+   .AxiIw   ( AxiIwMst     ),
+   .AxiAw   ( AxiAw        ),
+   .AxiDw   ( AxiDw        ),
+   .AxiUw   ( AxiUw        ),
+   .N_CORES ( `NB_CORES    ),
+   .BaseAddr( UartBaseAddr )
   ) i_mock_uart (
      .clk_i  ( s_clk         ),
      .rst_ni ( s_rstn        ),
@@ -559,8 +559,8 @@ module pulp_cluster_tb;
   rule_t [NumRules-1:0] addr_map;
   assign addr_map[0] = '{ // UART
     idx:        0,
-    start_addr: 'h03002000,
-    end_addr:   'h03003000
+    start_addr: UartBaseAddr,
+    end_addr:   UartBaseAddr + UartSize
   };
   assign addr_map[1] = '{ // 512KiB L2SPM
     idx:        1,
@@ -569,8 +569,8 @@ module pulp_cluster_tb;
   };
   assign addr_map[2] = '{ // Pulp Cluster
     idx:        2,
-    start_addr: ClustBaseAddr,
-    end_addr:   ClustBaseAddr + ClustExtOffs
+    start_addr: ClustBase,
+    end_addr:   ClustBase + ClustExtOffs
   };
 
   // Crossbar Configuration and Instantiation
@@ -644,6 +644,80 @@ module pulp_cluster_tb;
       .dst        ( axi_slave[1]                 )
       );
 
+//  pulp_cluster
+//`ifndef CLUSTER_NETLIST
+//`ifdef USE_PULP_PARAMETERS
+//  #(
+//    .Cfg ( PulpClusterCfg )
+//   )
+//`endif
+//`endif
+//  cluster_i (
+//    .clk_i                       ( s_clk                                ),
+//    .rst_ni                      ( s_rstn                               ),
+//    .pwr_on_rst_ni               ( s_rstn                               ),
+//    .ref_clk_i                   ( s_clk                                ),
+//    .axi_isolate_i               ( '0                                   ),
+//    .axi_isolated_o              (                                      ),
+//
+//    .pmu_mem_pwdn_i              ( 1'b0                                 ),
+//
+//    .dma_pe_evt_ack_i            ( '1                                   ),
+//    .dma_pe_evt_valid_o          (                                      ),
+//
+//    .dma_pe_irq_ack_i            ( 1'b1                                 ),
+//    .dma_pe_irq_valid_o          (                                      ),
+//
+//    .dbg_irq_valid_i             ( '0                                   ),
+//    .mbox_irq_i                  ( '0                                   ),
+//
+//    .pf_evt_ack_i                ( 1'b1                                 ),
+//    .pf_evt_valid_o              (                                      ),
+//
+//    .async_cluster_events_wptr_i ( '0                                   ),
+//    .async_cluster_events_rptr_o (                                      ),
+//    .async_cluster_events_data_i ( '0                                   ),
+//
+//    .en_sa_boot_i                ( s_cluster_en_sa_boot                 ),
+//    .test_mode_i                 ( 1'b0                                 ),
+//    .fetch_en_i                  ( s_cluster_fetch_en                   ),
+//    .eoc_o                       ( s_cluster_eoc                        ),
+//    .busy_o                      ( s_cluster_busy                       ),
+//    .cluster_id_i                ( ClustIdx                             ),
+//
+//    .async_data_master_aw_wptr_o ( async_cluster_to_soc_axi_bus.aw_wptr ),
+//    .async_data_master_aw_rptr_i ( async_cluster_to_soc_axi_bus.aw_rptr ),
+//    .async_data_master_aw_data_o ( async_cluster_to_soc_axi_bus.aw_data ),
+//    .async_data_master_ar_wptr_o ( async_cluster_to_soc_axi_bus.ar_wptr ),
+//    .async_data_master_ar_rptr_i ( async_cluster_to_soc_axi_bus.ar_rptr ),
+//    .async_data_master_ar_data_o ( async_cluster_to_soc_axi_bus.ar_data ),
+//    .async_data_master_w_data_o  ( async_cluster_to_soc_axi_bus.w_data  ),
+//    .async_data_master_w_wptr_o  ( async_cluster_to_soc_axi_bus.w_wptr  ),
+//    .async_data_master_w_rptr_i  ( async_cluster_to_soc_axi_bus.w_rptr  ),
+//    .async_data_master_r_wptr_i  ( async_cluster_to_soc_axi_bus.r_wptr  ),
+//    .async_data_master_r_rptr_o  ( async_cluster_to_soc_axi_bus.r_rptr  ),
+//    .async_data_master_r_data_i  ( async_cluster_to_soc_axi_bus.r_data  ),
+//    .async_data_master_b_wptr_i  ( async_cluster_to_soc_axi_bus.b_wptr  ),
+//    .async_data_master_b_rptr_o  ( async_cluster_to_soc_axi_bus.b_rptr  ),
+//    .async_data_master_b_data_i  ( async_cluster_to_soc_axi_bus.b_data  ),
+//
+//    .async_data_slave_aw_wptr_i  ( async_soc_to_cluster_axi_bus.aw_wptr ),
+//    .async_data_slave_aw_rptr_o  ( async_soc_to_cluster_axi_bus.aw_rptr ),
+//    .async_data_slave_aw_data_i  ( async_soc_to_cluster_axi_bus.aw_data ),
+//    .async_data_slave_ar_wptr_i  ( async_soc_to_cluster_axi_bus.ar_wptr ),
+//    .async_data_slave_ar_rptr_o  ( async_soc_to_cluster_axi_bus.ar_rptr ),
+//    .async_data_slave_ar_data_i  ( async_soc_to_cluster_axi_bus.ar_data ),
+//    .async_data_slave_w_data_i   ( async_soc_to_cluster_axi_bus.w_data  ),
+//    .async_data_slave_w_wptr_i   ( async_soc_to_cluster_axi_bus.w_wptr  ),
+//    .async_data_slave_w_rptr_o   ( async_soc_to_cluster_axi_bus.w_rptr  ),
+//    .async_data_slave_r_wptr_o   ( async_soc_to_cluster_axi_bus.r_wptr  ),
+//    .async_data_slave_r_rptr_i   ( async_soc_to_cluster_axi_bus.r_rptr  ),
+//    .async_data_slave_r_data_o   ( async_soc_to_cluster_axi_bus.r_data  ),
+//    .async_data_slave_b_wptr_o   ( async_soc_to_cluster_axi_bus.b_wptr  ),
+//    .async_data_slave_b_rptr_i   ( async_soc_to_cluster_axi_bus.b_rptr  ),
+//    .async_data_slave_b_data_o   ( async_soc_to_cluster_axi_bus.b_data  )
+//  );
+
   // Load ELF binary file
   task load_binary;
     input  string binary;                   // File name
@@ -669,8 +743,8 @@ module pulp_cluster_tb;
       for (int i = 0; i < num_wide_words; i++) begin
         automatic logic [AxiWideBeWidth-1:0][7:0] word = '0;
         for (int j = 0; j < AxiWideBeWidth; j++) begin
-          automatic int index = i * AxiWideBeWidth + j - num_start_unaligned_bytes; 
-          if(index >= 0) begin 
+          automatic int index = i * AxiWideBeWidth + j - num_start_unaligned_bytes;
+          if(index >= 0) begin
             word[j] = buffer[index];
           end
         end
@@ -805,6 +879,39 @@ module pulp_cluster_tb;
    end
 
   end
+
+/**************
+ *  VCD Dump  *
+ **************/
+
+`ifdef VCD_DUMP
+  initial begin: vcd_dump
+    string vcd_dump_file;
+
+    // Wait for the reset
+    wait (s_rstn);
+
+    // Wait until the probe is high
+    while (!s_cluster_fetch_en)
+      @(posedge s_clk);
+
+     if ( $value$plusargs ("VCD_DUMP_FILE=%s", vcd_dump_file));
+     $display("[TB] Dumping VCD in %s", vcd_dump_file);
+
+    $dumpfile(vcd_dump_file);
+    $dumpvars(0, cluster_i);
+    $dumpon;
+
+    // Wait until the probe is low
+    while (s_cluster_fetch_en)
+      @(posedge s_clk);
+
+    $dumpoff;
+
+    // Stop the execution
+    $finish(0);
+  end: vcd_dump
+`endif
 
 
 endmodule : pulp_cluster_tb

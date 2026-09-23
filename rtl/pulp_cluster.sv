@@ -137,9 +137,6 @@ module pulp_cluster
   input logic                                    pwr_on_rst_ni,
   input logic                                    pmu_mem_pwdn_i,
 
-
-  input logic [3:0]                              base_addr_i,
-
   input logic                                    test_mode_i,
 
   input logic                                    en_sa_boot_i,
@@ -254,7 +251,7 @@ module pulp_cluster
   output logic [Cfg.AxiCdcLogDepth:0]            async_wide_master_b_rptr_o
 );
 
-//Ensure that the input AXI ID width is big enough to accomodate the accomodate the IDs of internal wiring
+//Ensure that the input AXI ID width is big enough to accomodate the IDs of internal wiring
 if (Cfg.AxiIdInWidth < 1 + $clog2(Cfg.iCacheNumBanks))
   $info("AXI input ID width must be larger than 1+$clog2(Cfg.iCacheNumBanks) which is %d but was %d"
   , 1 + $clog2(Cfg.iCacheNumBanks), Cfg.AxiIdInWidth);
@@ -284,6 +281,8 @@ logic                                   s_hwpe_en;
 logic [$clog2(MAX_NUM_HWPES)-1:0]       s_hwpe_sel;
 // localparam int unsigned HWPE_SEL_BITS = (Cfg.HwpeCfg.NumHwpes > 1) ? $clog2(Cfg.HwpeCfg.NumHwpes) : 1;
 // logic [HWPE_SEL_BITS-1:0]       s_hwpe_sel;
+
+logic                     s_idma_en;
 
 logic                     fetch_en_synch;
 logic                     en_sa_boot_synch;
@@ -383,18 +382,16 @@ localparam hci_package::hci_size_parameter_t HciCoreSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  DEFAULT_EW,
-  EHW: DEFAULT_EHW,
-  FD:  0
+  EHW: DEFAULT_EHW
 };
 localparam hci_package::hci_size_parameter_t HciHwpeSizeParam = '{
-  DW:  Cfg.HwpeNumPorts * DataWidth,
+  DW:  (Cfg.HwpePresent) ? Cfg.HwpeNumPorts * DataWidth : 1,
   AW:  AddrWidth,
   BW:  DEFAULT_BW,
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  (Cfg.ECCInterco) ? HWPEParityWidth : DEFAULT_EW,
-  EHW: DEFAULT_EHW,
-  FD:  2
+  EHW: DEFAULT_EHW
 };
 localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
   DW:  DMA_HCI_DATA_WIDTH,
@@ -403,16 +400,14 @@ localparam hci_package::hci_size_parameter_t HciDmaSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  DEFAULT_IW,
   EW:  DEFAULT_EW,
-  EHW: DEFAULT_EHW,
-  FD:  0
+  EHW: DEFAULT_EHW
 };
 
 /* logarithmic and peripheral interconnect interfaces */
 // ext -> log interconnect
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW ),
-  .FD ( HciCoreSizeParam.FD )
+  .AW ( HciCoreSizeParam.AW )
 ) s_hci_ext[0:`NB_EXT-1] (
   .clk ( clk_i )
 );
@@ -426,8 +421,7 @@ XBAR_PERIPH_BUS s_hwpe_cfg_bus();
 // DMA -> (optionally) size converter
 hci_core_intf #(
   .DW ( HciDmaSizeParam.DW ),
-  .AW ( HciDmaSizeParam.AW ),
-  .FD ( HciDmaSizeParam.FD )
+  .AW ( HciDmaSizeParam.AW )
 ) s_hci_dma[0:Cfg.DmaNumPlugs-1] (
   .clk ( clk_i )
 );
@@ -443,15 +437,13 @@ hci_core_intf #(
   .DW   ( HciHwpeSizeParam.DW  ),
   .AW   ( HciHwpeSizeParam.AW  ),
   .EW   ( HciHwpeSizeParam.EW  ),
-  .EHW  ( HciHwpeSizeParam.EHW ),
-  .FD   ( HciHwpeSizeParam.FD  )
+  .EHW  ( HciHwpeSizeParam.EHW )
 ) s_hci_hwpe [0:0] (
   .clk ( clk_i )
 );
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW ),
-  .FD ( HciCoreSizeParam.FD )
+  .AW ( HciCoreSizeParam.AW )
 ) s_hci_core [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
@@ -479,8 +471,7 @@ XBAR_TCDM_BUS s_debug_bus[Cfg.NumCores-1:0]();
 // FIXME: iDMA
 hci_core_intf #(
   .DW ( HciCoreSizeParam.DW ),
-  .AW ( HciCoreSizeParam.AW ),
-  .FD ( HciCoreSizeParam.FD )
+  .AW ( HciCoreSizeParam.AW )
 ) s_core_dmactrl_bus [0:Cfg.NumCores-1] (
   .clk ( clk_i )
 );
@@ -526,8 +517,7 @@ localparam hci_package::hci_size_parameter_t HciMemSizeParam = '{
   UW:  DEFAULT_UW,
   IW:  TCDM_ID_WIDTH,
   EW:  (Cfg.ECCInterco) ? ParityWidth+MetaParityWidth : DEFAULT_EW,
-  EHW: DEFAULT_EHW,
-  FD:  0
+  EHW: DEFAULT_EHW
 };
 
 // log interconnect -> TCDM memory banks (SRAM)
@@ -614,7 +604,7 @@ hci_core_intf #(
   // DMA master signals - always declared, conditionally connected
   c2s_wide_req_t s_dma_master_req;       // Wide DMA master (256-bit)
   c2s_wide_resp_t s_dma_master_resp;
-  c2s_out_int_req_t s_dma_narrow_master_req;   // Narrow DMA master (64-bit) 
+  c2s_out_int_req_t s_dma_narrow_master_req;   // Narrow DMA master (64-bit)
   c2s_out_int_resp_t s_dma_narrow_master_resp;
 
 
@@ -639,7 +629,7 @@ hci_core_intf #(
     .init_no    ( s_init_n    )
   );
 
-/* fetch & busy genertion */
+/* fetch & busy generation */
 assign s_cluster_int_busy = s_cluster_periphs_busy | s_per2axi_busy | s_axi2per_busy | s_axi2mem_busy | s_dmac_busy | s_hwpe_busy;
 assign busy_o = s_cluster_int_busy | (|core_busy);
 assign fetch_en_int = fetch_enable_reg_int;
@@ -819,6 +809,26 @@ cluster_interconnect_wrap #(
 );
 
 //***************************************************
+//****************iDMA Clock Gating******************
+//***************************************************
+//*****************************************************
+// CONTROL CLOCK GATING CELL --> This clock gating cell
+// handles the clock gating control signal coming from
+// the cluster control unit, completely disabling the
+// clock in the idma wrapper
+//*****************************************************
+
+`ifdef TARGET_IDMA
+logic idma_clk_gated;
+cluster_clock_gating idma_ctrl_ckgate (
+    .clk_i      ( clk_i          ),
+    .en_i       ( s_idma_en      ),
+    .test_en_i  ( test_mode_i    ),
+    .clk_o      ( idma_clk_gated )
+  );
+`endif
+
+//***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
 if (Cfg.EnableWidePort) begin : gen_wide_port_idma
@@ -922,8 +932,8 @@ cluster_peripherals #(
   .NB_TCDM_BANKS  ( Cfg.TcdmNumBank   ),
   .ROM_BOOT_ADDR  ( Cfg.BootRomBaseAddr),
   .BOOT_ADDR      ( Cfg.BootAddr      ),
+  .SNITCH_ICACHE  ( Cfg.SnitchICache  ),
   .EVNT_WIDTH     ( EventWidth        ),
-
   .NB_L1_CUTS      ( NB_L1_CUTS       ),
   .RW_MARGIN_WIDTH ( RW_MARGIN_WIDTH  )
 
@@ -954,8 +964,6 @@ cluster_peripherals #(
   .dma_event_i            ( s_dma_event                        ),
   .dma_irq_i              ( s_dma_irq                          ),
   .mbox_irq_i             ( mbox_irq_synch                     ),
-
-  // NEW_SIGNALS .decompr_done_evt_i     ( s_decompr_done_evt                 ),
 
   .dma_fc_event_i         ( s_dma_fc_event                     ),
   .dma_fc_irq_i           ( '0                                 ),
@@ -991,6 +999,7 @@ cluster_peripherals #(
   .hwpe_events_i            ( s_hwpe_remap_evt                  ),
   .hwpe_en_o                ( s_hwpe_en                         ),
   .hwpe_sel_o               ( s_hwpe_sel                        ),
+  .idma_en_o                ( s_idma_en                         ),
   .hci_ctrl_o               ( s_hci_ctrl                        ),
   .enable_l1_l15_prefetch_o (  s_enable_l1_l15_prefetch         ),
   .flush_valid_o            ( s_icache_flush_valid              ),
@@ -1085,6 +1094,7 @@ generate
       .APU_NDSFLAGS_CPU    ( FpuInFlagsWidth            ),
       .APU_NUSFLAGS_CPU    ( FpuOutFlagsWidth           ),
       .DEBUG_START_ADDR    ( Cfg.DmBaseAddr             ),
+      .CLUSTER_BASE        ( Cfg.ClusterBaseAddr        ),
       .FPU                 ( Cfg.EnablePrivateFpu       ),
       .FP_DIVSQRT          ( Cfg.EnablePrivateFpDivSqrt ),
       .core_data_req_t     ( core_data_req_t            ),
@@ -1180,6 +1190,7 @@ generate
       .RemapAddress        ( Cfg.EnableRemapAddress ),
       .ClustAlias          ( Cfg.ClusterAlias       ),
       .ClustAliasBase      ( Cfg.ClusterAliasBase   ),
+      .ClustBaseAddr       ( Cfg.ClusterBaseAddr    ),
       .NumExtPerf          ( 5                      ),
       .core_data_req_t     ( core_data_req_t        ),
       .core_data_rsp_t     ( core_data_rsp_t        )
@@ -1188,8 +1199,6 @@ generate
       .rst_ni              ( rst_ni                ),
       .test_en_i           ( test_mode_i           ),
       .clk_en_i            ( clk_core_en[i]        ),
-      .base_addr_i         ( base_addr_i           ),
-      .cluster_id_i        ( cluster_id_i          ),
       .ext_perf_o          ( ext_perf[i]           ),
       .core_data_req_i     ( demux_data_req[i]     ),
       .core_data_rsp_o     ( demux_data_rsp[i]     ),
@@ -1201,41 +1210,53 @@ generate
   end
 endgenerate
 
-logic [Cfg.NumCores/3-1:0] hmr_tmr_synch;
-for (genvar i = 0; i < Cfg.NumCores/3; i++) begin
-  if (1'b1) begin // InterleaveGrps
-    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
-  end else begin
-    assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
-  end
-end
-
-logic [Cfg.NumCores/3-1:0] hmr_tmr_sw_resynch_req_short;
-logic [Cfg.NumCores/2-1:0] hmr_dmr_sw_resynch_req_short;
-
-always_comb begin
-  hmr_tmr_sw_resynch_req = '0;
-  hmr_dmr_sw_resynch_req = '0;
-
-  for (int i = 0; i < Cfg.NumCores/3; i++) begin
-    if (1'b1) begin // InterleaveGrps
-      hmr_tmr_sw_resynch_req[i] = hmr_tmr_sw_resynch_req_short[i];
-    end else begin
-      hmr_tmr_sw_resynch_req[3*i] = hmr_tmr_sw_resynch_req_short[i];
-    end
-  end
-
-  for (int i = 0; i < Cfg.NumCores/2; i++) begin
-    if (1'b1) begin // InterleaveGrps
-      hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
-    end else begin
-      hmr_dmr_sw_resynch_req[2*i] = hmr_dmr_sw_resynch_req_short[i];
-    end
-  end
-end
-
 generate
   if (Cfg.HMRPresent) begin : gen_hmr_unit
+
+    localparam int unsigned NumTMRGroups   = Cfg.HMRTmrEnabled ? NumCores/3 : 1;
+    localparam int unsigned NumDMRGroups   = Cfg.HMRDmrEnabled ? NumCores/2 : 1;
+
+    logic [NumTMRGroups-1:0] hmr_tmr_synch;
+    logic [NumTMRGroups-1:0] hmr_tmr_sw_resynch_req_short;
+    logic [NumDMRGroups-1:0] hmr_dmr_sw_resynch_req_short;
+
+
+    if (Cfg.HMRTmrEnabled) begin : gen_hmr_tmr_synch
+      for (genvar i = 0; i < Cfg.NumCores/3; i++) begin
+        if (1'b1) begin // InterleaveGrps
+          assign hmr_tmr_synch[i] = hmr_barrier_matched[i + 1];
+        end else begin
+          assign hmr_tmr_synch[i] = hmr_barrier_matched[i + i/2 + 1];
+        end
+      end
+
+      always_comb begin
+        hmr_tmr_sw_resynch_req = '0;
+        for (int i = 0; i < Cfg.NumCores/3; i++) begin
+          if (1'b1) begin // InterleaveGrps
+            hmr_tmr_sw_resynch_req[i] = hmr_tmr_sw_resynch_req_short[i];
+          end else begin
+            hmr_tmr_sw_resynch_req[3*i] = hmr_tmr_sw_resynch_req_short[i];
+          end
+        end
+      end
+
+    end else begin : gen_no_hmr_tmr_synch
+      assign hmr_tmr_synch = '0;
+      assign hmr_tmr_sw_resynch_req = '0;
+    end
+
+    always_comb begin
+      hmr_dmr_sw_resynch_req = '0;
+      for (int i = 0; i < Cfg.NumCores/2; i++) begin
+        if (1'b1) begin // InterleaveGrps
+          hmr_dmr_sw_resynch_req[i] = hmr_dmr_sw_resynch_req_short[i];
+        end else begin
+          hmr_dmr_sw_resynch_req[2*i] = hmr_dmr_sw_resynch_req_short[i];
+        end
+      end
+    end
+
     hmr_unit #(
       .NumCores          ( Cfg.NumCores                         ),
       .DMRSupported      ( Cfg.HMRDmrEnabled                    ),
@@ -1288,11 +1309,19 @@ generate
       .core_bus_outputs_i     ( '0           ),
       .core_axi_outputs_i     ( '0           )
     );
+
+    `ifndef VERILATOR
+    initial begin: p_assertions
+      assert (Cfg.HMRPresent && (Cfg.HMRDmrEnabled || Cfg.HMRTmrEnabled))
+          else $fatal(1, "Either DMR or TMR must be enabled when HMR is present!");
+    end
+    `endif
+
   end else begin : gen_no_hmr_unit
     assign hmr_reg_rsp                  = '0;
-    assign hmr_tmr_sw_resynch_req_short = '0;
     assign hmr_tmr_sw_synch_req         = '0;
-    assign hmr_dmr_sw_resynch_req_short = '0;
+    assign hmr_tmr_sw_resynch_req       = '0;
+    assign hmr_dmr_sw_resynch_req       = '0;
     assign hmr_dmr_sw_synch_req         = '0;
     assign recovery_bus                 = '0;
     assign setback                      = '0;
@@ -1305,11 +1334,11 @@ generate
       assign hmr2core[i].instr_gnt    = sys2hmr[i].instr_gnt;
       assign hmr2core[i].instr_rvalid = sys2hmr[i].instr_rvalid;
       assign hmr2core[i].instr_rdata  = sys2hmr[i].instr_rdata;
-      assign hmr2core[i].data_gnt     = sys2hmr[i].data_gnt;     
-      assign hmr2core[i].data_rvalid  = sys2hmr[i].data_rvalid;  
-      assign hmr2core[i].data_rdata   = sys2hmr[i].data_rdata;   
-      assign hmr2core[i].irq_req      = sys2hmr[i].irq_req;      
-      assign hmr2core[i].irq_id       = sys2hmr[i].irq_id;       
+      assign hmr2core[i].data_gnt     = sys2hmr[i].data_gnt;
+      assign hmr2core[i].data_rvalid  = sys2hmr[i].data_rvalid;
+      assign hmr2core[i].data_rdata   = sys2hmr[i].data_rdata;
+      assign hmr2core[i].irq_req      = sys2hmr[i].irq_req;
+      assign hmr2core[i].irq_id       = sys2hmr[i].irq_id;
 
       assign hmr2sys[i].instr_req     = core2hmr[i].instr_req;
       assign hmr2sys[i].instr_addr    = core2hmr[i].instr_addr;
@@ -1347,12 +1376,12 @@ begin
   assign s_apu_master_rflags[k] = s_apu__rflags[k];
 end
 
-// At the moment, the cluster does not support any shared execution unit 
+// At the moment, the cluster does not support any shared execution unit
 assign s_apu_master_gnt    = '0;
 assign s_apu_master_rvalid = '0;
 assign s_apu_master_rdata  = '0;
 assign s_apu__rflags       = '0;
-  
+
 //**************************************************************
 //**** HW Processing Engines / Cluster-Coupled Accelerators ****
 //**************************************************************
@@ -1749,7 +1778,7 @@ c2s_remap_resp_t src_remap_resp;
 if (Cfg.EnableWidePort) begin : gen_cluster_bus_narrow_master
   `AXI_ASSIGN_REQ_STRUCT(src_remap_req, s_data_master_req)
   `AXI_ASSIGN_RESP_STRUCT(s_data_master_resp, src_remap_resp)
-end else begin : gen_dma_narrow_master  
+end else begin : gen_dma_narrow_master
   // Merge cluster bus master and DMA narrow master via AXI multiplexer
   localparam int SlvIdWidth = AxiIdOutWidth;
   localparam int MstIdWidth = AxiIdOutWidth + 1;
@@ -2008,7 +2037,7 @@ axi_cdc_dst   #(
 );
 
 // If the AXI ID width of the subordinate port does not match the one required, we interpose
-// an AXI ID remapper. Otherwise the busses are simply assigned.
+// an AXI ID remapper. Otherwise the buses are simply assigned.
 `AXI_TYPEDEF_AW_CHAN_T(s2c_remap_aw_chan_t,logic[Cfg.AxiAddrWidth-1:0],logic[AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_W_CHAN_T(s2c_remap_w_chan_t,logic[Cfg.AxiDataInWidth-1:0],logic[Cfg.AxiDataInWidth/8-1:0],logic[Cfg.AxiUserWidth-1:0])
 `AXI_TYPEDEF_B_CHAN_T(s2c_remap_b_chan_t,logic[AxiIdInWidth-1:0],logic[Cfg.AxiUserWidth-1:0])
@@ -2132,7 +2161,7 @@ initial begin : p_assert
       else $fatal(1, "When Cfg.DmaUseHwpePort is 0, DMA_HCI_DATA_WIDTH must be equal to DataWidth!");
   end
   // Note: iDMA now uses conditional data width and AXI path selection
-  // EnableWidePort=0: iDMA uses 64-bit narrow transfers via cluster bus AXI path  
+  // EnableWidePort=0: iDMA uses 64-bit narrow transfers via cluster bus AXI path
   // EnableWidePort=1: iDMA uses 256-bit wide transfers via dedicated wide AXI path
   `endif
 end

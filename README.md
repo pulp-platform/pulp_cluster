@@ -28,7 +28,7 @@ We use [Bender](https://github.com/pulp-platform/bender) for hardware IP and dep
 cargo install bender
 ```
 
-## Simulation
+## QuestaSim Simulation
 
 It is possible to run benchmarks on the cluster, either within
 [PULP](https://github.com/pulp-platform/pulp) or as a separate IP. For
@@ -43,22 +43,28 @@ Warning: requires QuestaSim 2022.3 or newer.
    RISCV GCC toolchain](https://github.com/pulp-platform/pulp-riscv-gcc) to use
    a pre-built release. (At IIS, this is set up by the env script in step 4.)
 
-2. Compile the hw:
-   ```
-   make checkout
-   make scripts/compile.tcl
-   make build
-   ```
-
-3. Download the sw stack and bare-metal tests:
+2. Download the sw stack and bare-metal tests:
 	```
 	make pulp-runtime
 	make regression_tests
 	```
 
-4. Source the environment:
+3. Source the environment:
    ```
    source env/env.sh
+   ```
+   
+4. Compile the hw:
+   ```
+   make checkout
+   make generate_idma_rtl
+   make scripts/compile.tcl
+   make build
+   ```
+   Or alternatively:
+   ```
+   make init
+   make build
    ```
 
 5. Run the tests. Choose any test among the `parallel_bare_tests` and the
@@ -69,3 +75,21 @@ Warning: requires QuestaSim 2022.3 or newer.
    ```
 
    To use the GUI, add `gui=1` to the previous command.
+
+## QuestaOne Simulation
+
+To simulate with the new QuestaOne flow, follow the previous steps up to the `make pulp-runtime` command, then:
+
+1. Run the following from the pulp cluster root directory:
+   ```
+   make build_qone
+   ```
+
+2. Go to the desired test directory in regression_tests and run the following:
+   ```
+   make clean all run_qone
+   ```
+   or:
+   ```
+   make clean all run_qone gui=1
+   ```

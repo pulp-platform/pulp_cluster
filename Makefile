@@ -15,17 +15,28 @@ endif
 BENDER ?= bender
 PYTHON ?= python3
 
+BENDER_SUPPRESS_WARNINGS ?= E24
+export BENDER_SUPPRESS_WARNINGS
+
 VSIM ?= $(QUESTA) vsim
 VOPT ?= $(QUESTA) vopt
 VLIB ?= $(QUESTA) vlib
-top_level ?= pulp_cluster_tb
+
+QSIM ?= $(QUESTA) qsim
+QOPT ?= $(QUESTA) qopt
+Q1VE ?= q1ve --qverify
+
+VENV  := venv
+
+top_level ?= pulp_cluster
 library ?= work
 elf-bin ?= stimuli.riscv
 bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
 REGRESSIONS := $(ROOT_DIR)/regression_tests
 
-VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1 ns / 1 ps\" \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS_LINT += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 \"+incdir+$(shell pwd)/include\"
+VLOG_ARGS += -suppress vlog-2583 -suppress vlog-13314 -suppress vlog-13233 -timescale \"1ns / 1ps\" \"+incdir+$(shell pwd)/include\"
 
 # TB's wide DMA port toggle override
 export TB_ENABLE_WIDE_PORT
@@ -44,8 +55,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-#NONFREE_COMMIT ?= 6f5b4b5aa85b6f3ac4bbe03439dd250ab4810d80 # branch: dkeller/chimera-v2
-NONFREE_BRANCH ?= dkeller/chimera-v2
+NONFREE_COMMIT ?= aad59d36bfef6b74f03ffed28903a44cb86b9497
 
 nonfree-init:
 	rm -rf nonfree;
@@ -58,14 +68,13 @@ nonfree-init:
 
 .PHONY: init
 
-init: checkout
+init: checkout generate_idma_rtl scripts/compile.tcl
 
 .PHONY: checkout
 ## Checkout/update dependencies using Bender
 checkout:
 	$(BENDER) checkout
 	touch Bender.lock
-	make scripts/compile.tcl
 
 Bender.lock:
 	$(BENDER) checkout
@@ -82,15 +91,11 @@ update:
 
 sw-init: pulp-runtime fault_injection_sim regression_tests
 sw-clean:
-	@rm -rf pulp-runtime fault_injection_sim regression_test
+	@rm -rf pulp-runtime fault_injection_sim regression_tests
 
 ## Clone pulp-runtime as SW stack
 PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_REF	?= dkeller/chimera-v2
-PULP_RUNTIME_DIR	?= $(ROOT_DIR)/pulp-runtime
-# Lock (optional)
-PULP_RUNTIME_LOCK_FILE ?= pulp-runtime.lock
-PULP_RUNTIME_COMMIT := $(shell test -f $(PULP_RUNTIME_LOCK_FILE) && cat $(PULP_RUNTIME_LOCK_FILE) || echo)
+PULP_RUNTIME_COMMIT ?= 3b48b0c6872cc01ba169a2c9c886ebb815d22cdc
 
 pulp-runtime:
 	@if [ -d "$(PULP_RUNTIME_DIR)/.git" ]; then \
@@ -140,7 +145,7 @@ fault_injection_sim:
 		git -C $(FAULT_SIM_DIR) checkout $(FAULT_SIM_BRANCH) || true; \
 		git -C $(FAULT_SIM_DIR) pull --ff-only || true; \
 	fi
-	
+
 lock-fault-sim:
 	@git -C $(FAULT_SIM_DIR) rev-parse HEAD > $(FAULT_SIM_LOCK_FILE) && \
 	echo "Locked fault_injection_sim to $$(cat $(FAULT_SIM_LOCK_FILE))"
@@ -150,11 +155,7 @@ unlock-fault-sim:
 
 ## Clone regression tests
 REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_BRANCH ?= dkeller/chimera-v2
-REGRESSION_TESTS_DIR	?= $(ROOT_DIR)/regression_tests
-# Lock (optional)
-REGRESSION_TESTS_LOCK_FILE ?= regression_tests.lock
-REGRESSION_TESTS_COMMIT := $(shell test -f $(REGRESSION_TESTS_LOCK_FILE) && cat $(REGRESSION_TESTS_LOCK_FILE) || echo)
+REGRESSION_TESTS_COMMIT ?= f173611e3e8f15e7f526d40712135e7ff976f805 # branch: lg/upstream
 
 regression_tests:
 	@if [ -d "$(REGRESSION_TESTS_DIR)/.git" ]; then \
@@ -223,27 +224,68 @@ sim-clean: clean_idma_hw
 include bender-common.mk
 include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
+	$(call generate_vsim, $@, $(common_defs) $(common_targs) -t idma $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
+
+scripts/compile.tcl-mchan: | Bender.lock
+	$(call generate_vsim, scripts/compile.tcl, $(common_defs) $(common_targs) -t mchan $(sim_defs) $(sim_targs),..)
+	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> scripts/compile.tcl
 
 include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
 	$(BENDER) script synopsys $(common_targs) $(common_defs) $(synth_targs) $(synth_defs)	> $@
 
+scripts/compile_lint.tcl:
+	echo 'set ROOT $(ROOT_DIR)' > $@
+	$(BENDER) script vsim --vlog-arg="$(VLOG_ARGS_LINT)" $(common_defs) $(common_targs) | grep -v "set ROOT" >> $@
+	echo >> $@
+
 $(library):
 	$(QUESTA) vlib $(library)
 
-compile: $(IDMA_ROOT)/.idma_generated $(library)
+
+uv:
+	cd $(shell bender path idma) && \
+	curl -LsSf https://astral.sh/uv/install.sh | sh && \
+	uv sync --locked
+
+generate_idma_rtl: uv
+	. "$(shell bender path idma)/.venv/bin/activate" && $(MAKE) -C $(shell bender path idma) idma_hw_all
+
+compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
 	@test -f scripts/compile.tcl || { echo "ERROR: scripts/compile.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
+build_qone: compile
+	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
+
+
 build: compile
-	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level) -o $(top_level)_optimized +acc
+	$(VOPT) $(compile_flag) -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized +acc
+
+compile_lint: $(library)
+	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
+	@test -f scripts/compile_lint.tcl || { echo "ERROR: scripts/compile_lint.tcl file does not exist. Did you run make scripts in bender mode?"; exit 1; }
+	$(Q1VE) -od lint/comp_lint_results -c -do " \
+	onerror {exit}; \
+	do scripts/compile_lint.tcl; \
+	exit"
+
+lint: compile_lint
+	$(Q1VE) -od lint/lint_results -c -do " \
+	lint methodology ip -goal release; \
+	lint run -d $(top_level); \
+	exit"
+
+cdc: compile_lint
+	$(Q1VE) -od cdc_results -c -do " \
+	cdc run -d $(top_level); \
+	exit"
 
 run:
 	$(VSIM) +permissive -suppress 3053 -suppress 8885 -lib $(library)  +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) +APP=$(elf-bin) +notimingchecks +nospecify  -t 1ps \
-	${top_level}_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
+	${top_level}_tb_optimized +permissive-off ++$(elf-bin) ++$(target-options) ++$(cl-bin) | tee sim.log
 
 .PHONY: clean
 

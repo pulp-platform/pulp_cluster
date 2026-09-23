@@ -4,7 +4,7 @@
  *
  * This code is under development and not yet released to the public.
  * Until it is released, the code is under the copyright of ETH Zurich and
- * the University of Bologna, and may contain confidential and/or unpublished 
+ * the University of Bologna, and may contain confidential and/or unpublished
  * work. Any reuse/redistribution is strictly forbidden without written
  * permission from ETH Zurich.
  *
@@ -92,8 +92,7 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_HWPE_SIZE.EHW),
-        .FD(HCI_HWPE_SIZE.FD)
+        .EHW(HCI_HWPE_SIZE.EHW)
       )
       s_hwpe_intc [0:N_HCI_HWPE_PORTS-1] (
         .clk(clk_i)
@@ -106,8 +105,7 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_CORE_SIZE.EHW),
-        .FD(HCI_DMA_SIZE.FD)
+        .EHW(HCI_CORE_SIZE.EHW)
       )
       s_dma_intc [0:N_HCI_DMA_PORTS-1] (
         .clk(clk_i)
@@ -235,7 +233,7 @@ module cluster_interconnect_wrap
         .tcdm_target    ( hwpe_tcdm_slave[0]                                      ),
         .tcdm_initiator ( core_hwpe_tcdm_slave[NB_CORES:NB_CORES+HWPE_WIDTH_FAC-1] )
       );
-  
+
       for(genvar ii=0; ii<NB_CORES; ii++) begin : core_tcdm_slave_gen
         hci_core_assign i_assign (
           .tcdm_target    ( core_tcdm_slave      [ii] ),

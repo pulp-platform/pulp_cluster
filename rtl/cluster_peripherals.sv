@@ -18,7 +18,7 @@
 
 `include "register_interface/typedef.svh"
 
-module cluster_peripherals 
+module cluster_peripherals
   import pulp_cluster_package::*;
 #(
   parameter int unsigned  NB_CORES              = 8,
@@ -29,6 +29,7 @@ module cluster_peripherals
   parameter int unsigned  NB_TCDM_BANKS         = 8,
   parameter int unsigned  ROM_BOOT_ADDR         = 32'h1A000000,
   parameter int unsigned  BOOT_ADDR             = 32'h1C000000,
+  parameter int unsigned  SNITCH_ICACHE         = 0,
   parameter int unsigned  EVNT_WIDTH            = 8,
   parameter int unsigned  FEATURE_DEMUX_MAPPED  = 1,
   parameter int unsigned  NB_L1_CUTS            = 16,
@@ -101,7 +102,7 @@ module cluster_peripherals
   input logic [NB_CORES-1:0][3:0]     hwpe_events_i,
   output logic                        hwpe_en_o,
   output logic [$clog2(NB_HWPES)-1:0] hwpe_sel_o,
-  // output logic [((NB_HWPES>1)?$clog2(NB_HWPES):1)-1:0] hwpe_sel_o,
+  output logic                        idma_en_o,
   output hci_package::hci_interconnect_ctrl_t hci_ctrl_o,
 
   // Control ports
@@ -191,6 +192,8 @@ module cluster_peripherals
     .hwpe_en_o      ( hwpe_en_o                    ),
     .hwpe_sel_o     ( hwpe_sel_o                   ),
     .hci_ctrl_o     ( hci_ctrl_o                   ),
+
+    .idma_en_o   ( idma_en_o                 ),
 
     .fregfile_disable_o ( fregfile_disable_o       ),
 
@@ -285,7 +288,7 @@ module cluster_peripherals
   //******************** icache_ctrl_unit ******************
   //********************************************************
 
-`ifdef SNITCH_ICACHE
+if (SNITCH_ICACHE) begin: gen_snitch_icache_ctrl
   //For an explanation of this macro refer to https://github.com/pulp-platform/register_interface/blob/master/include/register_interface/typedef.svh#L34
   `REG_BUS_TYPEDEF_ALL(icache, logic[31:0], logic[31:0], logic[3:0])
   icache_req_t icache_req;
@@ -362,7 +365,7 @@ module cluster_peripherals
       assign IC_ctrl_unit_bus_main[i].ctrl_enable_regs = '0;
     `endif
   end
-`else
+end else begin: gen_hier_icache_ctrl
   assign flush_valid_o = '0;
   hier_icache_ctrl_unit_wrap #(
     .NB_CACHE_BANKS ( NB_CACHE_BANKS       ),
@@ -377,7 +380,7 @@ module cluster_peripherals
     .IC_ctrl_unit_bus_main       (  IC_ctrl_unit_bus_main           ),
     .enable_l1_l15_prefetch_o    (  enable_l1_l15_prefetch_o        )
   );
-`endif
+end
 
   //********************************************************
   //******************** DMA CL CONFIG PORT ****************

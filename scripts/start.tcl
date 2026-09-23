@@ -3,11 +3,11 @@ if {![info exists VSIM_PATH ]} {
     set VSIM_PATH ""
 }
 
-if {![info exists VSIM]} {
-    set VSIM vsim
+if {[info exists USE_QONE] && $USE_QONE == 1} {
+    qsim -qwavedb=+signal+memory +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
+} else {
+    vsim +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
 }
-
-$VSIM +permissive -suppress 3053 -suppress 8885 -suppress 12130 -lib $VSIM_PATH/work +APP=./build/test/test +notimingchecks +nospecify  -t 1ps  pulp_cluster_tb_optimized +permissive-off ++./build/test/test
 
 if {[info exists ::env(FAULT_INJECTION)]} {
     if {![info exists ::env(FAULT_INJECTION_SCRIPT)]} {
@@ -15,8 +15,3 @@ if {[info exists ::env(FAULT_INJECTION)]} {
     }
     source $::env(FAULT_INJECTION_SCRIPT)
 }
-
-source $VSIM_PATH/scripts/wave.tcl
-
-add log -r /*
-run -all
