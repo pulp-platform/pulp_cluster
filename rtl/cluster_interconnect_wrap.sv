@@ -92,7 +92,8 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_HWPE_SIZE.EHW)
+        .EHW(HCI_HWPE_SIZE.EHW),
+        .FD(HCI_HWPE_SIZE.FD)
       )
       s_hwpe_intc [0:N_HCI_HWPE_PORTS-1] (
         .clk(clk_i)
@@ -105,7 +106,8 @@ module cluster_interconnect_wrap
         .UW(HCI_HWPE_SIZE.UW),
         .IW(HCI_HWPE_SIZE.IW),
         .EW(HCI_HWPE_SIZE.EW),
-        .EHW(HCI_CORE_SIZE.EHW)
+        .EHW(HCI_CORE_SIZE.EHW),
+        .FD(HCI_DMA_SIZE.FD)
       )
       s_dma_intc [0:N_HCI_DMA_PORTS-1] (
         .clk(clk_i)

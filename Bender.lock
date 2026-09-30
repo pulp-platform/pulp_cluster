@@ -128,7 +128,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: e1eac429ea0af0f1aae4f21012ef8ace417532b9
+    revision: c79d0501377da9049c7198e7f9ea3f32bd115f4e
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -204,7 +204,7 @@ packages:
     dependencies:
     - common_cells
   neureka:
-    revision: 2e076f7d25cdfba38821ee95595bb27aec53c764
+    revision: 9edd85ed16861a9b85eabbe87454bd3bdf73c69c
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -229,7 +229,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: dbcba6b1efda24dc909ebdd4ace132f798c8c12b
+    revision: 466bc59a9c5b263b08535a8e6f1d0637a9bcff34
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
@@ -273,10 +273,10 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 11dd29e85d40e29fea0481b471f1c0cc967df1a4
+    revision: 4a1c3d566105b279a46188c8544a19935a5ac6e5
     version: null
     source:
-      Git: https://github.com/belanoa/softex.git
+      Git: https://github.com/pulp-platform/softex.git
     dependencies:
     - common_cells
     - fpnew

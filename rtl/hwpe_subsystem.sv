@@ -19,7 +19,7 @@ module hwpe_subsystem
   import hci_package::*;
   import pulp_cluster_package::*;
 #(
-  parameter  hwpe_subsystem_cfg_t HWPE_CFG = hwpe_subsystem_cfg_t'{'0, '0},
+  parameter  hwpe_subsystem_cfg_t HWPE_CFG = hwpe_subsystem_cfg_t'{'0, '0, '0},
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
   parameter  int unsigned ID_WIDTH         = 8,
@@ -46,6 +46,7 @@ module hwpe_subsystem
   localparam int unsigned AW = HCI_HWPE_SIZE.AW;
   localparam int unsigned EW = HCI_HWPE_SIZE.EW;
   localparam int unsigned EHW = HCI_HWPE_SIZE.EHW;
+  localparam int unsigned FD = HCI_HWPE_SIZE.FD;
 
   // TODO: remove this once we have a proper way to get the number of HWPEs
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
@@ -69,7 +70,8 @@ module hwpe_subsystem
     .DW   ( DW  ),
     .AW   ( AW  ),
     .EW   ( EW  ),
-    .EHW  ( EHW )
+    .EHW  ( EHW ),
+    .FD   ( FD  )
   ) tcdm [0:N_HWPES-1] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin : gen_hwpe

@@ -44,6 +44,7 @@ package pulp_cluster_package;
   typedef struct packed {
     hwpe_type_e [MAX_NUM_HWPES-1:0] HwpeList;
     byte_t NumHwpes;
+    byte_t FifoDepth;
   } hwpe_subsystem_cfg_t;
 
   // PULP cluster configuration
@@ -229,7 +230,7 @@ package pulp_cluster_package;
     TcdmSize: 128*1024,
     TcdmNumBank: 16,
     HwpePresent: 1,
-    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}},
+    HwpeCfg: '{NumHwpes: 3, HwpeList: {SOFTEX, NEUREKA, REDMULE}, FifoDepth: 2},
     HwpeNumPorts: 9,
     HMRPresent: 1,
     HMRDmrEnabled: 1,
