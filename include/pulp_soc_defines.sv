@@ -16,7 +16,6 @@
 
 /*
  * Collection of legacy pulp cluster defines.
- * 
  */
 
 `define CLUSTER_ALIAS
