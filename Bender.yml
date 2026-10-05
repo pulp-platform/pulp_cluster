@@ -22,7 +22,7 @@ dependencies:
   obi:                    { git: "https://github.com/pulp-platform/obi.git", version: =0.1.7 }
   hier-icache:            { git: "https://github.com/pulp-platform/hier-icache.git", version: =1.3.0 }
   cluster_icache:         { git: "https://github.com/pulp-platform/cluster_icache.git", version: =0.2.0 }
-  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: "072ddd876c88324ef28856d4b2697424aaa231ce" }
+  cluster_peripherals:    { git: "https://github.com/pulp-platform/cluster_peripherals.git", rev: "a3be530fccdcef4733d57163c6d979ff77ed554d" }
   axi:                    { git: "https://github.com/pulp-platform/axi.git", version: =0.39.8  }
   timer_unit:             { git: "https://github.com/pulp-platform/timer_unit.git", version: =1.0.2 }
   common_cells:           { git: "https://github.com/pulp-platform/common_cells.git", version: =1.38.0 }
@@ -31,12 +31,12 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 2a5a508 } # yt/wen-filter
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 26db6df5e335d453c21ee6ba4a28773d57754980 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 6ba6f41 } # yt/redmule-v2
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 466bc59a9c5b263b08535a8e6f1d0637a9bcff34 } # branch: yt/hci-structs
   neureka:                { git: "https://github.com/pulp-platform/neureka.git", rev: 9edd85ed16861a9b85eabbe87454bd3bdf73c69c } # branch: yt/hci-structs
-  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: 4a1c3d566105b279a46188c8544a19935a5ac6e5 } # branch: master
+  softex:                 { git: "https://github.com/belanoa/softex.git"       , rev: cda21ff7793a481bac079ab28cc5af209621ae45 } # branch: master
   obi:                    { git: "https://github.com/pulp-platform/obi.git", rev: v0.1.3 }
 
 export_include_dirs:
