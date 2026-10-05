@@ -31,7 +31,7 @@ dependencies:
   cv32e40p:               { git: "https://github.com/pulp-platform/cv32e40p.git", rev: astral-v1.0 }
   ibex:                   { git: "https://github.com/pulp-platform/ibex.git", rev: "pulpissimo-v6.1.2" }
   scm:                    { git: "https://github.com/pulp-platform/scm.git", rev: v1.2.0 }
-  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 26db6df5e335d453c21ee6ba4a28773d57754980 }
+  hci:                    { git: "https://github.com/pulp-platform/hci.git", rev: 590d54bcc4448b9a9c1537670e228171fe76fa06 }
   register_interface:     { git: "https://github.com/pulp-platform/register_interface.git", version: 0.4.4  }
   redundancy_cells:       { git: "https://github.com/pulp-platform/redundancy_cells.git", rev: 6ba6f41 } # yt/redmule-v2
   redmule:                { git: "https://github.com/pulp-platform/redmule.git", rev: 466bc59a9c5b263b08535a8e6f1d0637a9bcff34 } # branch: yt/hci-structs
