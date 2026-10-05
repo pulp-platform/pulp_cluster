@@ -128,7 +128,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 0741e5df7989932e99f7aae64162e2d5d00a03af
+    revision: cb59f9817fa81fef2fdc205f4de4af5d463b0367
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -273,7 +273,7 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 4a1c3d566105b279a46188c8544a19935a5ac6e5
+    revision: cda21ff7793a481bac079ab28cc5af209621ae45
     version: null
     source:
       Git: https://github.com/pulp-platform/softex.git
