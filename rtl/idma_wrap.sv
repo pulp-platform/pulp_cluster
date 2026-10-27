@@ -52,7 +52,7 @@ module dmac_wrap #(
   input logic                    test_mode_i,
   XBAR_PERIPH_BUS.Slave          pe_ctrl_slave[NB_PE_PORTS-1:0],
   hci_core_intf.target           ctrl_slave[0:NB_CORES-1],
-  hci_core_intf.initiator        tcdm_master[0:3],
+  hci_core_intf.initiator        tcdm_master[NB_TCDM_PORTS_PER_STRM*NUM_BIDIR_STREAMS-1:0],
   output                         axi_req_t [NUM_BIDIR_STREAMS-1:0] ext_master_req_o,
   input                          axi_resp_t [NUM_BIDIR_STREAMS-1:0] ext_master_resp_i,
   output logic [NB_CORES-1:0]    term_event_o,
@@ -739,7 +739,7 @@ module dmac_wrap #(
         .RejectZeroTransfers (1'b1),
         .ErrorHandling       (1'b0)
       ) i_idma_backend_r_axi_rw_init_rw_obi (
-        .clk_i              ( datapath_clk_gated                               ),
+        .clk_i              ( datapath_clk_gated                      ),
         .rst_ni             ( rst_ni                                  ),
         .test_i             ( test_mode_i                             ),
         .req_valid_i        ( be_valid[s]                             ),
