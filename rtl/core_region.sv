@@ -487,7 +487,8 @@ import rapid_recovery_pkg::*;
       $error("ERROR_1 (0x00000000 -> 0x%8x) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" , CLUSTER_BASE, core_data_req_o.add, $time()/1000 );
       $finish();
     end
-    if ((core_data_req_o.req == 1'b1) && (core_data_req_o.add >= (CLUSTER_BASE + 32'h0040_0000)) && ((core_data_req_o.add < (CLUSTER_BASE + 32'h0A00_0000)))) begin
+    if ((core_data_req_o.req == 1'b1) && (core_data_req_o.add >= (CLUSTER_BASE + 32'h0040_0000)) && ((core_data_req_o.add < (CLUSTER_BASE + 32'h0A00_0000)))
+        && !((core_data_req_o.add >= (CLUSTER_BASE + (cluster_id_i << 22))) && (core_data_req_o.add < (CLUSTER_BASE + (cluster_id_i << 22) + 32'h0040_0000)))) begin
       $error("ERROR_2 (0x%8x -> 0x%8x) : Data interface is making a request on unmapped region --> %8x\t at time %t [ns]" , CLUSTER_BASE + 32'h0040_0000, CLUSTER_BASE + 32'h0A00_0000, core_data_req_o.add, $time()/1000 );
       $finish();
     end
