@@ -1152,11 +1152,7 @@ module dmac_wrap #(
           .bank_rdata_i  ( {tcdm_master[NB_TCDM_PORTS_PER_STRM*s+5].r_data,tcdm_master[NB_TCDM_PORTS_PER_STRM*s+4].r_data}   )
         );
 
-        assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+4].boffs = '0;
-        assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+4].lrdy  = '0;
         assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+4].user  = '0;
-        assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+5].boffs = '0;
-        assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+5].lrdy  = '0;
         assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+5].user  = '0;
         assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+4].wen   = !tcdm_master_we_4;
         assign tcdm_master[NB_TCDM_PORTS_PER_STRM*s+5].wen   = !tcdm_master_we_5;
