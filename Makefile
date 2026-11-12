@@ -93,7 +93,7 @@ pulp-runtime:
 
 ### Clone pulp-sdk as SW stack
 PULP_SDK_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-sdk.git
-PULP_SDK_COMMIT ?= 894a13eb62eaa8d00c9f7c39d1d8ff98d9c03211
+PULP_SDK_COMMIT ?= 2173725964cad8f6d0e802e8328b6de6752e9495
 
 pulp-sdk:
 	git clone ${PULP_SDK_REMOTE} $@
