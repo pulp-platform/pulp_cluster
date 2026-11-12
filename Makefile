@@ -48,7 +48,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@gitlab.chips.it:digitalresearchline/chips-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= 05c9c686130a51302091df5676cbf7a13c298f5e
+NONFREE_COMMIT ?= e0e713be4a9215484e07d6f1244c21352e71a4bd
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
@@ -90,6 +90,14 @@ PULP_RUNTIME_COMMIT ?= 9bd23d2b2b6b6c74fc26a3ab3402fbebc589dace # branch: chips-
 pulp-runtime:
 	git clone $(PULP_RUNTIME_REMOTE) $@
 	cd $@ && git checkout $(PULP_RUNTIME_COMMIT)
+
+### Clone pulp-sdk as SW stack
+PULP_SDK_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-sdk.git
+PULP_SDK_COMMIT ?= 894a13eb62eaa8d00c9f7c39d1d8ff98d9c03211
+
+pulp-sdk:
+	git clone ${PULP_SDK_REMOTE} $@
+	cd $@ && git checkout ${PULP_SDK_COMMIT} && git submodule update --init --recursive
 
 ## Clone fault injection scripts
 FAULT_SIM_REMOTE ?= https://github.com/pulp-platform/InjectaFault.git
