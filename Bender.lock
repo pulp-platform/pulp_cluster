@@ -52,6 +52,7 @@ packages:
     dependencies:
     - axi
     - common_cells
+    - register_interface
     - scm
     - tech_cells_generic
   cluster_interconnect:
@@ -128,7 +129,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 2a5a5081a2b32f1a04e7e28c00d3762d92602b84
+    revision: 3e63936991569d0b1e315d6914478937b37bb338
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -179,7 +180,7 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 6be43a77c81e86c53e821dfbc618522c375ff28c
+    revision: 2e637216e0455d77706a50d0639b86891e2a83aa
     version: null
     source:
       Git: https://github.com/pulp-platform/iDMA.git
@@ -257,8 +258,8 @@ packages:
     - register_interface
     - tech_cells_generic
   register_interface:
-    revision: 5daa85d164cf6b54ad061ea1e4c6f3624556e467
-    version: 0.4.5
+    revision: d6e1d4cdaab7870f4faf3f88a1c788eaf5ac129d
+    version: 0.4.7
     source:
       Git: https://github.com/pulp-platform/register_interface.git
     dependencies:
