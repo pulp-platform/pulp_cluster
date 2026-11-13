@@ -271,25 +271,34 @@ module dmac_wrap #(
   // Here, another clock gating level is applied:
   //    - completely hw-controlled, this clock gating cell controls the datapath clock, disabling it when not needed.
 
-  logic keep_datapath_clocked, datapath_clk_en;
+  // The maximum inflight number of transfers is computed as: (FIFO DEPTH + number of outstanding bursts held by the backend +
+  // the transfer currently handled by the midend) * number of streams
+  localparam int unsigned MaxInflight   = NumStreams * (GLOBAL_QUEUE_DEPTH + NB_OUTSND_BURSTS + 2);
+  localparam int unsigned InflightWidth = $clog2(MaxInflight + 1);
 
-  // Register to keep the clock active until event completion
-  //    Once the transfer has started its execution (busy_o == 1'b1)
-  //    the datapath needs to be clocked until the completion event
-  //    has been received (|trans_complete). Then the datapath
-  //    can be gated again.
+  logic datapath_clk_en;
+  logic [InflightWidth-1:0] inflight_d, inflight_q;
 
-  always_ff @(posedge clk_i, negedge rst_ni) begin
-    if (rst_ni == 1'b0) begin
-      keep_datapath_clocked <= 1'b0;
-    end else if (busy_o == 1'b1) begin
-      keep_datapath_clocked <= 1'b1;
-    end else if (|trans_complete) begin
-      keep_datapath_clocked <= 1'b0;
+  // This counter keeps track of any ongoing transfers on the streams.
+  always_comb begin : proc_inflight
+    inflight_d = inflight_q;
+    for (int unsigned s = 0; s < NumStreams; s++) begin
+      if (fe_valid[s] & fe_ready[s]) inflight_d = inflight_d + 1'b1;
+      if (trans_complete[s])         inflight_d = inflight_d - 1'b1;
     end
   end
 
-  assign datapath_clk_en = (one_fe_valid | (|trans_complete) | keep_datapath_clocked);
+  always_ff @(posedge clk_i, negedge rst_ni) begin
+    if (rst_ni == 1'b0) begin
+      inflight_q <= '0;
+    end else begin
+      inflight_q <= inflight_d;
+    end
+  end
+
+  // Check if the datapath needs to be clocked.
+
+  assign datapath_clk_en = one_fe_valid | (|trans_complete) | (inflight_q != '0);
 
   // // ----------------------------------------------------------------------------------------------------------
   // // DATAPATH CLOCK GATING CELL --> This gates everything except for the frontend and the periph_to_reg modules
