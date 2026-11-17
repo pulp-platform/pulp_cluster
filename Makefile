@@ -30,7 +30,6 @@ VENV  := venv
 top_level ?= pulp_cluster
 library ?= work
 elf-bin ?= stimuli.riscv
-bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
 REGRESSIONS := $(ROOT_DIR)/regression_tests
 
@@ -79,17 +78,9 @@ Bender.lock:
 
 .PHONY: sw-init sw-clean
 
-sw-init: pulp-runtime fault_injection_sim regression_tests
+sw-init: pulp-sdk fault_injection_sim
 sw-clean:
-	@rm -rf pulp-runtime fault_injection_sim regression_tests
-
-## Clone pulp-runtime as SW stack
-PULP_RUNTIME_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 9bd23d2b2b6b6c74fc26a3ab3402fbebc589dace # branch: chips-it
-
-pulp-runtime:
-	git clone $(PULP_RUNTIME_REMOTE) $@
-	cd $@ && git checkout $(PULP_RUNTIME_COMMIT)
+	@rm -rf pulp-sdk fault_injection_sim
 
 ### Clone pulp-sdk as SW stack
 PULP_SDK_REMOTE ?= https://github.com/FondazioneChipsIT/pulp-sdk.git
