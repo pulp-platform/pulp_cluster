@@ -731,20 +731,21 @@ module dmac_wrap #(
       assign obi_write_req_from_dma[s/2].rready  = obi2axi_write_req_from_dma[s/2].rready ;
 
       idma_backend_synth_r_axi_rw_init_rw_obi #(
-        .DataWidth           (AXI_DATA_WIDTH),
-        .AddrWidth           (AXI_ADDR_WIDTH),
-        .UserWidth           (AXI_USER_WIDTH),
-        .AxiIdWidth          (AXI_ID_WIDTH),
-        .NumAxInFlight       (NB_OUTSND_BURSTS),
-        .BufferDepth         (32'd3),
-        .TFLenWidth          (TFLenWidth),
-        .MemSysDepth         (32'd0),
-        .CombinedShifter     (1'b0),
-        .RAWCouplingAvail    (1'b0),
-        .MaskInvalidData     (1'b0),
-        .HardwareLegalizer   (1'b1),
-        .RejectZeroTransfers (1'b1),
-        .ErrorHandling       (1'b0)
+        .DataWidth           ( AXI_DATA_WIDTH    ),
+        .AddrWidth           ( AXI_ADDR_WIDTH    ),
+        .UserWidth           ( AXI_USER_WIDTH    ),
+        .AxiIdWidth          ( AXI_ID_WIDTH      ),
+        .NumAxInFlight       ( NB_OUTSND_BURSTS  ),
+        .BufferDepth         ( 32'd3             ),
+        .TFLenWidth          ( TFLenWidth        ),
+        .MemSysDepth         ( 32'd0             ),
+        .CombinedShifter     ( 1'b0              ),
+        .RAWCouplingAvail    ( 1'b0              ),
+        .MaskInvalidData     ( 1'b0              ),
+        .HardwareLegalizer   ( 1'b1              ),
+        .RejectZeroTransfers ( 1'b1              ),
+        .ErrorHandling       ( 1'b0              ),
+        .Burst_len           ( IDMA_BURST_LENGTH )
       ) i_idma_backend_r_axi_rw_init_rw_obi (
         .clk_i              ( datapath_clk_gated                               ),
         .rst_ni             ( rst_ni                                  ),
