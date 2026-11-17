@@ -54,12 +54,7 @@ sources:
   - rtl/cluster_event_map.sv
   - rtl/cluster_timer_wrap.sv
   - rtl/obi_pulp_adapter.sv
-  - target: mchan
-    files:
-      - rtl/mchan_wrap.sv
-  - target: idma
-    files:
-      - rtl/idma_wrap.sv
+  - rtl/idma_wrap.sv
   - rtl/hwpe_subsystem.sv
   - rtl/instr_width_converter.sv
   - rtl/per2axi_wrap.sv
