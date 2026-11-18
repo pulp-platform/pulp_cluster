@@ -89,6 +89,6 @@ sources:
 
   - target: pulp_standalone_synth
     files:
-    - nonfree/gf12/sourcecode/tc_sram.sv
-    - nonfree/gf12/sourcecode/tc_clk.sv
+    - gf22/sourcecode/tc_sram.sv
+    - gf22/sourcecode/tc_clk.sv
 
