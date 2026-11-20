@@ -47,7 +47,7 @@ endef
 ######################
 
 NONFREE_REMOTE ?= git@gitlab.chips.it:digitalresearchline/chips-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= e0e713be4a9215484e07d6f1244c21352e71a4bd
+NONFREE_COMMIT ?= 61fd7793a28d0926e3a28ab2145bff1da8d40811
 
 nonfree-init:
 	git clone $(NONFREE_REMOTE) nonfree
