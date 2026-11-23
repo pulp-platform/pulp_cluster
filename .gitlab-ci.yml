@@ -11,12 +11,16 @@ stages:
 
 init:
   stage: nonfree
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script: make nonfree-init
   artifacts:
     paths: [ nonfree/.gitlab-ci.yml ]
 
 subpipe:
   stage: nonfree
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   needs: [ init ]
   variables:
     PARENT_PIPELINE_SOURCE: $CI_PIPELINE_SOURCE
