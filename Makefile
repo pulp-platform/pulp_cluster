@@ -31,7 +31,6 @@ VENV  := venv
 top_level ?= pulp_cluster
 library ?= work
 elf-bin ?= stimuli.riscv
-bwruntest = $(ROOT_DIR)/pulp-runtime/scripts/bwruntests.py
 
 REGRESSIONS := $(ROOT_DIR)/regression_tests
 
@@ -54,8 +53,8 @@ endef
 # Nonfree components #
 ######################
 
-NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:pulp-restricted/pulp-cluster-nonfree.git
-NONFREE_COMMIT ?= aad59d36bfef6b74f03ffed28903a44cb86b9497
+NONFREE_REMOTE ?= git@gitlab.chips.it:digitalresearchline/chips-restricted/pulp-cluster-nonfree.git
+NONFREE_COMMIT ?= 88a4e9a2a33abc743d821bb951f076db29cfd14a
 
 nonfree-init:
 	rm -rf nonfree;
@@ -89,25 +88,17 @@ update:
 
 .PHONY: sw-init sw-clean
 
-sw-init: pulp-runtime fault_injection_sim regression_tests
+sw-init: pulp-sdk fault_injection_sim
 sw-clean:
-	@rm -rf pulp-runtime fault_injection_sim regression_tests
+	@rm -rf pulp-sdk fault_injection_sim
 
-## Clone pulp-runtime as SW stack
-PULP_RUNTIME_REMOTE ?= https://github.com/pulp-platform/pulp-runtime.git
-PULP_RUNTIME_COMMIT ?= 3b48b0c6872cc01ba169a2c9c886ebb815d22cdc
+### Clone pulp-sdk as SW stack
+PULP_SDK_REMOTE ?= https://github.com/pulp-platform/pulp-sdk.git
+PULP_SDK_COMMIT ?= 7c942b8862ea41fc0b1a168e6a23573a0896851c
 
-pulp-runtime:
-	rm -rf $@
-	git clone $(PULP_RUNTIME_REMOTE) $@
-	cd $@ && git checkout $(PULP_RUNTIME_COMMIT)
-
-lock-runtime:
-	@git -C $(PULP_RUNTIME_DIR) rev-parse HEAD > $(PULP_RUNTIME_LOCK_FILE) && \
-	echo "Locked pulp-runtime to $$(cat $(PULP_RUNTIME_LOCK_FILE))"
-
-unlock-runtime:
-	@rm -f $(PULP_RUNTIME_LOCK_FILE) && echo "Unlocked pulp-runtime (will track $(PULP_RUNTIME_REF))"
+pulp-sdk:
+	git clone ${PULP_SDK_REMOTE} $@
+	cd $@ && git checkout ${PULP_SDK_COMMIT} && git submodule update --init --recursive
 
 ## Clone fault injection scripts
 FAULT_SIM_REMOTE ?= https://github.com/pulp-platform/InjectaFault.git
@@ -118,29 +109,15 @@ fault_injection_sim:
 	git clone $(FAULT_SIM_REMOTE) $@
 	cd $@ && git checkout $(FAULT_SIM_COMMIT)
 
-lock-fault-sim:
-	@git -C $(FAULT_SIM_DIR) rev-parse HEAD > $(FAULT_SIM_LOCK_FILE) && \
-	echo "Locked fault_injection_sim to $$(cat $(FAULT_SIM_LOCK_FILE))"
-
-unlock-fault-sim:
-	@rm -f $(FAULT_SIM_LOCK_FILE) && echo "Unlocked fault_injection_sim (will track $(FAULT_SIM_BRANCH))"
-
 ## Clone regression tests
-REGRESSION_TESTS_REMOTE ?= https://github.com/pulp-platform/regression_tests.git
-REGRESSION_TESTS_COMMIT ?= f173611e3e8f15e7f526d40712135e7ff976f805 # branch: lg/upstream
+REGRESSION_TESTS_REMOTE ?= https://github.com/FondazioneChipsIT/regression_tests.git
+REGRESSION_TESTS_COMMIT ?= a795d6a318c5aa5842e61e2e2daf2d2c6cb89454 # branch: chips-it
 
 regression_tests:
 	rm -rf $@
 	git clone $(REGRESSION_TESTS_REMOTE) $@
 	cd $@ && git checkout $(REGRESSION_TESTS_COMMIT)
 	cd $@ && git submodule update --init --recursive
-
-lock-regression-tests:
-	@git -C $(REGRESSION_TESTS_DIR) rev-parse HEAD > $(REGRESSION_TESTS_LOCK_FILE) && \
-	echo "Locked regression_tests to $$(cat $(REGRESSION_TESTS_LOCK_FILE))"
-
-unlock-regression-tests:
-	@rm -f $(REGRESSION_TESTS_LOCK_FILE) && echo "Unlocked regression_tests (will track $(REGRESSION_TESTS_BRANCH))"
 
 #########################
 # Hardware dependencies #
@@ -183,12 +160,8 @@ sim-clean: clean_idma_hw
 include bender-common.mk
 include bender-sim.mk
 scripts/compile.tcl: | Bender.lock
-	$(call generate_vsim, $@, $(common_defs) $(common_targs) -t idma $(sim_defs) $(sim_targs),..)
+	$(call generate_vsim, $@, $(common_defs) $(common_targs) $(sim_defs) $(sim_targs),..)
 	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> $@
-
-scripts/compile.tcl-mchan: | Bender.lock
-	$(call generate_vsim, scripts/compile.tcl, $(common_defs) $(common_targs) -t mchan $(sim_defs) $(sim_targs),..)
-	echo 'vlog "$(realpath $(ROOT_DIR))/tb/dpi/elfloader.cpp" -ccflags "-std=c++11"' >> scripts/compile.tcl
 
 include bender-synth.mk
 scripts/synth-compile.tcl: | Bender.lock
@@ -203,13 +176,14 @@ $(library):
 	$(QUESTA) vlib $(library)
 
 
-uv:
-	cd $(shell bender path idma) && \
-	curl -LsSf https://astral.sh/uv/install.sh | sh && \
-	uv sync --locked
+idma_venv:
+	python3 -m venv $(VENV) && \
+	$(VENV)/bin/python -m pip install -U pip && \
+	$(VENV)/bin/python -m pip install -r $(shell $(BENDER) path idma)/requirements.txt && \
+	$(VENV)/bin/python -m pip install "setuptools<81"
 
-generate_idma_rtl: uv
-	. "$(shell bender path idma)/.venv/bin/activate" && $(MAKE) -C $(shell bender path idma) idma_hw_all
+generate_idma_rtl: idma_venv
+	. "$(VENV)/bin/activate" && $(MAKE) -C $(shell $(BENDER) path idma) idma_hw_all
 
 compile: $(library)
 	@test -f Bender.lock || { echo "ERROR: Bender.lock file does not exist. Did you run make checkout in bender mode?"; exit 1; }
@@ -217,7 +191,7 @@ compile: $(library)
 	$(VSIM) -c -do 'quit -code [source scripts/compile.tcl]'
 
 build_qone: compile
-	$(QOPT) $(compile_flag) -debug +designfile -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
+	$(QOPT) $(compile_flag) -debug +designfile -access=rw+/$(top_level)_tb. -suppress 3053 -suppress 8885 -work $(library)  $(top_level)_tb -o $(top_level)_tb_optimized
 
 
 build: compile

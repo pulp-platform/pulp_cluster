@@ -54,7 +54,7 @@ package pulp_cluster_package;
     // Number of cores in the cluster
     byte_t NumCores;
     // Number of DMA TCDM plugs
-    // If using MCHAN, must be 4. If using iDMA, can vary in multiples of 2 or 3
+    // Can vary in multiples of 2 or 3
     byte_t DmaNumPlugs;
     // Number of DMA outstanding transactions
     byte_t DmaNumOutstandingBursts;
@@ -219,7 +219,7 @@ package pulp_cluster_package;
     NumCores: NumCores,
     DmaNumPlugs: NumDmas,
     DmaNumOutstandingBursts: 8,
-    DmaBurstLength: 5, // Means bursts of 256 bytes: passed as 256 to mchan top, later computed inside iDMA
+    DmaBurstLength: 5, // Means bursts of 256 bytes
     DmaUseHwpePort: `DMA_USE_HWPE_PORT,
     NumMstPeriphs: NB_MPERIPHS,
     NumSlvPeriphs: NB_SPERIPHS,

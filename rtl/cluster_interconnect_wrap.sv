@@ -254,10 +254,6 @@ module cluster_interconnect_wrap
         .DW_LIC ( DATA_WIDTH             ),
         .DW_SIC ( HWPE_WIDTH_FAC*32      ),
         .TS_BIT ( TEST_SET_BIT           ),
-        .AWH    ( 32                     ),
-        .DWH    ( 288                    ),
-        .OWH    ( 1                      ),
-        .AWM    ( ADDR_MEM_WIDTH+2       ),
         .`HCI_SIZE_PARAM(cores) ( HCI_CORE_SIZE ),
         .`HCI_SIZE_PARAM(mems)  ( HCI_MEM_SIZE  ),
         .`HCI_SIZE_PARAM(hwpe)  ( HCI_HWPE_SIZE )

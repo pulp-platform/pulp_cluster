@@ -179,10 +179,10 @@ packages:
       Git: https://github.com/pulp-platform/icache-intc.git
     dependencies: []
   idma:
-    revision: 6be43a77c81e86c53e821dfbc618522c375ff28c
+    revision: 00970b2a8f443fbd4a82325b5437966cbef6ef09
     version: null
     source:
-      Git: https://github.com/pulp-platform/idma.git
+      Git: https://github.com/FondazioneChipsIT/iDMA.git
     dependencies:
     - axi
     - axi_stream
@@ -196,13 +196,6 @@ packages:
     source:
       Git: https://github.com/pulp-platform/L2_tcdm_hybrid_interco.git
     dependencies: []
-  mchan:
-    revision: 3f2ae92f78e2ddbd0e079cbb4f81fcc248171c12
-    version: 1.2.4
-    source:
-      Git: https://github.com/pulp-platform/mchan.git
-    dependencies:
-    - common_cells
   neureka:
     revision: 9edd85ed16861a9b85eabbe87454bd3bdf73c69c
     version: null

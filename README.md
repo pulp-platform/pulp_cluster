@@ -67,8 +67,7 @@ Warning: requires QuestaSim 2022.3 or newer.
    make build
    ```
 
-5. Run the tests. Choose any test among the `parallel_bare_tests` and the
-   `mchan_tests`, move into the related folder and do:
+5. Run the tests. Choose any test among the `parallel_bare_tests`, move into the related folder and do:
 
    ```
    make clean all run

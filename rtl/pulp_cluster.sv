@@ -344,17 +344,7 @@ logic                                       s_dma_cl_irq;
 logic                                       s_dma_fc_event;
 logic                                       s_dma_fc_irq;
 
-// Determine if wide AXI port should be enabled based on DMA type and configuration
-// - MCHAN: Always disable wide port (uses narrow port only)
-// - iDMA: Use Cfg.EnableWidePort parameter
-// `ifdef TARGET_MCHAN
-//   localparam bit EnableWidePort = 1'b0;  // MCHAN never needs wide ports
-// `else
-//   localparam bit EnableWidePort = Cfg.EnableWidePort;  // User-configurable for iDMA
-// `endif
-
 // Wide AXI infrastructure: Conditional implementation based on EnableWidePort
-// - MCHAN: Always uses narrow transfers (EnableWidePort = 0)
 // - iDMA with EnableWidePort=1: Uses wide transfers (256-bit AXI)
 // - iDMA with EnableWidePort=0: Uses narrow transfers (64-bit AXI)
 // - Wide infrastructure present for interface compatibility
@@ -371,7 +361,6 @@ logic [Cfg.NumCores-1:0] hmr_dmr_sw_synch_req, hmr_tmr_sw_synch_req;
 // TODO Arpan correct this if needed
 localparam DMA_IW_CONTRIB_FAC = Cfg.DmaUseHwpePort ? 0 : 1;
 // data width of the TCDM master ports coming from the DMA.
-// if using MCHAN, must be 32
 localparam int unsigned DMA_HCI_DATA_WIDTH = Cfg.DmaUseHwpePort ? Cfg.AxiDataOutWideWidth : DataWidth;
 
 
@@ -827,7 +816,6 @@ cluster_interconnect_wrap #(
 // clock in the idma wrapper
 //*****************************************************
 
-`ifdef TARGET_IDMA
 logic idma_clk_gated;
 cluster_clock_gating idma_ctrl_ckgate (
     .clk_i      ( clk_i          ),
@@ -835,98 +823,46 @@ cluster_clock_gating idma_ctrl_ckgate (
     .test_en_i  ( test_mode_i    ),
     .clk_o      ( idma_clk_gated )
   );
-`endif
 
 //***************************************************
 //*********************DMAC WRAP*********************
 //***************************************************
-if (Cfg.EnableWidePort) begin : gen_wide_port_idma
-  dmac_wrap #(
-    .NB_CORES           ( Cfg.NumCores                ),
-    .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
-    .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
-    .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWideWidth     ),
-    .AXI_ID_WIDTH       ( Cfg.AxiIdOutWideWidth       ),
-    .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
-    .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
-    .DATA_WIDTH         ( DataWidth                   ),
-    .ADDR_WIDTH         ( AddrWidth                   ),
-    .BE_WIDTH           ( BeWidth                     ),
-    .axi_req_t          ( c2s_wide_req_t             ),
-    .axi_resp_t         ( c2s_wide_resp_t             ),
-  `ifdef TARGET_MCHAN
-    .NB_CTRLS           ( Cfg.NumCores + 2            ),
-    .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
-    .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
-  `else
-    .NB_PE_PORTS        ( 2                           ),
-    .NUM_BIDIR_STREAMS  ( 1                           ),
-    .GLOBAL_QUEUE_DEPTH ( 2                           ),
-    .MUX_READ           ( 1'b1                        ),
-    .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
-  `endif
-  ) dmac_wrap_i     (
-    .clk_i              ( clk_i                            ),
-    .rst_ni             ( rst_ni                           ),
-    .test_mode_i        ( test_mode_i                      ),
-    .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
-    .ctrl_slave         ( s_core_dmactrl_bus               ),
-    .tcdm_master        ( s_hci_dma                        ),
-  `ifdef TARGET_MCHAN
-    .ext_master_req_o   ( /* MCHAN uses narrow port - not connected to wide */ ),
-    .ext_master_resp_i  ( '0                                                   ),
-  `else
-    .ext_master_req_o   ( {s_dma_master_req} ),
-    .ext_master_resp_i  ( {s_dma_master_resp} ),
-  `endif
-    .term_event_o       ( s_dma_event                      ),
-    .term_irq_o         ( s_dma_irq                        ),
-    .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
-    .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
-    .busy_o             ( s_dmac_busy                      )
-  );
-end else begin : gen_narrow_port_idma
-  dmac_wrap #(
-    .NB_CORES           ( Cfg.NumCores                ),
-    .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
-    .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
-    .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWidth         ),
-    .AXI_ID_WIDTH       ( AxiIdOutWidth               ),
-    .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
-    .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
-    .DATA_WIDTH         ( DataWidth                   ),
-    .ADDR_WIDTH         ( AddrWidth                   ),
-    .BE_WIDTH           ( BeWidth                     ),
-    .axi_req_t          ( c2s_out_int_req_t          ),
-    .axi_resp_t         ( c2s_out_int_resp_t         ),
-  `ifdef TARGET_MCHAN
-    .NB_CTRLS           ( Cfg.NumCores + 2            ),
-    .MCHAN_BURST_LENGTH ( Cfg.DmaBurstLength          ),
-    .TCDM_ADD_WIDTH     ( TcdmAddrWidth               )
-  `else
-    .NB_PE_PORTS        ( 2                           ),
-    .NUM_BIDIR_STREAMS  ( 1                           ),
-    .GLOBAL_QUEUE_DEPTH ( 2                           ),
-    .MUX_READ           ( 1'b1                        ),
-    .TCDM_MEM2BANKS     ( !Cfg.DmaUseHwpePort         )
-  `endif
-  ) dmac_wrap_i     (
-    .clk_i              ( clk_i                            ),
-    .rst_ni             ( rst_ni                           ),
-    .test_mode_i        ( test_mode_i                      ),
-    .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
-    .ctrl_slave         ( s_core_dmactrl_bus               ),
-    .tcdm_master        ( s_hci_dma                        ),
-    .ext_master_req_o   ( {s_dma_narrow_master_req}        ),
-    .ext_master_resp_i  ( {s_dma_narrow_master_resp}       ),
-    .term_event_o       ( s_dma_event                      ),
-    .term_irq_o         ( s_dma_irq                        ),
-    .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
-    .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
-    .busy_o             ( s_dmac_busy                      )
-  );
-end
+dmac_wrap #(
+  .NB_CORES           ( Cfg.NumCores                ),
+  .NB_OUTSND_BURSTS   ( Cfg.DmaNumOutstandingBursts ),
+  .AXI_ADDR_WIDTH     ( Cfg.AxiAddrWidth            ),
+  .AXI_DATA_WIDTH     ( Cfg.AxiDataOutWidth         ),
+  .AXI_ID_WIDTH       ( AxiIdInWidth                ),
+  .AXI_USER_WIDTH     ( Cfg.AxiUserWidth            ),
+  .PE_ID_WIDTH        ( Cfg.NumCores + 1            ),
+  .DATA_WIDTH         ( DataWidth                   ),
+  .ADDR_WIDTH         ( AddrWidth                   ),
+  .BE_WIDTH           ( BeWidth                     ),
+  .axi_req_t          ( c2s_in_int_req_t            ),
+  .axi_resp_t         ( c2s_in_int_resp_t           ),
+  .NB_PE_PORTS        ( 2                           ),
+  .NUM_BIDIR_STREAMS  ( 1                           ),
+  .GLOBAL_QUEUE_DEPTH ( 8                           ),
+  .MUX_READ           ( 1'b1                        ),
+  .TCDM_MEM2BANKS     ( 1                           ),
+  .IDMA_BURST_LENGTH  ( Cfg.DmaBurstLength          )
+) dmac_wrap_i     (
+  .clk_i              ( idma_clk_gated                   ),
+  .rst_ni             ( rst_ni                           ),
+  .test_mode_i        ( test_mode_i                      ),
+  .pe_ctrl_slave      ( s_periph_dma_bus[1:0]            ),
+  .ctrl_slave         ( s_core_dmactrl_bus               ),
+  .tcdm_master        ( s_hci_dma                        ),
 
+  .ext_master_req_o   ( s_dma_ext_bus_req                ),
+  .ext_master_resp_i  ( s_dma_ext_bus_resp               ),
+
+  .term_event_o       ( s_dma_event                      ),
+  .term_irq_o         ( s_dma_irq                        ),
+  .term_event_pe_o    ( {s_dma_fc_event, s_dma_cl_event} ),
+  .term_irq_pe_o      ( {s_dma_fc_irq, s_dma_cl_irq}     ),
+  .busy_o             ( s_dmac_busy                      )
+);
 
 //***************************************************
 //**************CLUSTER PERIPHERALS******************
@@ -2154,16 +2090,6 @@ edge_propagator_tx ep_dma_pe_irq_i (
 // pragma translate_off
 `ifndef VERILATOR
 initial begin : p_assert
-  `ifdef TARGET_MCHAN
-  assert(DMA_HCI_DATA_WIDTH == 32)
-    else $fatal(1, "When using MCHAN, DMA_HCI_DATA_WIDTH must be 32!");
-  assert(Cfg.DmaNumPlugs == 4)
-    else $fatal(1, "When using MCHAN, Cfg.DmaNumPlugs must be 4!");
-  assert(!Cfg.DmaUseHwpePort)
-    else $fatal(1, "When using MCHAN, Cfg.DmaUseHwpePort must be 0!");
-  assert(!Cfg.EnableWidePort)
-    else $fatal(1, "When using MCHAN, wide port should be disabled!");
-  `else
   if (!Cfg.DmaUseHwpePort) begin
     // The DMA can have wide access to TCDM only when sharing the master port to HCI with the HWPE
     assert(DMA_HCI_DATA_WIDTH == DataWidth)
@@ -2172,7 +2098,6 @@ initial begin : p_assert
   // Note: iDMA now uses conditional data width and AXI path selection
   // EnableWidePort=0: iDMA uses 64-bit narrow transfers via cluster bus AXI path
   // EnableWidePort=1: iDMA uses 256-bit wide transfers via dedicated wide AXI path
-  `endif
 end
 `endif
 // pragma translate_on
