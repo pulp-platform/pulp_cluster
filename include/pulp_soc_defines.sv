@@ -16,7 +16,6 @@
 
 /*
  * Collection of legacy pulp cluster defines.
- * 
  */
 
 `ifndef PULP_SOC_DEFINES_SV
@@ -47,14 +46,16 @@
   `define CLUST_FP_DIVSQRT 1
   `define CLUST_SHARED_FP 2
   `define CLUST_SHARED_FP_DIVSQRT 2
-`endif 
+`endif
 
 //PARAMETRES
-`define NB_CLUSTERS   1
-`define NB_CORES      8
-`define NB_DMAS       4
-`define NB_MPERIPHS   1
-`define NB_SPERIPHS   12
+`define NB_CLUSTERS       1
+`define NB_CORES          8
+`define NB_DMAS           4
+`define NB_EXT            4
+`define NB_MPERIPHS       1
+`define NB_SPERIPHS       12
+`define DMA_USE_HWPE_PORT 0
 
 // Width of byte enable for a given data width
 `define EVAL_BE_WIDTH(DATAWIDTH) (DATAWIDTH/8)

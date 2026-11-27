@@ -52,7 +52,7 @@ module dmac_wrap #(
   input logic                    test_mode_i,
   XBAR_PERIPH_BUS.Slave          pe_ctrl_slave[NB_PE_PORTS-1:0],
   hci_core_intf.target           ctrl_slave[0:NB_CORES-1],
-  hci_core_intf.initiator        tcdm_master[0:3],
+  hci_core_intf.initiator        tcdm_master[NB_TCDM_PORTS_PER_STRM*NUM_BIDIR_STREAMS-1:0],
   output                         axi_req_t [NUM_BIDIR_STREAMS-1:0] ext_master_req_o,
   input                          axi_resp_t [NUM_BIDIR_STREAMS-1:0] ext_master_resp_i,
   output logic [NB_CORES-1:0]    term_event_o,
@@ -66,7 +66,7 @@ module dmac_wrap #(
   localparam int unsigned NumStreams = 32'd2 * NUM_BIDIR_STREAMS;
   localparam int unsigned StreamWidth = cf_math_pkg::idx_width(NumStreams);
 
-  // CORE --> MCHAN CTRL INTERFACE BUS SIGNALS
+  // CORE --> DMA CTRL INTERFACE BUS SIGNALS
   logic [NumRegs-1:0][ DATA_WIDTH-1:0] config_wdata;
   logic [NumRegs-1:0][ ADDR_WIDTH-1:0] config_add;
   logic [NumRegs-1:0]                  config_req;
@@ -747,7 +747,7 @@ module dmac_wrap #(
         .ErrorHandling       ( 1'b0              ),
         .Burst_len           ( IDMA_BURST_LENGTH )
       ) i_idma_backend_r_axi_rw_init_rw_obi (
-        .clk_i              ( datapath_clk_gated                               ),
+        .clk_i              ( datapath_clk_gated                      ),
         .rst_ni             ( rst_ni                                  ),
         .test_i             ( test_mode_i                             ),
         .req_valid_i        ( be_valid[s]                             ),

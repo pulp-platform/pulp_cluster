@@ -62,7 +62,7 @@ packages:
     dependencies:
     - common_cells
   cluster_peripherals:
-    revision: 51b2ea91753405e3afab4392044f15250e308ffe
+    revision: a3be530fccdcef4733d57163c6d979ff77ed554d
     version: null
     source:
       Git: https://github.com/pulp-platform/cluster_peripherals.git
@@ -128,7 +128,7 @@ packages:
     dependencies:
     - common_cells
   hci:
-    revision: 2a5a5081a2b32f1a04e7e28c00d3762d92602b84
+    revision: a42bd8bbf61eb4700b98d51af1b74603c278239e
     version: null
     source:
       Git: https://github.com/pulp-platform/hci.git
@@ -159,8 +159,8 @@ packages:
     dependencies:
     - tech_cells_generic
   hwpe-stream:
-    revision: b3d33afdd27e79bcda1348d0ab5f4afd52c03106
-    version: 1.9.0
+    revision: 05cb8303693065812e9d6bfe10976220fb455666
+    version: 1.10.0
     source:
       Git: https://github.com/pulp-platform/hwpe-stream.git
     dependencies:
@@ -196,15 +196,8 @@ packages:
     source:
       Git: https://github.com/pulp-platform/L2_tcdm_hybrid_interco.git
     dependencies: []
-  mchan:
-    revision: 3f2ae92f78e2ddbd0e079cbb4f81fcc248171c12
-    version: 1.2.4
-    source:
-      Git: https://github.com/pulp-platform/mchan.git
-    dependencies:
-    - common_cells
   neureka:
-    revision: 2e076f7d25cdfba38821ee95595bb27aec53c764
+    revision: 9edd85ed16861a9b85eabbe87454bd3bdf73c69c
     version: null
     source:
       Git: https://github.com/pulp-platform/neureka.git
@@ -212,7 +205,6 @@ packages:
     - hci
     - hwpe-ctrl
     - hwpe-stream
-    - register_interface
     - zeroriscy
   obi:
     revision: 0155fc34e900c7c884e081c0a1114a247937ff69
@@ -230,7 +222,7 @@ packages:
     dependencies:
     - axi_slice
   redmule:
-    revision: dbcba6b1efda24dc909ebdd4ace132f798c8c12b
+    revision: 466bc59a9c5b263b08535a8e6f1d0637a9bcff34
     version: null
     source:
       Git: https://github.com/pulp-platform/redmule.git
@@ -257,8 +249,8 @@ packages:
     - register_interface
     - tech_cells_generic
   register_interface:
-    revision: 5daa85d164cf6b54ad061ea1e4c6f3624556e467
-    version: 0.4.5
+    revision: 8e8c209ea559d3b54f45cf30fcce95ce70ff5e49
+    version: 0.4.6
     source:
       Git: https://github.com/pulp-platform/register_interface.git
     dependencies:
@@ -274,10 +266,10 @@ packages:
     dependencies:
     - tech_cells_generic
   softex:
-    revision: 11dd29e85d40e29fea0481b471f1c0cc967df1a4
+    revision: cda21ff7793a481bac079ab28cc5af209621ae45
     version: null
     source:
-      Git: https://github.com/belanoa/softex.git
+      Git: https://github.com/pulp-platform/softex.git
     dependencies:
     - common_cells
     - fpnew

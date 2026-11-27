@@ -19,10 +19,12 @@ module hwpe_subsystem
   import hci_package::*;
   import pulp_cluster_package::*;
 #(
-  parameter  hwpe_subsystem_cfg_t HWPE_CFG = hwpe_subsystem_cfg_t'{'0, '0},
+  parameter  hwpe_subsystem_cfg_t HWPE_CFG = hwpe_subsystem_cfg_t'{'0, '0, '0},
   parameter  int unsigned N_CORES          = 8,
   parameter  int unsigned N_MASTER_PORT    = 9,
   parameter  int unsigned ID_WIDTH         = 8,
+  //parameter int unsigned N_HWPES = 8,
+  //parameter int unsigned HWPE_SEL_BITS = (N_HWPES > 1) ? $clog2(N_HWPES) : 1,
   parameter  hci_package::hci_size_parameter_t HCI_HWPE_SIZE = '0
 )
 (
@@ -30,6 +32,7 @@ module hwpe_subsystem
   input  logic                             rst_n,
   input  logic                             test_mode,
   input  logic                             hwpe_en_i,
+  //input  logic [HWPE_SEL_BITS-1:0] hwpe_sel_i,
   input  logic [$clog2(MAX_NUM_HWPES)-1:0] hwpe_sel_i,
 
   hci_core_intf.initiator                  hwpe_xbar_master,
@@ -43,7 +46,9 @@ module hwpe_subsystem
   localparam int unsigned AW = HCI_HWPE_SIZE.AW;
   localparam int unsigned EW = HCI_HWPE_SIZE.EW;
   localparam int unsigned EHW = HCI_HWPE_SIZE.EHW;
+  localparam int unsigned FD = HCI_HWPE_SIZE.FD;
 
+  // TODO: remove this once we have a proper way to get the number of HWPEs
   localparam int unsigned N_HWPES = HWPE_CFG.NumHwpes;
   localparam int unsigned HWPE_SEL_BITS = (N_HWPES > 1) ? $clog2(N_HWPES) : 1;
 
@@ -65,7 +70,8 @@ module hwpe_subsystem
     .DW   ( DW  ),
     .AW   ( AW  ),
     .EW   ( EW  ),
-    .EHW  ( EHW )
+    .EHW  ( EHW ),
+    .FD   ( FD  )
   ) tcdm [0:N_HWPES-1] (.clk(clk));
 
   for (genvar i = 0; i < N_HWPES; i++) begin : gen_hwpe
